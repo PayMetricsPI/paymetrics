@@ -46,4 +46,4 @@ foreign key (fk_empresa) references empresa(id_empresa),
 unique (email)
 );
 
-update usuarios set senha = {NovaSenha} where id_usuario = {ID_USUARIO};
+update usuarios set senha = '${NovaSenha}' where id_usuario = '${ID_USUARIO}';
