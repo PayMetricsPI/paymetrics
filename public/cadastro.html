@@ -79,11 +79,15 @@ function cadastrar(event){
     
         event.preventDefault();
 
+        var administradorVar = ipt_admin.checked;
         var nomeVar = ipt_nome.value;
         var emailVar = (ipt_email.value).toLowerCase();
         var emailCVar = (ipt_email_confirm.value).toLowerCase();
         var senhaVar = ipt_senha.value;
         var senhaCVar = ipt_senha_confirm.value;
+        administradorVar = administradorVar ? 1 : 0;
+        console.log(administradorVar);
+        
 
         output_email.innerHTML = "";
         output_senha.innerHTML = "";
@@ -177,7 +181,8 @@ function cadastrar(event){
         emailServer: emailVar,
         emailCServer: emailCVar,
         senhaServer: senhaVar,
-        senhaCServer: senhaCVar
+        senhaCServer: senhaCVar,
+        administradorServer: administradorVar
       }),
     })
       .then(function (resposta) {
