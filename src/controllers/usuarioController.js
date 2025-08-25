@@ -98,7 +98,7 @@ function renovar(req, res) {
     }else {
 
         // Passe os valores como parâmetro e vá para o arquivo usuarioModel.js
-        usuarioModel.cadastrar(nome, email, senha)
+        usuarioModel.renovar(novaSenha, senha, IdUsuario)
             .then(
                 function (resultado) {
                     res.json(resultado);
