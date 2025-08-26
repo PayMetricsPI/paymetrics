@@ -51,7 +51,7 @@ function cadastrar(req, res) {
     var emailC = req.body.emailCServer;
     var senha = req.body.senhaServer;
     var senhaC = req.body.senhaCServer;
-    var fk_usuario = req.body.fkusuarioServer;
+    var fk_empresa = req.body.fk_empresaServer;
     var administrador = req.body.administradorServer;
     
 
@@ -71,7 +71,7 @@ function cadastrar(req, res) {
      }else {
 
         // Passe os valores como parâmetro e vá para o arquivo usuarioModel.js
-        usuarioModel.cadastrar(nome, email, senha, administrador, fk_usuario)
+        usuarioModel.cadastrar(nome, email, senha, administrador, fk_empresa)
             .then(
                 function (resultado) {
                     res.json(resultado);
