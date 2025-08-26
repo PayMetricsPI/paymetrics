@@ -91,13 +91,13 @@ function cadastrar(event){
         event.preventDefault();
 
         var administradorVar = ipt_admin.checked;
-        var fkusuarioVar = ipt_select.value
+        var fk_empresaVar = ipt_select.value
         var nomeVar = ipt_nome.value;
         var emailVar = (ipt_email.value).toLowerCase();
         var emailCVar = (ipt_email_confirm.value).toLowerCase();
         var senhaVar = ipt_senha.value;
         var senhaCVar = ipt_senha_confirm.value;
-        
+
         administradorVar = administradorVar ? 1 : 0;
         console.log(administradorVar);
         
