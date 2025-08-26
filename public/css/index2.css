@@ -1,3 +1,7 @@
+p{
+    margin-bottom: 0 !important;
+}
+
 .banner {
     background: url(../assets/imgs/banner.png) no-repeat center center;
     background-size: cover;
@@ -38,4 +42,22 @@
     padding-top: 20px;
     border-top: 1px solid #dee2e6;
     
+}
+
+.footer ul li {
+    list-style: none;
+}
+
+.footer ul li img {
+    width: 250px;
+}
+
+.footer ul li a {
+    color: white;
+    text-decoration: none;
+}
+
+.links-footer{
+    text-align: center;
+    align-items: center;
 }
