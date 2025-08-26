@@ -18,6 +18,7 @@ var indexRouter = require("./src/routes/index");
 var usuarioRouter = require("./src/routes/usuario");
 var novasenhaRouter = require("./src/routes/usuario");
 var deletarusuarioRouter = require("./src/routes/usuario");
+var listarRouter = require("./src/routes/usuario");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -29,12 +30,13 @@ app.use("/", indexRouter);
 app.use("/usuarios", usuarioRouter);
 app.use("/novasenha", novasenhaRouter);
 app.use("/deletar", deletarusuarioRouter);
+app.use("/listar", listarRouter);
 app.use('/bootstrap', express.static(__dirname + '/node_modules/bootstrap/dist'));
 
 
 app.listen(PORTA_APP, function () {
     console.log(`
-        
+
     ##   ##  ######   #####             ####       ##     ######     ##              ##  ##    ####    ######  
     ##   ##  ##       ##  ##            ## ##     ####      ##      ####             ##  ##     ##         ##  
     ##   ##  ##       ##  ##            ##  ##   ##  ##     ##     ##  ##            ##  ##     ##        ##   
