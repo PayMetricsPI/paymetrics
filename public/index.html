@@ -93,7 +93,7 @@
         </div>
     </div>
 
-    <div class="conteiner-fluid d-flex align-items-center" style="margin-top: 150px; background-color: #FFEC82;height: 600px;">
+    <div class="conteiner-fluid d-flex align-items-center" style="margin-top: 150px; background-color: #FFEC82;height: 600px;" id="sobre">
         <div class="container-fluid d-flex justify-content-center w-100" style="max-height: 80%;">
             <div class="image-fluid col-md-4 mx-5">
                 <div class="conteiner-fluid rounded-circle" style="background-color: hsla(51, 100%, 87%, 0.50);"></div>
@@ -111,6 +111,50 @@
             </div>
         </div>
     </div>
+
+    <div class="func container d-flex flex-wrap my-5">
+        <div class="cards_func bg-black d-flex p-3 align-items-center text-light border border-warning-subtle rounded">
+            <div class="icon_card_container">
+                <img class="icon_card" src="assets/icons/cpu.png" alt="">
+            </div>
+            <div class="justify-content-between d-flex flex-column">
+                <p class="text-warning">Monitoramento de CPU</p>
+                <p>Acompanhe em tempo real o desempenho do processador do servidor.
+                    identifique picos de consumo e previna gargalos antes que impactem o sistema.</p>
+            </div>
+        </div>
+        <div class="cards_func bg-black d-flex p-3 align-items-center text-light border border-warning-subtle rounded">
+            <div class="icon_card_container">
+                <img class="icon_card" src="assets/icons/disco.png" alt="">
+            </div>
+            <div class="justify-content-between d-flex flex-column">
+                <p class="text-warning">Monitoramento de disco</p>
+                <p>Acompanhe a saúde e o desempenho dos discos que armazenam dados sensíveis de pagamento.
+                    Evite gargalos de leitura/escrita e antecipe falhas de hardware.</p>
+            </div>
+        </div>
+        <div class="cards_func bg-black d-flex p-3 align-items-center text-light border border-warning-subtle rounded">
+            <div class="icon_card_container">
+                <img class="icon_card" src="assets/icons/ram.png"    alt="">
+            </div>
+            <div class="justify-content-between d-flex flex-column">
+                <p class="text-warning">Monitoramento de memória</p>
+                <p>Monitore a capacidade da RAM para garantir
+                    que os processos de pagamento sejam executados sem lentidão ou falhas.</p>
+            </div>
+        </div>
+        <div class="cards_func bg-black d-flex p-3 align-items-center text-light border border-warning-subtle rounded">
+            <div class="icon_card_container">
+                <img class="icon_card" src="assets/icons/rede.png" alt="">
+            </div>
+            <div class="justify-content-between d-flex flex-column">
+                <p class="text-warning">Monitoramento de rede</p>
+                <p>Monitore a rede que conecta os servidores de pagamento, garantindo disponibilidade e segurança nas transações.
+                    Identifique latência, quedas ou anomalias de tráfego.</p>
+            </div>
+        </div>
+    </div>
+
     <div class="conteiner-fluid">
         <div class="conteiner-fluid d-flex justify-content-center my-5" style=" background: linear-gradient(to right, rgb(43, 255, 0), rgb(187, 255, 0),rgb(255, 196, 0) ,rgb(255, 0, 0));-webkit-background-clip: text; color: transparent;">
             <h3 style="font-weight: 700;">Entendeu como funciona nosso monitoramento?</h3>
@@ -140,12 +184,12 @@
             <button class="btn btn-primary w-20 my-3" onclick="calculadora()">Calcular</button>
         </div>
     </div>
-    <div class="pontos">
+    <!-- <div class="pontos">
         <div class="ponto1"></div>
         <div class="ponto2"></div>
         <div class="ponto3"></div>
         <div class="ponto4"></div>
-    </div>
+    </div> -->
 
     <div class="footer container-fluid bg-black text-light py-5 ">
         <ul class="links-footer d-flex justify-content-around text-center">
@@ -153,19 +197,19 @@
                 <img src="assets/icons/logo-paymetrics-sem-fundo.png" alt="">
             </li>
             <li>
-                <p>Telefone</p>
+                <p>99999-9999</p>
             </li>
             <li>
-                <p>Email</p>
+                <p>paymetrics@gmail.com</p>
             </li>
             <li class="sobre text-light">
-                <a href="">Sobre</a>
+                <a href="#sobre">Sobre</a>
             </li>
             <li class="sobre text-light">
-                <a href="">Login</a>
+                <a href="login.html">Login</a>
             </li>
         </ul>
-        <p class="direitos">Todos os direitos reservados</p>
+        <p class="direitos text-center">Todos os direitos reservados</p>
     </div>
 </body>
 
