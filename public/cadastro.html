@@ -61,9 +61,12 @@
                         </div>
                         <div class="form-check mb-3">
                             <select name="" id="ipt_select">
-                                <option value="1">Amazon Brasil</option>
-                                <option value="2">Amazon Estados Unidos</option>
-                                <option value="3">Amazon Alemanha</option>
+                                <option value="1">Amazon.com Inc.</option>
+                                <option value="2">Amazon Brasil Ltda.</option>
+                                <option value="3">Amazon Deutschland GmbH</option>
+                                <option value="4">Amazon France SAS</option>
+                                <option value="5">Amazon Canada ULC</option>
+                                <option value="6">Amazon Spain Services SL</option>
                             </select>
                         </div>
                         <div class="form-check mb-3">
@@ -94,6 +97,7 @@ function cadastrar(event){
         var emailCVar = (ipt_email_confirm.value).toLowerCase();
         var senhaVar = ipt_senha.value;
         var senhaCVar = ipt_senha_confirm.value;
+        
         administradorVar = administradorVar ? 1 : 0;
         console.log(administradorVar);
         
