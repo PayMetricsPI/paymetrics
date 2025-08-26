@@ -16,4 +16,12 @@ router.post("/renovar/:IdUsuario", function (req, res){
     usuarioController.renovar(req, res)
 })
 
+router.get("/listar/:IdEmpresa", function (req, res) {
+    usuarioController.listar(req, res);
+})
+
+router.delete("/deletar/:idUsuario", function (req, res) {
+    usuarioController.deletar(req, res);
+})
+
 module.exports = router;

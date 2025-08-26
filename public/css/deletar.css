@@ -23,7 +23,7 @@
 
 .adicionarUsuario a {
   padding: 15px 30px;
-  background-color: #008080;
+  background-color: #ffee00;
   color: #F4F5F7;
   border-radius: 20px;
 }
@@ -33,18 +33,17 @@ table {
   border-collapse: collapse;
 }
 
-th,
-td {
+th, td {
   text-align: left;
   padding: 10px;
 }
 
 thead {
-  border: 2px solid #008080;
+  border: 2px solid #ffee00;
 }
 
 td {
-  border-bottom: 1px solid #008080;
+  border-bottom: 1px solid #ffee00;
 }
 
 .colunaDelete {
