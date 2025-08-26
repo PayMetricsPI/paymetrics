@@ -22,7 +22,7 @@
                       <a class="nav-link mx-5" href="">Sobre</a>                    
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link mx-5" href="">Login</a>
+                    <a class="nav-link mx-5" href="login.html">Login</a>
                 </li>
             </ul>
         </div>
@@ -60,9 +60,20 @@
                             <div id="output_confirmacao"></div>
                         </div>
                         <div class="form-check mb-3">
+                            <select name="" id="ipt_select">
+                                <option value="1">Amazon.com Inc.</option>
+                                <option value="2">Amazon Brasil Ltda.</option>
+                                <option value="3">Amazon Deutschland GmbH</option>
+                                <option value="4">Amazon France SAS</option>
+                                <option value="5">Amazon Canada ULC</option>
+                                <option value="6">Amazon Spain Services SL</option>
+                            </select>
+                        </div>
+                        <div class="form-check mb-3">
                             <input id="ipt_admin" type="checkbox" class="form-check-input">
                             <label class="form-check-label" for="ipt_admin">Usuário administrador</label>
                         </div>
+                        
                         <button type="submit" class="btn btn-primary w-100" onclick="cadastrar(event)">Cadastrar</button>
                         <!-- <div id="div_mensagemTextoVazio"></div> -->
                     </form>
@@ -79,11 +90,17 @@ function cadastrar(event){
     
         event.preventDefault();
 
+        var administradorVar = ipt_admin.checked;
+        var fk_empresaVar = ipt_select.value
         var nomeVar = ipt_nome.value;
         var emailVar = (ipt_email.value).toLowerCase();
         var emailCVar = (ipt_email_confirm.value).toLowerCase();
         var senhaVar = ipt_senha.value;
         var senhaCVar = ipt_senha_confirm.value;
+
+        administradorVar = administradorVar ? 1 : 0;
+        console.log(administradorVar);
+        
 
         output_email.innerHTML = "";
         output_senha.innerHTML = "";
@@ -177,7 +194,9 @@ function cadastrar(event){
         emailServer: emailVar,
         emailCServer: emailCVar,
         senhaServer: senhaVar,
-        senhaCServer: senhaCVar
+        senhaCServer: senhaCVar,
+        administradorServer: administradorVar,
+        fk_empresaServer: fk_empresaVar
       }),
     })
       .then(function (resposta) {

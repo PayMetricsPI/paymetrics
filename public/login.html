@@ -14,7 +14,7 @@
 <body class="d-flex flex-column min-vh-100">
     <nav class="navbar navbar-expand-sm">
         <div class="conteiner-fluid d-flex w-100 align-items-center">
-            <img class="navbar-brand ms-5 img-fluid" src="assets/icons/logo-paymetrics-sem-fundo 2.png" style="max-width: 150px;"></img>
+            <a href="index.html"><img class="navbar-brand ms-5 img-fluid" src="assets/icons/logo-paymetrics-sem-fundo 2.png" style="max-width: 150px;"></img></a>
             <ul class="navbar-nav d-flex w-100 justify-content-center" style="font-size: 20px;">
                 <li class="nav-item">
                     <a class="nav-link mx-5" href="index.html">Home</a>
@@ -23,7 +23,7 @@
                     <a class="nav-link" href="">Sobre</a>
                 </li>
                 <li class="nav-item mx-5">
-                    <a class="nav-link" href="">Login</a>
+                    <a class="nav-link" href="login.html">Login</a>
                 </li>
             </ul>
         </div>
@@ -54,6 +54,82 @@
     </div>
     </div>
 </body>
-<script src="node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="node_modules/bootstrap/dist/js/bootstrap.bundle.min.js">
+
+    function entrar() {
+        var emailVar = email_input.value;
+        var senhaVar = senha_input.value;
+
+        if (emailVar == "" || senhaVar == "") {
+            respostaLogin.innerHTML = "Preencha todos os campos.";
+            return false;
+        }
+
+        console.log("FORM LOGIN: ", emailVar);
+        console.log("FORM SENHA: ", senhaVar);
+
+        if (tentativas >= 3) {
+            respostaLogin.innerHTML = `Número máximo de tentativas atingido.<br> Tente novamente mais tarde!`;
+            return;
+        }
+
+
+        fetch("/usuarios/autenticar", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                emailServer: emailVar,
+                senhaServer: senhaVar
+            })
+        }).then(function (resposta) {
+            console.log("ESTOU NO THEN DO entrar()!")
+
+            if (resposta.ok) {
+                console.log(resposta);
+
+                respostaLogin.innerHTML = `Login realizado com sucesso!<br>Redirecionando para a Dashboard...<br>
+                <img src="imgs/circle-loading.gif" id="gif_Loading" alt="Gif de Carregamento">`
+
+                resposta.json().then(json => {
+                    console.log(json);
+                    console.log(JSON.stringify(json));
+                    sessionStorage.EMAIL_USUARIO = json.email;
+                    sessionStorage.NOME_USUARIO = json.nome;
+                    sessionStorage.ID_USUARIO = json.id_usuario;
+
+                    if (sessionStorage.EMAIL_USUARIO == 'julia@sptech.school') {
+                        setTimeout(function () {
+                            window.location.href = "embreve.html";
+                        }, 1000);
+                    } else {
+                        setTimeout(function () {
+                            window.location.href = "embreve.html";
+                        }, 1000);
+                    }
+
+                });
+
+            } else {
+                tentativas++;
+
+                console.log("Houve um erro ao tentar realizar o login!");
+
+                respostaLogin.innerHTML = `Email e/ou Senha inválidos!`;
+
+                resposta.text().then(texto => {
+                    console.error(texto);
+                    finalizarAguardar(texto);
+                });
+            }
+
+        }).catch(function (erro) {
+            console.log(erro);
+        })
+
+        return false;
+    }
+</script>
 
 </html>
