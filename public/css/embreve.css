@@ -3,12 +3,21 @@
     backdrop-filter: blur(5px);
     color: #FFE760;
 }
-.conteiner {
-    display: flex;
-    height: 80vh;
-    justify-content: center;
-    align-items: center;
+.navbar-color {
+    background: linear-gradient(to right, #FFE760, #ff91009c);
 }
 h1 {
     font-weight: 900;
+}
+
+.mask2:hover,.mask3:hover{
+    animation-name: spin;
+    transition: 0.3s ease-in-out;
+    animation-duration: 1s;
+}
+
+@keyframes spin {
+    0% {transform: rotateZ(0deg);}
+    50% {transform: rotateZ(-180deg);}
+    100% {transform: rotateZ(0deg);}
 }

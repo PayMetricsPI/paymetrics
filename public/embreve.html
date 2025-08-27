@@ -11,31 +11,41 @@
     <link rel="shortcut icon" type="imagex/png" href="assets/icons/logo Paymetrics.png">
 </head>
 
-<body class="d-flex flex-column min-vh-100">
-    <nav class="navbar navbar-expand-sm">
-        <div class="container-fluid d-flex w-100 align-items-center">
-            <img class="navbar-brand ms-5 img-fluid" src="assets/icons/logo-paymetrics-sem-fundo 2.png" style="max-width: 12%;"></img>
-            <ul class="navbar-nav d-flex w-100 justify-content-center" style="font-size: 20px;">
+<body class="d-flex min-vh-100">
+    <nav class="navbar-color d-flex flex-column flex-shrink-0" style="width: 5rem;">
+        <div class="container-fluid d-flex w-100 align-items-center p-1">
+            <ul class="nav nac-pills nav-flush flex-column mb-auto text-center" style="font-size: 20px;">
+                    <a class="d-block p-3 link-dark text-decorartion-none" href="index.html">
+                        <img class="bi" width="40" height="32" src="assets/icons/PayMetrics-icon.png"></img>
+                    </a>
                 <li class="nav-item">
-                    <a class="nav-link mx-5" href="index.html">Home</a>
+                    <a class="nav-link active py-3 border-bottom " data-bs-placemnet="right" href="">
+                        <img src="assets/icons/alert-icon.png" class="bi mask1" width="32" height="32" alt="">
+                    </a>
                 </li>
                 <li class="nav-item">
-                      <a class="nav-link mx-5" href="">Sobre</a>                    
+                      <a class="nav-link active py-3 border-bottom" data-bs-placemnet="right" href="">
+                        <img src="assets/icons/chart-icon.png" class="bi mask2" width="32" height="32" alt="">
+                      </a>                    
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link mx-5" href="login.html">Login</a>
+                    <a class="nav-link active py-3 border-bottom" href="" data-bs-placemnet="right">
+                        <img src="assets/icons/settings-icon.png" class="bi mask3" width="32" height="32" alt="">
+                    </a>
                 </li>
-                <div class="hello">
+                <!-- <div class="hello">
                     <h3>Olá, <span id="b_usuario">usuário</span>!</h3>
-                </div>
-                <div class="perfil">
-                <img src="" alt="foto_perfil" style="border-radius: 5%;" width="10%">
-            </div>
+                </div> -->
+                <li>
+                    <a class="nav-link active py-3 border-bottom" data-bs-placemnet="right" href="">
+                        <img class="bi" role="img" class="bi mask" width="32" height="32" src="assets/icons/account-icon.png" alt="foto_perfil">
+                    </a>
+                </li>
             </ul>
         </div>
     </nav>
-    <div class="conteiner conteiner-fluid">
-        <div class="mensagem flex-column p-4 shadow d-flex justify-content-center align-items-center rounded bg-opacity-50" style="max-width: 1500px;">
+    <div class="conteiner conteiner-fluid d-flex">
+        <div class="mensagem flex-column p-4 shadow d-flex justify-content-center align-items-center rounded bg-opacity-50 mx-5 my-5">
             <div class="col-md-6 d-none d-md-flex justify-content-center align-items-center">
                 <img class="img-fluid" src="assets/imgs/licensed-image.png" style="max-height: 1500px; max-width: 100%; object-fit: contain;" alt="">
             </div>
