@@ -24,14 +24,27 @@ p{
 }
 
 .cards {
-    padding: 10rem 0 10rem 0;
+    margin: 5rem auto;
 }
 
 .card {
-    margin: 10vh 3rem 10vh 3rem;
-
     min-height: 30rem;
-    padding: 1rem;
+}
+
+.sobre {
+    width: 100vw;
+    display: flex;
+    justify-content: space-around;
+}
+
+.imagem_sobre {
+    display: flex;
+    align-items: center !important;
+}
+
+.imagem_sobre img {
+    max-width: 100%;
+    height: auto;
 }
 
 .func {
@@ -88,6 +101,19 @@ p{
 }
 
 @media (max-width: 768px) {
+    .sobre {
+        display: block;
+        align-items: center;
+        text-align: center;
+    }
+    .imagem_sobre {
+        display: none !important;
+    }
+
+    .imagem_sobre img {
+        display: none !important;
+    }
+
     .links-footer {
         flex-direction: column !important;
         padding-left: 0;

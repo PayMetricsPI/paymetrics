@@ -45,7 +45,7 @@
             </div>
         </div>
     </section>
-    <div class="container-fluid row d-flex flex-wrap column-gap-5 justify-content-center align-items-center cards">
+    <div class="container-fluid d-flex flex-wrap justify-content-evenly gap-5 align-items-center cards">
         <div class="card" style="width: 18rem;">
             <img src="assets/icons/monitoramento.png" class="card-img-top" alt="...">
             <div class="card-body">
@@ -68,35 +68,77 @@
             </div>
         </div>
     </div>
-
-
-
-
-
-
-
-
-    <div class="conteiner-fluid my-5">
-        <div class="container-fluid d-flex justify-content-center">
-            <div class="col-md-4 mx-4">
-                <h2>Como funciona?</h2>
-                <p class="d-flex justify-content-center align-items-center w-100 h-100 my-0" style="max-height: 80%;">
-                    Nosso sistema monitora em tempo real todo o hardware que processa pagamentos
-                    em seu e-commerce, garantindo que terminais, servidores e dispositivos de rede
-                    estejam sempre funcionando corretamente. Identificamos falhas, lentidão ou
-                    instabilidades antes que afetem suas transações, enviando alertas imediatos e
-                    oferecendo relatórios detalhados para que você possa agir rapidamente.</p>
+    <div class="conteiner-fluid d-flex justify-content-around bg-body-secondary" style="height: 70vh;">
+        <div class="d-flex flex-column col-md-4 mx-4 gap-2 justify-content-center">
+            <h2>Como funciona?</h2>
+            <p class="d-flex justify-content-center align-items-center" style="max-height: 80%;">
+                Nosso sistema monitora em tempo real todo o hardware que processa pagamentos
+                em seu e-commerce, garantindo que terminais, servidores e dispositivos de rede
+                estejam sempre funcionando corretamente. Identificamos falhas, lentidão ou
+                instabilidades antes que afetem suas transações, enviando alertas imediatos e
+                oferecendo relatórios detalhados para que você possa agir rapidamente.</p>
+        </div>
+        <div class="imagem_sobre">
+            <img src="assets/imgs/como-funciona.png" alt="">
+        </div>
+    </div>
+    <div class="container my-5 d-flex flex-column">
+        <div class="d-flex text-center justify-content-center">
+            <h2>Nosso monitoramento</h2>
+        </div>
+        <div class="func d-flex flex-wrap my-5">
+            <div
+                class="cards_func bg-black d-flex p-3 align-items-center text-light border border-warning-subtle rounded">
+                <div class="icon_card_container">
+                    <img class="icon_card" src="assets/icons/cpu.png" alt="">
+                </div>
+                <div class="texto_card justify-content-between d-flex flex-column">
+                    <p class="text-warning">Monitoramento de CPU</p>
+                    <p>Acompanhe em tempo real o desempenho do processador do servidor.
+                        identifique picos de consumo e previna gargalos antes que impactem o sistema.</p>
+                </div>
             </div>
-            <div class="image-fluid col-md-4">
-                <img src="assets/imgs/como-funciona.png" alt="">
+            <div
+                class="cards_func bg-black d-flex p-3 align-items-center text-light border border-warning-subtle rounded">
+                <div class="icon_card_container">
+                    <img class="icon_card" src="assets/icons/disco.png" alt="">
+                </div>
+                <div class="texto_card justify-content-between d-flex flex-column">
+                    <p class="text-warning">Monitoramento de disco</p>
+                    <p>Acompanhe a saúde e o desempenho dos discos que armazenam dados sensíveis de pagamento.
+                        Evite gargalos de leitura/escrita e antecipe falhas de hardware.</p>
+                </div>
+            </div>
+            <div
+                class="cards_func bg-black d-flex p-3 align-items-center text-light border border-warning-subtle rounded">
+                <div class="icon_card_container">
+                    <img class="icon_card" src="assets/icons/ram.png" alt="">
+                </div>
+                <div class="texto_card justify-content-between d-flex flex-column">
+                    <p class="text-warning">Monitoramento de memória</p>
+                    <p>Monitore a capacidade da RAM para garantir
+                        que os processos de pagamento sejam executados sem lentidão ou falhas.</p>
+                </div>
+            </div>
+            <div
+                class="cards_func bg-black d-flex p-3 align-items-center text-light border border-warning-subtle rounded">
+                <div class="icon_card_container">
+                    <img class="icon_card" src="assets/icons/rede.png" alt="">
+                </div>
+                <div class="texto_card justify-content-between d-flex flex-column">
+                    <p class="text-warning">Monitoramento de rede</p>
+                    <p>Monitore a rede que conecta os servidores de pagamento, garantindo disponibilidade e segurança
+                        nas transações.
+                        Identifique latência, quedas ou anomalias de tráfego.</p>
+                </div>
             </div>
         </div>
     </div>
 
-    <div class="conteiner-fluid d-flex align-items-center" style="margin-top: 150px; background-color: #FFEC82;height: 600px;" id="sobre">
-        <div class="container-fluid d-flex justify-content-center w-100" style="max-height: 80%;">
-            <div class="image-fluid col-md-4 mx-5">
-                <div class="conteiner-fluid rounded-circle" style="background-color: hsla(51, 100%, 87%, 0.50);"></div>
+    <div class="conteiner-fluid d-flex align-items-center"
+        style="margin-top: 3rem; background-color: #FFEC82;height: 600px;" id="sobre">
+        <div class="sobre" style="max-height: 80%;">
+            <div class="imagem_sobre d-flex justify-content-center col-md-4 mx-5">
                 <img src="assets/imgs/quem-somos.png" style="max-height: 400px;" alt="">
             </div>
             <div class="col-md-4 mx-4">
@@ -112,56 +154,15 @@
         </div>
     </div>
 
-    <div class="func container d-flex flex-wrap my-5">
-        <div class="cards_func bg-black d-flex p-3 align-items-center text-light border border-warning-subtle rounded">
-            <div class="icon_card_container">
-                <img class="icon_card" src="assets/icons/cpu.png" alt="">
-            </div>
-            <div class="texto_card justify-content-between d-flex flex-column">
-                <p class="text-warning">Monitoramento de CPU</p>
-                <p>Acompanhe em tempo real o desempenho do processador do servidor.
-                    identifique picos de consumo e previna gargalos antes que impactem o sistema.</p>
-            </div>
-        </div>
-        <div class="cards_func bg-black d-flex p-3 align-items-center text-light border border-warning-subtle rounded">
-            <div class="icon_card_container">
-                <img class="icon_card" src="assets/icons/disco.png" alt="">
-            </div>
-            <div class="texto_card justify-content-between d-flex flex-column">
-                <p class="text-warning">Monitoramento de disco</p>
-                <p>Acompanhe a saúde e o desempenho dos discos que armazenam dados sensíveis de pagamento.
-                    Evite gargalos de leitura/escrita e antecipe falhas de hardware.</p>
-            </div>
-        </div>
-        <div class="cards_func bg-black d-flex p-3 align-items-center text-light border border-warning-subtle rounded">
-            <div class="icon_card_container">
-                <img class="icon_card" src="assets/icons/ram.png"    alt="">
-            </div>
-            <div class="texto_card justify-content-between d-flex flex-column">
-                <p class="text-warning">Monitoramento de memória</p>
-                <p>Monitore a capacidade da RAM para garantir
-                    que os processos de pagamento sejam executados sem lentidão ou falhas.</p>
-            </div>
-        </div>
-        <div class="cards_func bg-black d-flex p-3 align-items-center text-light border border-warning-subtle rounded">
-            <div class="icon_card_container">
-                <img class="icon_card" src="assets/icons/rede.png" alt="">
-            </div>
-            <div class="texto_card justify-content-between d-flex flex-column">
-                <p class="text-warning">Monitoramento de rede</p>
-                <p>Monitore a rede que conecta os servidores de pagamento, garantindo disponibilidade e segurança nas transações.
-                    Identifique latência, quedas ou anomalias de tráfego.</p>
-            </div>
-        </div>
-    </div>
 
     <div class="conteiner-fluid">
-        <div class="conteiner-fluid d-flex justify-content-center my-5" style=" background: linear-gradient(to right, rgb(43, 255, 0), rgb(187, 255, 0),rgb(255, 196, 0) ,rgb(255, 0, 0));-webkit-background-clip: text; color: transparent;">
+        <div class="conteiner-fluid d-flex justify-content-center my-5"
+            style=" background: linear-gradient(to right, rgb(43, 255, 0), rgb(187, 255, 0),rgb(255, 196, 0) ,rgb(255, 0, 0));-webkit-background-clip: text; color: transparent;">
             <h3 style="font-weight: 700;">Entendeu como funciona nosso monitoramento?</h3>
         </div>
         <div class="conteiner-fluid d-flex justify-content-center">
             <p>Agora, é só preencher seu lucro anual \n
-        para nosso sistema calcular o prejuízo evitado!</p>
+                para nosso sistema calcular o prejuízo evitado!</p>
         </div>
         <div class="conteiner-fluid d-flex justify-content-center align-items-center flex-column">
             <div class="col">
@@ -174,9 +175,9 @@
                 <input type="number" id="ipt_valorInserido">
             </div>
         </div>
-    <div id="conteiner-fluid d-flex justify-content-center">
+        <div id="conteiner-fluid d-flex justify-content-center">
 
-    </div>
+        </div>
         <div class="conteiner-fluid d-flex justify-content-center">
             <div id="outputCalculadora">
 
