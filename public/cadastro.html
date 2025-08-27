@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="./css/style.css">
     <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+    <!-- <script src="js/validacao.js"></script> -->
     <title>PayMetrics | Cadastro</title>
     <link rel="shortcut icon" type="imagex/png" href="assets/icons/logo Paymetrics.png">
 </head>
@@ -75,7 +76,7 @@
                         </div>
                         
                         <button type="submit" class="btn btn-primary w-100" onclick="cadastrar(event)">Cadastrar</button>
-                        <!-- <div id="div_mensagemTextoVazio"></div> -->
+                        <div id="div_mensagemTextoVazio"></div>
                     </form>
                 </div>
             </div>
@@ -148,6 +149,7 @@ function cadastrar(event){
                 if (!caracteres_especias.test(senhaVar)) {
                     output_senha.innerHTML += `A senha deve conter no mínimo 1 caracter especial<br>`
                     output_senha.style.color = `red`
+                    return;
                 }
 
             }
@@ -156,6 +158,7 @@ function cadastrar(event){
                 if (senhaVar.length < 8) {
                     output_senha.innerHTML += `A senha deve conter no mínimo 8 caracteres<br>`
                     output_senha.style.color = `red`
+                    return;
                 }
 
             }
@@ -163,6 +166,7 @@ function cadastrar(event){
                 if (!numeros.test(senhaVar)) {
                     output_senha.innerHTML += `A senha deve conter no mínimo 1 caracter numérico<br>`
                     output_senha.style.color = `red`
+                    return;
                 }
 
             }
@@ -173,16 +177,15 @@ function cadastrar(event){
                     return;
                 }
                 else if (i == 3) {
-                    if (senhaVar != confrimação_senha) {
+                    if (senhaVar != confirmação_senha) {
                         output_confirmacao.innerHTML += `As senhas devem ser iguais`
                         output_confirmacao.style.color = 'red';
                         return;
                         console.log(`sim`)
-                    }
                 }
-
-            }
         }
+    }
+}
     
         fetch("/usuarios/cadastrar", {
       method: "POST",
@@ -203,11 +206,10 @@ function cadastrar(event){
         console.log("resposta: ", resposta);
 
         if (resposta.ok) {
+            
           cadastroResposta.innerHTML =
             `Cadastro realizado com sucesso!`;
-
-          limparFormulario();
-          finalizarAguardar();
+            window.location = "../login.html";
         } else {
           throw "Houve um erro ao tentar realizar o cadastro!";
         }
@@ -224,5 +226,5 @@ function cadastrar(event){
     sessionStorage.clear();
     window.location = "../index.html";
   }
-    
+
 </script>
