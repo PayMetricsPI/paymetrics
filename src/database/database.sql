@@ -12,18 +12,6 @@ cartao_postal varchar(40) not null,
 primary key (id_endereco)
 );
 
-create table contato (
-id_contato int auto_increment,
-nome_contato varchar(100),
-telefone varchar(15),
-email_contato varchar(200),
-fk_empresa int,
-primary key (id_contato),
-foreign key (fk_empresa)
-references empresa(id_empresa) 
-);
-
-
 create table empresa (
 id_empresa int auto_increment,
 razão_social varchar(200) not null,
@@ -32,6 +20,20 @@ primary key (id_empresa),
 foreign key (fk_endereco)
 references endereco(id_endereco)
 );
+
+create table contato (
+id_contato int auto_increment,
+nome_contato varchar(100),
+telefone varchar(20),
+email_contato varchar(200),
+fk_empresa int,
+primary key (id_contato),
+foreign key (fk_empresa)
+references empresa(id_empresa) 
+);
+
+
+
 
 create table usuarios (
 id_usuario int auto_increment,
@@ -50,7 +52,7 @@ values
 ('7th Avenue', '410 Terry', 'Seattle', 'WA', 'US', '98109'),
 ('Avenida Juscelino Kubitschek', '2041', 'São Paulo', 'SP', 'BR', '04543-011'),
 ('Marcel-Breuer-Strasse', '12', 'Munique', 'BY', 'DE', '80807'),
-('Rue de l\Héronnière', '67', 'Clichy', 'IDF', 'FR', '92110'),
+('Rue de l\Héronnière', '67', 'Clichy', 'ID', 'FR', '92110'),
 ('West Georgia Street', '402', 'Vancouver', 'BC', 'CA', 'V6B 5A1'),
 ('Calle Ramírez de Prado', '5', 'Madrid', 'MD', 'ES', '28045');
 
@@ -73,5 +75,4 @@ values
 ('Mariangela Marseglia', '+34-91-5555-0105', 'mariangela.marseglia@amazon.es', 6);
 
 select * from usuarios;
-
 -- update usuarios set senha = {NovaSenha} where id_usuario = {ID_USUARIO};
