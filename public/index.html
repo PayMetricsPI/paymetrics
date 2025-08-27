@@ -18,7 +18,11 @@
             <ul class="navbar-nav d-flex align-items-center">
                 <a class="navbar-brand">PayMetrics</a>
                 <div>
-                    <svg id="menu" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><rect width="24" height="24" fill="none"/><path fill="#000" d="M4 18q-.425 0-.712-.288T3 17t.288-.712T4 16h16q.425 0 .713.288T21 17t-.288.713T20 18zm0-5q-.425 0-.712-.288T3 12t.288-.712T4 11h16q.425 0 .713.288T21 12t-.288.713T20 13zm0-5q-.425 0-.712-.288T3 7t.288-.712T4 6h16q.425 0 .713.288T21 7t-.288.713T20 8z"/></svg>
+                    <svg id="menu" onclick="menu()" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><rect width="24" height="24" fill="none"/><path fill="#000" d="M4 18q-.425 0-.712-.288T3 17t.288-.712T4 16h16q.425 0 .713.288T21 17t-.288.713T20 18zm0-5q-.425 0-.712-.288T3 12t.288-.712T4 11h16q.425 0 .713.288T21 12t-.288.713T20 13zm0-5q-.425 0-.712-.288T3 7t.288-.712T4 6h16q.425 0 .713.288T21 7t-.288.713T20 8z"/></svg>
+                    <div id="links">
+                        <a href="">Sobre</a>
+                        <a href="">Login</a>
+                    </div>
                 </div>
                 <div class="menu_full">
                     <li class="nav-item">
@@ -227,3 +231,17 @@
 
 </html>
 <script src="js/calculadora.js"></script>
+<script>
+    exibir = true
+    function menu() {
+        var menu = document.getElementById("links")
+
+        if(exibir == true) {
+            menu.style.display = "flex"
+            exibir = false
+        } else {
+            menu.style.display = "none"
+            exibir = true
+        }
+    }
+</script>
