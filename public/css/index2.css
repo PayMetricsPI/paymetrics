@@ -93,11 +93,21 @@ p{
         padding-left: 0;
         gap: 1rem;
     }
+
+    .icon_card {
+    max-width: 150px;
+    max-height: 150px;
+    object-fit: contain;
+    }
     .cards_func{
         flex-direction: column;
         gap: 1rem;
-        height: auto;
-        justify-content: space-between;
+        height: 350px;
+        justify-content: space-around;
         width: 100%;
+    }
+
+    .texto_card {
+        text-align: center;
     }
 }
