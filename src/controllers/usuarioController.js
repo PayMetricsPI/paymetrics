@@ -138,9 +138,22 @@ function renovar(req, res) {
         })
     };
 
+    function deletar (res, req){
+        var IdUsuario = req.body.IdUsuario;
+
+        usuarioModel.deletar(IdUsuario).then(function(resultado){
+            res.json(resultado);
+        }).catch(function (erro){
+           console.log(erro);
+           console.log("Houve um erroo ao buscar os usários: ", erro.sqlMessage);
+           res.status(500).json(erro.sqlMessage);
+    });
+    }
+
 module.exports = {
     autenticar,
     cadastrar,
     renovar,
-    listar
+    listar,
+    deletar
 }
