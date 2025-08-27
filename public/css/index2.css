@@ -2,6 +2,14 @@ p{
     margin-bottom: 0 !important;
 }
 
+#menu {
+    display: none;
+}
+
+#menu_full {
+    display: flex;
+}
+
 .banner {
     background: url(../assets/imgs/banner.png) no-repeat center center;
     background-size: cover;
@@ -28,7 +36,32 @@ p{
 }
 
 .card {
-    min-height: 30rem;
+    height: 50rem;
+    justify-content: space-between;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center;
+    padding: 1rem;
+}
+
+.div_card_img {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.card img {
+    width: 180px;
+    height: 180px;
+}
+
+.card_body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
 }
 
 .sobre {
@@ -135,5 +168,18 @@ p{
 
     .texto_card {
         text-align: center;
+    }
+}
+
+@media (max-width: 425px) {
+    #menu {
+        display: block;
+    }
+
+    .menu_full {
+        display: none !important;
+    }
+    .card{
+        height: 10rem;
     }
 }

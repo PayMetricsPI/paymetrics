@@ -13,22 +13,27 @@
 </head>
 
 <body class="d-flex flex-column min-vh-100">
-    <nav class="navbar navbar-expand-sm">
+    <nav class="navbar navbar-expand">
         <div class="container-fluid">
-            <ul class="navbar-nav">
+            <ul class="navbar-nav d-flex align-items-center">
                 <a class="navbar-brand">PayMetrics</a>
-                <li class="nav-item">
-                    <a class="nav-link" href="index.html">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="">Sobre</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="login.html">Login</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="cadastro.html">Cadastro</a>
-                </li>
+                <div>
+                    <svg id="menu" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><rect width="24" height="24" fill="none"/><path fill="#000" d="M4 18q-.425 0-.712-.288T3 17t.288-.712T4 16h16q.425 0 .713.288T21 17t-.288.713T20 18zm0-5q-.425 0-.712-.288T3 12t.288-.712T4 11h16q.425 0 .713.288T21 12t-.288.713T20 13zm0-5q-.425 0-.712-.288T3 7t.288-.712T4 6h16q.425 0 .713.288T21 7t-.288.713T20 8z"/></svg>
+                </div>
+                <div class="menu_full">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="">Sobre</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="login.html">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="cadastro.html">Cadastro</a>
+                    </li>
+                </div>
             </ul>
         </div>
     </nav>
@@ -38,8 +43,7 @@
             <div class="row">
                 <div class="col-lg-6 col-md-8">
                     <h1 class="display-3 fw-bold">Monitore suas vendas em tempo real</h1>
-                    <p class="lead mt-3">Integre com sua loja e tenha visão completa das vendas e pagamentos em um só
-                        painel.</p>
+                    <p class="lead mt-3">Integre com sua loja e tenha visão completa sobre os servidores que compõe as vendas.</p>
                     <a href="#servicos" class="btn btn-primary btn-lg mt-3">Saiba Mais</a>
                 </div>
             </div>
@@ -47,22 +51,28 @@
     </section>
     <div class="container-fluid d-flex flex-wrap justify-content-evenly gap-5 align-items-center cards">
         <div class="card" style="width: 18rem;">
-            <img src="assets/icons/monitoramento.png" class="card-img-top" alt="...">
-            <div class="card-body">
+            <div class="div_card_img">
+                <img src="assets/icons/monitoramento.png" class="card-img-top" alt="...">
+            </div>
+            <div class="card_body card-body">
                 <h5 class="card-title">Monitoramento em tempo real</h5>
                 <p class="card-text">Receba notificações instantâneas de cada transação.</p>
             </div>
         </div>
         <div class="card" style="width: 18rem;">
-            <img src="assets/icons/metricas.png" class="card-img-top" alt="...">
-            <div class="card-body">
+            <div class="div_card_img">
+                <img src="assets/icons/metricas.png" class="card-img-top" alt="...">
+            </div>
+            <div class="card_body card-body">
                 <h5 class="card-title">Relatórios detalhados</h5>
                 <p class="card-text">Entenda o desempenho das vendas por período, produto ou método de pagamento.</p>
             </div>
         </div>
         <div class="card" style="width: 18rem;">
-            <img src="assets/icons/vendas.png" class="card-img-top" alt="...">
-            <div class="card-body">
+            <div class="div_card_img">
+                <img src="assets/icons/vendas.png" class="card-img-top" alt="...">
+            </div>
+            <div class="card_body card-body">
                 <h5 class="card-title">Vendas mais estáveis</h5>
                 <p class="card-text">Evite perdas de clientes por problemas com pagamentos.</p>
             </div>
