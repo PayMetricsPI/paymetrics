@@ -15,7 +15,7 @@ p{
     flex-direction: column;
     position: absolute;
     z-index: 500;
-    background-color: yellow;
+    background-color: #FFEC82;
     height: 5rem;
     width: 5rem;
     justify-content: space-around;
@@ -47,6 +47,15 @@ p{
 
 .banner-content {
     position: relative;
+}
+
+.botao {
+    background-color: #FFEC82 !important;
+    color: #5E4E4E !important;
+}
+
+.botao:hover {
+    background-color: #f7e062 !important;
 }
 
 .cards {
@@ -123,6 +132,13 @@ p{
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.inputs_calculadora {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 
