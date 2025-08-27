@@ -1,0 +1,51 @@
+.conteudoAdmin {
+  width: 85%;
+  align-self: center;
+}
+
+.div_titulo {
+  margin-top: 20px;
+}
+
+.div_titulo h1 {
+  font: 400 34px 'Poppins', sans-serif;
+}
+
+.conteudoUsuarios {
+  margin-top: 100px;
+}
+
+.adicionarUsuario {
+  display: flex;
+  justify-content: end;
+  margin-bottom: 20px;
+}
+
+.adicionarUsuario a {
+  padding: 15px 30px;
+  background-color: #ffee00;
+  color: #F4F5F7;
+  border-radius: 20px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  text-align: left;
+  padding: 10px;
+}
+
+thead {
+  border: 2px solid #ffee00;
+}
+
+td {
+  border-bottom: 1px solid #ffee00;
+}
+
+.colunaDelete {
+  text-align: center;
+}

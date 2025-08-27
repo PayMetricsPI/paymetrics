@@ -15,21 +15,23 @@
 <body class="d-flex flex-column min-vh-100">
     <nav class="navbar navbar-expand-sm">
         <div class="container-fluid">
-            <ul class="navbar-nav">
-                <a class="navbar-brand">PayMetrics</a>
-                <li class="nav-item">
-                    <a class="nav-link" href="index.html">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="">Sobre</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="login.html">Login</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="cadastro.html">Cadastro</a>
-                </li>
-            </ul>
+            <a class="navbar-brand">PayMetrics</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="">Sobre</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="login.html">Login</a>
+                    </li>
+                </ul>
+            </div>
         </div>
     </nav>
     <section class="banner d-flex align-items-center">
@@ -38,65 +40,113 @@
             <div class="row">
                 <div class="col-lg-6 col-md-8">
                     <h1 class="display-3 fw-bold">Monitore suas vendas em tempo real</h1>
-                    <p class="lead mt-3">Integre com sua loja e tenha visão completa das vendas e pagamentos em um só
-                        painel.</p>
-                    <a href="#servicos" class="btn btn-primary btn-lg mt-3">Saiba Mais</a>
+                    <p class="lead mt-3">Integre com sua loja e tenha visão completa sobre os servidores que compõe as
+                        vendas.</p>
+                    <a href="#servicos" class="botao btn btn-lg mt-3">Saiba Mais</a>
                 </div>
             </div>
         </div>
     </section>
-    <div class="container-fluid row d-flex flex-wrap column-gap-5 justify-content-center align-items-center cards">
+    <div class="container-fluid d-flex flex-wrap justify-content-evenly gap-5 align-items-center cards">
         <div class="card" style="width: 18rem;">
-            <img src="assets/icons/monitoramento.png" class="card-img-top" alt="...">
-            <div class="card-body">
+            <div class="div_card_img">
+                <img src="assets/icons/monitoramento.png" class="card-img-top" alt="...">
+            </div>
+            <div class="card_body card-body">
                 <h5 class="card-title">Monitoramento em tempo real</h5>
                 <p class="card-text">Receba notificações instantâneas de cada transação.</p>
             </div>
         </div>
         <div class="card" style="width: 18rem;">
-            <img src="assets/icons/metricas.png" class="card-img-top" alt="...">
-            <div class="card-body">
+            <div class="div_card_img">
+                <img src="assets/icons/metricas.png" class="card-img-top" alt="...">
+            </div>
+            <div class="card_body card-body">
                 <h5 class="card-title">Relatórios detalhados</h5>
                 <p class="card-text">Entenda o desempenho das vendas por período, produto ou método de pagamento.</p>
             </div>
         </div>
         <div class="card" style="width: 18rem;">
-            <img src="assets/icons/vendas.png" class="card-img-top" alt="...">
-            <div class="card-body">
+            <div class="div_card_img">
+                <img src="assets/icons/vendas.png" class="card-img-top" alt="...">
+            </div>
+            <div class="card_body card-body">
                 <h5 class="card-title">Vendas mais estáveis</h5>
                 <p class="card-text">Evite perdas de clientes por problemas com pagamentos.</p>
             </div>
         </div>
     </div>
-
-
-
-
-
-
-
-
-    <div class="conteiner-fluid my-5">
-        <div class="container-fluid d-flex justify-content-center">
-            <div class="col-md-4 mx-4">
-                <h2>Como funciona?</h2>
-                <p class="d-flex justify-content-center align-items-center w-100 h-100 my-0" style="max-height: 80%;">
-                    Nosso sistema monitora em tempo real todo o hardware que processa pagamentos
-                    em seu e-commerce, garantindo que terminais, servidores e dispositivos de rede
-                    estejam sempre funcionando corretamente. Identificamos falhas, lentidão ou
-                    instabilidades antes que afetem suas transações, enviando alertas imediatos e
-                    oferecendo relatórios detalhados para que você possa agir rapidamente.</p>
+    <div class="conteiner-fluid d-flex justify-content-around bg-body-secondary" style="height: 70vh;">
+        <div class="d-flex flex-column col-md-4 mx-4 gap-2 justify-content-center">
+            <h2>Como funciona?</h2>
+            <p class="d-flex justify-content-center align-items-center" style="max-height: 80%;">
+                Nosso sistema monitora em tempo real todo o hardware que processa pagamentos
+                em seu e-commerce, garantindo que terminais, servidores e dispositivos de rede
+                estejam sempre funcionando corretamente. Identificamos falhas, lentidão ou
+                instabilidades antes que afetem suas transações, enviando alertas imediatos e
+                oferecendo relatórios detalhados para que você possa agir rapidamente.</p>
+        </div>
+        <div class="imagem_sobre">
+            <img src="assets/imgs/como-funciona.png" alt="">
+        </div>
+    </div>
+    <div class="container my-5 d-flex flex-column">
+        <div class="d-flex text-center justify-content-center">
+            <h2>Nosso monitoramento</h2>
+        </div>
+        <div class="func d-flex flex-wrap my-5">
+            <div
+                class="cards_func bg-black d-flex p-3 align-items-center text-light border border-warning-subtle rounded">
+                <div class="icon_card_container">
+                    <img class="icon_card" src="assets/icons/cpu.png" alt="">
+                </div>
+                <div class="texto_card justify-content-between d-flex flex-column">
+                    <p class="text-warning">Monitoramento de CPU</p>
+                    <p>Acompanhe em tempo real o desempenho do processador do servidor.
+                        identifique picos de consumo e previna gargalos antes que impactem o sistema.</p>
+                </div>
             </div>
-            <div class="image-fluid col-md-4">
-                <img src="assets/imgs/como-funciona.png" alt="">
+            <div
+                class="cards_func bg-black d-flex p-3 align-items-center text-light border border-warning-subtle rounded">
+                <div class="icon_card_container">
+                    <img class="icon_card" src="assets/icons/disco.png" alt="">
+                </div>
+                <div class="texto_card justify-content-between d-flex flex-column">
+                    <p class="text-warning">Monitoramento de disco</p>
+                    <p>Acompanhe a saúde e o desempenho dos discos que armazenam dados sensíveis de pagamento.
+                        Evite gargalos de leitura/escrita e antecipe falhas de hardware.</p>
+                </div>
+            </div>
+            <div
+                class="cards_func bg-black d-flex p-3 align-items-center text-light border border-warning-subtle rounded">
+                <div class="icon_card_container">
+                    <img class="icon_card" src="assets/icons/ram.png" alt="">
+                </div>
+                <div class="texto_card justify-content-between d-flex flex-column">
+                    <p class="text-warning">Monitoramento de memória</p>
+                    <p>Monitore a capacidade da RAM para garantir
+                        que os processos de pagamento sejam executados sem lentidão ou falhas.</p>
+                </div>
+            </div>
+            <div
+                class="cards_func bg-black d-flex p-3 align-items-center text-light border border-warning-subtle rounded">
+                <div class="icon_card_container">
+                    <img class="icon_card" src="assets/icons/rede.png" alt="">
+                </div>
+                <div class="texto_card justify-content-between d-flex flex-column">
+                    <p class="text-warning">Monitoramento de rede</p>
+                    <p>Monitore a rede que conecta os servidores de pagamento, garantindo disponibilidade e segurança
+                        nas transações.
+                        Identifique latência, quedas ou anomalias de tráfego.</p>
+                </div>
             </div>
         </div>
     </div>
 
-    <div class="conteiner-fluid d-flex align-items-center" style="margin-top: 150px; background-color: #FFEC82;height: 600px;">
-        <div class="container-fluid d-flex justify-content-center w-100" style="max-height: 80%;">
-            <div class="image-fluid col-md-4 mx-5">
-                <div class="conteiner-fluid rounded-circle" style="background-color: hsla(51, 100%, 87%, 0.50);"></div>
+    <div class="conteiner-fluid d-flex align-items-center"
+        style="margin-top: 3rem; background-color: #FFEC82;height: 600px;" id="sobre">
+        <div class="sobre" style="max-height: 80%;">
+            <div class="imagem_sobre d-flex justify-content-center col-md-4 mx-5">
                 <img src="assets/imgs/quem-somos.png" style="max-height: 400px;" alt="">
             </div>
             <div class="col-md-4 mx-4">
@@ -111,64 +161,83 @@
             </div>
         </div>
     </div>
+
+
     <div class="conteiner-fluid">
-        <div class="conteiner-fluid d-flex justify-content-center my-5" style=" background: linear-gradient(to right, rgb(43, 255, 0), rgb(187, 255, 0),rgb(255, 196, 0) ,rgb(255, 0, 0));-webkit-background-clip: text; color: transparent;">
+        <div class="conteiner-fluid d-flex justify-content-center my-5"
+            style=" color: black;">
             <h3 style="font-weight: 700;">Entendeu como funciona nosso monitoramento?</h3>
         </div>
         <div class="conteiner-fluid d-flex justify-content-center">
-            <p>Agora, é só preencher seu lucro anual \n
-        para nosso sistema calcular o prejuízo evitado!</p>
+            <p>Agora, é só preencher seu lucro anual
+                para nosso sistema calcular o prejuízo evitado!</p>
         </div>
-        <div class="conteiner-fluid d-flex justify-content-center align-items-center flex-column">
-            <div class="col">
-                <h4>Nome da empresa</h4>
-                <input type="text" id="ipt_nome">
-            </div>
-
-            <div class="col my-3">
-                <h4>Lucro anual</h4>
-                <input type="number" id="ipt_valorInserido">
+        <div>
+            <div class="inputs_calculadora">
+                <div class="d-flex flex-column justify-content-center align-items-center mt-3">
+                    <h4>Nome da empresa</h4>
+                    <input type="text" id="ipt_nome">
+                </div>
+                <div class="d-flex flex-column justify-content-center align-items-center my-3">
+                    <h4>Lucro anual</h4>
+                    <input type="number" id="ipt_valorInserido">
+                </div>
             </div>
         </div>
-    <div id="conteiner-fluid d-flex justify-content-center">
+        <div>
 
-    </div>
-        <div class="conteiner-fluid d-flex justify-content-center">
+        </div>
+        <div class="conteiner-fluid d-flex justify-content-center flex-column align-items-center">
             <div id="outputCalculadora">
 
             </div>
-            <button class="btn btn-primary w-20 my-3" onclick="calculadora()">Calcular</button>
+            <button class="botao btn btn-primary w-20 my-3" onclick="calculadora()">Calcular</button>
         </div>
     </div>
-    <div class="pontos">
+    <!-- <div class="pontos">
         <div class="ponto1"></div>
         <div class="ponto2"></div>
         <div class="ponto3"></div>
         <div class="ponto4"></div>
-    </div>
-
+    </div> -->
     <div class="footer container-fluid bg-black text-light py-5 ">
         <ul class="links-footer d-flex justify-content-around text-center">
             <li>
                 <img src="assets/icons/logo-paymetrics-sem-fundo.png" alt="">
             </li>
             <li>
-                <p>Telefone</p>
+                <p>99999-9999</p>
             </li>
             <li>
-                <p>Email</p>
+                <p>paymetrics@gmail.com</p>
             </li>
             <li class="sobre text-light">
-                <a href="">Sobre</a>
+                <a href="#sobre">Sobre</a>
             </li>
             <li class="sobre text-light">
-                <a href="">Login</a>
+                <a href="login.html">Login</a>
             </li>
         </ul>
-        <p class="direitos">Todos os direitos reservados</p>
+        <p class="direitos text-center">Todos os direitos reservados</p>
     </div>
+    <script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
 </body>
 
 
 </html>
 <script src="js/calculadora.js"></script>
+<script>
+    exibir = true
+    function menu() {
+        var menu = document.getElementById("links")
+
+        if (exibir == true) {
+            menu.style.display = "flex"
+            exibir = false
+        } else {
+            menu.style.display = "none"
+            exibir = true
+        }
+    }
+</script>

@@ -72,6 +72,6 @@ values
 ('Jesse Dougherty', '+1-604-555-0104', 'jesse.dougherty@amazon.ca', 5),
 ('Mariangela Marseglia', '+34-91-5555-0105', 'mariangela.marseglia@amazon.es', 6);
 
-select*from usuarios;
+select * from usuarios;
 
 -- update usuarios set senha = {NovaSenha} where id_usuario = {ID_USUARIO};

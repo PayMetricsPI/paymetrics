@@ -121,8 +121,39 @@ function renovar(req, res) {
     }
 }
 
+    function listar(req, res ){
+        var IdEmpresa = req.params.IdEmpresa;
+
+        usuarioModel.listar(IdEmpresa).then(function(resultado){
+            if (resultado.length > 0){
+                res.status(200).json(resultado);
+            }else {
+                res.status(204).send("Nenhum resultado encontrado")
+            }
+        }).catch(function(erro){
+            console.log(erro);
+            console.log("Houve um erro ao buscar os usuários: ", erro.sqlMessage);
+            res.status(500).json(erro.sqlMessage);
+            
+        })
+    };
+
+    function deletar (res, req){
+        var IdUsuario = req.body.IdUsuario;
+
+        usuarioModel.deletar(IdUsuario).then(function(resultado){
+            res.json(resultado);
+        }).catch(function (erro){
+           console.log(erro);
+           console.log("Houve um erroo ao buscar os usários: ", erro.sqlMessage);
+           res.status(500).json(erro.sqlMessage);
+    });
+    }
+
 module.exports = {
     autenticar,
     cadastrar,
-    renovar
+    renovar,
+    listar,
+    deletar
 }
