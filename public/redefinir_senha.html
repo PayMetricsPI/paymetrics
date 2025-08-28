@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="./css/navbar.css">
     <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
     <title>PayMetrics | Cadastro</title>
@@ -14,21 +15,28 @@
 
 <body class="d-flex flex-column min-vh-100">
     <nav class="navbar navbar-expand-sm">
-        <div class="container-fluid">
-            <ul class="navbar-nav">
-                <a class="navbar-brand" href="index.html">PayMetrics</a>
-                <li class="nav-item">
-                    <a class="nav-link" href="index.html">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="sobre.html">Sobre</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link">Olá, <span id="nome">usuário</span>!</a>
-                </li>
-            </ul>
-        </div>
-    </nav>
+            <div class="container-fluid">
+                <a class="navbar-brand">PayMetrics</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link" href="index.html">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="sobre.html">Sobre</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="login.html">Login</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
     <div class="flex-grow-1 d-flex justify-content-center align-items-center">
         <div class="p-4 shadow w-100 row w-100 justify-content-center align-items-center" style="max-width: 900px;">
             <div class="col-md-6 d-none d-md-flex justify-content-center align-items-center">
@@ -69,6 +77,8 @@
             </div>
         </div>
     </div>
+    <script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>
