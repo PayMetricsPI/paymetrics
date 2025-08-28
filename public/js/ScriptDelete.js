@@ -29,7 +29,7 @@ function listarUsuario() {
                             <td>${i + 1}</td>
                             <td class="colunaUsuario">${usuario.nome}</td>
                             <td class="colunaEmail">${usuario.email}</td>
-                             <td class="colunaEmail">${usuario.razao_social}</td>
+                             <td class="colunaEmpresa">${usuario.razao_social}</td>
                             <td class="colunaAcesso">${usuario.adm}</td>
                             <td class="colunaDelete">
                                 ${isSelf
