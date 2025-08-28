@@ -24,7 +24,7 @@ function autenticar(req, res) {
                         email: resultadoAutenticar[0].email,
                         nome: resultadoAutenticar[0].nome,
                         senha: resultadoAutenticar[0].senha,
-                        administrador: resultadoAutenticar[0],administrador
+                        administrador: resultadoAutenticar[0].administrador
                         });
 
                     } else if (resultadoAutenticar.length == 0) {
