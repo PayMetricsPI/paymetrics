@@ -75,15 +75,10 @@
         var emailVar = ipt_email.value;
         var senhaVar = ipt_senha.value;
 
-        console.log("Passei aqui")
-
         if (emailVar == "" || senhaVar == "") {
             respostaLogin.innerHTML = "Preencha todos os campos.";
             return false;
         }
-
-        console.log("FORM LOGIN: ", emailVar);
-        console.log("FORM SENHA: ", senhaVar);
 
         fetch("/usuarios/autenticar", {
             method: "POST",
@@ -106,6 +101,7 @@
                     sessionStorage.EMAIL_USUARIO = json.email;
                     sessionStorage.NOME_USUARIO = json.nome;
                     sessionStorage.ID_USUARIO = json.id_usuario;
+                    sessionStorage.ADMINISTRADOR = json.id_administrador;
 
                     if (sessionStorage.EMAIL_USUARIO == 'julia@sptech.com') {
                         setTimeout(function () {
