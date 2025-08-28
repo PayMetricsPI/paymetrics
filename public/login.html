@@ -14,27 +14,28 @@
 
 <body class="d-flex flex-column min-vh-100">
     <nav class="navbar navbar-expand-sm">
-        <div class="container-fluid">
-            <a class="navbar-brand">PayMetrics</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo02"
-                aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link" href="index.html">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="">Sobre</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="login.html">Login</a>
-                    </li>
-                </ul>
+            <div class="container-fluid">
+                <a class="navbar-brand">PayMetrics</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link" href="index.html">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="sobre.html">Sobre</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="login.html">Login</a>
+                        </li>
+                    </ul>
+                </div>
             </div>
-        </div>
-    </nav>
+        </nav>
     <div class="flex-grow-1 d-flex justify-content-center align-items-center">
         <div class="p-4 shadow w-100 row w-100 justify-content-center align-items-center rounded"
             style="max-width: 1200px;">
@@ -55,7 +56,7 @@
                             <input id="ipt_senha" type="password" class="form-control"
                                 placeholder="Insira sua senha...">
                         </div>
-                        <button type="submit" class="btn btn-primary w-100 my-4">Login</button>
+                        <button type="submit" class="btn btn-primary w-100 my-4" onclick="login(event)">Login</button>
                     </form>
                 </div>
             </div>
@@ -64,11 +65,17 @@
     <script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
 </body>
-<script src="node_modules/bootstrap/dist/js/bootstrap.bundle.min.js">
+<script src="node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 
-    function entrar() {
-        var emailVar = email_input.value;
-        var senhaVar = senha_input.value;
+<script>
+    function login(event) {
+
+        event.preventDefault();
+
+        var emailVar = ipt_email.value;
+        var senhaVar = ipt_senha.value;
+
+        console.log("Passei aqui")
 
         if (emailVar == "" || senhaVar == "") {
             respostaLogin.innerHTML = "Preencha todos os campos.";
@@ -77,12 +84,6 @@
 
         console.log("FORM LOGIN: ", emailVar);
         console.log("FORM SENHA: ", senhaVar);
-
-        if (tentativas >= 3) {
-            respostaLogin.innerHTML = `Número máximo de tentativas atingido.<br> Tente novamente mais tarde!`;
-            return;
-        }
-
 
         fetch("/usuarios/autenticar", {
             method: "POST",
@@ -99,9 +100,6 @@
             if (resposta.ok) {
                 console.log(resposta);
 
-                respostaLogin.innerHTML = `Login realizado com sucesso!<br>Redirecionando para a Dashboard...<br>
-                <img src="imgs/circle-loading.gif" id="gif_Loading" alt="Gif de Carregamento">`
-
                 resposta.json().then(json => {
                     console.log(json);
                     console.log(JSON.stringify(json));
@@ -109,7 +107,7 @@
                     sessionStorage.NOME_USUARIO = json.nome;
                     sessionStorage.ID_USUARIO = json.id_usuario;
 
-                    if (sessionStorage.EMAIL_USUARIO == 'julia@sptech.school') {
+                    if (sessionStorage.EMAIL_USUARIO == 'julia@sptech.com') {
                         setTimeout(function () {
                             window.location.href = "embreve.html";
                         }, 1000);
@@ -122,15 +120,14 @@
                 });
 
             } else {
-                tentativas++;
+               
 
                 console.log("Houve um erro ao tentar realizar o login!");
 
-                respostaLogin.innerHTML = `Email e/ou Senha inválidos!`;
+                
 
                 resposta.text().then(texto => {
                     console.error(texto);
-                    finalizarAguardar(texto);
                 });
             }
 

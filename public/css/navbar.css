@@ -25,5 +25,30 @@ body {
     background-color: hsl(51, 100%, 39%);
     width: 4.5dvw;
     height: 4.5dvh;
+}
 
+#menu {
+    display: none;
+}
+
+.menu_full {
+    display: flex !important;
+}
+
+#links {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    z-index: 500;
+    background-color: #FFEC82;
+    height: 5rem;
+    width: 5rem;
+    justify-content: space-around;
+    align-items: center;
+    border-radius: 0px 10px 10px 10px;
+}
+
+#links a {
+    color: black;
+    text-decoration: none;
 }

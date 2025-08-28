@@ -21,11 +21,11 @@ function alterar() {
             console.log("Entrei no fetch");
             if (resposta.ok) {
 
+                alert(nome + " sua senha foi alterada com sucesso!");
                 console.log("Senha redefinida com sucesso" + nome);
 
-
                 setTimeout(() => {
-                    window.location = "login.html";
+                    window.location = "embreve.html";
                 }, "2000");
 
             } else {
