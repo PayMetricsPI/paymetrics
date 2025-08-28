@@ -209,7 +209,9 @@ function cadastrar(event){
             
           cadastroResposta.innerHTML =
             `Cadastro realizado com sucesso!`;
-            window.location = "../login.html";
+            setTimeout(() => {
+              window.location = "login.html";
+            }, "2000");
         } else {
           throw "Houve um erro ao tentar realizar o cadastro!";
         }
