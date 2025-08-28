@@ -1,5 +1,6 @@
 body {
-    background-image: url("../assets/imgs/dashboard.png");
+    background: url("../assets/imgs/dashboard.png") no-repeat center center;
+    min-height: 90vh;
 }
 
 .mensagem {
@@ -13,15 +14,54 @@ body {
 h1 {
     font-weight: 900;
 }
-
-.mask2:hover,.mask3:hover{
-    animation-name: spin;
-    transition: 0.3s ease-in-out;
+.mask2:hover{
+    animation-name: zoom;
     animation-duration: 1s;
 }
 
+.mask3:hover {
+    animation-name: spin;
+    animation-duration: 1s;
+}
+.mask:hover {
+    animation-name: zoom_slow;
+    animation-duration: 1s;
+}
+.text {
+    font-size: 68px;
+    font-weight: 800; 
+    background: linear-gradient(to top, #FFE760, #ff9100); 
+    color: transparent; 
+    -webkit-background-clip: text;
+}
+.mask1:hover {
+    animation-name: shake;
+    animation-duration: 1s;
+}
 @keyframes spin {
     0% {transform: rotateZ(0deg);}
     50% {transform: rotateZ(-180deg);}
     100% {transform: rotateZ(0deg);}
+}
+@keyframes shake {
+    0% {transform: rotateZ(0deg);}
+    20% {transform: rotateZ(45deg); width: 40px; height: 40px;}
+    40% {transform: rotateZ(-45deg);}
+    60% {transform: rotateZ(45deg); width: 40px; height: 40px;}
+    80% {transform: rotateZ(-45deg);}
+    100% {transform: rotateZ(0deg);}
+}
+@keyframes zoom {
+    0% {width: 32px; height: auto;}
+    20% {width: 40px; height: auto;}
+    40% {width: 32px; height: auto;}
+    60% {width: 40px; height: auto;}
+    100% {width: 32px; height: auto;}
+}
+@keyframes zoom_slow {
+    0% {width: 32px; height: auto;}
+    20% {width: 38px; height: auto;}
+    40% {width: 38px; height: auto;}
+    60% {width: 38px; height: auto;}
+    100% {width: 32px; height: auto;}
 }
