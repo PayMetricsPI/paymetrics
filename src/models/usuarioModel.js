@@ -28,7 +28,9 @@ function renovar(IdUsuario, senha, novaSenha) {
 
 function listar(IdEmpresa){
     console.log("ACESSEI O USUARIO MODEL \n \n \t\t >> se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco \n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function listar():", IdEmpresa);
-    var instrucaoSql = ``;
+    var instrucaoSql = `select u.nome, u.email, e.razão_social, u.administrador
+        from usuarios u inner join 
+        empresa e on e.id_empresa = u.fk_empresa where e.id_empresa = ${IdEmpresa};`;
     console .log("Executando a instrução SQL \n" + instrucaoSql);
     return database.executar(instrucaoSql);
 }
