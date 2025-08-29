@@ -144,10 +144,37 @@ function renovar(req, res) {
     });
     }
 
+    function redefinirSenha (req, res) {
+        
+    console.log(req.params.idUsuario)
+
+        var id_usuario = req.params.idUsuario;
+        const senhaAntiga = req.body.senhaAntiga;
+        const novaSenha = req.body.novaSenha;
+
+        if (!id_usuario || !senhaAntiga || !novaSenha) {
+            return res.status(400).send("Dados insuficientes.");
+        }
+
+        usuarioModel.verificarSenha(id_usuario, senhaAntiga)
+        .then(resultado => {
+            if(resultado.length === 0) {
+                return res.status(401).send("Senha antiga incorreta.")
+            }
+            return usuarioModel.renovar(id_usuario, novaSenha)
+                .then(() => res.status(200).send("Senha alterada com sucesso!"))
+        })
+        .catch(erro => {
+            console.log(erro);
+            res.status(500).send("Erro ao redefinir senha.");
+        })
+    }
+
 module.exports = {
     autenticar,
     cadastrar,
     renovar,
     listar,
-    deletar
+    deletar,
+    redefinirSenha
 }

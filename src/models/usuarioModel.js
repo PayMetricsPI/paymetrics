@@ -24,10 +24,10 @@ function cadastrar(nome, email, senha, administrador, fk_empresa) {
     return database.executar(instrucaoSql);
 }
 
-function renovar(IdUsuario, senha, novaSenha) {
-    console.log("ACESSEI O USUARIO MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function renovar():",IdUsuario, novaSenha, senha);
+function renovar(id_usuario, novaSenha) {
+    console.log("ACESSEI O USUARIO MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function renovar():",id_usuario, novaSenha);
     var instrucaoSql = `
-       UPDATE usuarios SET senha = ${novaSenha} WHERE id_usuario = ${id_usuario};`;
+       UPDATE usuarios SET senha = "${novaSenha}" WHERE id_usuario = ${id_usuario};`;
     console.log("Executando a instrução SQL: \n" + instrucaoSql);
     return database.executar(instrucaoSql);
 }
@@ -48,11 +48,17 @@ function deletar(IdUsuario){
     return database.executar(instrucaoSql);
 }
 
+function verificarSenha(idUsuario, senhaAntiga) {
+    var instrucao = `Select * from usuarios where id_usuario = ${idUsuario} and senha = "${senhaAntiga}"`;
+    return database.executar(instrucao);
+}
+
 
 module.exports = {
     autenticar,
     cadastrar,
     renovar,
     listar,
-    deletar
+    deletar,
+    verificarSenha
 };
