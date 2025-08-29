@@ -147,13 +147,10 @@ function renovar(req, res) {
     function redefinirSenha (req, res) {
         
     console.log(req.params.idUsuario)
+
         var id_usuario = req.params.idUsuario;
-        console.log(id_usuario)
-        console.log("AAAAAAAAAAAAAAAAAAAAAA")
         const senhaAntiga = req.body.senhaAntiga;
         const novaSenha = req.body.novaSenha;
-
-        
 
         if (!id_usuario || !senhaAntiga || !novaSenha) {
             return res.status(400).send("Dados insuficientes.");

@@ -104,8 +104,6 @@
         cardErro.style.display = "block";
         return;
     }
-    console.log("AAAAAAAAAAAAAAAA")
-    console.log(id_usuario)
 
     fetch(`/usuarios/redefinirSenha/${id_usuario}`, {
         method: "POST",
@@ -132,60 +130,6 @@
         mensagem_erro.innerHTML = "Erro ao redefinir senha.";
         cardErro.style.display = "block";
     });
-
-    
-
-    // const numeros = /\d/;
-    // const LetrasMinusculas = /[A-Z]/;
-    // const caractresEspeciais = /[!@#%&*().;,/]/;
-
-    // // Verifica se os campos estão preenchidos
-    // if (emailVar == "" || senhaVar == ""|| nomeVar=="" || confirmacaoSenhaVar=="") {
-    //     alert("Preencha todos os campos!");
-    //     return;
-    // }
-//     //loop para percorrer as verificacoes da senhaVar
-//     for (j = 1; j < 6; j++) {
-//         if (j == 1) {
-//             if (!caractresEspeciais.test(novaSenhaVar)) {
-//                 output_senhaVar.innerHTML += `A senha deve conter no mínimo 1 caracter especial<br>`
-//                 output_senhaVar.style.color = `red`
-//                 return;
-//             }
-
-//         }
-    
-//     else if (j == 2) {
-//         if (novaSenhaVar.length < 8) {
-//             output_senhaVar.innerHTML += `A senha deve conter no mínimo 8 caracteres<br>`
-//             output_senhaVar.style.color = `red`
-//             return;
-//         }
-
-//     }
-//     else if (j == 3) {
-//         if (!numeros.test(novaSenhaVar)) {
-//             output_senhaVar.innerHTML += `A senha deve conter no mínimo 1 caracter numérico<br>`
-//             output_senhaVar.style.color = `red`
-//             return;
-//         }
-
-//     }
-//     else if (j == 4) {
-//         if (!LetrasMinusculas.test(novaSenhaVar)) {
-//             output_senhaVar.innerHTML += `A senha deve conter no mínimo 1 letra maiúscula<br>`
-//             output_senhaVar.style.color = `red`
-//             return;
-//         }
-//         if(confirmarSenhaVar != novaSenhaVar){
-//           output_confirmarSenhaVar += `Os campos devem ser iguais`
-//           return;
-//         }
-
-//     }
-
-// }
-
 
     }
 
