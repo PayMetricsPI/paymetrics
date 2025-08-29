@@ -70,7 +70,7 @@
                                 placeholder="Confirme sua senha...">
                                   <div id="output_confirmarSenhaVar"></div>
                         </div>
-                        <button onclick="alterar()" type="submit" class="btn btn-primary w-100">Salvar</button>
+                        <button onclick="alterar(event)" type="submit" class="btn btn-primary w-100">Salvar</button>
 
                     </form>
                 </div>
@@ -84,69 +84,107 @@
 </html>
 <script>
 
-    function alterar() {
-        var senhaVar = ipt_senhaAntiga
-        var novaSenhaVar = ipt_senhaNova
-        var confirmarSenhaVar = ipt_senhaNovaConfirmar
+    function alterar(event) {
 
-        if (senhaVar == "" && novaSenhaVar == "" && confirmarSenhaVar == "") {
-            cardErro.style.display = "block";
-            mensagem_erro.innerHTML =
-                "(Mensagem de erro para todos os campos em branco)";
-                return;
-        }
+        event.preventDefault();
+        
+        const id_usuario = sessionStorage.ID_USUARIO;
+        const senhaAntiga = ipt_senhaAntiga.value;
+        const novaSenha = ipt_senhaNova.value;
+        const confirmarNovaSenha = ipt_senhaNovaConfirmar.value;
 
-    const numeros = /\d/;
-    const LetrasMinusculas = /[A-Z]/;
-    const caractresEspeciais = /[!@#%&*().;,/]/;
 
-    // Verifica se os campos estão preenchidos
-    if (emailVar == "" || senhaVar == ""|| nomeVar=="" || confirmacaoSenhaVar=="") {
-        alert("Preencha todos os campos!");
+        if (!senhaAntiga || !novaSenha || !confirmarNovaSenha) {
+        mensagem_erro.innerHTML = "Preencha todos os campos!";
+        cardErro.style.display = "block";
         return;
     }
+        if (novaSenha !== confirmarNovaSenha) {
+        mensagem_erro.innerHTML = "As senhas não coincidem!";
+        cardErro.style.display = "block";
+        return;
+    }
+    console.log("AAAAAAAAAAAAAAAA")
+    console.log(id_usuario)
 
-    //loop para percorrer as verificacoes da senhaVar
-    for (j = 1; j < 6; j++) {
-        if (j == 1) {
-            if (!caractresEspeciais.test(novaSenhaVar)) {
-                output_senhaVar.innerHTML += `A senha deve conter no mínimo 1 caracter especial<br>`
-                output_senhaVar.style.color = `red`
-                return;
-            }
-
+    fetch(`/usuarios/redefinirSenha/${id_usuario}`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            senhaAntiga: senhaAntiga,
+            novaSenha: novaSenha
+        })
+    })
+    .then(resposta => {
+        if (resposta.ok) {
+            mensagem_erro.innerHTML = "Senha alterada com sucesso!";
+            cardErro.style.display = "block";
+        } else {
+            resposta.text().then(texto => {
+                mensagem_erro.innerHTML = texto;
+                cardErro.style.display = "block";
+            });
         }
+    })
+    .catch(erro => {
+        mensagem_erro.innerHTML = "Erro ao redefinir senha.";
+        cardErro.style.display = "block";
+    });
+
     
-    else if (j == 2) {
-        if (novaSenhaVar.length < 8) {
-            output_senhaVar.innerHTML += `A senha deve conter no mínimo 8 caracteres<br>`
-            output_senhaVar.style.color = `red`
-            return;
-        }
 
-    }
-    else if (j == 3) {
-        if (!numeros.test(novaSenhaVar)) {
-            output_senhaVar.innerHTML += `A senha deve conter no mínimo 1 caracter numérico<br>`
-            output_senhaVar.style.color = `red`
-            return;
-        }
+    // const numeros = /\d/;
+    // const LetrasMinusculas = /[A-Z]/;
+    // const caractresEspeciais = /[!@#%&*().;,/]/;
 
-    }
-    else if (j == 4) {
-        if (!LetrasMinusculas.test(novaSenhaVar)) {
-            output_senhaVar.innerHTML += `A senha deve conter no mínimo 1 letra maiúscula<br>`
-            output_senhaVar.style.color = `red`
-            return;
-        }
-        if(confirmarSenhaVar != novaSenhaVar){
-          output_confirmarSenhaVar += `Os campos devem ser iguais`
-          return;
-        }
+    // // Verifica se os campos estão preenchidos
+    // if (emailVar == "" || senhaVar == ""|| nomeVar=="" || confirmacaoSenhaVar=="") {
+    //     alert("Preencha todos os campos!");
+    //     return;
+    // }
+//     //loop para percorrer as verificacoes da senhaVar
+//     for (j = 1; j < 6; j++) {
+//         if (j == 1) {
+//             if (!caractresEspeciais.test(novaSenhaVar)) {
+//                 output_senhaVar.innerHTML += `A senha deve conter no mínimo 1 caracter especial<br>`
+//                 output_senhaVar.style.color = `red`
+//                 return;
+//             }
 
-    }
+//         }
+    
+//     else if (j == 2) {
+//         if (novaSenhaVar.length < 8) {
+//             output_senhaVar.innerHTML += `A senha deve conter no mínimo 8 caracteres<br>`
+//             output_senhaVar.style.color = `red`
+//             return;
+//         }
 
-}
+//     }
+//     else if (j == 3) {
+//         if (!numeros.test(novaSenhaVar)) {
+//             output_senhaVar.innerHTML += `A senha deve conter no mínimo 1 caracter numérico<br>`
+//             output_senhaVar.style.color = `red`
+//             return;
+//         }
+
+//     }
+//     else if (j == 4) {
+//         if (!LetrasMinusculas.test(novaSenhaVar)) {
+//             output_senhaVar.innerHTML += `A senha deve conter no mínimo 1 letra maiúscula<br>`
+//             output_senhaVar.style.color = `red`
+//             return;
+//         }
+//         if(confirmarSenhaVar != novaSenhaVar){
+//           output_confirmarSenhaVar += `Os campos devem ser iguais`
+//           return;
+//         }
+
+//     }
+
+// }
 
 
     }
