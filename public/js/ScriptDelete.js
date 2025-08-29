@@ -51,32 +51,27 @@ function listarUsuario() {
 }
 
 window.onload = listarUsuario;
-
-
-
 function deletarUsuario(idUsuario) {
 
-    idUsuario = sessionStorage.ID_USUARIO
+    const IdUsuario = sessionStorage.ID_USUARIO;
+
+    console.log("ID do usuário: " + IdUsuario);
 
     if (confirm("Tem certeza que deseja deletar este usuário?")) {
-        fetch(`/usuarios/deletar/${idUsuario}`, {
-            method: "DELETE",
-            headers: {
-                "Content-Type": "application/json",
-                body: JSON.stringify({
-                    IdUsuario: IdUsuario
-                }),
-            },
+        fetch(`/usuarios/deletar/${IdUsuario}`, {
+            method: "post",
         }).then(response => {
             if (response.ok) {
-                listarUsuarios(); // Refresh the list
+                listarUsuarios(); // Atualiza a lista
             } else {
                 console.log("Erro ao deletar usuário.");
             }
+        }).catch(error => {
+            console.error(error);
+            console.log("Erro ao deletar usuário.");
         })
-            .catch(error => {
-                console.error(error);
-                console.log("Erro ao deletar usuário.");
-            })
     }
 }
+
+
+
