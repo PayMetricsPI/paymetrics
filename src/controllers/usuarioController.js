@@ -133,7 +133,8 @@ function renovar(req, res) {
     };
 
     function deletar (req, res){
-        var IdUsuario = req.body.IdUsuario;
+        console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+        var IdUsuario = req.params.idUsuario;
 
         usuarioModel.deletar(IdUsuario).then(function(resultado){
             res.json(resultado);

@@ -24,23 +24,17 @@ function listarUsuario() {
                     tbody.innerHTML = '';
                     resposta.forEach((usuario, i) => {
                         var tr = document.createElement("tr");
-                        var isSelf = usuario.id_usuario == sessionStorage.ID_USUARIO;
                         tr.innerHTML = `
                             <td>${i + 1}</td>
                             <td class="colunaUsuario">${usuario.nome}</td>
                             <td class="colunaEmail">${usuario.email}</td>
-                             <td class="colunaEmpresa">${usuario.razao_social}</td>
+                            <td class="colunaEmpresa">${usuario.razao_social}</td>
                             <td class="colunaAcesso">${usuario.adm}</td>
-                            <td class="colunaDelete">
-                                ${isSelf
-                                ? '<span style="color:gray;opacity:0.5;cursor:not-allowed;"><i class="fa-solid fa-trash"></i></span>'
-                                : `<button onclick="deletarUsuario(${usuario.id_usuario})">
+                            <td class="colunaDelete"><button onclick="deletarUsuario(${usuario.id})">
                                         <i class="fa-solid fa-trash" style="color: #ac0000;"></i>
-                                    </button>`
-                            }
+                                    </button>
                             </td>
                         `;
-                        console.log(isSelf)
                         tbody.appendChild(tr);
                     });
                 });
@@ -52,17 +46,12 @@ function listarUsuario() {
 
 window.onload = listarUsuario;
 function deletarUsuario(idUsuario) {
-
-    const IdUsuario = sessionStorage.ID_USUARIO;
-
-    console.log("ID do usuário: " + IdUsuario);
-
     if (confirm("Tem certeza que deseja deletar este usuário?")) {
-        fetch(`/usuarios/deletar/${IdUsuario}`, {
-            method: "post",
+        fetch(`/usuarios/deletar/${idUsuario}`, {
+            method: "delete",
         }).then(response => {
             if (response.ok) {
-                listarUsuarios(); // Atualiza a lista
+                listarUsuario(); // Atualiza a lista
             } else {
                 console.log("Erro ao deletar usuário.");
             }
