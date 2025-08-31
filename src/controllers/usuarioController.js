@@ -14,18 +14,12 @@ function autenticar(req, res) {
             .then(
                 function (resultadoAutenticar) {
                     console.log(`\nResultados encontrados: ${resultadoAutenticar.length}`);
-                    console.log(`Resultados: ${JSON.stringify(resultadoAutenticar)}`); // transforma JSON em String
+                    console.log(`Resultados: ${JSON.stringify(resultadoAutenticar)}`);
 
                     if (resultadoAutenticar.length == 1) {
-                        console.log(resultadoAutenticar);
+                    console.log(resultadoAutenticar);
 
-                        res.json({
-                        id_usuario: resultadoAutenticar[0].id_usuario,
-                        email: resultadoAutenticar[0].email,
-                        nome: resultadoAutenticar[0].nome,
-                        senha: resultadoAutenticar[0].senha,
-                        administrador: resultadoAutenticar[0].administrador
-                        });
+                    res.json(resultadoAutenticar[0]);
 
                     } else if (resultadoAutenticar.length == 0) {
                         res.status(403).send("Email e/ou senha inválido(s)");
@@ -138,8 +132,9 @@ function renovar(req, res) {
         })
     };
 
-    function deletar (res, req){
-        var IdUsuario = req.body.IdUsuario;
+    function deletar (req, res){
+        console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+        var IdUsuario = req.params.idUsuario;
 
         usuarioModel.deletar(IdUsuario).then(function(resultado){
             res.json(resultado);
@@ -150,10 +145,37 @@ function renovar(req, res) {
     });
     }
 
+    function redefinirSenha (req, res) {
+        
+    console.log(req.params.idUsuario)
+
+        var id_usuario = req.params.idUsuario;
+        const senhaAntiga = req.body.senhaAntiga;
+        const novaSenha = req.body.novaSenha;
+
+        if (!id_usuario || !senhaAntiga || !novaSenha) {
+            return res.status(400).send("Dados insuficientes.");
+        }
+
+        usuarioModel.verificarSenha(id_usuario, senhaAntiga)
+        .then(resultado => {
+            if(resultado.length === 0) {
+                return res.status(401).send("Senha antiga incorreta.")
+            }
+            return usuarioModel.renovar(id_usuario, novaSenha)
+                .then(() => res.status(200).send("Senha alterada com sucesso!"))
+        })
+        .catch(erro => {
+            console.log(erro);
+            res.status(500).send("Erro ao redefinir senha.");
+        })
+    }
+
 module.exports = {
     autenticar,
     cadastrar,
     renovar,
     listar,
-    deletar
+    deletar,
+    redefinirSenha
 }
