@@ -17,7 +17,7 @@
     <div id="header"></div>
     <div class="flex-grow-1 d-flex justify-content-center align-items-center">
         <div class="p-4 shadow w-100 row w-100 justify-content-center align-items-center rounded"
-            style="max-width: 1200px;">
+            style="max-width: 900px;">
             <div class="col-md-6 d-none d-md-flex justify-content-center align-items-center">
                 <img src="assets/imgs/CRUDimage.png" alt="" class="img-fluid"
                     style="max-height: 600px;max-width: 100%; object-fit: contain;">
@@ -34,12 +34,12 @@
                             <p class="my-0">Senha</p>
                             <input id="ipt_senha" type="password" class="form-control"
                                 placeholder="Insira sua senha...">
+                                <div>
+                                    <p id="respostaLogin" class="text-danger mt-2"></p>
+                                </div>
                         </div>
                         <button type="submit" class="btn btn-primary w-100 my-4" onclick="login(event)">Login</button>
                     </form>
-                    <div class="d-flex text-center justify-content-center">
-                        <a href="redefinir_senha.html">Redefinir senha</a>
-                    </div>
                 </div>
             </div>
         </div>
@@ -50,6 +50,9 @@
 <script src="node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 <script src="js/sessao.js"></script>
 <script>
+
+            tentativas = 0;
+
     function login(event) {
 
         event.preventDefault();
@@ -61,6 +64,12 @@
             respostaLogin.innerHTML = "Preencha todos os campos.";
             return false;
         }
+
+        if (tentativas >= 3) {
+            respostaLogin.innerHTML += `Número máximo de tentativas atingido.<br> Tente novamente mais tarde!`;
+            return;
+        }
+
 
         fetch("/usuarios/autenticar", {
             method: "POST",
@@ -104,8 +113,18 @@
                 });
 
             } else {
-               
 
+                for (let i = 0; i < 3; i++) {
+                    if (tentativas < 3) {
+                        respostaLogin.innerHTML = `Email e/ou senha inválido(s). Tente novamente.<br> Você tem mais ${2 - tentativas} tentativa(s).<br>`;
+                        break;
+                    } else {
+                        respostaLogin.innerHTML += `<br>Número máximo de tentativas atingido.<br> Tente novamente mais tarde!`;
+                        break;
+                        
+                    }
+                }
+                tentativas++;
                 console.log("Houve um erro ao tentar realizar o login!");
 
                 

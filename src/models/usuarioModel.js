@@ -53,6 +53,13 @@ function verificarSenha(idUsuario, senhaAntiga) {
     return database.executar(instrucao);
 }
 
+function verificar(IdUsuario) {
+    console.log("ACESSEI O USUARIO MODEL \n \n \t\t >> se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco \n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function verificar():", IdUsuario);
+    var instrucaoSql = ` select u.nome, u.email, e.razão_social as empresa from usuarios u
+        inner join empresa e where e.id_empresa = u.fk_empresa and u.id_usuario = ${IdUsuario};`
+    return database.executar(instrucaoSql)
+}
+
 
 module.exports = {
     autenticar,
@@ -60,5 +67,6 @@ module.exports = {
     renovar,
     listar,
     deletar,
-    verificarSenha
+    verificarSenha,
+    verificar
 };

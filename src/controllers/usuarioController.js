@@ -133,7 +133,6 @@ function renovar(req, res) {
     };
 
     function deletar (req, res){
-        console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
         var IdUsuario = req.params.idUsuario;
 
         usuarioModel.deletar(IdUsuario).then(function(resultado){
@@ -170,6 +169,26 @@ function renovar(req, res) {
             res.status(500).send("Erro ao redefinir senha.");
         })
     }
+    
+
+function verificar(req, res) {
+
+    const id_usuario = req.params.idUsuario;
+
+    usuarioModel.verificar(id_usuario)
+        .then(resultado => {
+            if (resultado.length > 0) {
+                const { nome, email, empresa } = resultado[0];
+                res.status(200).json({ nome, email, empresa });
+            } else {
+                res.status(404).send("Usuário não encontrado.");
+            }
+        })
+        .catch(erro => {
+            console.log(erro);
+            res.status(500).send("Erro ao verificar usuário.");
+        });
+}
 
 module.exports = {
     autenticar,
@@ -177,5 +196,6 @@ module.exports = {
     renovar,
     listar,
     deletar,
-    redefinirSenha
+    redefinirSenha,
+    verificar
 }
