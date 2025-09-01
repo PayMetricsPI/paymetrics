@@ -50,15 +50,6 @@
                             <input id="ipt_senha_confirm" type="password" class="form-control" placeholder="Confirme sua senha...">
                             <div id="output_confirmacao"></div>
                         </div>
-                        <div class="form-check mb-3">
-                            <select name="" id="ipt_select">
-                                <option value="1">Amazon.com Inc.</option>
-                                <option value="2">Amazon Brasil Ltda.</option>
-                                <option value="3">Amazon Deutschland GmbH</option>
-                                <option value="4">Amazon France SAS</option>
-                                <option value="5">Amazon Canada ULC</option>
-                                <option value="6">Amazon Spain Services SL</option>
-                            </select>
                         </div>
                         <div class="form-check mb-3">
                             <input id="ipt_admin" type="checkbox" class="form-check-input">
@@ -83,7 +74,7 @@ function cadastrar(event){
         event.preventDefault();
 
         var administradorVar = ipt_admin.checked;
-        var fk_empresaVar = ipt_select.value
+        var fk_empresaVar = sessionStorage.EMPRESA
         var nomeVar = ipt_nome.value;
         var emailVar = (ipt_email.value).toLowerCase();
         var emailCVar = (ipt_email_confirm.value).toLowerCase();
