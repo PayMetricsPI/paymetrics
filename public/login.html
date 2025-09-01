@@ -34,6 +34,9 @@
                             <p class="my-0">Senha</p>
                             <input id="ipt_senha" type="password" class="form-control"
                                 placeholder="Insira sua senha...">
+                                <div>
+                                    <p id="respostaLogin" class="text-danger mt-2"></p>
+                                </div>
                         </div>
                         <button type="submit" class="btn btn-primary w-100 my-4" onclick="login(event)">Login</button>
                     </form>
@@ -47,6 +50,9 @@
 <script src="node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 <script src="js/sessao.js"></script>
 <script>
+
+            tentativas = 0;
+
     function login(event) {
 
         event.preventDefault();
@@ -58,6 +64,12 @@
             respostaLogin.innerHTML = "Preencha todos os campos.";
             return false;
         }
+
+        if (tentativas >= 3) {
+            respostaLogin.innerHTML += `Número máximo de tentativas atingido.<br> Tente novamente mais tarde!`;
+            return;
+        }
+
 
         fetch("/usuarios/autenticar", {
             method: "POST",
@@ -101,8 +113,18 @@
                 });
 
             } else {
-               
 
+                for (let i = 0; i < 3; i++) {
+                    if (tentativas < 3) {
+                        respostaLogin.innerHTML = `Email e/ou senha inválido(s). Tente novamente.<br> Você tem mais ${2 - tentativas} tentativa(s).<br>`;
+                        break;
+                    } else {
+                        respostaLogin.innerHTML += `<br>Número máximo de tentativas atingido.<br> Tente novamente mais tarde!`;
+                        break;
+                        
+                    }
+                }
+                tentativas++;
                 console.log("Houve um erro ao tentar realizar o login!");
 
                 
