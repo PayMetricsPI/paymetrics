@@ -33,8 +33,6 @@ references empresa(id_empresa)
 );
 
 
-
-
 create table usuarios (
 id_usuario int auto_increment,
 nome varchar(200) not null,
@@ -45,6 +43,28 @@ fk_empresa int not null,
 primary key (id_usuario),
 foreign key (fk_empresa) references empresa(id_empresa),
 unique (email)
+);
+
+create table maquina (
+id_maquina int auto_increment primary key,
+mac_adress varchar(45),
+fk_empresa int,
+foreign key (fk_empresa) references empresa(id_empresa)
+);
+
+create table componente (
+id_componente int auto_increment primary key,
+nome_componente varchar(45),
+unidade_medida decimal(10,2)
+);
+
+create table componente_maquina (
+fk_maquina int,
+fk_componente int,
+limite_hardware decimal(10,2),
+foreign key (fk_maquina) references maquina(id_maquina),
+foreign key (fk_componente) references componente(id_componente),
+primary key (fk_maquina, fk_componente)
 );
 
 insert into endereco (logradouro, numero, cidade, sigla_estado, sigla_pais, cartao_postal)
