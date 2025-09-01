@@ -10,33 +10,12 @@
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
     <title>PayMetrics | Cadastro</title>
     <link rel="shortcut icon" type="imagex/png" href="assets/icons/logo Paymetrics.png">
+    <script type="module" src="js/header.js"></script>
     <script src="js/fetchNovaSenha.js"></script>
 </head>
 
 <body class="d-flex flex-column min-vh-100">
-    <nav class="navbar navbar-expand-sm">
-            <div class="container-fluid">
-                <a class="navbar-brand">PayMetrics</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false"
-                    aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                        <li class="nav-item">
-                            <a class="nav-link" href="index.html">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="sobre.html">Sobre</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="login.html">Login</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
+    <div id="header"></div>
     <div class="flex-grow-1 d-flex justify-content-center align-items-center">
         <div class="p-4 shadow w-100 row w-100 justify-content-center align-items-center" style="max-width: 900px;">
             <div class="col-md-6 d-none d-md-flex justify-content-center align-items-center">
@@ -62,13 +41,13 @@
                             <p>Nova senha</p>
                             <input id="ipt_senhaNova" type="password" class="form-control"
                                 placeholder="Insira nova senha...">
-                                <div id="output_senhaVar"></div>
+                            <div id="output_senhaVar"></div>
                         </div>
                         <div class="mb-3">
                             <p>Confirmar nova senha</p>
                             <input id="ipt_senhaNovaConfirmar" type="password" class="form-control"
                                 placeholder="Confirme sua senha...">
-                                  <div id="output_confirmarSenhaVar"></div>
+                            <div id="output_confirmarSenhaVar"></div>
                         </div>
                         <button onclick="alterar(event)" type="submit" class="btn btn-primary w-100">Salvar</button>
 
@@ -82,12 +61,13 @@
 </body>
 
 </html>
+<script src="js/sessao.js"></script>
 <script>
 
     function alterar(event) {
 
         event.preventDefault();
-        
+
         const id_usuario = sessionStorage.ID_USUARIO;
         const senhaAntiga = ipt_senhaAntiga.value;
         const novaSenha = ipt_senhaNova.value;
@@ -95,41 +75,41 @@
 
 
         if (!senhaAntiga || !novaSenha || !confirmarNovaSenha) {
-        mensagem_erro.innerHTML = "Preencha todos os campos!";
-        cardErro.style.display = "block";
-        return;
-    }
-        if (novaSenha !== confirmarNovaSenha) {
-        mensagem_erro.innerHTML = "As senhas não coincidem!";
-        cardErro.style.display = "block";
-        return;
-    }
-
-    fetch(`/usuarios/redefinirSenha/${id_usuario}`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            senhaAntiga: senhaAntiga,
-            novaSenha: novaSenha
-        })
-    })
-    .then(resposta => {
-        if (resposta.ok) {
-            mensagem_erro.innerHTML = "Senha alterada com sucesso!";
+            mensagem_erro.innerHTML = "Preencha todos os campos!";
             cardErro.style.display = "block";
-        } else {
-            resposta.text().then(texto => {
-                mensagem_erro.innerHTML = texto;
+            return;
+        }
+        if (novaSenha !== confirmarNovaSenha) {
+            mensagem_erro.innerHTML = "As senhas não coincidem!";
+            cardErro.style.display = "block";
+            return;
+        }
+
+        fetch(`/usuarios/redefinirSenha/${id_usuario}`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                senhaAntiga: senhaAntiga,
+                novaSenha: novaSenha
+            })
+        })
+            .then(resposta => {
+                if (resposta.ok) {
+                    mensagem_erro.innerHTML = "Senha alterada com sucesso!";
+                    cardErro.style.display = "block";
+                } else {
+                    resposta.text().then(texto => {
+                        mensagem_erro.innerHTML = texto;
+                        cardErro.style.display = "block";
+                    });
+                }
+            })
+            .catch(erro => {
+                mensagem_erro.innerHTML = "Erro ao redefinir senha.";
                 cardErro.style.display = "block";
             });
-        }
-    })
-    .catch(erro => {
-        mensagem_erro.innerHTML = "Erro ao redefinir senha.";
-        cardErro.style.display = "block";
-    });
 
     }
 

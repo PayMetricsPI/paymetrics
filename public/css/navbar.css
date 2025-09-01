@@ -18,6 +18,8 @@ body {
     min-height: 80px;
     background-color: #FFE760;
     padding: 0px;
+    display: flex;
+    align-items: center;
 }
 
 
@@ -25,6 +27,18 @@ body {
     background-color: hsl(51, 100%, 39%);
     width: 4.5dvw;
     height: 4.5dvh;
+}
+
+.navbar-brand img {
+    width: 200px;
+}
+
+.navbar-nav {
+    display: flex;
+    align-items: center;
+}
+.exit {
+    font-size: 5000px;
 }
 
 #menu {
