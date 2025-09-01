@@ -1,34 +1,68 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
 body {
-    background: url("../assets/imgs/dashboard.png") no-repeat center center;
-    min-height: 90vh;
-    backdrop-filter: blur(5px);
+    background: none;
+    min-height: 100vh;
+}
+
+.page-bg {
+    position: fixed;
+    inset: 0;
+    background: url("../assets/imgs/dashboard.png") no-repeat center center / cover;
+    filter: blur(5px);
+    z-index: 0;
+    pointer-events: none;
 }
 
 .mensagem {
     text-align: center;
     color: #FFE760;
 }
+
 .navbar-color {
-    background: linear-gradient(to right, #1d1d1d, #3f3e3d);
-    transition: 0.3s ease-in-out;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
     width: 5rem;
+    z-index: 2;
+    background: linear-gradient(to right, #1d1d1d, #3f3e3d);
+    transition: width 0.3s;
+    overflow-x: hidden;
+    overflow-y: auto;
+    white-space: nowrap;
 }
-.alertas,.dash,.config,.user {
+.alertas, .dash, .config {
+    color: white;
+}
+
+
+.alertas, .dash, .config, .user {
     opacity: 0;
     transform: translateX(0px);
-    transition: 0.3s ease;
+    transition: opacity 0.3s, transform 0.3s;
+    display: inline-block;
+    max-width: 0;
+    overflow: hidden;
+    color: white;
+
 }
 .item1:hover {
     background-color: gray;
 }
 .navbar-color:hover {
     width: 12rem;
-    .alertas,.dash,.config,.user{
-        display: block;
-        color: white;
-        transform: translateX(20px);;
-        opacity: 1;
-    }
+}
+.navbar-color:hover .alertas,
+.navbar-color:hover .dash,
+.navbar-color:hover .config,
+.navbar-color:hover .user {
+    opacity: 1;
+    transform: translateX(20px);
+    max-width: 120px;
 }
 h1 {
     font-weight: 900;
@@ -83,4 +117,24 @@ h1 {
     40% {width: 38px; height: auto;}
     60% {width: 38px; height: auto;}
     100% {width: 32px; height: auto;}
+}
+
+.main-content {
+    position: relative;
+    z-index: 1;
+    margin-left: 5rem;
+    transition: margin-left 0.3s;
+    width: calc(100% - 5rem);
+}
+
+.navbar-color:hover { width: 12rem; }
+.navbar-color:hover ~ .main-content {
+    margin-left: 12rem;
+    width: calc(100% - 12rem);
+}
+
+.conteiner {
+    margin-left: 5rem;
+    transition: margin-left 0.3s;
+    width: calc(100% - 5rem);
 }
