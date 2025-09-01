@@ -10,6 +10,25 @@ body {
 }
 .navbar-color {
     background: linear-gradient(to right, #1d1d1d, #3f3e3d);
+    transition: 0.3s ease-in-out;
+    width: 5rem;
+}
+.alertas,.dash,.config,.user {
+    opacity: 0;
+    transform: translateX(0px);
+    transition: 0.3s ease;
+}
+.item1:hover {
+    background-color: gray;
+}
+.navbar-color:hover {
+    width: 12rem;
+    .alertas,.dash,.config,.user{
+        display: block;
+        color: white;
+        transform: translateX(20px);;
+        opacity: 1;
+    }
 }
 h1 {
     font-weight: 900;
