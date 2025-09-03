@@ -34,3 +34,5 @@ function finalizarAguardar(texto) {
     }
 }
 
+window.limparSessao = limparSessao;
+

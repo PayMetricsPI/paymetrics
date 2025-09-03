@@ -28,4 +28,8 @@ router.post("/redefinirSenha/:idUsuario", function(req, res) {
     usuarioController.redefinirSenha(req, res);
 });
 
+router.get("/verificar/:idUsuario", function(req, res) {
+    usuarioController.verificar(req, res);
+});
+
 module.exports = router;

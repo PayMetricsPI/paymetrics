@@ -4,30 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="./css/navbar.css">
     <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
     <!-- <script src="js/validacao.js"></script> -->
     <title>PayMetrics | Cadastro</title>
     <link rel="shortcut icon" type="imagex/png" href="assets/icons/logo Paymetrics.png">
+    <script type="module" src="js/header.js"></script>
+
 </head>
 
 <body class="d-flex flex-column min-vh-100">
-    <nav class="navbar navbar-expand-sm">
-        <div class="container-fluid d-flex w-100 align-items-center">
-            <img class="navbar-brand ms-5 img-fluid" src="assets/icons/logo-paymetrics-sem-fundo 2.png" style="max-width: 150px;"></img>
-            <ul class="navbar-nav d-flex w-100 justify-content-center" style="font-size: 20px;">
-                <li class="nav-item">
-                    <a class="nav-link mx-5" href="index.html">Home</a>
-                </li>
-                <li class="nav-item">
-                      <a class="nav-link mx-5" href="sobre.html">Sobre</a>                    
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link mx-5" href="login.html">Login</a>
-                </li>
-            </ul>
-        </div>
-    </nav>
+    <div id="header">
+
+    </div>
     <div class="flex-grow-1 d-flex justify-content-center align-items-center">
         <div class="p-4 shadow w-100 row w-100 justify-content-center align-items-center rounded" style="max-width: 1200px;">
             <div class="col-md-6 d-none d-md-flex justify-content-center align-items-center">
@@ -61,22 +51,14 @@
                             <div id="output_confirmacao"></div>
                         </div>
                         <div class="form-check mb-3">
-                            <select name="" id="ipt_select">
-                                <option value="1">Amazon.com Inc.</option>
-                                <option value="2">Amazon Brasil Ltda.</option>
-                                <option value="3">Amazon Deutschland GmbH</option>
-                                <option value="4">Amazon France SAS</option>
-                                <option value="5">Amazon Canada ULC</option>
-                                <option value="6">Amazon Spain Services SL</option>
-                            </select>
-                        </div>
-                        <div class="form-check mb-3">
                             <input id="ipt_admin" type="checkbox" class="form-check-input">
                             <label class="form-check-label" for="ipt_admin">Usuário administrador</label>
                         </div>
-                        
                         <button type="submit" class="btn btn-primary w-100" onclick="cadastrar(event)">Cadastrar</button>
                         <div id="div_mensagemTextoVazio"></div>
+                        </div>
+                        
+                        
                     </form>
                 </div>
             </div>
@@ -85,6 +67,7 @@
 </body>
 
 </html>
+<script src="js/sessao.js"></script>
 <script>
 
 function cadastrar(event){
@@ -92,7 +75,7 @@ function cadastrar(event){
         event.preventDefault();
 
         var administradorVar = ipt_admin.checked;
-        var fk_empresaVar = ipt_select.value
+        var fk_empresaVar = sessionStorage.EMPRESA
         var nomeVar = ipt_nome.value;
         var emailVar = (ipt_email.value).toLowerCase();
         var emailCVar = (ipt_email_confirm.value).toLowerCase();
@@ -206,9 +189,6 @@ function cadastrar(event){
         console.log("resposta: ", resposta);
 
         if (resposta.ok) {
-            
-          cadastroResposta.innerHTML =
-            `Cadastro realizado com sucesso!`;
             setTimeout(() => {
               window.location = "login.html";
             }, "2000");

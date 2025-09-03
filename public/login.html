@@ -10,35 +10,14 @@
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
     <title>PayMetrics | Login</title>
     <link rel="shortcut icon" type="imagex/png" href="assets/icons/logo Paymetrics.png">
+    <script type="module" src="js/header.js"></script>
 </head>
 
 <body class="d-flex flex-column min-vh-100">
-    <nav class="navbar navbar-expand-sm">
-            <div class="container-fluid">
-                <a class="navbar-brand">PayMetrics</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false"
-                    aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                        <li class="nav-item">
-                            <a class="nav-link" href="index.html">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="sobre.html">Sobre</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="login.html">Login</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
+    <div id="header"></div>
     <div class="flex-grow-1 d-flex justify-content-center align-items-center">
         <div class="p-4 shadow w-100 row w-100 justify-content-center align-items-center rounded"
-            style="max-width: 1200px;">
+            style="max-width: 900px;">
             <div class="col-md-6 d-none d-md-flex justify-content-center align-items-center">
                 <img src="assets/imgs/CRUDimage.png" alt="" class="img-fluid"
                     style="max-height: 600px;max-width: 100%; object-fit: contain;">
@@ -55,6 +34,9 @@
                             <p class="my-0">Senha</p>
                             <input id="ipt_senha" type="password" class="form-control"
                                 placeholder="Insira sua senha...">
+                                <div>
+                                    <p id="respostaLogin" class="text-danger mt-2"></p>
+                                </div>
                         </div>
                         <button type="submit" class="btn btn-primary w-100 my-4" onclick="login(event)">Login</button>
                     </form>
@@ -66,8 +48,11 @@
     <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
 </body>
 <script src="node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-
+<script src="js/sessao.js"></script>
 <script>
+
+            tentativas = 0;
+
     function login(event) {
 
         event.preventDefault();
@@ -79,6 +64,12 @@
             respostaLogin.innerHTML = "Preencha todos os campos.";
             return false;
         }
+
+        if (tentativas >= 3) {
+            respostaLogin.innerHTML += `Número máximo de tentativas atingido.<br> Tente novamente mais tarde!`;
+            return;
+        }
+
 
         fetch("/usuarios/autenticar", {
             method: "POST",
@@ -122,8 +113,19 @@
                 });
 
             } else {
-               
 
+                for (let i = 0; i < 3; i++) {
+                    
+                    if (tentativas < 3) {
+                        respostaLogin.innerHTML = `Email e/ou senha inválido(s). Tente novamente.<br> Você tem mais ${2 - tentativas} tentativa(s).<br>`;
+                        break;
+                    } else {
+                        respostaLogin.innerHTML += `<br>Número máximo de tentativas atingido.<br> Tente novamente mais tarde!`;
+                        break;
+                        
+                    }
+                }
+                tentativas++;
                 console.log("Houve um erro ao tentar realizar o login!");
 
                 
