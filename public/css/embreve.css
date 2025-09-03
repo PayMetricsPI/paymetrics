@@ -16,18 +16,21 @@ body {
 .alertas,.dash,.config,.user {
     opacity: 0;
     transform: translateX(0px);
-    transition: 0.3s ease;
+    transition: 1s ease-in;
+    transition: 0.1s ease-out;
+    text-overflow: hidden;
 }
 .item1:hover {
     background-color: gray;
 }
 .navbar-color:hover {
-    width: 12rem;
+    width: 15rem;
     .alertas,.dash,.config,.user{
         display: block;
         color: white;
         transform: translateX(20px);;
         opacity: 1;
+        text-overflow: hidden;
     }
 }
 h1 {
