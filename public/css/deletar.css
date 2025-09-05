@@ -1,24 +1,19 @@
-.conteudoAdmin {
-  width: 85%;
-  align-self: center;
+
+.divHeaderADM{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.div_titulo {
-  margin-top: 20px;
-}
 
 .div_titulo h1 {
   font: 400 34px 'Poppins', sans-serif;
 }
 
-.conteudoUsuarios {
-  margin-top: 100px;
-}
-
 .adicionarUsuario {
   display: flex;
-  justify-content: end;
-  margin-bottom: 20px;
+  align-items: center;
+  justify-content: center;
 }
 
 .adicionarUsuario a {
@@ -28,17 +23,30 @@
   border-radius: 20px;
 }
 
-table {
+.table-container {
   width: 100%;
+  max-height: 500px;
+  overflow-x: auto;
+  overflow-y: auto;
+}
+
+table {
+  min-width: 800px;
   border-collapse: collapse;
+  margin: 0 auto; 
 }
 
 th, td {
   text-align: left;
   padding: 10px;
+  word-wrap: break-word;
 }
 
 thead {
+  position: sticky;
+  top: 0;
+  background: #fff;
+  z-index: 2;
   border: 2px solid #ffee00;
 }
 
