@@ -11,13 +11,14 @@
     <link rel="shortcut icon" type="imagex/png" href="assets/icons/logo Paymetrics.png">
 </head>
 
-<body>
+<body onload="validarAdmin()">
+
   <div class="page-bg"></div>
 
   <aside class="sidebar">
     <nav class="navbar-color d-flex flex-column flex-shrink-0">
         <div class="container-fluid d-flex w-100 align-items-center p-1">
-            <ul class="nav nav-pills nav-flush flex-column mb-auto text-center">
+            <ul class="nav nav-pills nav-flush flex-column mb-auto text-center" id="ul_links">
                     <a class="d-flex p-3 link-dark text-decorartion-none" href="index.html">
                         <img class="bi" width="40" height="32" src="assets/icons/PayMetrics-icon.png"></img>
                     </a>
@@ -71,4 +72,6 @@
         </div>
     </div>
 </body>
+<script src="js/sessao.js">
+</script>
 </html>
