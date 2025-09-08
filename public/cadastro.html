@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./css/style.css">
     <link rel="stylesheet" href="./css/navbar.css">
+    <link rel="stylesheet" href="./css/embreve.css">
     <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
     <!-- <script src="js/validacao.js"></script> -->
@@ -15,7 +16,7 @@
 </head>
 
 <body class="d-flex flex-column min-vh-100">
-    <div id="header">
+    <div id="sidebar">
 
     </div>
     <div class="container-fluid mt-3">
@@ -73,6 +74,7 @@
 
 </html>
 <script src="js/sessao.js"></script>
+<script src="js/ScriptDelete.js"></script>
 <script>
 
 function cadastrar(event){
@@ -195,7 +197,7 @@ function cadastrar(event){
 
         if (resposta.ok) {
             setTimeout(() => {
-              window.location = "login.html";
+              window.location = "deletarUsuario.html";
             }, "2000");
         } else {
           throw "Houve um erro ao tentar realizar o cadastro!";
@@ -211,7 +213,7 @@ function cadastrar(event){
 
   function sair() {
     sessionStorage.clear();
-    window.location = "../index.html";
+    window.location = "./index.html";
   }
 
 </script>

@@ -1,9 +1,9 @@
 var adm = sessionStorage.ADMINISTRADOR
 console.log(adm);
 
-if (adm != "1") {
-    window.location.href = "../embreve.html";
-}
+// if (adm != "1") {
+//     window.location.href = "./embreve.html";
+// }
 
 var tbody = document.getElementById("tbody_usuarios");
 
