@@ -15,55 +15,13 @@
 
   <div class="page-bg"></div>
 
-  <aside class="sidebar">
-    <nav class="navbar-color d-flex flex-column flex-shrink-0">
-        <div class="container-fluid d-flex w-100 align-items-center p-1">
-            <ul class="nav nav-pills nav-flush flex-column mb-auto text-center" id="ul_links">
-                    <a class="d-flex p-3 link-dark text-decorartion-none" href="index.html">
-                        <img class="bi" width="40" height="32" src="assets/icons/PayMetrics-icon.png"></img>
-                    </a>
-                <li class="nav-item">
-                    <a class="nav-link py-3 d-flex mx-1 align-items-center" title data-bs-toggle="tooltip" data-bs-placemnet="right" arial-current="page" data-bs-original-title="Avisos" href="">
-                        <img src="assets/icons/alert-icon.png" class="bi mask1" aria-label="Avisos" width="32" height="32" alt="">
-                        <span class="alertas">Alertas</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                      <a class="nav-link py-3 d-flex mx-1 align-items-center" data-bs-placemnet="right" href="">
-                        <img src="assets/icons/chart-icon.png" class="bi mask2" width="32" height="32" alt="">
-                        <span class="dash">Dashboards</span>
-                      </a>                    
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link py-3 d-flex mx-1 align-items-center" href="" data-bs-placemnet="right">
-                        <img src="assets/icons/settings-icon.png" class="bi mask3" width="32" height="32" alt="">
-                        <span class="config">Configurações</span>
-                    </a>
-                </li>
-                <li>
-                    <a class="nav-link py-3 d-flex mx-1 align-items-center" data-bs-placemnet="right" href="perfil.html">
-                        <img role="img" class="bi mask" width="32" height="32" src="assets/icons/account-icon.png" alt="foto_perfil">
-                        <span class="user">Usuario</span>
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </nav>
-  </aside>
+  <div id="sidebar"></div>
 
   <div class="main-content">
-        <div class="conteiner conteiner-fluid">
-            <div class="mensagem flex-column d-flex justify-content-center align-items-center rounded bg-opacity-50">
+        <div class="conteiner conteiner-fluid" style="height: 95vh !important;">
+            <div class="mensagem flex-column d-flex justify-content-center align-items-center rounded bg-opacity-50 h-100">
                 <div class="col-md-6 d-none d-md-flex justify-content-center align-items-center">
-                    <img class="img-fluid" src="assets/imgs/licensed-image.png" style="max-height: 100%; max-width: 100%; object-fit: contain;" alt="">
-                </div>
-                <div class="col-md-6 d-md-flex justify-content-center align-items-center">
-                    <h1 class="text">Em manutenção!</h1>
-                </div>
-            </div>
-            <div class="mensagem flex-column d-flex justify-content-center align-items-center rounded bg-opacity-50">
-                <div class="col-md-6 d-none d-md-flex justify-content-center align-items-center">
-                    <img class="img-fluid" src="assets/imgs/licensed-image.png" style="max-height: 100%; max-width: 100%; object-fit: contain;" alt="">
+                    <img class="img-fluid" src="assets/imgs/embreve.png" style="max-height: 100%; max-width: 100%; object-fit: contain;" alt="">
                 </div>
                 <div class="col-md-6 d-md-flex justify-content-center align-items-center">
                     <h1 class="text">Em manutenção!</h1>
@@ -72,6 +30,9 @@
         </div>
     </div>
 </body>
-<script src="js/sessao.js">
+<script src="js/sessao.js"></script>
+<script>
+    // validarSessao()
 </script>
+<script src="js/header.js"></script>
 </html>

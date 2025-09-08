@@ -67,6 +67,14 @@ body {
 h1 {
     font-weight: 900;
 }
+/* .mask:hover {
+    animation-name: zoom_slow;
+    animation-duration: 1s;
+}
+.mask1:hover {
+    animation-name: shake;
+    animation-duration: 1s;
+}
 .mask2:hover{
     animation-name: zoom;
     animation-duration: 1s;
@@ -75,21 +83,13 @@ h1 {
 .mask3:hover {
     animation-name: spin;
     animation-duration: 1s;
-}
-.mask:hover {
-    animation-name: zoom_slow;
-    animation-duration: 1s;
-}
+} */
 .text {
     font-size: 68px;
     font-weight: 800; 
     background: linear-gradient(to top, #FFE760, #ff9100); 
     color: transparent; 
     -webkit-background-clip: text;
-}
-.mask1:hover {
-    animation-name: shake;
-    animation-duration: 1s;
 }
 @keyframes spin {
     0% {transform: rotateZ(0deg);}
@@ -125,9 +125,10 @@ h1 {
     margin-left: 5rem;
     transition: margin-left 0.3s;
     width: calc(100% - 5rem);
+    min-height: 100vh;
 }
 
-.navbar-color:hover { width: 12rem; }
+.navbar-color:hover { width: 13rem; }
 .navbar-color:hover ~ .main-content {
     margin-left: 12rem;
     width: calc(100% - 12rem);
