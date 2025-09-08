@@ -7,5 +7,5 @@ function calculadora(){
   // formatar moeda 
     var moeda = calculo.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
     
-    outputCalculadora.innerHTML = `Olá, ${nome}.<br> Com nosso monitoramento sua empresa evita um prejuízo de ${moeda} anual.  `
+    outputCalculadora.innerHTML = `Olá, ${nome}.<br> Com nosso monitoramento sua empresa evita um prejuízo de aproximadamente ${moeda} anual.  `
 }
