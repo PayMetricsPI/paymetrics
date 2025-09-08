@@ -8,7 +8,7 @@ function validarSessao() {
     if (email != null && nome != null) {
         usuario.innerHTML = nome;
     } else {
-        window.location = "../login.html";
+        window.location = "./login.html";
     }
 }
 
