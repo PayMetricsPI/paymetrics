@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/login.css">
     <link rel="stylesheet" href="css/navbar.css">
+    <link rel="stylesheet" href="css/embreve.css">
     <link rel="stylesheet" href="css/perfil.css">
     <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
@@ -15,12 +16,8 @@
 </head>
 
 <body>
-    <div id="header"></div>
-    <div class="container-fluid mt-3">
-        <a href="embreve.html">
-            <svg style="transform: rotate(-180deg)" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 30 30"><rect width="30" height="30" fill="none"/><path fill="#000" d="M8.293 2.293a1 1 0 0 1 1.414 0l4.5 4.5a1 1 0 0 1 0 1.414l-4.5 4.5a1 1 0 0 1-1.414-1.414L11 8.5H1.5a1 1 0 0 1 0-2H11L8.293 3.707a1 1 0 0 1 0-1.414"/></svg>
-        </a>
-    </div>
+    <div id="sidebar"></div>
+      <div class="main-content">
     <div style="height: 85vh; display: flex; justify-content: center;">
         <div class="container-perfil flex-grow-1 d-flex flex-column flex-md-row justify-content-center align-items-center">
         <div style="width: 80vw;">
@@ -44,11 +41,12 @@
                         </div>
                     </div>
                     <div class="d-flex text-center justify-content-center">
-                        <a href="redefinir_senha.html">Redefinir senha</a>
+                        <a href="redefinir_senha.html" class="btn btn-primary my-4">Redefinir senha</a>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
     </div>
     </div>
     <script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
@@ -57,5 +55,8 @@
 <script src="js/perfil.js"></script>
 <script src="node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 <script src="js/sessao.js"></script>
+<script>
+    // validarSessao()
+</script>
 
 </html>

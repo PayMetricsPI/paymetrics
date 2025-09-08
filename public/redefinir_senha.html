@@ -5,7 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./css/style.css">
-    <link rel="stylesheet" href="./css/navbar.css">
+    <link rel="stylesheet" href="./css/login.css">
+    <link rel="stylesheet" href="./css/embreve.css">
     <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
     <title>PayMetrics | Cadastro</title>
@@ -15,13 +16,16 @@
 </head>
 
 <body class="d-flex flex-column min-vh-100">
-    <div id="header"></div>
+    <div id="sidebar"></div>
+      <div class="main-content">
     <div class="container-fluid mt-3">
-        <a href="perfil.html">
-            <svg style="transform: rotate(-180deg)" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 30 30"><rect width="30" height="30" fill="none"/><path fill="#000" d="M8.293 2.293a1 1 0 0 1 1.414 0l4.5 4.5a1 1 0 0 1 0 1.414l-4.5 4.5a1 1 0 0 1-1.414-1.414L11 8.5H1.5a1 1 0 0 1 0-2H11L8.293 3.707a1 1 0 0 1 0-1.414"/></svg>
-        </a>
+        <div class="voltar-btn" style="position: absolute; top: 20px; left: 20px; z-index: 10;">
+            <a href="perfil.html">
+                <svg style="transform: rotate(-180deg)" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 30 30"><rect width="30" height="30" fill="none"/><path fill="#000" d="M8.293 2.293a1 1 0 0 1 1.414 0l4.5 4.5a1 1 0 0 1 0 1.414l-4.5 4.5a1 1 0 0 1-1.414-1.414L11 8.5H1.5a1 1 0 0 1 0-2H11L8.293 3.707a1 1 0 0 1 0-1.414"/></svg>
+            </a>
+        </div>
     </div>
-    <div class="flex-grow-1 d-flex justify-content-center align-items-center">
+    <div class="flex-grow-1 d-flex justify-content-center align-items-center" style="min-height: 100vh;">
         <div class="p-4 shadow w-100 row w-100 justify-content-center align-items-center" style="max-width: 900px;">
             <div class="col-md-6 d-none d-md-flex justify-content-center align-items-center">
                 <img src="assets/imgs/CRUDimage.png" alt="Banner" class="img-fluid"
@@ -38,29 +42,30 @@
                     </div>
                     <form>
                         <div class="mb-3">
-                            <p>Senha Antiga</p>
+                            <p class="my-0">Senha Antiga</p>
                             <input id="ipt_senhaAntiga" type="password" class="form-control"
                                 placeholder="Inseira senha antiga">
                         </div>
                         <div class="mb-3">
-                            <p>Nova senha</p>
+                            <p class="my-0">Nova senha</p>
                             <input id="ipt_senhaNova" type="password" class="form-control"
                                 placeholder="Insira nova senha...">
                             <div id="output_senhaVar"></div>
                         </div>
                         <div class="mb-3">
-                            <p>Confirmar nova senha</p>
+                            <p class="my-0">Confirmar nova senha</p>
                             <input id="ipt_senhaNovaConfirmar" type="password" class="form-control"
                                 placeholder="Confirme sua senha...">
                             <div id="output_confirmarSenhaVar"></div>
                         </div>
-                        <button onclick="alterar(event)" type="submit" class="btn btn-primary w-100">Salvar</button>
+                        <button onclick="alterar(event)" type="submit" class="btn btn-primary w-100 my-4">Salvar</button>
 
                     </form>
                 </div>
             </div>
         </div>
     </div>
+</div>
     <script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
 </body>
@@ -68,7 +73,7 @@
 </html>
 <script src="js/sessao.js"></script>
 <script>
-
+    // validarSessao()
     function alterar(event) {
 
         event.preventDefault();
