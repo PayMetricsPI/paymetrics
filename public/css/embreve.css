@@ -27,7 +27,7 @@ body {
     top: 0;
     left: 0;
     height: 100vh;
-    width: 5rem;
+    width: 4.8rem;
     z-index: 2;
     background: linear-gradient(to right, #1d1d1d, #3f3e3d);
     transition: width 0.3s;
@@ -54,7 +54,7 @@ body {
     background-color: gray;
 }
 .navbar-color:hover {
-    width: 12rem;
+    width: 20rem;
 }
 .navbar-color:hover .alertas,
 .navbar-color:hover .dash,
@@ -128,9 +128,9 @@ h1 {
     min-height: 100vh;
 }
 
-.navbar-color:hover { width: 13rem; }
+.navbar-color:hover { width: 20rem; }
 .navbar-color:hover ~ .main-content {
-    margin-left: 12rem;
+    margin-left: 20rem;
     width: calc(100% - 12rem);
 }
 
@@ -138,4 +138,37 @@ h1 {
     margin-left: 5rem;
     transition: margin-left 0.3s;
     width: calc(100% - 5rem);
+}
+
+.botao_principal{
+    background-color: #FFE760 !important;
+    color: #3f3e3d !important;
+    font-weight: 600 !important;
+    padding: 20px !important;
+    transition: .25s !important;
+}
+.botao_redefinir{
+    background-color: #FFE760 !important;
+    color: #3f3e3d !important;
+    font-weight: 600 !important;
+    padding: 10px !important;
+    transition: .25s !important;
+}
+
+.botao_principal:hover{
+    background-color: #ffd900 !important
+}
+
+.botao_redefinir:hover{
+    background-color: #ffd900 !important
+}
+
+.perfil_container{
+    padding: 30px 30px 0px 30px !important;
+}
+.container-perfil .w-100 p{
+    margin-bottom: 0px !important;
+}
+.container-perfil .w-100 p:last-child{
+    margin-bottom: 20px !important;
 }
