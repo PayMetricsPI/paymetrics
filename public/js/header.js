@@ -26,7 +26,7 @@ if (header) {
         <div class="container-fluid d-flex w-100 align-items-center p-1 h-100">
             <ul class="nav nav-pills nav-flush flex-column mb-auto text-center h-100" id="ul_links">
                     <a class="d-flex p-3 link-dark text-decorartion-none" href="index.html">
-                        <img class="bi" width="40" height="32" src="assets/icons/PayMetrics-icon.png"></img>
+                        <img class="bi" height="50" style="margin-left: -10px" src="assets/icons/logo-paymetrics-sem-fundo.png"/>
                     </a>
                 <li class="nav-item">
                     <a class="nav-link py-3 d-flex mx-1 align-items-center" title data-bs-toggle="tooltip" data-bs-placemnet="right" arial-current="page" data-bs-original-title="Avisos" href="./embreve.html">
