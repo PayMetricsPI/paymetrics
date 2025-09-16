@@ -55,5 +55,6 @@ td {
 }
 
 .colunaDelete {
+  cursor: pointer;
   text-align: center;
 }
