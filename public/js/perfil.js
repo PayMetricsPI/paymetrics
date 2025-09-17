@@ -22,5 +22,3 @@ function carregarPerfil() {
             }
         }).catch(console.error);
 }
-
-window.onload = carregarPerfil;

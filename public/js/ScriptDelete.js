@@ -43,8 +43,6 @@ function listarUsuario() {
         }).catch(console.error);
 }
 
-window.onload = listarUsuario;
-
 function deletarUsuario(idUsuario) {
     if (confirm("Tem certeza que deseja deletar este usuário?")) {
         fetch(`/usuarios/deletar/${idUsuario}`, {
