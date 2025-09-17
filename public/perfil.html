@@ -8,56 +8,50 @@
     <link rel="stylesheet" href="css/navbar.css">
     <link rel="stylesheet" href="css/embreve.css">
     <link rel="stylesheet" href="css/perfil.css">
-    <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
     <link rel="shortcut icon" type="imagex/png" href="assets/icons/logo Paymetrics.png">
-    <script type="module" src="js/header.js"></script>
     <title>Perfil</title>
 </head>
 
-<body>
+<body onload="carregarPerfil(); validarAdmin()">
     <div id="sidebar"></div>
-      <div class="main-content">
-    <div style="height: 85vh; display: flex; justify-content: center;">
-        <div class="container-perfil flex-grow-1 d-flex flex-column flex-md-row justify-content-center align-items-center">
-        <div style="width: 40vw;">
-            <div class="shadow rounded perfil_container">
-                <div class="d-flex row justify-content-center align-items-center">
-                    <div>
-                        <h3>Perfil</h3>
-                    </div>
-                    <div class="container-perfil mt-3 d-flex flex-column justify-content-betweeen">
-                        <div class="w-100">
-                            <p style="font-size: 12px;">Nome:</p>
-                            <p id="nome"></p>
+    <div class="main-content">
+        <div style="height: 85vh; display: flex; justify-content: center;">
+            <div
+                class="container-perfil flex-grow-1 d-flex flex-column flex-md-row justify-content-center align-items-center">
+                <div style="width: 40vw;">
+                    <div class="shadow rounded perfil_container">
+                        <div class="d-flex row justify-content-center align-items-center">
+                            <div>
+                                <h3>Perfil</h3>
+                            </div>
+                            <div class="container-perfil mt-3 d-flex flex-column justify-content-betweeen">
+                                <div class="w-100">
+                                    <p style="font-size: 12px;">Nome:</p>
+                                    <p id="nome"></p>
+                                </div>
+                                <div class="w-100">
+                                    <p style="font-size: 12px;">Email:</p>
+                                    <p id="email"></p>
+                                </div>
+                                <div class="w-100">
+                                    <p style="font-size: 12px;">Empresa:</p>
+                                    <p id="empresa"></p>
+                                </div>
+                            </div>
+                            <div class="d-flex text-center justify-content-center">
+                                <a href="redefinir_senha.html" class="botao_principal btn btn-primary my-4">Redefinir
+                                    senha</a>
+                            </div>
                         </div>
-                        <div class="w-100">
-                            <p style="font-size: 12px;">Email:</p>
-                            <p id="email"></p>
-                        </div>
-                        <div class="w-100">
-                            <p style="font-size: 12px;">Empresa:</p>
-                            <p id="empresa"></p>
-                        </div>
-                    </div>
-                    <div class="d-flex text-center justify-content-center">
-                        <a href="redefinir_senha.html" class="botao_principal btn btn-primary my-4">Redefinir senha</a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    </div>
-    </div>
-    <script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
 </body>
 <script src="js/perfil.js"></script>
-<script src="node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 <script src="js/sessao.js"></script>
 <script src="js/header.js"></script>
-<script>
-    window.addEventListener('load', validarAdmin);
-</script>
 
 </html>
