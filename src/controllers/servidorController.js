@@ -1,8 +1,8 @@
 var servidorModel = require("../models/servidor");
 
 function criarServidor (req, res){
-    var nome = req.params.nome;
-    var sistema_operacional = req.params.sistema_operacional;
+    var nome = req.body.nome;
+    var sistema_operacional = req.body.sistema_operacional;
     var fk_empresa = req.body.fk_empresa;
 
 
