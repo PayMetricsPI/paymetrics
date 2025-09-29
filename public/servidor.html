@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/login.css">
+    <link rel="stylesheet" href="css/navbar.css">
+    <link rel="stylesheet" href="css/embreve.css">
+    <link rel="stylesheet" href="css/deletar.css">
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+    <title>PayMetrics | Atualizar Cadastro</title>
+    <link rel="shortcut icon" type="imagex/png" href="assets/icons/logo Paymetrics.png">
+</head>
+
+<body onload>
+    <div id="sidebar"></div>
+    <div class="main-content">
+        <div class="conteudoDashboard container">
+            <div class="div_titulo_mercado" id="div_titulo_mercado"></div>
+            <div class="conteudoAdmin">
+                <div class="divHeaderADM my-5" style="margin: 0 100px 0 100px;">
+                    <div class="div_titulo">
+                        <h1>Controle de Usuários</h1>
+                    </div>
+                    <div class="adicionarUsuario">
+                        <a href="./cadastro.html" class="botao_principal">Adicionar Usuário</a>
+                    </div>
+                </div>
+                <div class="mostrarUsuarios">
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr class="nomeColuna">
+                                    <th>ID</th>
+                                    <th class="colunaUsuario">Nome</th>
+                                    <th class="colunaEmail">E-mail</th>
+                                    <th class="colunaEmpresa">Empresa</th>
+                                    <th class="colunaAcesso">Acesso</th>
+                                    <th class="colunaDelete">Delete</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody_usuarios">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="box2"></div>
+        </div>
+    </div>
+</div>
+<script src="js/sessao.js"></script>
+<script src="js/header.js"></script>
+<script src="js/ScriptDelete.js"></script>
+</body>
+
+</html>
