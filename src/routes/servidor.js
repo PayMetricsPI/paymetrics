@@ -1,0 +1,10 @@
+var express = require ("express");
+var router = express.Router();
+
+var servidorController = require("../controllers/servidorController");
+
+router.delete("/deletarServidor/:id_servidor", function (req, res){
+    servidorController.deletarServidor(req,res);
+})
+
+module.exports = router;

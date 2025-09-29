@@ -1,0 +1,12 @@
+var database = require("../database/config")
+
+function deletarServidor (id_servidor, fk_empresa){
+    console.log("ACESSO AO SERIVIDOR MODEL")
+    var instrucaoSql = `delete from servidor where id_servidor = ${id_servidor} and fk_empresa = ${fk_empresa}`;
+    console.log("Executando a instrução SQL \n: " + instrucaoSql);
+    return database.executar(instrucaoSql);
+}
+
+module.exports={
+    deletarServidor
+};
