@@ -38,7 +38,7 @@
                                     <p id="respostaLogin" class="text-danger mt-2"></p>
                                 </div>
                         </div>
-                        <button type="submit" class="btn btn-primary w-100 my-4" onclick="login(event)">Login</button>
+                        <button id="botao" type="submit" class="btn btn-primary w-100 my-4" onclick="login(event)">Login</button>
                     </form>
                 </div>
             </div>
@@ -51,7 +51,6 @@
 <script src="js/sessao.js"></script>
 <script>
 
-            tentativas = 0;
 
     function login(event) {
 
@@ -63,11 +62,6 @@
         if (emailVar == "" || senhaVar == "") {
             respostaLogin.innerHTML = "Preencha todos os campos.";
             return false;
-        }
-
-        if (tentativas >= 3) {
-            respostaLogin.innerHTML += `Número máximo de tentativas atingido.<br> Tente novamente mais tarde!`;
-            return;
         }
 
 
