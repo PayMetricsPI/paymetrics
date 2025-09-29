@@ -1,25 +1,9 @@
 create database PayMetrics;
 use PayMetrics;
 
-create table endereco (
-id_endereco int auto_increment,
-logradouro varchar(200) not null,
-numero varchar(40) not null,
-cidade varchar(100) not null,
-sigla_estado char(2) not null,
-sigla_pais char(2) not null,
-cartao_postal varchar(40) not null,
-primary key (id_endereco)
-);
-
 create table empresa (
-id_empresa int auto_increment,
-razão_social varchar(200) not null,
-fk_endereco int, 
-primary key (id_empresa),
-foreign key (fk_endereco)
-references endereco(id_endereco)
-);
+id_empresa int auto_increment primary key,
+razão_social varchar(200) not null);
 
 create table contato (
 id_contato int auto_increment,
@@ -40,50 +24,52 @@ email varchar(200) not null,
 senha varchar(200) not null,
 administrador boolean default false,
 fk_empresa int not null,
-primary key (id_usuario),
+primary key (id_usuario, fk_empresa),
 foreign key (fk_empresa) references empresa(id_empresa),
 unique (email)
 );
 
-create table maquina (
-id_maquina int auto_increment primary key,
-mac_adress varchar(45),
-fk_empresa int,
+create table servidor(
+id_servidor int not null auto_increment,
+nome varchar(200),
+sistema_operacional varchar(100) not null,
+fk_empresa int not null,
+primary key (id_servidor, fk_empresa),
 foreign key (fk_empresa) references empresa(id_empresa)
 );
 
-create table componente (
-id_componente int auto_increment primary key,
-nome_componente varchar(45),
-unidade_medida decimal(10,2)
-);
+create table componente(
+id_componente int not null auto_increment,
+nome varchar(200) not null,
+unidade_medida varchar(50),
+primary key (id_componente));
 
-create table componente_maquina (
-fk_maquina int,
-fk_componente int,
-limite_hardware decimal(10,2),
-foreign key (fk_maquina) references maquina(id_maquina),
-foreign key (fk_componente) references componente(id_componente),
-primary key (fk_maquina, fk_componente)
-);
+create table servidor_componente(
+fk_servidor int not null,
+fk_empresa int not null,
+fk_componente int not null,
+primary key (fk_servidor, fk_empresa, fk_componente),
+foreign key (fk_servidor)references servidor(id_servidor),
+foreign key (fk_empresa)references empresa(id_empresa),
+foreign key (fk_componente) references componente (id_componente));
 
-insert into endereco (logradouro, numero, cidade, sigla_estado, sigla_pais, cartao_postal)
+create table parametro(
+id_parametro int not null auto_increment, 
+fk_componente int not null,
+alerta_max int,
+alerta_min int,
+primary key (id_parametro, fk_componente),
+foreign key (fk_componente) references componente(id_componente));
+
+
+insert into empresa (razão_social)
 values
-('7th Avenue', '410 Terry', 'Seattle', 'WA', 'US', '98109'),
-('Avenida Juscelino Kubitschek', '2041', 'São Paulo', 'SP', 'BR', '04543-011'),
-('Marcel-Breuer-Strasse', '12', 'Munique', 'BY', 'DE', '80807'),
-('Rue de l\Héronnière', '67', 'Clichy', 'ID', 'FR', '92110'),
-('West Georgia Street', '402', 'Vancouver', 'BC', 'CA', 'V6B 5A1'),
-('Calle Ramírez de Prado', '5', 'Madrid', 'MD', 'ES', '28045');
-
-insert into empresa (razão_social, fk_endereco)
-values
-('Amazon.com Inc.', 1),
-('Amazon Brasil Ltda.', 2),
-('Amazon Deutschland GmbH', 3),
-('Amazon France SAS', 4),
-('Amazon Canada ULC', 5), 
-('Amazon Spain Services SL', 6); 
+('Amazon.com Inc.'),
+('Amazon Brasil Ltda.'),
+('Amazon Deutschland GmbH'),
+('Amazon France SAS'),
+('Amazon Canada ULC'), 
+('Amazon Spain Services SL'); 
 
 insert into contato (nome_contato, telefone, email_contato, fk_empresa)
 values
@@ -95,4 +81,7 @@ values
 ('Mariangela Marseglia', '+34-91-5555-0105', 'mariangela.marseglia@amazon.es', 6);
 
 select * from usuarios;
--- update usuarios set senha = {NovaSenha} where id_usuario = {ID_USUARIO};
+
+insert into usuarios (nome, email, senha, administrador, fk_empresa)values
+('Gabriele', 'gabi@gmail.com', 'Gabi@007', TRUE, 1),
+('Samuel', 'samu@gmail.com', 'Gabi@007', FALSE, 1);
