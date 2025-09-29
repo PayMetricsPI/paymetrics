@@ -1,4 +1,19 @@
-var servidorModel = require("../models/servidroModel");
+var servidorModel = require("../models/servidor");
+
+function criarServidor (req, res){
+    var nome = req.body.nome;
+    var sistema_operacional = req.body.sistema_operacional;
+    var fk_empresa = req.body.fk_empresa;
+
+
+    servidorModel.criarServidor(nome, sistema_operacional,fk_empresa).then(function(resultado){
+        res.json(resultado);
+    }).catch(function (erro){
+        console.log(erro);
+        console.log("Houve um erro ao criar o servidor: ", erro.sqlMessage);
+        res.status(500).json(erro.sqlMessage);
+    });
+}
 
 function deletarServidor (req, res){
     var id_servidor = req.params.id_servidor;
@@ -13,5 +28,6 @@ function deletarServidor (req, res){
     });
 }
 module.exports={
-    deletarServidor
+    deletarServidor,
+    criarServidor
 };
