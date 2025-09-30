@@ -21,34 +21,87 @@
             <div class="conteudoAdmin">
                 <div class="divHeaderADM my-5" style="margin: 0 100px 0 100px;">
                     <div class="div_titulo">
-                        <h1>Seus Servidores</h1>
+                        <h1>Meus Servidores</h1>
                     </div>
                 </div>
             </div>
-                <!-- <div class="all_users"> -->
+     <!-- <div class="all_users"> -->
             <div class="users">
-            <div class="users_container">Servidor 1</div>
-            <div class="users_container">Servidor 2</div>
+                <div class="users_container">
+                    <img src="./assets/profile/default_avatar.webp" style="width: 90px; border-radius: 20%;" alt="">
+                    <div class="photo_info">
+                        <div class="photo"></div>
+                        <p>Servidor 1</p>
+                            <p>Editar</p>
+                        <p>Excluir</p>
+                    </div>
+                </div>
+           <div class="users_container">
+                    <img src="./assets/profile/default_avatar.webp" style="width: 90px; border-radius: 20%;" alt="">
+                    <div class="photo_info">
+                        <div class="photo"></div>
+                        <p>Servidor 2</p>
+                        <p>Editar</p>
+                        <p>Excluir</p>
+                    </div>
+                </div>
             </div>
-        <!-- </div> -->
+    <!-- </div> -->
     </div>
     
-    <div class="register_new" id="create_user_button_empresa">
-        <span class="material-symbols-outlined">
-            Adicionar Servidor
+    <div class="register_new" id="create_server_button_empresa">
+    <span class="material-symbols-outlined">
+        Adicionar Servidor
+    </span>
+    <div class="box2"></div>
+</div>
+
+    </div>
+</div>
+
+<div class="out_create_server out_edit" id="out_create_server"></div>
+
+<div class="create_server_modal modal_edit" id="create_server_modal">
+    <div class="create_server_headers edit_headers">
+        <h3>Criar Servidor</h3>
+        <span class="material-symbols-outlined" id="close_create_server_button">
+            close
         </span>
-        
-        <div class="box2"></div>
-    
+    </div>
+
+    <div class="create_server_content edit_content">
+        <div class="create_server_field edit_field">
+            <label for="">Nome do Servidor</label>
+            <input type="text" class="nome_input">
+        </div>
+
+        <div class="create_server_field edit_field">
+            <label for="">Sistema Operacional</label>
+            <input type="text" class="so_input">
+        </div>
+
+        <div class="create_server_field edit_field">
+            <label for="">MAC Address</label>
+            <input type="text" class="mac_input">
+        </div>
+
+        <div class="create_server_button edit_buttons">
+            <button class="cancel_button" id="cancel_button_create_server">
+                Cancelar
+            </button>
+            <button class="confirm_button" id="submit_button_create_server">
+                Confirmar
+            </button>
         </div>
     </div>
 </div>
+
 <script src="js/sessao.js"></script>
 <script src="js/header.js"></script>
 <script src="js/ScriptDelete.js"></script>
 <script src="js/edit_user_info.js"></script>
 <script src="js/delete_account_user_empresa.js"></script>
-<script src="js/criar_usuario_empresa.js"></script>
+<script src="js/criar_servidor.js"></script>
 </body>
 
 </html>
