@@ -33,10 +33,12 @@ create table servidor(
 id_servidor int not null auto_increment,
 nome varchar(200),
 sistema_operacional varchar(100) not null,
+mac_address varchar(50) not null,
 fk_empresa int not null,
 primary key (id_servidor, fk_empresa),
 foreign key (fk_empresa) references empresa(id_empresa)
 );
+
 
 create table componente(
 id_componente int not null auto_increment,
