@@ -8,12 +8,12 @@
     <link rel="stylesheet" href="css/navbar.css">
     <link rel="stylesheet" href="css/embreve.css">
     <link rel="stylesheet" href="css/deletar.css">
+    <link rel="stylesheet" href="css/servidor.css">
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
     <title>PayMetrics | Atualizar Cadastro</title>
     <link rel="shortcut icon" type="imagex/png" href="assets/icons/logo Paymetrics.png">
 </head>
-
-<body onload>
+<body>
     <div id="sidebar"></div>
     <div class="main-content">
         <div class="conteudoDashboard container">
@@ -21,39 +21,43 @@
             <div class="conteudoAdmin">
                 <div class="divHeaderADM my-5" style="margin: 0 100px 0 100px;">
                     <div class="div_titulo">
-                        <h1>Controle de Usuários</h1>
+                        <h1>Servidores</h1>
                     </div>
-                    <div class="adicionarUsuario">
-                        <a href="./cadastro.html" class="botao_principal">Adicionar Usuário</a>
-                    </div>
+    
                 </div>
                 <div class="mostrarUsuarios">
-                    <div class="table-container">
-                        <table>
-                            <thead>
-                                <tr class="nomeColuna">
-                                    <th>ID</th>
-                                    <th class="colunaUsuario">Nome</th>
-                                    <th class="colunaEmail">E-mail</th>
-                                    <th class="colunaEmpresa">Empresa</th>
-                                    <th class="colunaAcesso">Acesso</th>
-                                    <th class="colunaDelete">Delete</th>
-                                </tr>
-                            </thead>
+                      
+                    <div class="table-container">   
+                      
                             <tbody id="tbody_usuarios">
                             </tbody>
                         </table>
-                    </div>
+                    </div>  
                 </div>
             </div>
-            
-            <div class="box2"></div>
+                <div class="all_users">
+            <div class="users" id="users_container"></div>
+        </div>
+    </div>
+    <div class="users_container">Servidor 1</div>
+    <br>
+    <div class="users_container">Servidor 2</div>
+    <div class="register_new" id="create_user_button_empresa">
+        <span class="material-symbols-outlined">
+            Adicionar Servidor
+        </span>
+        
+        <div class="box2"></div>
+    
         </div>
     </div>
 </div>
 <script src="js/sessao.js"></script>
 <script src="js/header.js"></script>
 <script src="js/ScriptDelete.js"></script>
+<script src="js/edit_user_info.js"></script>
+<script src="js/delete_account_user_empresa.js"></script>
+<script src="js/criar_usuario_empresa.js"></script>
 </body>
 
 </html>
