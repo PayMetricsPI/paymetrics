@@ -85,3 +85,8 @@ select * from usuarios;
 insert into usuarios (nome, email, senha, administrador, fk_empresa)values
 ('Gabriele', 'gabi@gmail.com', 'Gabi@007', TRUE, 1),
 ('Samuel', 'samu@gmail.com', 'Gabi@007', FALSE, 1);
+
+insert into servidor (nome, sistema_operacional, fk_empresa)
+values("alfa", "windows", 1);
+
+select* from servidor;

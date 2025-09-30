@@ -11,5 +11,8 @@ router.post("/criarServidor", function (req, res) {
     servidorController.criarServidor(req, res);
 });
 
+router.put("/atualizarServidor", function(req, res){
+    servidorController.atualizarServidor(req, res)
+})
 
 module.exports = router;

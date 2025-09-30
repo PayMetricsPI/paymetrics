@@ -27,7 +27,24 @@ function deletarServidor (req, res){
         res.status(500).json(erro.sqlMessage);
     });
 }
+
+function atualizarServidor (req, res){
+    var nome = req.body.nome;
+    var sistema_operacional = req.body.sistema_operacional;
+    var fk_empresa = req.body.fk_empresa
+
+    servidorModel.atualizarServidor(nome,sistema_operacional,fk_empresa).then(function(resultado){
+        res.json(resultado);
+    }).catch(function (erro){
+        console.log(erro);
+        console.log("Houve um erro ao buscar o servidor: ", erro.sqlMessage);
+        res.status(500).json(erro.sqlMessage);
+    });
+}
+
+
 module.exports={
     deletarServidor,
-    criarServidor
+    criarServidor,
+    atualizarServidor
 };
