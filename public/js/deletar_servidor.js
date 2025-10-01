@@ -1,59 +1,61 @@
-const out_delete_user_account = document.getElementById('out_delete_user_account');
-const close_delete_user_account_button = document.getElementById('close_delete_user_account_button');
-const delete_user_account_modal = document.getElementById('delete_user_account_modal');
-const cancel_button_delete_user_account = document.getElementById('cancel_button_delete_user_account');
+const out_delete_server = document.getElementById('out_delete_user_account');
+const close_delete_server_button = document.getElementById('close_delete_user_account_button');
+const delete_server_modal = document.getElementById('delete_user_account_modal');
+const cancel_button_delete_server = document.getElementById('cancel_button_delete_user_account');
+const confirm_button_delete_server = document.getElementById('confirm_button_delete_user');
 
-const delete_user_button = document.getElementsByClassName('delete_user_button');
+const delete_server_buttons = document.querySelectorAll('.delete_user_button');
 
-const confirm_button_delete_user = document.getElementById('confirm_button_delete_user');
-
-const close_modal_delete_user = () => {
-    out_delete_user_account.style.visibility = 'hidden';
-    delete_user_account_modal.style.visibility = 'hidden';
-    out_delete_user_account.style.pointerEvents = 'none';
-    delete_user_account_modal.style.pointerEvents = 'none';
-    out_delete_user_account.style.opacity = 0;
-    delete_user_account_modal.style.opacity = 0;
+// Fechar modal
+const close_modal_delete_server = () => {
+    out_delete_server.style.visibility = 'hidden';
+    delete_server_modal.style.visibility = 'hidden';
+    out_delete_server.style.pointerEvents = 'none';
+    delete_server_modal.style.pointerEvents = 'none';
+    out_delete_server.style.opacity = 0;
+    delete_server_modal.style.opacity = 0;
+    delete_server_modal.removeAttribute('idServidor');
 }
 
-const open_modal_delete_user = (userID) => {
-    out_delete_user_account.style.visibility = 'visible';
-    delete_user_account_modal.style.visibility = 'visible';
-    out_delete_user_account.style.pointerEvents = 'auto';
-    delete_user_account_modal.style.pointerEvents = 'auto';
-    out_delete_user_account.style.opacity = 1;
-    delete_user_account_modal.style.opacity = 1;
-    delete_user_account_modal.setAttribute('idUser', userID);
+// Abrir modal
+const open_modal_delete_server = (serverID) => {
+    out_delete_server.style.visibility = 'visible';
+    delete_server_modal.style.visibility = 'visible';
+    out_delete_server.style.pointerEvents = 'auto';
+    delete_server_modal.style.pointerEvents = 'auto';
+    out_delete_server.style.opacity = 1;
+    delete_server_modal.style.opacity = 1;
+    delete_server_modal.setAttribute('idServidor', serverID);
 }
 
-const onclickDeleteUser = (e) => {
-    const userLocal = e.parentElement.parentElement;
-    const userIdDeleted = userLocal.getAttribute('idUser');
+// Associa os botões de excluir ao modal
+delete_server_buttons.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+        const container = e.target.closest('.users_container');
+        const serverIdDeleted = container.getAttribute('idUser'); // já existe no HTML
+        open_modal_delete_server(serverIdDeleted);
+    });
+});
 
-    open_modal_delete_user(userIdDeleted)
-}
+// Enviar DELETE para o backend
+const sendDeleteServer = () => {
+    const serverID = delete_server_modal.getAttribute('idServidor');
 
-const sendDeleteUser = () => {
-    const userID = delete_user_account_modal.getAttribute('idUser');
-    const empresaID = sessionStorage.getItem('id');
-
-    fetch('/empresas/deletar/usuario', {
+    fetch(`/servidores/deletarServidor/${serverID}`, {
         method: 'DELETE',
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-            "userID": userID,
-            "empresaID": empresaID,
-        }),
     }).then(response => {
-        if(response.status == 200){
-            window.location.reload()
+        if (response.status === 200) {
+            window.location.reload();
+        } else {
+            alert("Erro ao excluir servidor!");
         }
-    })
+    });
 }
 
-out_delete_user_account.addEventListener('click', close_modal_delete_user)
-close_delete_user_account_button.addEventListener('click', close_modal_delete_user)
-cancel_button_delete_user_account.addEventListener('click', close_modal_delete_user)
-confirm_button_delete_user.addEventListener('click', sendDeleteUser)
+// Eventos de fechar/cancelar
+out_delete_server.addEventListener('click', close_modal_delete_server);
+close_delete_server_button.addEventListener('click', close_modal_delete_server);
+cancel_button_delete_server.addEventListener('click', close_modal_delete_server);
+
+// Confirmar exclusão
+confirm_button_delete_server.addEventListener('click', sendDeleteServer);
