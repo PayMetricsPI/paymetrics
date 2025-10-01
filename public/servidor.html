@@ -30,16 +30,14 @@
       <!-- Lista de servidores -->
       <div class="users">
         <div class="users_container" idServidor="1">
-          <img src="./assets//icons/servidor_.png" alt= "" width="90px">
+            <img src="./assets//icons/servidor_.png" alt= "" width="90px">
           <p>Servidor 1</p>
-          <div class="comn"></div>
-        <div class="user_controls">
+           <div class="comn"></div>
+          <div class="user_controls">
           <button class="edit_user_button">Editar</button>
           <button class="delete_user_button">Excluir</button>
         </div>
         </div>
-        
-
         <div class="users_container" idServidor="2">
             <img src="./assets//icons/servidor_.png" alt= "" width="90px">
           <p>Servidor 2</p>
@@ -59,6 +57,7 @@
         </div>
         </div>
         <div class="users_container" idServidor="4">
+            
             <img src="./assets//icons/servidor_.png" alt= "" width="90px">
           <p>Servidor 4</p>
            <div class="comn"></div>
@@ -105,6 +104,35 @@
       </div>
     </div>
   </div>
+  <div class="out_edit" id="out_edit_server"></div>
+
+<div class="edit_server_modal modal_edit" id="edit_server_modal">
+  <div class="edit_headers">
+    <h3>Editar Servidor</h3>
+    <span id="close_edit_server_button">x</span>
+  </div>
+
+  <div class="edit_field">
+    <label>Nome:</label>
+    <input type="text" class="nome_input">
+  </div>
+<br>
+  <div class="edit_field">
+    <label>Sistema Operacional:</label>
+    <input type="text" class="so_input">
+  </div>
+<br>
+  <div class="edit_field">
+    <label>MAC Address:</label>
+    <input type="text" class="mac_input">
+  </div>
+<br>
+  <div class="edit_buttons">
+    <button class="cancel_button" id="cancel_button_edit_server">Cancelar</button>
+    <button class="confirm_button" id="submit_button_edit_server">Salvar</button>
+  </div>
+</div>
+
 
   <!-- Modal de excluir servidor -->
   <!-- Overlay -->
@@ -128,7 +156,7 @@
   <script src="js/sessao.js"></script>
   <script src="js/header.js"></script>
   <script src="js/ScriptDelete.js"></script>
-  <script src="js/edit_user_info.js"></script>
+  <script src="js/editar_servidor.js"></script>
   <script src="js/deletar_servidor.js"></script>
   <script src="js/criar_servidor.js"></script>
 </body>
