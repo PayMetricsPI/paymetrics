@@ -11,10 +11,11 @@
 .users_container {
     background-color: #F4F4F4;
     display: flex;
-    align-items: center; /* Alinha verticalmente os itens */
-    justify-content: space-between; /* Distribui espaço entre os elementos */
+    align-items: center; 
+    text-align: center;
+    justify-content: space-between; 
     width: 40vw;
-    padding: 30px;
+    padding: 10px;
     border: 5px solid black;
     border-radius: 100px;
 }
@@ -134,16 +135,21 @@
 .user_controls .edit_user_button {
     background-color: #00A335;
     border-radius: 100px;
+    width: 80px;
 }
 
 
 
 .user_controls .edit_user_button:hover {
     background-color: #00832c;
+        border-radius: 100px;
+    width: 80px;
 }
 
 .user_controls .delete_user_button {
     background-color: #E30B0B;
+    border-radius: 100px;
+    width: 80px;
 }
 
 .user_controls .delete_user_button:hover {
@@ -233,6 +239,7 @@
     border: none;
     background-color: #E30B0B;
     border-radius: 100px;
+    width: 150px;
 }
 
 .confirm_button_delete:hover,
@@ -260,4 +267,12 @@
 
 .cancel_button:hover {
     background-color: #a7a7a7;
+}
+
+#out_delete_server,
+#delete_user_account_modal {
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .2s ease;
 }
