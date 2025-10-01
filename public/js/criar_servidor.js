@@ -1,5 +1,4 @@
 const create_server_button_servidor = document.getElementById('create_server_button_empresa');
-
 const out_create_server = document.getElementById('out_create_server');
 const create_server_modal = document.getElementById('create_server_modal');
 const close_create_server_button = document.getElementById('close_create_server_button');
