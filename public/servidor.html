@@ -1,107 +1,110 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/login.css">
-    <link rel="stylesheet" href="css/navbar.css">
-    <link rel="stylesheet" href="css/embreve.css">
-    <link rel="stylesheet" href="css/deletar.css">
-    <link rel="stylesheet" href="css/servidor.css">
-    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
-    <title>PayMetrics | Atualizar Cadastro</title>
-    <link rel="shortcut icon" type="imagex/png" href="assets/icons/logo Paymetrics.png">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="css/login.css">
+  <link rel="stylesheet" href="css/navbar.css">
+  <link rel="stylesheet" href="css/embreve.css">
+  <link rel="stylesheet" href="css/deletar.css">
+  <link rel="stylesheet" href="css/servidor.css">
+  <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+  <title>PayMetrics | Meus Servidores</title>
+  <link rel="shortcut icon" type="imagex/png" href="assets/icons/logo Paymetrics.png">
 </head>
 <body>
-    <div id="sidebar"></div>
-    <div class="main-content">
-        <div class="conteudoDashboard container">
-            <div class="div_titulo_mercado" id="div_titulo_mercado"></div>
-            <div class="conteudoAdmin">
-                <div class="divHeaderADM my-5" style="margin: 0 100px 0 100px;">
-                    <div class="div_titulo">
-                        <h1>Meus Servidores</h1>
-                    </div>
-                </div>
-            </div>
-     <!-- <div class="all_users"> -->
-            <div class="users">
-                <div class="users_container">
-                    <img src="./assets/profile/default_avatar.webp" style="width: 90px; border-radius: 20%;" alt="">
-                    <div class="photo_info">
-                        <div class="photo"></div>
-                        <p>Servidor 1</p>
-                            <p>Editar</p>
-                        <p>Excluir</p>
-                    </div>
-                </div>
-           <div class="users_container">
-                    <img src="./assets/profile/default_avatar.webp" style="width: 90px; border-radius: 20%;" alt="">
-                    <div class="photo_info">
-                        <div class="photo"></div>
-                        <p>Servidor 2</p>
-                        <p>Editar</p>
-                        <p>Excluir</p>
-                    </div>
-                </div>
-            </div>
-    <!-- </div> -->
+  <div id="sidebar"></div>
+
+  <div class="main-content">
+    <div class="conteudoDashboard container">
+      <div class="div_titulo_mercado" id="div_titulo_mercado"></div>
+      <div class="conteudoAdmin">
+        <div class="divHeaderADM my-5" style="margin: 0 100px;">
+          <div class="div_titulo">
+            <h1>Meus Servidores</h1>
+          </div>
+        </div>
+      </div>
+
+      <!-- Lista de servidores -->
+      <div class="users">
+        <div class="users_container" idServidor="1">
+          <img src="./assets/profile/default_avatar.webp" alt="" width="90px">
+          <p>Servidor 1</p>
+          <div class="comn"></div>
+        <div class="user_controls">
+          <button class="edit_user_button">Editar</button>
+          <button class="confirm_button_delete_user">Excluir</button>
+        </div>
+        </div>
+        
+
+        <div class="users_container" idServidor="2">
+           <img src="./assets/profile/default_avatar.webp" alt="" width="90px">
+          <p>Servidor 2</p>
+          <div class="user_controls">
+          <button class="edit_user_button">Editar</button>
+          <button class="confirm_button_delete_user">Excluir</button>
+        </div>
+        </div>
+      </div>
     </div>
-    
+
+    <!-- Botão de adicionar servidor -->
     <div class="register_new" id="create_server_button_empresa">
-    <span class="material-symbols-outlined">
-        Adicionar Servidor
-    </span>
-    <div class="box2"></div>
-</div>
-
+      <span class="material-symbols-outlined">Adicionar Servidor</span>
     </div>
-</div>
+  </div>
 
-<div class="out_create_server out_edit" id="out_create_server"></div>
+  <!-- Overlay do modal -->
+  <div class="out_edit" id="out_create_server"></div>
+  <div class="out_edit" id="out_delete_server"></div>
 
-<div class="create_server_modal modal_edit" id="create_server_modal">
+  <!-- Modal de criar servidor -->
+  <div class="create_server_modal modal_edit" id="create_server_modal">
     <div class="create_server_headers edit_headers">
-        <h3>Criar Servidor</h3>
-        <span class="material-symbols-outlined" id="close_create_server_button">
-            close
-        </span>
+      <h3>Criar Servidor</h3>
+      <span class="material-symbols-outlined" id="close_create_server_button">close</span>
     </div>
-
     <div class="create_server_content edit_content">
-        <div class="create_server_field edit_field">
-            <label for="">Nome do Servidor</label>
-            <input type="text" class="nome_input">
-        </div>
-
-        <div class="create_server_field edit_field">
-            <label for="">Sistema Operacional</label>
-            <input type="text" class="so_input">
-        </div>
-
-        <div class="create_server_field edit_field">
-            <label for="">MAC Address</label>
-            <input type="text" class="mac_input">
-        </div>
-
-        <div class="create_server_button edit_buttons">
-            <button class="cancel_button" id="cancel_button_create_server">
-                Cancelar
-            </button>
-            <button class="confirm_button" id="submit_button_create_server">
-                Confirmar
-            </button>
-        </div>
+      <div class="edit_field">
+        <label for="">Nome do Servidor</label>
+        <input type="text" class="nome_input">
+      </div>
+      <div class="edit_field">
+        <label for="">Sistema Operacional</label>
+        <input type="text" class="so_input">
+      </div>
+      <div class="edit_field">
+        <label for="">MAC Address</label>
+        <input type="text" class="mac_input">
+      </div>
+      <div class="edit_buttons">
+        <button class="cancel_button" id="cancel_button_create_server">Cancelar</button>
+        <button class="confirm_button" id="submit_button_create_server">Confirmar</button>
+      </div>
     </div>
-</div>
+  </div>
 
-<script src="js/sessao.js"></script>
-<script src="js/header.js"></script>
-<script src="js/ScriptDelete.js"></script>
-<script src="js/edit_user_info.js"></script>
-<script src="js/delete_account_user_empresa.js"></script>
-<script src="js/criar_servidor.js"></script>
+  <!-- Modal de excluir servidor -->
+  <div class="delete_user_account_modal modal_edit" id="delete_user_account_modal">
+    <div class="edit_headers">
+      <h3>Excluir Servidor</h3>
+      <span id="close_delete_user_account_button">x</span>
+    </div>
+    <p>Tem certeza que deseja excluir este servidor?</p>
+    <div class="edit_buttons">
+      <button class="cancel_button" id="cancel_button_delete_user_account">Cancelar</button>
+      <button class="confirm_button_delete_user" id="confirm_button_delete_user">Confirmar</button>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/sessao.js"></script>
+  <script src="js/header.js"></script>
+  <script src="js/ScriptDelete.js"></script>
+  <script src="js/edit_user_info.js"></script>
+  <script src="js/deletar_servidor.js"></script>
+  <script src="js/criar_servidor.js"></script>
 </body>
-
 </html>
