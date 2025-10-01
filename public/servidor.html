@@ -22,6 +22,7 @@
         <div class="divHeaderADM my-5" style="margin: 0 100px;">
           <div class="div_titulo">
             <h1>Meus Servidores</h1>
+            <br><br>    <br>
           </div>
         </div>
       </div>
@@ -34,7 +35,7 @@
           <div class="comn"></div>
         <div class="user_controls">
           <button class="edit_user_button">Editar</button>
-          <button class="confirm_button_delete_user">Excluir</button>
+          <button class="delete_user_button">Excluir</button>
         </div>
         </div>
         
@@ -42,9 +43,28 @@
         <div class="users_container" idServidor="2">
             <img src="./assets//icons/servidor_.png" alt= "" width="90px">
           <p>Servidor 2</p>
+           <div class="comn"></div>
           <div class="user_controls">
           <button class="edit_user_button">Editar</button>
-          <button class="confirm_button_delete_user">Excluir</button>
+          <button class="delete_user_button">Excluir</button>
+        </div>
+        </div>
+        <div class="users_container" idServidor="3">
+            <img src="./assets//icons/servidor_.png" alt= "" width="90px">
+          <p>Servidor 3</p>
+           <div class="comn"></div>
+          <div class="user_controls">
+          <button class="edit_user_button">Editar</button>
+          <button class="delete_user_button">Excluir</button>
+        </div>
+        </div>
+        <div class="users_container" idServidor="4">
+            <img src="./assets//icons/servidor_.png" alt= "" width="90px">
+          <p>Servidor 4</p>
+           <div class="comn"></div>
+          <div class="user_controls">
+          <button class="edit_user_button">Editar</button>
+          <button class="delete_user_button">Excluir</button>
         </div>
         </div>
       </div>
@@ -87,17 +107,22 @@
   </div>
 
   <!-- Modal de excluir servidor -->
-  <div class="delete_user_account_modal modal_edit" id="delete_user_account_modal">
-    <div class="edit_headers">
-      <h3>Excluir Servidor</h3>
-      <span id="close_delete_user_account_button">x</span>
-    </div>
-    <p>Tem certeza que deseja excluir este servidor?</p>
-    <div class="edit_buttons">
-      <button class="cancel_button" id="cancel_button_delete_user_account">Cancelar</button>
-      <button class="confirm_button_delete_user" id="confirm_button_delete_user">Confirmar</button>
-    </div>
+  <!-- Overlay -->
+<div class="out_edit" id="out_delete_server"></div>
+
+<!-- Modal -->
+<div class="delete_user_account_modal modal_edit" id="delete_user_account_modal">
+  <div class="edit_headers">
+    <h3>Excluir Servidor</h3>
+    <span id="close_delete_user_account_button">x</span>
   </div>
+  <p>Tem certeza que deseja excluir este servidor?</p>
+  <div class="edit_buttons">
+    <button class="cancel_button" id="cancel_button_delete_user_account">Cancelar</button>
+    <button class="confirm_button_delete_user" id="confirm_button_delete_user">Confirmar</button>
+  </div>
+</div>
+
 
   <!-- Scripts -->
   <script src="js/sessao.js"></script>
