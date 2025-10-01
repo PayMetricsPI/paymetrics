@@ -1,4 +1,4 @@
-const out_delete_server = document.getElementById('out_delete_user_account');
+const out_delete_server = document.getElementById('out_delete_server');
 const close_delete_server_button = document.getElementById('close_delete_user_account_button');
 const delete_server_modal = document.getElementById('delete_user_account_modal');
 const cancel_button_delete_server = document.getElementById('cancel_button_delete_user_account');
@@ -32,7 +32,7 @@ const open_modal_delete_server = (serverID) => {
 delete_server_buttons.forEach(btn => {
     btn.addEventListener('click', (e) => {
         const container = e.target.closest('.users_container');
-        const serverIdDeleted = container.getAttribute('idUser'); // já existe no HTML
+        const serverIdDeleted = container.getAttribute('idServidor'); 
         open_modal_delete_server(serverIdDeleted);
     });
 });
