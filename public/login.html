@@ -93,6 +93,7 @@
                     sessionStorage.ADMINISTRADOR   = usuario.id_administrador;
                     sessionStorage.EMPRESA         = usuario.fk_empresa;
                     sessionStorage.NOME_EMPRESA    = usuario.razao_social;
+                    sessionStorage.setItem("id", usuario.fk_empresa); 
 
                     if (sessionStorage.EMAIL_USUARIO == 'julia@sptech.com') {
                         setTimeout(function () {
