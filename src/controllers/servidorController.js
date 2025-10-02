@@ -9,6 +9,23 @@ function listarServidores(req, res) {
             console.error("Erro ao listar servidores:", erro.sqlMessage || erro);
             res.status(500).json({ error: erro.sqlMessage || erro });
         });
+
+}
+
+
+function criarServidores(req, res) {
+    const servidores = req.body.servidores;
+
+    if (!servidores || !Array.isArray(servidores) || servidores.length === 0) {
+        return res.status(400).json({ error: "Dados inválidos" });
+    }
+
+    servidorModel.criarServidores(servidores)
+        .then(resultado => res.status(201).json({ message: "Servidores criados com sucesso", insertedCount: resultado.affectedRows }))
+        .catch(erro => {
+            console.error("Erro ao criar servidores:", erro.sqlMessage || erro);
+            res.status(500).json({ error: "Houve um erro ao criar os servidores", details: erro.sqlMessage });
+        });
 }
 
 
@@ -66,3 +83,4 @@ module.exports = {
     criarServidores,
     deletarServidor
 };
+
