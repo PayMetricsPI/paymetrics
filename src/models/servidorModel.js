@@ -14,6 +14,12 @@ function criarServidores(servidores) {
 
 function deletarServidor(id_servidor, fk_empresa) {
     console.log("ACESSO AO SERVIDOR MODEL");
+
+     if (id_servidor == null || fk_empresa == null) {
+        console.error("Erro: id_servidor ou fk_empresa indefinidos!");
+        return Promise.reject("id_servidor ou fk_empresa indefinidos");
+    }
+    
     var instrucaoSql = `
         DELETE FROM servidor 
         WHERE id_servidor = ${id_servidor} AND fk_empresa = ${fk_empresa};
