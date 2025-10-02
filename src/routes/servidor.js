@@ -18,7 +18,7 @@ router.put("/atualizarServidor/:id_servidor", function(req, res) {
 });
 
 
-router.delete("/deletarServidor/:id_servidor", function(req, res) {
+router.post("/deletarServidor/:id_servidor", function(req, res) {
     servidorController.deletarServidor(req, res);
 });
 

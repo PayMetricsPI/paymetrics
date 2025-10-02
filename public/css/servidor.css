@@ -20,6 +20,8 @@
     border-radius: 100px;
 }
 
+
+
 .all_users {
     overflow-y: scroll;
     scrollbar-color: #00863F #eeeeee;
@@ -99,37 +101,46 @@
 
 /* Estilos para o fundo da modal */
 .out_edit {
-    top: 0;
-    left: 0;
-    z-index: 10;
-    position: absolute;
-    background-color: #00000090;
-    width: 100vw;
-    height: 100vh;
-    cursor: pointer;
-    transition: .25s;
-    visibility: hidden;
-    pointer-events: none;
-    opacity: 0;
+  top: 0;
+  left: 0;
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0,0,0,0.6);
+  z-index: 10;
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.25s ease;
 }
 
-/* Estilos para a modal */
-.modal_edit {
-    transition: .25s;
-    z-index: 11;
-    padding: 20px;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: #fff;
-    border-radius: 20px;
-    width: 30vw;
-    cursor: auto;
-    visibility: hidden;
-    pointer-events: none;
-    opacity: 0;
+.out_edit.show {
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto;
 }
+
+.modal_edit {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 11;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  width: 400px;
+  max-width: 90%;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.25s ease;
+}
+
+.modal_edit.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
 
 /* Estilos para os botões de controle de usuário */
 .user_controls .edit_user_button {
@@ -269,10 +280,3 @@
     background-color: #a7a7a7;
 }
 
-#out_delete_server,
-#delete_user_account_modal {
-  visibility: hidden;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity .2s ease;
-}
