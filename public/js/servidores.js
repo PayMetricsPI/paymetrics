@@ -1,6 +1,14 @@
+<<<<<<< HEAD
 const usersDiv = document.querySelector('.users');
 const fk_empresa = Number(sessionStorage.getItem('id'));
 
+=======
+// --------------------- VARIÁVEIS GLOBAIS ---------------------
+const usersDiv = document.querySelector('.users');
+const fk_empresa = Number(sessionStorage.getItem('id'));
+
+// MODAIS
+>>>>>>> 43eea4d (feat: Funcionalidades de editar,exluir,deletar e criar)
 const out_create_server = document.getElementById('out_create_server');
 const create_server_modal = document.getElementById('create_server_modal');
 const close_create_server_button = document.getElementById('close_create_server_button');
@@ -142,7 +150,6 @@ function carregarServidores() {
                         <button class="delete_user_button">Excluir</button>
                     </div>
                 `;
-
                 usersDiv.appendChild(div);
                 div.querySelector('.edit_user_button').addEventListener('click', () =>
                     open_modal_edit_server(s.id_servidor, s.nome, s.sistema_operacional, s.mac_address, s.disco,s.memoria)
