@@ -23,20 +23,22 @@ const confirm_button_delete_server = document.getElementById('confirm_button_del
 
 let deleteServerID = null;
 
-// --------------------- FUNÇÕES MODAIS ---------------------
+
 function open_modal_create_server() {
-    out_create_server.style.display = 'block';
-    create_server_modal.classList.add('show');
+    out_create_server.classList.add('show');   
+    create_server_modal.classList.add('show'); 
 }
+
 function close_modal_create_server() {
-    out_create_server.style.display = 'none';
+    out_create_server.classList.remove('show');
     create_server_modal.classList.remove('show');
     create_server_modal.querySelectorAll('input').forEach(i => i.value = '');
 }
 
+
 function open_modal_edit_server(id, nome, so, mac) {
-    out_edit_server.classList.add('show');   // overlay visível
-    edit_server_modal.classList.add('show');  // modal visível
+    out_edit_server.classList.add('show');   
+    edit_server_modal.classList.add('show');  
     edit_server_modal.querySelector('.nome_input').value = nome;
     edit_server_modal.querySelector('.so_input').value = so;
     edit_server_modal.querySelector('.mac_input').value = mac;
@@ -48,8 +50,6 @@ function close_modal_edit_server() {
     edit_server_modal.classList.remove('show');
     edit_server_modal.removeAttribute('idServidor');
 }
-
-
 
 function open_modal_delete_server(id) {
     deleteServerID = id;
@@ -64,8 +64,6 @@ function close_modal_delete_server() {
 }
 
 
-// --------------------- EVENTOS ---------------------
-// CRIAR
 document.getElementById('create_server_button_empresa').addEventListener('click', open_modal_create_server);
 close_create_server_button.addEventListener('click', close_modal_create_server);
 cancel_button_create_server.addEventListener('click', close_modal_create_server);
@@ -83,7 +81,7 @@ submit_button_create_server.addEventListener('click', () => {
       .catch(console.error);
 });
 
-// EDITAR
+
 close_edit_server_button.addEventListener('click', close_modal_edit_server);
 cancel_button_edit_server.addEventListener('click', close_modal_edit_server);
 submit_button_edit_server.addEventListener('click', () => {
@@ -101,7 +99,7 @@ submit_button_edit_server.addEventListener('click', () => {
       .catch(console.error);
 });
 
-// DELETAR
+
 close_delete_server_button.addEventListener('click', close_modal_delete_server);
 cancel_button_delete_server.addEventListener('click', close_modal_delete_server);
 confirm_button_delete_server.addEventListener('click', () => {
@@ -115,7 +113,7 @@ confirm_button_delete_server.addEventListener('click', () => {
       .catch(console.error);
 });
 
-// --------------------- CARREGAR SERVIDORES ---------------------
+
 function carregarServidores() {
     if (!fk_empresa) return;
     fetch(`/servidores/${fk_empresa}`)
