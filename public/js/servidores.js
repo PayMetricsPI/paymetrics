@@ -83,7 +83,6 @@ submit_button_create_server.addEventListener('click', () => {
       .catch(console.error);
 });
 
-
 close_edit_server_button.addEventListener('click', close_modal_edit_server);
 cancel_button_edit_server.addEventListener('click', close_modal_edit_server);
 submit_button_edit_server.addEventListener('click', () => {
@@ -102,7 +101,6 @@ submit_button_edit_server.addEventListener('click', () => {
       .then(() => { close_modal_edit_server(); carregarServidores(); })
       .catch(console.error);
 });
-
 
 close_delete_server_button.addEventListener('click', close_modal_delete_server);
 cancel_button_delete_server.addEventListener('click', close_modal_delete_server);
