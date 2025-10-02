@@ -10,76 +10,34 @@
   <link rel="stylesheet" href="css/servidor.css">
   <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
   <title>PayMetrics | Meus Servidores</title>
-  <link rel="shortcut icon" type="imagex/png" href="assets/icons/logo Paymetrics.png">
+  <link rel="shortcut icon" type="image/png" href="assets/icons/logo Paymetrics.png">
 </head>
 <body>
   <div id="sidebar"></div>
 
   <div class="main-content">
     <div class="conteudoDashboard container">
-      <div class="div_titulo_mercado" id="div_titulo_mercado"></div>
-      <div class="conteudoAdmin">
-        <div class="divHeaderADM my-5" style="margin: 0 100px;">
-          <div class="div_titulo">
-            <h1>Meus Servidores</h1>
-            <br><br>    <br>
-          </div>
+      <div class="divHeaderADM my-5" style="margin: 0 100px;">
+        <div class="div_titulo">
+          <h1>Meus Servidores</h1>
         </div>
       </div>
 
-      <!-- Lista de servidores -->
-      <div class="users">
-        <div class="users_container" idServidor="1">
-            <img src="./assets//icons/servidor_.png" alt= "" width="90px">
-          <p>Servidor 1</p>
-           <div class="comn"></div>
-          <div class="user_controls">
-          <button class="edit_user_button">Editar</button>
-          <button class="delete_user_button">Excluir</button>
-        </div>
-        </div>
-        <div class="users_container" idServidor="2">
-            <img src="./assets//icons/servidor_.png" alt= "" width="90px">
-          <p>Servidor 2</p>
-           <div class="comn"></div>
-          <div class="user_controls">
-          <button class="edit_user_button">Editar</button>
-          <button class="delete_user_button">Excluir</button>
-        </div>
-        </div>
-        <div class="users_container" idServidor="3">
-            <img src="./assets//icons/servidor_.png" alt= "" width="90px">
-          <p>Servidor 3</p>
-           <div class="comn"></div>
-          <div class="user_controls">
-          <button class="edit_user_button">Editar</button>
-          <button class="delete_user_button">Excluir</button>
-        </div>
-        </div>
-        <div class="users_container" idServidor="4">
-            
-            <img src="./assets//icons/servidor_.png" alt= "" width="90px">
-          <p>Servidor 4</p>
-           <div class="comn"></div>
-          <div class="user_controls">
-          <button class="edit_user_button">Editar</button>
-          <button class="delete_user_button">Excluir</button>
-        </div>
-        </div>
-      </div>
-    </div>
+      <div class="users" id="users_container">
 
-    <!-- Botão de adicionar servidor -->
-    <div class="register_new" id="create_server_button_empresa">
-      <span class="material-symbols-outlined">Adicionar Servidor</span>
+      </div>
+
+      
+      <button class="register_new" id="create_server_button_empresa">
+        Adicionar Servidor
+      </button>
     </div>
   </div>
 
-  <!-- Overlay do modal -->
   <div class="out_edit" id="out_create_server"></div>
+  <div class="out_edit" id="out_edit_server"></div>
   <div class="out_edit" id="out_delete_server"></div>
 
-  <!-- Modal de criar servidor -->
   <div class="create_server_modal modal_edit" id="create_server_modal">
     <div class="create_server_headers edit_headers">
       <h3>Criar Servidor</h3>
@@ -104,55 +62,43 @@
       </div>
     </div>
   </div>
-  <div class="out_edit" id="out_edit_server"></div>
 
-<div class="edit_server_modal modal_edit" id="edit_server_modal">
-  <div class="edit_headers">
-    <h3>Editar Servidor</h3>
-    <span id="close_edit_server_button">x</span>
+ 
+  <div class="edit_server_modal modal_edit" id="edit_server_modal">
+    <div class="edit_headers">
+      <h3>Editar Servidor</h3>
+      <span id="close_edit_server_button">x</span>
+    </div>
+    <div class="edit_field">
+      <label>Nome:</label>
+      <input type="text" class="nome_input">
+    </div>
+    <div class="edit_field">
+      <label>Sistema Operacional:</label>
+      <input type="text" class="so_input">
+    </div>
+    <div class="edit_field">
+      <label>MAC Address:</label>
+      <input type="text" class="mac_input">
+    </div>
+    <div class="edit_buttons">
+      <button class="cancel_button" id="cancel_button_edit_server">Cancelar</button>
+      <button class="confirm_button" id="submit_button_edit_server">Salvar</button>
+    </div>
   </div>
 
-  <div class="edit_field">
-    <label>Nome:</label>
-    <input type="text" class="nome_input">
+  <div class="delete_user_account_modal modal_edit" id="delete_user_account_modal">
+    <div class="edit_headers">
+      <h3>Excluir Servidor</h3>
+      <span id="close_delete_user_account_button">x</span>
+    </div>
+    <p>Tem certeza que deseja excluir este servidor?</p>
+    <div class="edit_buttons">
+      <button class="cancel_button" id="cancel_button_delete_user_account">Cancelar</button>
+      <button class="confirm_button_delete_user" id="confirm_button_delete_user">Confirmar</button>
+    </div>
   </div>
-<br>
-  <div class="edit_field">
-    <label>Sistema Operacional:</label>
-    <input type="text" class="so_input">
-  </div>
-<br>
-  <div class="edit_field">
-    <label>MAC Address:</label>
-    <input type="text" class="mac_input">
-  </div>
-<br>
-  <div class="edit_buttons">
-    <button class="cancel_button" id="cancel_button_edit_server">Cancelar</button>
-    <button class="confirm_button" id="submit_button_edit_server">Salvar</button>
-  </div>
-</div>
 
-
-  <!-- Modal de excluir servidor -->
-  <!-- Overlay -->
-<div class="out_edit" id="out_delete_server"></div>
-
-<!-- Modal -->
-<div class="delete_user_account_modal modal_edit" id="delete_user_account_modal">
-  <div class="edit_headers">
-    <h3>Excluir Servidor</h3>
-    <span id="close_delete_user_account_button">x</span>
-  </div>
-  <p>Tem certeza que deseja excluir este servidor?</p>
-  <div class="edit_buttons">
-    <button class="cancel_button" id="cancel_button_delete_user_account">Cancelar</button>
-    <button class="confirm_button_delete_user" id="confirm_button_delete_user">Confirmar</button>
-  </div>
-</div>
-
-
-  <!-- Scripts -->
   <script src="js/sessao.js"></script>
   <script src="js/header.js"></script>
   <script src="js/ScriptDelete.js"></script>
