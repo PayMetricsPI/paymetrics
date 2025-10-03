@@ -17,23 +17,22 @@ var app = express();
 
 var indexRouter = require("./src/routes/index");
 var usuarioRouter = require("./src/routes/usuario");
+var servidorRouter = require("./src/routes/servidor");
 var redefinirSenhaRouter = require("./src/routes/usuario");
 var deletarusuarioRouter = require("./src/routes/usuario");
 var listarRouter = require("./src/routes/usuario");
-var deletarServidorRouter = require("./src/routes/servidor");
 
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 
-app.use(cors());
-
 app.use("/", indexRouter);
 app.use("/usuarios", usuarioRouter);
+app.use("/servidores", servidorRouter);
 app.use("/redefinirSenha", redefinirSenhaRouter);
 app.use("/deletar", deletarusuarioRouter);
 app.use("/listar", listarRouter);
-app.use("/servidor", deletarServidorRouter)
 app.use('/bootstrap', express.static(__dirname + '/node_modules/bootstrap/dist'));
 
 

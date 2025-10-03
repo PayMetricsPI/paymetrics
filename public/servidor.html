@@ -1,59 +1,101 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/login.css">
-    <link rel="stylesheet" href="css/navbar.css">
-    <link rel="stylesheet" href="css/embreve.css">
-    <link rel="stylesheet" href="css/deletar.css">
-    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
-    <title>PayMetrics | Atualizar Cadastro</title>
-    <link rel="shortcut icon" type="imagex/png" href="assets/icons/logo Paymetrics.png">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="css/login.css">
+  <link rel="stylesheet" href="css/navbar.css">
+  <link rel="stylesheet" href="css/embreve.css">
+  <link rel="stylesheet" href="css/deletar.css">
+  <link rel="stylesheet" href="css/servidor.css">
+  <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+  <title>PayMetrics | Meus Servidores</title>
+  <link rel="shortcut icon" type="image/png" href="assets/icons/logo Paymetrics.png">
 </head>
+<body>
+  <div id="sidebar"></div>
 
-<body onload>
-    <div id="sidebar"></div>
-    <div class="main-content">
-        <div class="conteudoDashboard container">
-            <div class="div_titulo_mercado" id="div_titulo_mercado"></div>
-            <div class="conteudoAdmin">
-                <div class="divHeaderADM my-5" style="margin: 0 100px 0 100px;">
-                    <div class="div_titulo">
-                        <h1>Controle de Usuários</h1>
-                    </div>
-                    <div class="adicionarUsuario">
-                        <a href="./cadastro.html" class="botao_principal">Adicionar Usuário</a>
-                    </div>
-                </div>
-                <div class="mostrarUsuarios">
-                    <div class="table-container">
-                        <table>
-                            <thead>
-                                <tr class="nomeColuna">
-                                    <th>ID</th>
-                                    <th class="colunaUsuario">Nome</th>
-                                    <th class="colunaEmail">E-mail</th>
-                                    <th class="colunaEmpresa">Empresa</th>
-                                    <th class="colunaAcesso">Acesso</th>
-                                    <th class="colunaDelete">Delete</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tbody_usuarios">
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="box2"></div>
+  <div class="main-content">
+    <div class="conteudoDashboard container">
+      <div class="divHeaderADM my-5" style="margin: 0 100px;">
+        <div class="div_titulo">
+          <h1>Meus Servidores</h1>
+          <button class="register_new" id="create_server_button_empresa">Adicionar Servidor</button>
         </div>
+      </div>
+      <div class="users" id="users_container">
+      </div>
     </div>
-</div>
-<script src="js/sessao.js"></script>
-<script src="js/header.js"></script>
-<script src="js/ScriptDelete.js"></script>
-</body>
+  </div>
+  
+  <div class="out_edit" id="out_create_server"></div>
+  <div class="out_edit" id="out_edit_server"></div>
+  <div class="out_edit" id="out_delete_server"></div>
 
+  <div class="create_server_modal modal_edit" id="create_server_modal">
+    <div class="create_server_headers edit_headers">
+      <h3>Criar Servidor</h3>
+      <span class="material-symbols-outlined" id="close_create_server_button">close</span>
+    </div>
+    <div class="create_server_content edit_content">
+      <div class="edit_field">
+        <label for="">Nome do Servidor</label>
+        <input type="text" class="nome_input">
+      </div>
+      <div class="edit_field">
+        <label for="">Sistema Operacional</label>
+        <input type="text" class="so_input">
+      </div>
+      <div class="edit_field">
+        <label for="">MAC Address</label>
+        <input type="text" class="mac_input">
+      </div>
+      <div class="edit_buttons">
+        <button class="cancel_button" id="cancel_button_create_server">Cancelar</button>
+        <button class="confirm_button" id="submit_button_create_server">Confirmar</button>
+      </div>
+      
+    </div>
+  </div>
+
+  <div class="edit_server_modal modal_edit" id="edit_server_modal">
+    <div class="edit_headers">
+      <h3>Editar Servidor</h3>
+      <span id="close_edit_server_button">x</span>
+    </div>
+    <div class="edit_field">
+      <label for="">Nome do Servidor</label>
+      <input type="text" class="nome_input">
+
+    </div>
+    <div class="edit_field" >
+      <label for="">Sistema Operacional</label>
+      <input type="text" class="so_input">
+    </div>
+    <div class="edit_field">
+      <label for="">MAC Address</label>
+      <input type="text" class="mac_input">
+    </div>
+    <div class="edit_buttons">
+      <button class="cancel_button" id="cancel_button_edit_server">Cancelar</button>
+      <button class="confirm_button" id="submit_button_edit_server">Salvar</button>
+    </div>
+  </div>
+
+  <div class="delete_user_account_modal modal_edit" id="delete_user_account_modal">
+    <div class="edit_headers">
+      <h3>Excluir Servidor</h3>
+      <span id="close_delete_user_account_button">x</span>
+    </div>
+    <p>Tem certeza que deseja excluir este servidor?</p>
+    <div class="edit_buttons">
+      <button class="cancel_button" id="cancel_button_delete_user_account">Cancelar</button>
+      <button class="confirm_button_delete_user" id="confirm_button_delete_user">Confirmar</button>
+    </div>
+  </div>
+
+  <script src="js/sessao.js"></script>
+  <script src="js/header.js"></script>
+  <script src="js/servidores.js"></script>
+</body>
 </html>

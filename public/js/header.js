@@ -40,6 +40,12 @@ if (header) {
                         <span class="dash">Dashboards</span>
                       </a>                    
                 </li>
+                 <li class="nav-item">
+                      <a class="nav-link py-3 d-flex mx-1 align-items-center" data-bs-placemnet="right" href="./servidor.html ">
+                        <img src="assets/icons/servidor.png" class="bi mask2" width="32" height="32" alt="">
+                        <span class="dash">Servidores</span>
+                      </a>                    
+                </li>
                 <li class="nav-item">
                     <a class="nav-link py-3 d-flex mx-1 align-items-center" data-bs-placemnet="right"href="./embreve.html">
                         <img src="assets/icons/settings-icon.png" class="bi mask3" width="32" height="32" alt="">

@@ -29,14 +29,17 @@ foreign key (fk_empresa) references empresa(id_empresa),
 unique (email)
 );
 
-create table servidor(
-id_servidor int not null auto_increment,
-nome varchar(200),
-sistema_operacional varchar(100) not null,
-fk_empresa int not null,
-primary key (id_servidor, fk_empresa),
-foreign key (fk_empresa) references empresa(id_empresa)
+ create table servidor (
+    id_servidor INT NOT NULL AUTO_INCREMENT,
+    nome VARCHAR(200),
+    sistema_operacional VARCHAR(100) NOT NULL,
+    mac_address VARCHAR(50) NOT NULL,
+    fk_empresa INT NOT NULL,
+    PRIMARY KEY (id_servidor),
+    FOREIGN KEY (fk_empresa) REFERENCES empresa(id_empresa) 
 );
+
+
 
 create table componente(
 id_componente int not null auto_increment,
