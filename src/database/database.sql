@@ -36,7 +36,7 @@ unique (email)
     mac_address VARCHAR(50) NOT NULL,
     fk_empresa INT NOT NULL,
     PRIMARY KEY (id_servidor),
-    FOREIGN KEY (fk_empresa) REFERENCES empresa(id_empresa) ON DELETE CASCADE
+    FOREIGN KEY (fk_empresa) REFERENCES empresa(id_empresa) 
 );
 
 
