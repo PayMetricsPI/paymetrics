@@ -20,8 +20,6 @@
     border-radius: 100px;
 }
 
-
-
 .all_users {
     overflow-y: scroll;
     scrollbar-color: #00863F #eeeeee;
@@ -37,8 +35,8 @@
     background-color: #F4F4F4;
     border: #00863F 3px solid;
     display: flex;
-    align-items: center; /* Centraliza verticalmente */
-    justify-content: space-between; /* Distribui espaço entre os elementos */
+    align-items: center; 
+    justify-content: space-between; 
     padding: 16px;
     border-radius: 100px;
 }
@@ -52,7 +50,7 @@
 .all_users .user .photo_info .user_info {
     display: flex;
     flex-direction: column;
-    align-items: center; /* Centraliza horizontalmente */
+    align-items: center;
     justify-content: center;
 }
 
@@ -83,7 +81,7 @@
     font-weight: 600;
     margin-right: 5%;
 }
-/* Estilo para o botão de registrar novo usuário */
+
 .register_new {
     display: flex;
     align-items: center;
@@ -99,7 +97,6 @@
     transition: 0.25s;
 }
 
-/* Estilos para o fundo da modal */
 .out_edit {
   top: 0;
   left: 0;
@@ -142,7 +139,7 @@
 }
 
 
-/* Estilos para os botões de controle de usuário */
+
 .user_controls .edit_user_button {
     background-color: #00A335;
     border-radius: 100px;
@@ -167,7 +164,7 @@
     background-color: #b30909;
 }
 
-/* Estilos para conteúdos dentro da modal */
+
 .edit_modal .edit_content div {
     display: flex;
 }
@@ -182,18 +179,57 @@
     gap: 10px;
 }
 
-/* Estilos para campos de edição */
+
+
+.create_server_content input {
+  border: yellow 2px solid;
+  background-color: #f4f4f4;
+  font-size: 16px;
+  padding: 15px 20px;
+  border-radius: 8px;  
+  outline: none;
+  width: 100%;
+  box-sizing: border-box;
+  height: 45px;         
+  line-height: 1.5;       
+}
+
+.create_server_content .edit_field {
+  margin-bottom: 20px;
+}
+
+.edit_server_modal input {
+  border: yellow 2px solid;   
+  background-color: #fff;
+  font-size: 16px;
+  padding: 12px 20px;
+  border-radius: 8px;      
+  outline: none;
+  width: 100%;
+  box-sizing: border-box;
+  height: 45px;
+  line-height: 1.5;
+}
+
+
+.edit_server_modal .edit_field {
+  margin-bottom: 15px;
+}
+
+
+
 .edit_field {
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    gap: 10px;
+     line-height: 1.5;   
 }
 
 .edit_password_field {
     position: relative;
 }
 
-/* Estilos para ícones dentro dos campos de edição */
+
 .edit_password_field span,
 .delete_account_field span {
     position: absolute;
@@ -201,8 +237,6 @@
     top: 50%;
     cursor: pointer;
 }
-
-/* Estilos para rótulos e campos de entrada */
 .edit_content > div label {
     margin-left: 20px;
 }
@@ -218,7 +252,8 @@
     box-sizing: border-box;
 }
 
-/* Estilos para cabeçalhos da modal */
+
+
 .edit_headers {
     display: flex;
     justify-content: space-between;
@@ -229,7 +264,7 @@
     cursor: pointer;
 }
 
-/* Estilos para botões dentro da modal */
+
 .edit_buttons {
     display: flex;
     gap: 10px;
@@ -266,7 +301,7 @@
 }
 
 .confirm_button:hover {
-    background-color: #FFD700; /* Cor de destaque ao passar o mouse */
+    background-color: #FFD700; 
 }
 
 .cancel_button {

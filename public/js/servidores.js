@@ -126,7 +126,7 @@ function carregarServidores() {
                 div.innerHTML = `
                     <img src="./assets/icons/servidor_.png" width="90px">
                     <div class="user_info">
-                        <p class="server_name">${s.nome}</p>
+                        <p class="server_name"> <strong>${s.nome} </strong> </p>
                         <p class="server_so">${s.sistema_operacional}</p>
                         <p class="server_mac">${s.mac_address}</p>
                     </div>
