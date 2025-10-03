@@ -1,8 +1,6 @@
-// --------------------- VARIÁVEIS GLOBAIS ---------------------
 const usersDiv = document.querySelector('.users');
 const fk_empresa = Number(sessionStorage.getItem('id'));
 
-// MODAIS
 const out_create_server = document.getElementById('out_create_server');
 const create_server_modal = document.getElementById('create_server_modal');
 const close_create_server_button = document.getElementById('close_create_server_button');
@@ -116,6 +114,7 @@ confirm_button_delete_server.addEventListener('click', () => {
 
 function carregarServidores() {
     if (!fk_empresa) return;
+
     fetch(`/servidores/${fk_empresa}`)
         .then(resp => resp.json())
         .then(servidores => {
@@ -124,17 +123,20 @@ function carregarServidores() {
                 const div = document.createElement('div');
                 div.className = 'users_container';
                 div.innerHTML = `
+                  <div class="user_icon">
                     <img src="./assets/icons/servidor_.png" width="90px">
-                    <div class="user_info">
-                        <p class="server_name"> <strong>${s.nome} </strong> </p>
-                        <p class="server_so">${s.sistema_operacional}</p>
-                        <p class="server_mac">${s.mac_address}</p>
                     </div>
+                    <div class="user_info">
+                    <p class="server_name" style="color:red;"> <strong>${s.nome}</strong> </p>
+                    <p class="server_name"><strong>Sistema Operacional: </strong>${s.sistema_operacional}</p>
+                    <p class="server_so"> <strong>Mac Adress: </strong> ${s.mac_address} </p>
+                    
                     <div class="user_controls">
                         <button class="edit_user_button">Editar</button>
                         <button class="delete_user_button">Excluir</button>
                     </div>
                 `;
+
                 usersDiv.appendChild(div);
                 div.querySelector('.edit_user_button').addEventListener('click', () =>
                     open_modal_edit_server(s.id_servidor, s.nome, s.sistema_operacional, s.mac_address)
@@ -146,6 +148,4 @@ function carregarServidores() {
         })
         .catch(console.error);
 }
-
-
 window.onload = carregarServidores;
