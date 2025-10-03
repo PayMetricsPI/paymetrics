@@ -1,24 +1,42 @@
 .users {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
+    flex-direction: row; 
     gap: 20px;
-    width: 1300px;
-    height: 350px;
+    flex-wrap: wrap;    
+    width: 100%;        
 }
 
 .users_container {
     background-color: #F4F4F4;
     display: flex;
-    align-items: center; 
+     align-items: center;      
+    justify-content: center; 
     text-align: center;
-    justify-content: space-between; 
+   
     width: 40vw;
     padding: 10px;
     border: 5px solid black;
     border-radius: 100px;
+    overflow: auto;
 }
+
+   .user_icon {
+    flex-shrink: 0;          
+    display: flex;
+    justify-content: flex-start;  /* joga a foto totalmente à esquerda */
+    align-items: center;
+    margin-right: 10px;          /* espaço entre a foto e o conteúdo */
+}
+
+
+.user_icon img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 3px solid black;
+}
+
+
 
 .all_users {
     overflow-y: scroll;
@@ -315,3 +333,32 @@
     background-color: #a7a7a7;
 }
 
+
+@media (max-width: 768px) {
+    .users_container {
+        width: 60vw; 
+        flex-direction: column; 
+        padding: 15px;
+    }
+
+    .all_users {
+        max-height: 50vh; 
+    }
+
+    .all_users .user {
+        flex-direction: column; 
+        align-items: center;
+        gap: 10px;
+    }
+
+    .all_users .user .photo_info {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .register_new {
+        right: 5vw;
+        bottom: 3vh;
+        padding: 10px 20px;
+    }
+}
