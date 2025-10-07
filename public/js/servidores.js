@@ -1,14 +1,6 @@
-<<<<<<< HEAD
 const usersDiv = document.querySelector('.users');
 const fk_empresa = Number(sessionStorage.getItem('id'));
 
-=======
-// --------------------- VARIÁVEIS GLOBAIS ---------------------
-const usersDiv = document.querySelector('.users');
-const fk_empresa = Number(sessionStorage.getItem('id'));
-
-// MODAIS
->>>>>>> 43eea4d (feat: Funcionalidades de editar,exluir,deletar e criar)
 const out_create_server = document.getElementById('out_create_server');
 const create_server_modal = document.getElementById('create_server_modal');
 const close_create_server_button = document.getElementById('close_create_server_button');
