@@ -22,16 +22,4 @@ router.post("/deletarServidor/:id_servidor", function(req, res) {
     servidorController.deletarServidor(req, res);
 });
 
-<<<<<<< HEAD
-router.post("/criarServidor", function (req, res) {
-    servidorController.criarServidor(req, res);
-});
-
-router.put("/atualizarServidor", function(req, res){
-    servidorController.atualizarServidor(req, res)
-})
-
 module.exports = router;
-=======
-module.exports = router;
->>>>>>> 64cb4b8 (refactor: Mudanças na parte do back end)

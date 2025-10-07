@@ -27,29 +27,6 @@ function criarServidores(req, res) {
         });
 }
 
-<<<<<<< HEAD
-function atualizarServidor (req, res){
-    var nome = req.body.nome;
-    var sistema_operacional = req.body.sistema_operacional;
-    var fk_empresa = req.body.fk_empresa
-
-    servidorModel.atualizarServidor(nome,sistema_operacional,fk_empresa).then(function(resultado){
-        res.json(resultado);
-    }).catch(function (erro){
-        console.log(erro);
-        console.log("Houve um erro ao buscar o servidor: ", erro.sqlMessage);
-        res.status(500).json(erro.sqlMessage);
-    });
-}
-
-
-module.exports={
-    deletarServidor,
-    criarServidor,
-    atualizarServidor
-};
-=======
-
 function deletarServidor(req, res) {
     const id_servidor = req.params.id_servidor;
     const { fk_empresa } = req.body;
@@ -68,13 +45,13 @@ function deletarServidor(req, res) {
 
 function atualizarServidor(req, res) {
     const id_servidor = req.params.id_servidor;
-    const { nome, sistema_operacional, mac_address } = req.body;
+    const { nome, sistema_operacional, mac_address, disco,ram } = req.body;
 
-    if (!id_servidor || !nome || !sistema_operacional || !mac_address) {
+    if (!id_servidor || !nome || !sistema_operacional || !mac_address || disco || ram) {
         return res.status(400).json({ error: "Dados incompletos para atualizar servidor" });
     }
 
-    servidorModel.atualizarServidor(id_servidor, nome, sistema_operacional, mac_address)
+    servidorModel.atualizarServidor(id_servidor, nome, sistema_operacional, mac_address, disco,)
         .then(resultado => res.status(200).json({ message: "Servidor atualizado com sucesso", resultado }))
         .catch(erro => {
             console.error("Erro ao atualizar o servidor:", erro.sqlMessage || erro);
@@ -89,4 +66,3 @@ module.exports = {
     criarServidores,
     deletarServidor
 };
->>>>>>> 64cb4b8 (refactor: Mudanças na parte do back end)

@@ -37,10 +37,10 @@ function listarServidores(fk_empresa) {
 }
 
 
-function atualizarServidor(id_servidor, nome, sistema_operacional, mac_address) {
+function atualizarServidor(id_servidor, nome, sistema_operacional, mac_address, ) {
     var instrucaoSql = `
         update servidor
-        set nome = '${nome}', sistema_operacional = '${sistema_operacional}', mac_address = '${mac_address}'
+        set nome = '${nome}', sistema_operacional = '${sistema_operacional}', , mac_address = '${mac_address}'
         where id_servidor = ${id_servidor};
     `;
     return database.executar(instrucaoSql);
