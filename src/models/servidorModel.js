@@ -4,8 +4,8 @@ var database = require("../database/config");
 function criarServidores(servidores) {
     let queries = servidores.map(s => {
         return `
-            insert into servidor (nome, sistema_operacional, mac_address, fk_empresa)
-            VALUES ('${s.nome}', '${s.sistema_operacional}', '${s.mac_address}', ${s.fk_empresa});
+            insert into servidor (nome, sistema_operacional, mac_address,ram , disco fk_empresa)
+            VALUES ('${s.nome}', '${s.sistema_operacional}', '${s.mac_address}', ${ram}, ${disco} ${s.fk_empresa});
         `;
     }).join("\n");
 
@@ -37,10 +37,11 @@ function listarServidores(fk_empresa) {
 }
 
 
-function atualizarServidor(id_servidor, nome, sistema_operacional, mac_address, ) {
+function atualizarServidor(id_servidor, nome, sistema_operacional, mac_address, ram, disco ) {
     var instrucaoSql = `
         update servidor
-        set nome = '${nome}', sistema_operacional = '${sistema_operacional}', , mac_address = '${mac_address}'
+        set nome = '${nome}', sistema_operacional = '${sistema_operacional}', mac_address = '${mac_address},
+        ram = ${ram}, disco = ${disco}'
         where id_servidor = ${id_servidor};
     `;
     return database.executar(instrucaoSql);

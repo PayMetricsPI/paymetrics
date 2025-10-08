@@ -34,6 +34,8 @@ unique (email)
     nome VARCHAR(200),
     sistema_operacional VARCHAR(100) NOT NULL,
     mac_address VARCHAR(50) NOT NULL,
+    ram INT NOT NULL,
+    disco INT NOT NULL,
     fk_empresa INT NOT NULL,
     PRIMARY KEY (id_servidor),
     FOREIGN KEY (fk_empresa) REFERENCES empresa(id_empresa) 
@@ -89,7 +91,9 @@ insert into usuarios (nome, email, senha, administrador, fk_empresa)values
 ('Gabriele', 'gabi@gmail.com', 'Gabi@007', TRUE, 1),
 ('Samuel', 'samu@gmail.com', 'Gabi@007', FALSE, 1);
 
-insert into servidor (nome, sistema_operacional, fk_empresa)
-values("alfa", "windows", 1);
+insert into servidor (nome, sistema_operacional,mac_address,ram,disco fk_empresa)
+values("alfa", "windows", 5, 1, "00:1A:2B:3C:4D:5E",1);
 
 select* from servidor;
+
+select* from usuarios;
