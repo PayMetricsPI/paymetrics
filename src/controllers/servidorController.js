@@ -28,22 +28,6 @@ function criarServidores(req, res) {
         });
 }
 
-
-function criarServidores(req, res) {
-    const servidores = req.body.servidores;
-
-    if (!servidores || !Array.isArray(servidores) || servidores.length === 0) {
-        return res.status(400).json({ error: "Dados inválidos" });
-    }
-
-    servidorModel.criarServidores(servidores)
-        .then(resultado => res.status(201).json({ message: "Servidores criados com sucesso", insertedCount: resultado.affectedRows }))
-        .catch(erro => {
-            console.error("Erro ao criar servidores:", erro.sqlMessage || erro);
-            res.status(500).json({ error: "Houve um erro ao criar os servidores", details: erro.sqlMessage });
-        });
-}
-
 function deletarServidor(req, res) {
     const id_servidor = req.params.id_servidor;
     const { fk_empresa } = req.body;
@@ -62,9 +46,9 @@ function deletarServidor(req, res) {
 
 function atualizarServidor(req, res) {
     const id_servidor = req.params.id_servidor;
-    const { nome, sistema_operacional, mac_address, disco,ram } = req.body;
+    const { nome, sistema_operacional, mac_address, ram, disco } = req.body;
 
-    if (!id_servidor || !nome || !sistema_operacional || !mac_address || !disco || !ram) {
+    if (!id_servidor || !nome || !sistema_operacional || !mac_address || !ram || !disco) {
         return res.status(400).json({ error: "Dados incompletos para atualizar servidor" });
     }
 

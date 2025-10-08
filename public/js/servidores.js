@@ -41,8 +41,8 @@ function open_modal_edit_server(id, nome, so, mac, ram, disco) {
     edit_server_modal.querySelector('.so_input').value = so;
     edit_server_modal.querySelector('.mac_input').value = mac;
     edit_server_modal.setAttribute('idServidor', id);
-    edit_server_modal.querySelector('disco_input').value = disco;
-    edit_server_modal.querySelector('ram_input').value = ram;    
+    edit_server_modal.querySelector('.ram_input').value = ram;   
+    edit_server_modal.querySelector('.disco_input').value = disco; 
 }
 
 function close_modal_edit_server() {
@@ -71,9 +71,9 @@ submit_button_create_server.addEventListener('click', () => {
     const nome = create_server_modal.querySelector('.nome_input').value.trim();
     const so = create_server_modal.querySelector('.so_input').value.trim();
     const mac = create_server_modal.querySelector('.mac_input').value.trim();
-    const disco = create_server_modal.querySelector('.disco_input').value.trim();
     const ram = create_server_modal.querySelector('.ram_input').value.trim();
-    if (!nome || !so || !mac || !disco || !ram) return alert("Preencha todos os campos!");
+    const disco = create_server_modal.querySelector('.disco_input').value.trim();
+    if (!nome || !so || !mac || !ram || !disco) return alert("Preencha todos os campos!");
     fetch(`/servidores/criarServidor`, {
         method: 'POST',
         headers: { "Content-Type": "application/json" },
@@ -90,9 +90,9 @@ submit_button_edit_server.addEventListener('click', () => {
     const nome = edit_server_modal.querySelector('.nome_input').value.trim();
     const so = edit_server_modal.querySelector('.so_input').value.trim();
     const mac = edit_server_modal.querySelector('.mac_input').value.trim();
-    const disco = edit_server_modal.querySelector('.disco_input').value.trim();
     const ram = edit_server_modal.querySelector('.ram_input').value.trim();
-    if (!nome || !so || !mac || !disco || !ram) return alert("Preencha todos os campos!");
+    const disco = edit_server_modal.querySelector('.disco_input').value.trim();
+    if (!nome || !so || !mac || !ram || !disco) return alert("Preencha todos os campos!");
     fetch(`/servidores/atualizarServidor/${id}`, {
         method: 'PUT',
         headers: { "Content-Type": "application/json" },
@@ -134,8 +134,8 @@ function carregarServidores() {
                     <p class="server_name" style="color:red;"> <strong>${s.nome}</strong> </p>
                     <p class="server_name"><strong>Sistema Operacional: </strong>${s.sistema_operacional}</p>
                     <p class="server_so"> <strong>Mac Adress: </strong> ${s.mac_address} </p>
-                    <p class="server_name"> <strong>Disco: </strong> ${s.disco} </p>
-                    <p class="server_name"> <strong>Ram: </strong> ${s.ram} </p>
+                    <p class="server_ram"> <strong>Ram Gb: </strong> ${s.ram} </p>
+                    <p class="server_disco"> <strong>Disco Tb: </strong> ${s.disco} </p>
                     
                     <div class="user_controls">
                         <button class="edit_user_button">Editar</button>
@@ -144,7 +144,7 @@ function carregarServidores() {
                 `;
                 usersDiv.appendChild(div);
                 div.querySelector('.edit_user_button').addEventListener('click', () =>
-                    open_modal_edit_server(s.id_servidor, s.nome, s.sistema_operacional, s.mac_address, s.disco,s.memoria)
+                    open_modal_edit_server(s.id_servidor, s.nome, s.sistema_operacional, s.mac_address, s.ram, s.disco)
                 );
                 div.querySelector('.delete_user_button').addEventListener('click', () =>
                     open_modal_delete_server(s.id_servidor)
