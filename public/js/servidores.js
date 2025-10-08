@@ -71,13 +71,13 @@ submit_button_create_server.addEventListener('click', () => {
     const nome = create_server_modal.querySelector('.nome_input').value.trim();
     const so = create_server_modal.querySelector('.so_input').value.trim();
     const mac = create_server_modal.querySelector('.mac_input').value.trim();
-    // const disco = create_server_modal.querySelector('.disco_input').value.trim();
-    // const ram = create_server_modal.querySelector('.ram_input').value.trim();
-    if (!nome || !so || !mac) return alert("Preencha todos os campos!");
+    const disco = create_server_modal.querySelector('.disco_input').value.trim();
+    const ram = create_server_modal.querySelector('.ram_input').value.trim();
+    if (!nome || !so || !mac || !disco || !ram) return alert("Preencha todos os campos!");
     fetch(`/servidores/criarServidor`, {
         method: 'POST',
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ servidores: [{ fk_empresa, nome, sistema_operacional: so, mac_address: mac}] })
+        body: JSON.stringify({ servidores: [{ fk_empresa, nome, sistema_operacional: so, mac_address: mac, disco, ram}] })
     }).then(resp => resp.json())
       .then(() => { close_modal_create_server(); carregarServidores(); })
       .catch(console.error);
