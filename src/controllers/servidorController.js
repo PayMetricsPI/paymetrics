@@ -9,6 +9,7 @@ function listarServidores(req, res) {
             console.error("Erro ao listar servidores:", erro.sqlMessage || erro);
             res.status(500).json({ error: erro.sqlMessage || erro });
         });
+
 }
 
 
@@ -26,7 +27,6 @@ function criarServidores(req, res) {
             res.status(500).json({ error: "Houve um erro ao criar os servidores", details: erro.sqlMessage });
         });
 }
-
 
 function deletarServidor(req, res) {
     const id_servidor = req.params.id_servidor;
@@ -46,13 +46,13 @@ function deletarServidor(req, res) {
 
 function atualizarServidor(req, res) {
     const id_servidor = req.params.id_servidor;
-    const { nome, sistema_operacional, mac_address } = req.body;
+    const { nome, mac_address, ram, disco } = req.body;
 
-    if (!id_servidor || !nome || !sistema_operacional || !mac_address) {
+    if (!id_servidor || !nome  || !mac_address || !ram || !disco) {
         return res.status(400).json({ error: "Dados incompletos para atualizar servidor" });
     }
 
-    servidorModel.atualizarServidor(id_servidor, nome, sistema_operacional, mac_address)
+    servidorModel.atualizarServidor(id_servidor, nome, mac_address, ram,disco,)
         .then(resultado => res.status(200).json({ message: "Servidor atualizado com sucesso", resultado }))
         .catch(erro => {
             console.error("Erro ao atualizar o servidor:", erro.sqlMessage || erro);
