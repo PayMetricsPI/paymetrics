@@ -5,7 +5,7 @@ function criarServidores(servidores) {
     let queries = servidores.map(s => {
         return `
             insert into servidor (nome, mac_address, tipo_cpu, ram , disco, fk_empresa)
-            VALUES ('${s.nome}','${s.mac_address}',${s.cpu}, ${s.ram}, ${s.disco}, ${s.fk_empresa});
+            VALUES ('${s.nome}','${s.mac_address}','${s.tipo_cpu}', '${s.ram}', '${s.disco}', '${s.fk_empresa}');
         `;
     }).join("\n");
 
@@ -37,10 +37,10 @@ function listarServidores(fk_empresa) {
 }
 
 
-function atualizarServidor(id_servidor, nome, mac_address,cpu , ram, disco ) {
+function atualizarServidor(id_servidor, nome, mac_address,tipo_cpu , ram, disco ) {
     var instrucaoSql = `
         update servidor
-        set nome = '${nome}', mac_address = '${mac_address}', 'tipo_cpu' = '${cpu}',
+        set nome = '${nome}', mac_address = '${mac_address}', tipo_cpu = '${tipo_cpu}',
         disco = ${disco}, ram = ${ram}
         where id_servidor = ${id_servidor};
     `;
