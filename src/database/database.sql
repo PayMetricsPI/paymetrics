@@ -53,7 +53,7 @@ primary key (id_parametro, fk_componente),
 foreign key (fk_componente) references componente(id_componente));
 
 
-insert into empresa (razão_social)
+insert into empresa (razao_social)
 values
 ('Amazon.com Inc.'),
 ('Amazon Brasil Ltda.'),
