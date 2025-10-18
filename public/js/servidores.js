@@ -73,11 +73,11 @@ submit_button_create_server.addEventListener('click', () => {
     const tipo_cpu = create_server_modal.querySelector('.tipo_cpu_input').value.trim();
     const ram = create_server_modal.querySelector('.ram_input').value.trim();
     const disco = create_server_modal.querySelector('.disco_input').value.trim();
-    if (!nome || !mac || !ram || !tipo_cpu || !disco) return alert("Preencha todos os campos!");
+    if (!nome || !mac ||  !tipo_cpu ||!ram || !disco) return alert("Preencha todos os campos!");
     fetch(`/servidores/criarServidor`, {
         method: 'POST',
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ servidores: [{ fk_empresa, nome, mac_address: mac,tipo_cpu , disco, ram}] })
+        body: JSON.stringify({ servidores: [{ fk_empresa, nome, mac_address: mac, tipo_cpu , ram, disco}] })
     }).then(resp => resp.json())
       .then(() => { close_modal_create_server(); carregarServidores(); })
       .catch(console.error);
