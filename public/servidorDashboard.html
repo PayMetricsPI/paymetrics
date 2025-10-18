@@ -1,21 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/login.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="css/login.css">
   <link rel="stylesheet" href="css/navbar.css">
   <link rel="stylesheet" href="css/embreve.css">
   <link rel="stylesheet" href="css/deletar.css">
   <link rel="stylesheet" href="css/servidor.css">
   <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
-    <title>Servidor-Dashboard</title>
-    <link rel="shortcut icon" type="image/png" href="assets/icons/logo Paymetrics.png">
+  <link rel="stylesheet" href="css/dashboardServidor.css">
+  <title>Servidor-Dashboard</title>
+  <link rel="shortcut icon" type="image/png" href="assets/icons/logo Paymetrics.png">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
+
 <body>
-     <div id="sidebar"></div>
-     
-     <script src="js/sessao.js"></script>
-     <script src="js/header.js"></script>
+  <div id="sidebar"></div>
+
+  <div class="container">
+    <div class="main_content">
+    <div class="icone"> <img src="./assets/imgs/Icone_Servidor.png" alt=""></div>
+      <div class="servidor_nome">
+        <p>Servidor Treada</p>
+      </div>
+
+      <div class="container_select">
+  <label class="label" for="periodo">Últimos</label>
+  <div class="select_personalizar">
+    <select id="periodo">
+      <option>1 Dia</option>
+      <option>7 Dias</option>
+      <option>30 Dias</option>
+      <option>90 Dias</option>
+    </select>
+    <span class="select_cursor"></span>
+  </div>
+</div>
+
+<div>
+  <canvas id="myChart"></canvas>
+</div>
+
+    </div>
+  </div>
+  <script src="js/sessao.js"></script>
+  <script src="js/header.js"></script>
 </body>
+
 </html>

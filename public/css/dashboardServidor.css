@@ -1,0 +1,74 @@
+.main_content{
+    display: flex;
+    gap: 200px;
+    align-items: center;
+}
+
+
+.icone {
+  display: flex;
+  width: 150px;
+  height: 150px;
+  margin-top: 3%;
+}
+
+.servidor_nome{
+    display: flex;
+    width: 100%;
+    height: 100%;
+    font: 400 34px 'Poppins', sans-serif;
+    font-weight: bold;
+}
+
+.container_select {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.label {
+  font-size: 14px;
+  color: #222;
+  font-family: sans-serif;
+  margin-right: 8px;
+  font-weight: bold;
+}
+
+.select_personalizar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  border: 1px solid #222;
+  border-radius: 32px;
+  padding: 0 8px 0 0;
+  background: #fff;
+  height: 38px;
+}
+
+.select_personalizar select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 14px;
+  padding: 8px 32px 8px 12px;
+  border-radius: 32px;
+  font-family: sans-serif;
+  color: #222;
+  height: 38px;
+  cursor: pointer;
+  width: 110px; 
+}
+
+.select_cursor {
+  position: absolute;
+  right: 16px;
+  width: 0; 
+  height: 0; 
+  pointer-events: none;
+  border-left: 7px solid transparent;
+  border-right: 7px solid transparent;
+  border-top: 7px solid #222;
+}
