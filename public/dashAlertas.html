@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/navbar.css">
+    <link rel="stylesheet" href="css/dashAlerta.css">
+    <title>PayMetrics | Dashboard alertas</title>
+</head>
+
+<body>
+    <div id="sidebar"></div>
+    <section class="dash_alertas">
+        <div class="titulo">
+            <h1>Alertas atuais</h1>
+            <div class="filter">
+                <p>Componentes</p>
+                <select class="campo">
+                    <option value="todos">Todos</option>
+                    <option value="cpu">CPU</option>
+                    <option value="ram">RAM</option>
+                    <option value="disco">Disco</option>
+                    <option value="disco">Rede</option>
+                </select>
+            </div>
+        </div>
+        <div class="todos_componentes">
+            <div class="titulo_todos">
+                <h1>Todos os compoenentes</h1>
+                <img src="assets/icons/icon_alerta.png" alt="Alerta">
+            </div>
+            <div class="names">
+                <p>Servidor</p>
+                <p>Componente</p>
+                <p>Tipo alerta</p>
+                <p>Métrica</p>
+                <p>Tempo</p>
+            </div>
+            <div class="servidores_todos">
+                <div class="servidor1">
+                    <input type="checkbox" id="servidor1" name="servidor1" value="servidor1">
+                    <p>Servidor 1B2XB</p>
+                    <p>CPU</p>
+                    <p>Crítico</p>
+                    <p>90%</p>
+                    <p>10:35:21</p>
+                </div>
+                <div class="servidor2">
+                    <input type="checkbox" id="servidor2" name="servidor2" value="servidor2">
+                    <p>Servidor 1B2XB</p>
+                    <p>RAM</p>
+                    <p>Normal</p>
+                    <p>80%</p>
+                    <p>10:35:21</p>
+                </div>
+                <div class="servidor3">
+                    <input type="checkbox" id="servidor3" name="servidor3" value="servidor3">
+                    <p>Servidor 1B2XB</p>
+                    <p>Disco</p>
+                    <p>Normal</p>
+                    <p>85%</p>
+                    <p>10:35:21</p>
+                </div>
+                <div class="servidor4">
+                    <input type="checkbox" id="servidor4" name="servidor4" value="servidor4">
+                    <p>Servidor 1B2XB</p>
+                    <p>Rede</p>
+                    <p>Normal</p>
+                    <p>85%</p>
+                    <p>10:35:21</p>
+                </div>
+                <div class="servidor5">
+                    <input type="checkbox" id="servidor5" name="servidor5" value="servidor5" checked>
+                    <p>Servidor 1B2XB</p>
+                    <p>Rede</p>
+                    <p>Normal</p>
+                    <p>82%</p>
+                    <p>10:35:21</p>
+                </div>
+            </div>
+        </div>
+        <div>
+            <div class="criticos">
+                <h1>Servidores críticos</h1>
+                <div class="titulo_critico">
+                    <img src="assets/imgs/servidor.png" alt="Servidor">
+                    <p>Servidor 1B2XB</p>
+                    <p>A8.3C.37.21.6F.EB</p>
+                    <div class="alertas_criticos">
+                        <p>1 Crítico</p>
+                        <p>3 Alertas</p>
+                    </div>
+                </div>
+                <div class="informacoes">
+                    <div class="alertas">
+                        <p>Alertas</p>
+                        <div class="alertas_div">
+                            <div class="cpu">
+                                <p>CPU</p>
+                                <p>90%</p>
+                            </div>
+                            <div class="ram">
+                                <p>RAM</p>
+                                <p>82%</p>
+                            </div>
+                            <div class="disco">
+                                <p>DISCO</p>
+                                <p>20%</p>
+                            </div>
+                            <div class="rede_up">
+                                <p>REDE (up)</p>
+                                <p>89%</p>
+                            </div>
+                            <div class="rede_down">
+                                <p>REDE (down)</p>
+                                <p>55%</p>
+                            </div>
+                        </div>
+                        <div class="inf_hardware">
+                            <h1>informacoes hardware</h1>
+                            <div class="div_info">
+                                <div class="info_cpu">
+                                    <p><b>CPU: </b>Theadripper</p>
+                                </div>
+                                <div class="info_disco">
+                                    <p><b>Disco: </b>10TB</p>
+                                </div>
+                                <div class="info_ram">
+                                    <p><b>RAM: </b>128GB</p>
+                                </div>
+                                <div class="info_REDE">
+                                    <p><b>Rede: </b>10TB</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="check_filtro">
+                            <input type="checkbox" id="cpu" name="cpu" value="cpu" checked>
+                            <p>CPU</p>
+                            <input type="checkbox" id="rma" name="ram" value="ram" checked>
+                            <p>RAM</p>
+                            <input type="checkbox" id="disco" name="disco" value="disco" checked>
+                            <p>DISCO</p>
+                            <input type="checkbox" id="rede" name="rede" value="rede" checked>
+                            <p>REDE</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </section>
+</body>
+
+</html>

@@ -1,0 +1,46 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    overflow-x: hidden;
+}
+
+.dash_alertas {
+    background-color: #FFFFFF;
+    min-height: 100dvh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    margin-left: 90px;
+    margin-top: 90px;
+}
+
+.titulo {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 600px;
+}
+
+.filter {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.filter p {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.filter select {
+  padding: 5px 10px;
+  font-size: 15px;
+  border-radius: 30px;
+  border: 2px solid black;
+  cursor: pointer;
+}
