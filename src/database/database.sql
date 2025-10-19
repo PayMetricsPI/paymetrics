@@ -67,3 +67,8 @@ select * from usuarios;
 insert into usuarios (nome, email, senha, administrador, fk_empresa)values
 ('Gabriele', 'gabi@gmail.com', 'Gabi@007', TRUE, 1),
 ('Samuel', 'samu@gmail.com', 'Gabi@007', FALSE, 1);
+
+insert into servidor (nome, mac_address, tipo_cpu,ram,disco,fk_empresa)
+values("Alfa","00:19:B9:FB:E2:58","Xeon silver 8 core",64,4,1),
+	  ("Beta","00:0C:6E:3C:D1:6D","Xeon gold 8 core",50,5,1),
+      ("Omega","00:00:5E:00:53:AF","Xeon® Platinum 8450H",40,6,1);
