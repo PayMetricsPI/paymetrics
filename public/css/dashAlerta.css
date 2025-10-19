@@ -26,21 +26,49 @@ body {
     gap: 600px;
 }
 
+.titulo h1 {
+    font-size: 25px;
+}
+
 .filter {
-  display: flex;
-  align-items: center;
-  gap: 20px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
 }
 
 .filter p {
-  font-size: 16px;
-  font-weight: 500;
+    font-size: 16px;
+    font-weight: 500;
 }
 
 .filter select {
-  padding: 5px 10px;
-  font-size: 15px;
-  border-radius: 30px;
-  border: 2px solid black;
-  cursor: pointer;
+    padding: 5px 10px;
+    font-size: 12px;
+    border-radius: 30px;
+    border: 2px solid black;
+    cursor: pointer;
+    padding: 8px 40px 8px 16px;
+}
+
+.todos_componentes {
+    border: 2px solid #F7B216;
+    border-radius: 15px;
+    padding: 20px 30px;
+    margin: 30px auto;
+}
+
+.titulo_todos {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 600px;
+    border-bottom: 2px solid #F7B216;
+}
+
+.titulo_todos h1 {
+    font-size: 25px;
+}
+
+.titulo_todos img {
+    width: 60px;
 }
