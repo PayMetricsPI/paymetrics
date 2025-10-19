@@ -129,7 +129,14 @@
     padding: 15px;
 }
 
-.contaner_limite{
+.container_limite{
     display: flex;
     flex-direction: column;
+    position: relative;
+    top: 70px;
+    margin-left: 40px;
+}
+
+.espaco{
+    margin-top: 100px;
 }
