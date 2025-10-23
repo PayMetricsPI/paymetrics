@@ -34,7 +34,22 @@ function obterMedicoesPorEmpresa(req, res){
     res.status(200).json(searchData);
 }
 
+function obterMedicoesPorMAC(req, res){
+    const mac = req.params.mac;
+
+    const searchData = [];
+        data.forEach(medicao => {
+        console.log(medicao)
+        if(medicao.macAddress == mac){
+            searchData.push(medicao);
+        }
+    });
+
+    res.status(200).json(searchData);
+}
+
 module.exports = {
     novaMedicao,
-    obterMedicoesPorEmpresa
+    obterMedicoesPorEmpresa,
+    obterMedicoesPorMAC
 }
