@@ -48,8 +48,24 @@ function obterMedicoesPorMAC(req, res){
     res.status(200).json(searchData);
 }
 
+function obterUltimaMedicaoPorMAC(req, res){
+    const mac = req.params.mac;
+
+    let searchData;
+    for(let i = data.length-1; i > 0; i--){
+        if(data[i].macAddress == mac){
+            searchData = data[i];
+            break
+        }
+    }
+
+    res.status(200).json(searchData);
+}
+
+
 module.exports = {
     novaMedicao,
     obterMedicoesPorEmpresa,
-    obterMedicoesPorMAC
+    obterMedicoesPorMAC,
+    obterUltimaMedicaoPorMAC
 }
