@@ -19,6 +19,22 @@ function novaMedicao(req, res){
     res.status(200).json(data)
 }
 
+function obterMedicoesPorEmpresa(req, res){
+    const empresa = req.params.empresa;
+
+    const searchData = [];
+
+    data.forEach(medicao => {
+        console.log(medicao)
+        if(medicao.empresa == empresa){
+            searchData.push(medicao);
+        }
+    });
+
+    res.status(200).json(searchData);
+}
+
 module.exports = {
-    novaMedicao
+    novaMedicao,
+    obterMedicoesPorEmpresa
 }
