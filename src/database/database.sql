@@ -3,7 +3,7 @@ use payMetrics;
 
 create table empresa (
 id_empresa int auto_increment primary key,
-razão_social varchar(200) not null);
+razao_social varchar(200) not null);
 
 create table fk_cargo(
 id int not null auto_increment primary key,
