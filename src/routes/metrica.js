@@ -15,5 +15,9 @@ router.get("/obterPorMAC/:mac", function(req, res){
     metricaController.obterMedicoesPorMAC(req, res)
 })
 
+router.get("/obterUltimaPorMAC/:mac", function(req, res){
+    metricaController.obterUltimaMedicaoPorMAC(req, res)
+})
+
 
 module.exports = router;
