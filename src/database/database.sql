@@ -3,7 +3,11 @@ use PayMetrics;
 
 create table empresa (
 id_empresa int auto_increment primary key,
-razão_social varchar(200) not null);
+razao_social varchar(200) not null);
+
+create table cargo(
+id int not null auto_increment primary key,
+nome varchar(200) not null);
 
 create table usuarios (
 id_usuario int auto_increment,
@@ -11,9 +15,10 @@ fk_empresa int not null,
 nome varchar(200) not null,
 email varchar(200) not null,
 senha varchar(200) not null,
-cargo varchar(200) not null,
+fk_cargo int not null,
 primary key (id_usuario, fk_empresa),
 foreign key (fk_empresa) references empresa(id_empresa),
+foreign key (fk_cargo) references cargo(id),
 unique (email)
 );
 
@@ -46,7 +51,7 @@ primary key (id_parametro,fk_servidor,fk_empresa,fk_componente),
 foreign key (fk_servidor, fk_empresa)references servidor(id_servidor, fk_empresa),
 foreign key (fk_componente) references componente (id_componente));
 
-insert into empresa (razão_social)
+insert into empresa (razao_social)
 values
 ('Amazon.com Inc.'),
 ('Amazon Brasil Ltda.'),
@@ -54,6 +59,8 @@ values
 ('Amazon France SAS'),
 ('Amazon Canada ULC'),
 ('Amazon Spain Services SL');
+
+select *from empresa;
 
 select * from usuarios;
 
