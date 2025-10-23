@@ -11,9 +11,10 @@ function novaMedicao(req, res){
     const mbEnviados = req.body.mbEnviados;
     const mbRecebidos = req.body.mbRecebidos;
     const processos = req.body.processos;
+    const tempoBoot = req.body.tempoBoot;
 
     const newData = {
-        datetime, empresa, codMaq, cpu, ram, disco, macAddress, mbEnviados, mbRecebidos, processos
+        datetime, empresa, codMaq, cpu, ram, disco, macAddress, mbEnviados, mbRecebidos, processos, tempoBoot
     }
     data.push(newData)
     res.status(200).json(data)
