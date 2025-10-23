@@ -21,6 +21,7 @@ var servidorRouter = require("./src/routes/servidor");
 var redefinirSenhaRouter = require("./src/routes/usuario");
 var deletarusuarioRouter = require("./src/routes/usuario");
 var listarRouter = require("./src/routes/usuario");
+var metricaRouter = require("./src/routes/metrica");
 
 app.use(cors());
 app.use(express.json());
@@ -33,6 +34,7 @@ app.use("/servidores", servidorRouter);
 app.use("/redefinirSenha", redefinirSenhaRouter);
 app.use("/deletar", deletarusuarioRouter);
 app.use("/listar", listarRouter);
+app.use("/metrica", metricaRouter);
 app.use('/bootstrap', express.static(__dirname + '/node_modules/bootstrap/dist'));
 
 
