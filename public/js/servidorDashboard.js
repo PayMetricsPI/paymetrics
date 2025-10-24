@@ -13,6 +13,11 @@ function atualizarCPU(valorCPU) {
     chartCPU.data.datasets[0].data = [valorCPU, 100 - valorCPU];
     chartCPU.update();
 }
+function atualizarRAM(valorRAM) {
+    chartRAM.data.datasets[0].data = [valorRAM, 100 - valorRAM];
+    chartRAM.update();
+}
+
 
 setInterval(() => {
   fetch(`/metrica/obterUltimaPorMAC/${servidor.mac_address}`, { method: 'GET' })
@@ -20,6 +25,7 @@ setInterval(() => {
     .then((data) => {
       dadosTempoReal = data;
       atualizarCPU(data.cpu)
+      atualizarRAM(data.ram)
     })
 }, 10000)
 
@@ -156,14 +162,14 @@ new Chart(ctx2, {
 
 const ctx3 = document.getElementById('statusRamChart');
 
-new Chart(ctx3, {
+const chartRAM = new Chart(ctx3, {
     type: 'doughnut',
     data: {
         labels: [],
         datasets: [{
             label: 'Ram',
-            data: [100],
-            backgroundColor: ['rgb(255,44,44)'],
+            data: [0, 100],
+            backgroundColor: ['rgb(255,44,44)', "#e1e1e1ff"],
             hoverOffset: 4,
             borderWidth: 0,
         }]
@@ -181,13 +187,14 @@ new Chart(ctx3, {
         id: 'center-text',
         beforeDraw: function (chart) {
             const { ctx, chartArea: { width, height } } = chart;
+            const valor = Number(chart.data.datasets[0].data[0]).toFixed(0);
             ctx.save();
 
             ctx.font = 'bold 30px Arial';
             ctx.fillStyle = '#333';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'top';
-            ctx.fillText('100%', width / 2, height / 2 + 10);
+            ctx.fillText(`${valor}%`, width / 2, height / 2 + 10);
 
             ctx.font = 'bold 22px Arial';
             ctx.fillStyle = '#000';
