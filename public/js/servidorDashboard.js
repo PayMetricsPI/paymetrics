@@ -405,7 +405,7 @@ fetch(`servidores/${fk_empresa}`)
         ctx.fillStyle = '#000';
         ctx.fillText('Em uso (download)', width / 2, height / 2 + 60);
 
-        ctx.restore();
+           ctx.restore();
       }
     }]
   });
