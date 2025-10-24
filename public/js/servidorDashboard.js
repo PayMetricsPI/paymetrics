@@ -9,6 +9,21 @@ if (servidor) {
 
 let dadosTempoReal;
 
+function buscarDados(){
+  fetch(`/metrica/obterUltimaPorMAC/${servidor.mac_address}`, { method: 'GET' })
+    .then((resultado) => resultado.json())
+    .then((data) => {
+      dadosTempoReal = data;
+      atualizarCPU(data.cpu)
+      atualizarRAM(data.ram)
+      atualizarDisco(data.disco)
+    }).catch(() => {
+        console.log("rode o python :)")
+    })
+}
+setInterval(buscarDados, 2000)
+buscarDados()
+
 function atualizarCPU(valorCPU) {
     chartCPU.data.datasets[0].data = [valorCPU, 100 - valorCPU];
     chartCPU.update();
@@ -17,17 +32,11 @@ function atualizarRAM(valorRAM) {
     chartRAM.data.datasets[0].data = [valorRAM, 100 - valorRAM];
     chartRAM.update();
 }
+function atualizarDisco(valorDisco) {
+    chartDisco.data.datasets[0].data = [valorDisco, 100 - valorDisco];
+    chartDisco.update();
+}
 
-
-setInterval(() => {
-  fetch(`/metrica/obterUltimaPorMAC/${servidor.mac_address}`, { method: 'GET' })
-    .then((resultado) => resultado.json())
-    .then((data) => {
-      dadosTempoReal = data;
-      atualizarCPU(data.cpu)
-      atualizarRAM(data.ram)
-    })
-}, 10000)
 
 
 const ctx = document.getElementById('CpuChart').getContext('2d');
@@ -251,14 +260,14 @@ new Chart(ctx4, {
 
 const ctx5 = document.getElementById('statusDiscoChart');
 
-new Chart(ctx5, {
+const chartDisco = new Chart(ctx5, {
     type: 'doughnut',
     data: {
         labels: [],
         datasets: [{
             label: 'Disco',
-            data: [100],
-            backgroundColor: ['rgb(255,44,44)'],
+            data: [0, 100],
+            backgroundColor: ['rgb(255,44,44)', "#e1e1e1ff"],
             hoverOffset: 4,
             borderWidth: 0,
         }]
@@ -276,13 +285,14 @@ new Chart(ctx5, {
         id: 'center-text',
         beforeDraw: function (chart) {
             const { ctx, chartArea: { width, height } } = chart;
+            const valor = Number(chart.data.datasets[0].data[0]).toFixed(0);
             ctx.save();
 
             ctx.font = 'bold 30px Arial';
             ctx.fillStyle = '#333';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'top';
-            ctx.fillText('100%', width / 2, height / 2 + 10);
+            ctx.fillText(`${valor}%`, width / 2, height / 2 + 10);
 
             ctx.font = 'bold 22px Arial';
             ctx.fillStyle = '#000';
