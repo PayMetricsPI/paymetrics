@@ -71,7 +71,7 @@ submit_button_create_server.addEventListener('click', () => {
     const nome = create_server_modal.querySelector('.nome_input').value.trim();
     const mac = create_server_modal.querySelector('.mac_input').value.trim();
     const tipo_cpu = create_server_modal.querySelector('.tipo_cpu_input').value.trim();
-    const ram = create_server_modal.querySelector('.r   am_input').value.trim();
+    const ram = create_server_modal.querySelector('.ram_input').value.trim();
     const disco = create_server_modal.querySelector('.disco_input').value.trim();
     if (!nome || !mac ||  !tipo_cpu ||!ram || !disco) return alert("Preencha todos os campos!");
     fetch(`/servidores/criarServidor`, {
