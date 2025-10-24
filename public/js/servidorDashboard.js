@@ -118,6 +118,7 @@ const chartCPU = new Chart(ctx1, {
         }]
     },
     options: {
+        maintainAspectRatio: false,
         circumference: 180,
         cutout: '80%',
         rotation: 270,
@@ -206,6 +207,7 @@ const chartRAM = new Chart(ctx3, {
         }]
     },
     options: {
+        maintainAspectRatio: false,
         circumference: 180,
         cutout: '80%',
         rotation: 270,
@@ -295,6 +297,7 @@ const chartDisco = new Chart(ctx5, {
         }]
     },
     options: {
+        maintainAspectRatio: false,
         circumference: 180,
         cutout: '80%',
         rotation: 270,
@@ -383,6 +386,7 @@ const chartMBEnviados = new Chart(ctx7, {
         }]
     },
     options: {
+        maintainAspectRatio: false,
         circumference: 180,
         cutout: '80%',
         rotation: 270,
@@ -429,6 +433,7 @@ const chartMBRecebidos = new Chart(ctx8, {
         }]
     },
     options: {
+        maintainAspectRatio: false,
         circumference: 180,
         cutout: '80%',
         rotation: 270,
