@@ -1,0 +1,164 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    background-color: #f9f9f9;
+}
+
+h1 {
+    font-size: 24px;
+    margin-left: 270px; /* Espaço para o sidebar */
+    padding: 20px;
+}
+
+.page-bg {
+    background-color: #f9f9f9; /* Cor de fundo */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1; /* Coloca o fundo atrás do conteúdo */
+}
+
+.container {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap; /* Permite que os cartões se ajustem em linhas */
+    margin: 20px; /* Margem externa */
+    margin-left: 100px; /* Espaço para o sidebar */
+}
+.cartao {
+    width: 200px; 
+    height: 180px; 
+    display: flex;
+    align-items: center; 
+    justify-content: center; 
+    border-radius: 5px; 
+    border: 2px solid #f0ad4e; 
+    color: black; 
+    flex-direction: column; 
+    padding: 5px; /* Reduzido de 20px para 10px */
+    margin: 5px; /* Reduzido de 10px para 5px */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); 
+    text-align: center; 
+}
+
+
+.cartao h2 {
+    font-size: 36px; /* Tamanho do título ajustado */
+    margin: 0;
+}
+
+.cartao p {
+    font-size: 14px; /* Tamanho do texto ajustado */
+    margin: 5px 0;
+    color: black; /* Mantendo o texto branco */
+}
+.seletor {
+    margin-left: 270px; /* Espaço para o sidebar */
+    padding: 20px; /* Preenchimento ao redor do seletor */
+    display: flex;
+    align-items: center;
+}
+
+.seletor label {
+    margin-right: 10px; /* Espaço entre o label e o seletor */
+}
+
+.seletor select {
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    background-color: #f9f9f9;
+}
+
+.sidebar {
+    width: 200px;
+    background-color: #333;
+    color: white;
+    position: fixed;
+    height: 100%;
+}
+
+.main-content {
+    margin-left: 220px; /* Espaço para a sidebar */
+    padding: 20px;
+}
+
+.header {
+    text-align: center;
+}
+
+.metrics {
+    display: flex;
+    justify-content: space-between;
+    margin: 20px 0;
+}
+
+.metric {
+    background-color: #fff;
+    border: 2px solid #f0ad4e;
+    border-radius: 5px;
+    padding: 20px;
+    text-align: center;
+    width: 30%;
+}
+
+.alertas-tempo {
+    background-color: #f9c74f;
+    padding: 20px;
+    border-radius: 5px;
+}
+
+.alertas-tempo .charts {
+    display: flex;
+    justify-content: space-between;
+}
+
+.chart {
+    width: 48%;
+}
+
+.bar-chart {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 10px;
+}
+
+.bar {
+    width: 18%;
+    background-color: #f9844a;
+    height: 50px;
+    transition: background-color 0.3s;
+}
+
+.bar.highlighted {
+    background-color: #e63946;
+}
+
+.bar:hover {
+    background-color: #f3722c;
+}
+
+.alertas-componentes {
+    margin-top: 20px;
+}
+
+.components {
+    display: flex;
+    justify-content: space-between;
+}
+
+.component {
+    background-color: #fff;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    text-align: center;
+    width: 23%; /* Para 4 componentes em linha */
+}
