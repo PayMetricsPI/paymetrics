@@ -1,18 +1,11 @@
 const usersDiv = document.querySelector('.users');
 const fk_empresa = Number(sessionStorage.getItem('id'));
+const servidor = JSON.parse(sessionStorage.getItem('servidorSelecionado'));
 
-fetch(`servidores/${fk_empresa}`)
-  .then(response => response.json())
-  .then(resultados => {
-    const dadosFiltrados = resultados.map(s => ({
-      nome: s.nome,
-      tipo_cpu: s.tipo_cpu
-    }));
-    console.log(dadosFiltrados);
-    modelo_cpu.innerHTML = dadosFiltrados[fk_empresa].tipo_cpu
-    servidorNome.innerHTML = dadosFiltrados[fk_empresa].nome
-  })
-  .catch(err => console.error('Erro ao buscar servidores:', err));
+if (servidor) {
+    document.getElementById('servidorNome').textContent = servidor.nome;
+    document.getElementById('modelo_cpu').textContent = servidor.tipo_cpu;
+  }
 
 
   
@@ -405,7 +398,7 @@ fetch(`servidores/${fk_empresa}`)
         ctx.fillStyle = '#000';
         ctx.fillText('Em uso (download)', width / 2, height / 2 + 60);
 
-           ctx.restore();
+        ctx.restore();
       }
     }]
   });

@@ -71,7 +71,7 @@ submit_button_create_server.addEventListener('click', () => {
     const nome = create_server_modal.querySelector('.nome_input').value.trim();
     const mac = create_server_modal.querySelector('.mac_input').value.trim();
     const tipo_cpu = create_server_modal.querySelector('.tipo_cpu_input').value.trim();
-    const ram = create_server_modal.querySelector('.ram_input').value.trim();
+    const ram = create_server_modal.querySelector('.r   am_input').value.trim();
     const disco = create_server_modal.querySelector('.disco_input').value.trim();
     if (!nome || !mac ||  !tipo_cpu ||!ram || !disco) return alert("Preencha todos os campos!");
     fetch(`/servidores/criarServidor`, {
@@ -126,6 +126,7 @@ function carregarServidores() {
             servidores.forEach(s => {
                 const div = document.createElement('div');
                 div.className = 'users_container';
+                div.style.cursor = 'pointer';
                 div.innerHTML = `
                   <div class="user_icon">
                     <img src="./assets/icons/servidor_.png" width="90px">
@@ -142,6 +143,16 @@ function carregarServidores() {
                         <button class="delete_user_button">Excluir</button>
                     </div>
                 `;
+
+               div.addEventListener('click', (event) => {
+          if (event.target.classList.contains('edit_user_button') || event.target.classList.contains('delete_user_button')) {
+            return;
+          }
+
+          sessionStorage.setItem('servidorSelecionado', JSON.stringify(s));
+
+          window.location.href = 'servidorDashboard.html';
+        });
                 usersDiv.appendChild(div);
                 div.querySelector('.edit_user_button').addEventListener('click', () =>
                     open_modal_edit_server(s.id_servidor, s.nome, s.mac_address, s.tipo_cpu, s.ram, s.disco)
