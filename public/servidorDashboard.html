@@ -2,155 +2,155 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="css/login.css">
-  <link rel="stylesheet" href="css/navbar.css">
-  <link rel="stylesheet" href="css/embreve.css">
-  <link rel="stylesheet" href="css/deletar.css">
-  <link rel="stylesheet" href="css/servidor.css">
-  <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
-  <link rel="stylesheet" href="css/dashboardServidor.css">
-  <title>Servidor-Dashboard</title>
-  <link rel="shortcut icon" type="image/png" href="assets/icons/logo Paymetrics.png">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/login.css">
+    <link rel="stylesheet" href="css/navbar.css">
+    <link rel="stylesheet" href="css/embreve.css">
+    <link rel="stylesheet" href="css/deletar.css">
+    <link rel="stylesheet" href="css/servidor.css">
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/dashboardServidor.css">
+    <title>Servidor-Dashboard</title>
+    <link rel="shortcut icon" type="image/png" href="assets/icons/logo Paymetrics.png">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body>
-  <div id="sidebar"></div>
+    <div id="sidebar"></div>
 
-  <div class="container">
-    <div class="main_content">
-      <div class="icone"> <img src="./assets/imgs/Icone_Servidor.png" alt=""></div>
-      <div class="servidor_nome">
-        <p id="servidorNome"></p>
-      </div>
+    <div class="container">
+        <div class="main_content">
+            <div class="icone"> <img src="./assets/imgs/Icone_Servidor.png" alt=""></div>
+            <div class="servidor_nome">
+                <p id="servidorNome"></p>
+            </div>
 
-      <div class="container_select">
-        <label class="label" for="periodo">Últimos</label>
-        <div class="select_personalizar">
-          <select id="periodo">
-            <option>1 Dia</option>
-            <option>7 Dias</option>
-            <option>30 Dias</option>
-            <option>90 Dias</option>
-          </select>
-          <span class="select_cursor"></span>
+            <div class="container_select">
+                <label class="label" for="periodo">Últimos</label>
+                <div class="select_personalizar">
+                    <select id="periodo">
+                        <option>1 Dia</option>
+                        <option>7 Dias</option>
+                        <option>30 Dias</option>
+                        <option>90 Dias</option>
+                    </select>
+                    <span class="select_cursor"></span>
+                </div>
+            </div>
+
         </div>
-      </div>
-
     </div>
-  </div>
 
-  <div class="container">
-    <div class="main_content">
-      <div class="canvas">
-        <canvas id="CpuChart"></canvas>
-      </div>
-      <div class="dashboard_informacao">
-        <span class="Texto"></span>
-        <br>
-        <span class="Modelo">Modelo</span>
-        <span class="Texto" id="modelo_cpu"></span>
-        <br>
-        <span>Tempo de Atividade</span>
-        <span class="Texto2">08 dias, 20 horas e 55 minutos</span>
-      </div>
-      <div class="container_limite">
-        <div class="limite">
-          <span id="padrao">Limite padrão:</span> <span class="Texto3"> 80%</span>
+    <div class="container">
+        <div class="main_content">
+            <div class="canvas">
+                <canvas id="CpuChart"></canvas>
+            </div>
+            <div class="dashboard_informacao">
+                <span class="Texto"></span>
+                <br>
+                <span class="Modelo">Modelo</span>
+                <span class="Texto" id="modelo_cpu"></span>
+                <br>
+                <span>Tempo de Atividade</span>
+                <span class="Texto2" id="boot_time">-</span>
+            </div>
+            <div class="container_limite">
+                <div class="limite">
+                    <span id="padrao">Limite padrão:</span> <span class="Texto3"> 80%</span>
+                </div>
+                <div class="limite">
+                    <span id="critico">Limite crítico:</span> <span class="Texto3"> 80%</span>
+                </div>
+                <canvas id="statusChart"></canvas>
+            </div>
         </div>
-        <div class="limite">
-          <span id="critico">Limite crítico:</span> <span class="Texto3">  80%</span>
-        </div>
-        <canvas id="statusChart"></canvas>
-      </div>
     </div>
-  </div>
 
-  <div class="espaco"></div>
-  <div class="container">
-    <div class="main_content">
-      <div class="canvas">
-        <canvas id="RamChart"></canvas>
-      </div>
-      <div class="dashboard_informacao">
-        <span class="Texto">RAM</span>
-        <br>
-        <span>Capacidade</span>
-        <span class="Texto2">64gb</span>
-      </div>
-      <div class="container_limite">
-        <div class="limite">
-          <span id="padrao">Limite padrão:</span> <span class="Texto3"> 80%</span>
+    <div class="espaco"></div>
+    <div class="container">
+        <div class="main_content">
+            <div class="canvas">
+                <canvas id="RamChart"></canvas>
+            </div>
+            <div class="dashboard_informacao">
+                <span class="Texto">RAM</span>
+                <br>
+                <span>Capacidade</span>
+                <span class="Texto2">64gb</span>
+            </div>
+            <div class="container_limite">
+                <div class="limite">
+                    <span id="padrao">Limite padrão:</span> <span class="Texto3"> 80%</span>
+                </div>
+                <div class="limite">
+                    <span id="critico">Limite crítico:</span> <span class="Texto3"> 80%</span>
+                </div>
+                <canvas id="statusRamChart"></canvas>
+            </div>
         </div>
-        <div class="limite">
-          <span id="critico">Limite crítico:</span> <span class="Texto3">  80%</span>
-        </div>
-        <canvas id="statusRamChart"></canvas>
-      </div>
     </div>
-  </div>
 
-  <div class="espaco"></div>
-  <div class="container">
-    <div class="main_content">
-      <div class="canvas">
-        <canvas id="DiscoChart"></canvas>
-      </div>
-      <div class="dashboard_informacao">
-        <span class="Texto">Disco</span>
-        <br>
-        <span>Capacidade</span>
-        <span class="Texto2">4tb</span>
-      </div>
-      <div class="container_limite">
-        <div class="limite">
-          <span id="padrao">Limite padrão:</span> <span class="Texto3"> 80%</span>
+    <div class="espaco"></div>
+    <div class="container">
+        <div class="main_content">
+            <div class="canvas">
+                <canvas id="DiscoChart"></canvas>
+            </div>
+            <div class="dashboard_informacao">
+                <span class="Texto">Disco</span>
+                <br>
+                <span>Capacidade</span>
+                <span class="Texto2">4tb</span>
+            </div>
+            <div class="container_limite">
+                <div class="limite">
+                    <span id="padrao">Limite padrão:</span> <span class="Texto3"> 80%</span>
+                </div>
+                <div class="limite">
+                    <span id="critico">Limite crítco:</span> <span class="Texto3"> 80%</span>
+                </div>
+                <canvas id="statusDiscoChart"></canvas>
+            </div>
         </div>
-        <div class="limite">
-          <span id="critico">Limite crítco:</span> <span class="Texto3">  80%</span>
-        </div>
-        <canvas id="statusDiscoChart"></canvas>
-      </div>
     </div>
-  </div>
 
-  <div class="espaco"></div>
-  <div class="container">
-    <div class="main_content">
-      <div class="canvas">
-        <canvas id="RedeChart" width="564" height="282"></canvas>
-      </div>
-      <div class="dashboard_informacao">
-        <span class="Texto">Rede</span>
-        <span>Capacidade</span>
-        <span class="Texto2">10gb</span>
-      </div>
-      <div class="container_limite">
-        <div class="limite">
-          <span id="padrao">Limite padrão:</span> <span class="Texto3"> 80%</span>
-        </div>
-        <div class="limite">
-          <span id="critico">Limite crítico:</span> <span class="Texto3">  80%</span>
-        </div>
-        <canvas id="statusRedeChart"></canvas>
-      </div>
+    <div class="espaco"></div>
+    <div class="container">
+        <div class="main_content">
+            <div class="canvas">
+                <canvas id="RedeChart" width="564" height="282"></canvas>
+            </div>
+            <div class="dashboard_informacao">
+                <span class="Texto">Rede</span>
+                <span>Capacidade</span>
+                <span class="Texto2">10gb</span>
+            </div>
+            <div class="container_limite">
+                <div class="limite">
+                    <span id="padrao">Limite padrão:</span> <span class="Texto3"> 80%</span>
+                </div>
+                <div class="limite">
+                    <span id="critico">Limite crítico:</span> <span class="Texto3"> 80%</span>
+                </div>
+                <canvas id="statusRedeChart"></canvas>
+            </div>
 
-      <div class="container_limite">
-        <div class="limite">
-          <span id="padrao">Limite padrão:</span> <span class="Texto3"> 80%</span>
+            <div class="container_limite">
+                <div class="limite">
+                    <span id="padrao">Limite padrão:</span> <span class="Texto3"> 80%</span>
+                </div>
+                <div class="limite">
+                    <span id="critico">Limite crítico:</span> <span class="Texto3"> 80%</span>
+                </div>
+                <canvas id="statusRedeChart2"></canvas>
+            </div>
         </div>
-        <div class="limite">
-          <span id="critico">Limite crítico:</span> <span class="Texto3"> 80%</span>
-        </div>
-        <canvas id="statusRedeChart2"></canvas>
-      </div>
     </div>
-  </div>
-  <script src="js/sessao.js"></script>
-  <script src="js/header.js"></script>
-  <script src="js/servidorDashboard.js"></script>
+    <script src="js/sessao.js"></script>
+    <script src="js/header.js"></script>
+    <script src="js/servidorDashboard.js"></script>
 </body>
 
 </html>
