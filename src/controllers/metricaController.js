@@ -14,7 +14,7 @@ function novaMedicao(req, res){
     const tempoBoot = req.body.tempoBoot;
 
     const newData = {
-        datetime, empresa, codMaq, cpu, ram, disco, macAddress, mbEnviados, mbRecebidos, processos, tempoBoot
+        datetime, codMaq, cpu, ram, disco, macAddress, mbEnviados, mbRecebidos, processos, tempoBoot
     }
     data.push(newData)
     res.status(200).json(data)
@@ -34,6 +34,11 @@ function novaMedicao(req, res){
 
 //     res.status(200).json(searchData);
 // }
+
+function obterMedicoes(req, res){
+    res.status(200).json(data);
+}
+
 
 function obterMedicoesPorMAC(req, res){
     const mac = req.params.mac;
@@ -68,5 +73,6 @@ module.exports = {
     novaMedicao,
     // obterMedicoesPorEmpresa,
     obterMedicoesPorMAC,
-    obterUltimaMedicaoPorMAC
+    obterUltimaMedicaoPorMAC,
+    obterMedicoes
 }
