@@ -2,7 +2,7 @@ const data = []
 
 function novaMedicao(req, res){
     const datetime = req.body.datetime;
-    const empresa = req.body.empresa;
+    // const empresa = req.body.empresa;
     const codMaq = req.body.codMaquina;
     const cpu = req.body.cpu;
     const ram = req.body.ram;
@@ -20,20 +20,20 @@ function novaMedicao(req, res){
     res.status(200).json(data)
 }
 
-function obterMedicoesPorEmpresa(req, res){
-    const empresa = req.params.empresa;
+// function obterMedicoesPorEmpresa(req, res){
+//     const empresa = req.params.empresa;
 
-    const searchData = [];
+//     const searchData = [];
 
-    data.forEach(medicao => {
-        console.log(medicao)
-        if(medicao.empresa == empresa){
-            searchData.push(medicao);
-        }
-    });
+//     data.forEach(medicao => {
+//         console.log(medicao)
+//         if(medicao.empresa == empresa){
+//             searchData.push(medicao);
+//         }
+//     });
 
-    res.status(200).json(searchData);
-}
+//     res.status(200).json(searchData);
+// }
 
 function obterMedicoesPorMAC(req, res){
     const mac = req.params.mac;
@@ -66,7 +66,7 @@ function obterUltimaMedicaoPorMAC(req, res){
 
 module.exports = {
     novaMedicao,
-    obterMedicoesPorEmpresa,
+    // obterMedicoesPorEmpresa,
     obterMedicoesPorMAC,
     obterUltimaMedicaoPorMAC
 }
