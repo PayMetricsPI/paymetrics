@@ -7,16 +7,15 @@ if (servidor) {
     document.getElementById('modelo_cpu').textContent = servidor.tipo_cpu;
 }
 
-let dadosTempoReal;
-
 function buscarDados(){
   fetch(`/metrica/obterUltimaPorMAC/${servidor.mac_address}`, { method: 'GET' })
     .then((resultado) => resultado.json())
     .then((data) => {
-      dadosTempoReal = data;
       atualizarCPU(data.cpu)
       atualizarRAM(data.ram)
       atualizarDisco(data.disco)
+      atualizarMBEnviados(data.mbEnviados)
+      atualizarMBRecebidos(data.mbRecebidos)
     }).catch(() => {
         console.log("rode o python :)")
     })
@@ -36,8 +35,14 @@ function atualizarDisco(valorDisco) {
     chartDisco.data.datasets[0].data = [valorDisco, 100 - valorDisco];
     chartDisco.update();
 }
-
-
+function atualizarMBRecebidos(valorMbRecebidos) {
+    chartMBRecebidos.data.datasets[0].data = [valorMbRecebidos, 100 - valorMbRecebidos];
+    chartMBRecebidos.update();
+}
+function atualizarMBEnviados(valorMbEnviados) {
+    chartMBEnviados.data.datasets[0].data = [valorMbEnviados, 100 - valorMbEnviados];
+    chartMBEnviados.update();
+}
 
 const ctx = document.getElementById('CpuChart').getContext('2d');
 new Chart(ctx, {
@@ -348,14 +353,14 @@ new Chart(ctx6, {
 
 const ctx7 = document.getElementById('statusRedeChart');
 
-new Chart(ctx7, {
+const chartMBEnviados = new Chart(ctx7, {
     type: 'doughnut',
     data: {
         labels: [],
         datasets: [{
             label: 'Rede',
-            data: [100],
-            backgroundColor: ['rgb(255,44,44)'],
+            data: [0, 100],
+            backgroundColor: ['rgb(255,44,44)', "#e1e1e1ff"],
             hoverOffset: 4,
             borderWidth: 0,
         }]
@@ -373,17 +378,18 @@ new Chart(ctx7, {
         id: 'center-text',
         beforeDraw: function (chart) {
             const { ctx, chartArea: { width, height } } = chart;
+            const valor = Number(chart.data.datasets[0].data[0]).toFixed(0);
             ctx.save();
 
             ctx.font = 'bold 30px Arial';
             ctx.fillStyle = '#333';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'top';
-            ctx.fillText('100%', width / 2, height / 2 + 10);
+            ctx.fillText(`${valor}%`, width / 2, height / 2 + 10);
 
             ctx.font = 'bold 22px Arial';
             ctx.fillStyle = '#000';
-            ctx.fillText('Em uso (upload)', width / 2, height / 2 + 60);
+            ctx.fillText('Em uso', width / 2, height / 2 + 60);
 
             ctx.restore();
         }
@@ -393,14 +399,14 @@ new Chart(ctx7, {
 
 const ctx8 = document.getElementById('statusRedeChart2');
 
-new Chart(ctx8, {
+const chartMBRecebidos = new Chart(ctx8, {
     type: 'doughnut',
     data: {
         labels: [],
         datasets: [{
             label: 'Rede',
-            data: [100],
-            backgroundColor: ['rgb(255,44,44)'],
+            data: [0, 100],
+            backgroundColor: ['rgb(255,44,44)', "#e1e1e1ff"],
             hoverOffset: 4,
             borderWidth: 0,
         }]
@@ -418,17 +424,18 @@ new Chart(ctx8, {
         id: 'center-text',
         beforeDraw: function (chart) {
             const { ctx, chartArea: { width, height } } = chart;
+            const valor = Number(chart.data.datasets[0].data[0]).toFixed(0);
             ctx.save();
 
             ctx.font = 'bold 30px Arial';
             ctx.fillStyle = '#333';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'top';
-            ctx.fillText('100%', width / 2, height / 2 + 10);
+            ctx.fillText(`${valor}%`, width / 2, height / 2 + 10);
 
             ctx.font = 'bold 22px Arial';
             ctx.fillStyle = '#000';
-            ctx.fillText('Em uso (download)', width / 2, height / 2 + 60);
+            ctx.fillText('Em uso', width / 2, height / 2 + 60);
 
             ctx.restore();
         }
