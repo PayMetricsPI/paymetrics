@@ -5,6 +5,8 @@ const servidor = JSON.parse(sessionStorage.getItem('servidorSelecionado'));
 if (servidor) {
     document.getElementById('servidorNome').textContent = servidor.nome;
     document.getElementById('modelo_cpu').textContent = servidor.tipo_cpu;
+    document.getElementById('capacidade_ram').textContent = servidor.ram+"GB";
+    document.getElementById('capacidade_disco').textContent = servidor.disco+"TB";
 }
 
 function formatarDiferenca(timestamp) {

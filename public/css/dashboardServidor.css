@@ -126,14 +126,15 @@
     gap: 20px;
 }
 .container_limite.rede{
-  width: 10vw;
+  display: flex;
+  flex: 1;
+  justify-content: center;
+}
+.rede .limite{
+  width: 150px;
 }
 .container_limite.rede h3{
   text-align: center;
-}
-.container_limite.rede .limite_medida{
-  font-size: 30px;
-
 }
 .limite_header{
   font-size: 20px;
@@ -202,7 +203,14 @@
 .limites_container_wrapper{
   display: flex;
   gap: 20px;
+  width: 63vw;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-left: 30px;
 }
 .last{
   padding-bottom: 100px;
+}
+.limites_container_2{
+  display: flex;
 }

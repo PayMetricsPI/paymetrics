@@ -16,7 +16,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
-<body>
+<body onload="">
     <div id="sidebar"></div>
 
     <div class="container header">
@@ -73,7 +73,7 @@
             </div>
             <div class="dashboard_informacao">
                 <span class="info_title">Modelo</span>
-                <span class="Texto3" id="modelo_cpu"></span>
+                <span class="Texto3" id="modelo_cpu">-</span>
                 <span class="info_title">Tempo de Atividade</span>
                 <span class="Texto3" id="boot_time">-</span>
             </div>
@@ -97,7 +97,7 @@
             </div>
             <div class="dashboard_informacao">
                 <span class="info_title">Capacidade</span>
-                <span class="Texto3">64gb</span>
+                <span class="Texto3" id="capacidade_ram">-</span>
             </div>
             <div class="container_limite">
                 <div class="limite">
@@ -119,7 +119,7 @@
             </div>
             <div class="dashboard_informacao">
                 <span class="info_title">Capacidade</span>
-                <span class="Texto3">4tb</span>
+                <span class="Texto3" id="capacidade_disco">-</span>
             </div>
             <div class="container_limite">
                 <div class="limite">
@@ -139,34 +139,34 @@
             <div class="canvas">
                 <canvas id="RedeChart" width="564" height="282"></canvas>
             </div>
-            <div class="dashboard_informacao rede">
-                <span class="info_title">Capacidade</span>
-                <span class="Texto3">10gb</span>
-            </div>
             <div class="limites_container_wrapper">
                 <div class="container_limite rede">
                     <div>
                         <h3>Upload</h3>
-                        <div class="limite">
-                            <h2 class="limite_header">Limite padrão:</h2>
-                            <span class="limite_medida mid">80%</span>
-                        </div>
-                        <div class="limite">
-                            <h2 class="limite_header">Limite crítico:</h2>
-                            <span class="limite_medida hig">80%</span>
+                        <div class="limites_container_2">
+                            <div class="limite">
+                                <h2 class="limite_header">Limite padrão:</h2>
+                                <span class="limite_medida mid">80%</span>
+                            </div>
+                            <div class="limite">
+                                <h2 class="limite_header">Limite crítico:</h2>
+                                <span class="limite_medida hig">80%</span>
+                            </div>
                         </div>
                     </div>
                 </div>
                 <div class="container_limite rede">
                     <div>
                         <h3>Download</h3>
-                        <div class="limite">
-                            <h2 class="limite_header">Limite padrão:</h2>
-                            <span class="limite_medida mid">80%</span>
-                        </div>
-                        <div class="limite">
-                            <h2 class="limite_header">Limite crítico:</h2>
-                            <span class="limite_medida hig">80%</span>
+                        <div class="limites_container_2">
+                            <div class="limite">
+                                <h2 class="limite_header">Limite padrão:</h2>
+                                <span class="limite_medida mid">80%</span>
+                            </div>
+                            <div class="limite">
+                                <h2 class="limite_header">Limite crítico:</h2>
+                                <span class="limite_medida hig">80%</span>
+                            </div>
                         </div>
                     </div>
                 </div>
