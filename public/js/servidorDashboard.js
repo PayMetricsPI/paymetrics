@@ -7,19 +7,32 @@ if (servidor) {
     document.getElementById('modelo_cpu').textContent = servidor.tipo_cpu;
 }
 
-function buscarDados(){
-  fetch(`/metrica/obterUltimaPorMAC/${servidor.mac_address}`, { method: 'GET' })
-    .then((resultado) => resultado.json())
-    .then((data) => {
-      atualizarCPU(data.cpu)
-      atualizarRAM(data.ram)
-      atualizarDisco(data.disco)
-      atualizarMBEnviados(data.mbEnviados)
-      atualizarMBRecebidos(data.mbRecebidos)
-    }).catch(() => {
-        console.log("rode o python :)")
-    })
+function formatarDiferenca(timestamp) {
+  const agora = Date.now() / 1000;
+  const diffSegundos = Math.abs(agora - timestamp);
+
+  const dias = Math.floor(diffSegundos / (60 * 60 * 24));
+  const horas = Math.floor((diffSegundos % (60 * 60 * 24)) / (60 * 60));
+  const minutos = Math.floor((diffSegundos % (60 * 60)) / 60);
+
+  return `${dias.toString().padStart(2, '0')} dias, ${horas.toString().padStart(2, '0')} horas e ${minutos.toString().padStart(2, '0')} minutos`;
 }
+
+function buscarDados() {
+    fetch(`/metrica/obterUltimaPorMAC/${servidor.mac_address}`, { method: 'GET' })
+        .then((resultado) => resultado.json())
+        .then((data) => {
+            atualizarCPU(data.cpu)
+            atualizarRAM(data.ram)
+            atualizarDisco(data.disco)
+            atualizarMBEnviados(data.mbEnviados)
+            atualizarMBRecebidos(data.mbRecebidos)
+            atualizarBootTime(data.tempoBoot)
+        }).catch(() => {
+            console.log("rode o python :)")
+        })
+}
+
 setInterval(buscarDados, 2000)
 buscarDados()
 
@@ -42,6 +55,10 @@ function atualizarMBRecebidos(valorMbRecebidos) {
 function atualizarMBEnviados(valorMbEnviados) {
     chartMBEnviados.data.datasets[0].data = [valorMbEnviados, 100 - valorMbEnviados];
     chartMBEnviados.update();
+}
+function atualizarBootTime(bootTime){
+    const boot_time = document.getElementById('boot_time');
+    boot_time.innerHTML = formatarDiferenca(bootTime)
 }
 
 const ctx = document.getElementById('CpuChart').getContext('2d');
