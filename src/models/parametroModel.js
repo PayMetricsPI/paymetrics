@@ -36,9 +36,17 @@ function atualizarParametro(fk_componente,fk_empresa,fk_componente,alerta_critic
     return database.executar(instrucaoSql);
 }
 
+function listarParametro(fk_empresa) {
+    var instrucaoSql = `
+        select * from parametro 
+        where fk_empresa = ${fk_empresa};
+    `;
+    return database.executar(instrucaoSql);
+}
 
 module.exports = {
     criarParametro,
     // deletarParametro,
-    atualizarParametro
+    atualizarParametro,
+    // listarParametro
 };

@@ -63,7 +63,7 @@ function atualizarParametro(req, res) {
 
 module.exports = {
     atualizarParametro,
-    // listarServidores,
+    // listarParametro,
     criarParametro,
-    // deletarServidor
+    // deletarParametro
 };
