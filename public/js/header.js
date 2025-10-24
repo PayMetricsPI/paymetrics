@@ -18,7 +18,7 @@ if (header) {
                 </ul>
             </div>
         </div>
-    </nav>` 
+    </nav>`
 } else if (sidebar) {
     sidebar.innerHTML = ` 
         <aside class="sidebar">
@@ -47,9 +47,9 @@ if (header) {
                       </a>                    
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link py-3 d-flex mx-1 align-items-center" data-bs-placemnet="right"href="./embreve.html">
-                        <img src="assets/icons/settings-icon.png" class="bi mask3" width="32" height="32" alt="">
-                        <span class="config">Configurações</span>
+                    <a class="nav-link py-3 d-flex mx-1 align-items-center" data-bs-placemnet="right"href="./dashAlerta.html">
+                        <img src="assets/imgs/image_alerta.png" class="bi mask3" width="32" height="32" alt="">
+                        <span class="config">Dashboard Alertas</span>
                     </a>
                 </li>
                 <li>
