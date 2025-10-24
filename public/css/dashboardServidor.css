@@ -106,19 +106,8 @@
     margin-left: 15px;
 }
 
-.container_Nucleo{
-    display: flex;
-    flex-direction: row;
-    gap: 100px;
-}
-
-.container_threads{
-    display: flex;
-    flex-direction: row;
-    gap:190px;
-}
-
 .limite{
+    margin: 4px;
     display: flex;
     flex-direction: row;
     margin-left: 25px;
@@ -139,4 +128,14 @@
 
 .espaco{
     margin-top: 100px;
+}
+
+#critico{
+  color: red;
+  font-weight: bold;
+}
+
+#padrao{
+  color: darkorange;
+  font-weight: bold;
 }
