@@ -3,8 +3,8 @@ var database = require("../database/config");
 function criarParametro(servidores) {
     let queries = servidores.map(s => {
         return `
-            insert into parametro (fk_componente,fk_empresa,fk_componente,alerta_critico, alerta_normal)
-            VALUES ('${s.fk_componente}','${s.fk_empresa}'),'${s.fk_componente}','${s.alerta_critico}', '${s.alerta_normal}';
+            insert into parametro (fk_servidor,fk_empresa,fk_componente,alerta_critico, alerta_normal)
+            VALUES ('${s.fk_servidor}','${s.fk_empresa}'),'${s.fk_componente}','${s.alerta_critico}', '${s.alerta_normal}';
         `;
     }).join("\n");
 
@@ -26,10 +26,10 @@ function criarParametro(servidores) {
 //     return database.executar(instrucaoSql);
 // }
 
-function atualizarParametro(fk_componente,fk_empresa,fk_componente,alerta_critico, alerta_normal) {
+function atualizarParametro(fk_servidor,fk_empresa,fk_componente,alerta_critico, alerta_normal) {
     var instrucaoSql = `
         update paramtro
-        set fk_componente = '${fk_componente}', fk_empresa = '${fk_empresa}', fk_componente = '${fk_componente}',
+        set fk_servidor = '${fk_servidor}', fk_empresa = '${fk_empresa}', fk_componente = '${fk_componente}',
         alerta_critico = ${alerta_critico}, alerta_normal = ${alerta_normal}
         where id_paramtro = ${id_paramtro};
     `;

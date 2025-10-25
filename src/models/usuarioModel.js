@@ -5,7 +5,7 @@ function autenticar(email, senha) {
     var instrucaoSql = `
     select 
     u.id_usuario as id_usuario,  u.nome as nome,
-    u.email as email, u.administrador as id_administrador, u.fk_empresa as fk_empresa,
+    u.email as email, u.fk_cargo as id_cargo, u.fk_empresa as fk_empresa,
     e.razao_social as razao_social
     from usuarios u
     inner join empresa e on e.id_empresa = u.fk_empresa
@@ -15,10 +15,10 @@ function autenticar(email, senha) {
     return database.executar(instrucaoSql);
 }
 
-function cadastrar(nome, email, senha, administrador, fk_empresa) {
-    console.log("ACESSEI O USUARIO MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function cadastrar():", nome, senha, email, administrador, fk_empresa);
+function cadastrar(nome, email, senha, fk_cargo, fk_empresa) {
+    console.log("ACESSEI O USUARIO MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function cadastrar():", nome, senha, email, fk_cargo, fk_empresa);
     var instrucaoSql = `
-        INSERT INTO usuarios (nome, email, senha, administrador, fk_empresa) VALUES ('${nome}', '${email}', '${senha}', '${administrador}', '${fk_empresa}');
+        INSERT INTO usuarios (nome, email, senha, fk_cargo, fk_empresa) VALUES ('${nome}', '${email}', '${senha}', '${fk_cargo}', '${fk_empresa}');
     `;
     console.log("Executando a instrução SQL: \n" + instrucaoSql);
     return database.executar(instrucaoSql);
@@ -34,7 +34,7 @@ function renovar(id_usuario, novaSenha) {
 
 function listar(IdEmpresa){
     console.log("ACESSEI O USUARIO MODEL \n \n \t\t >> se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco \n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function listar():", IdEmpresa);
-    var instrucaoSql = `select u.id_usuario as id, u.nome, u.email, e.razao_social as razao_social, u.administrador as adm
+    var instrucaoSql = `select u.id_usuario as id, u.nome, u.email, e.razao_social as razao_social, u.fk_cargo as adm
         from usuarios u inner join 
         empresa e on e.id_empresa = u.fk_empresa where e.id_empresa = ${IdEmpresa};`;
     console .log("Executando a instrução SQL \n" + instrucaoSql);

@@ -90,7 +90,7 @@
                     sessionStorage.EMAIL_USUARIO   = usuario.email;
                     sessionStorage.NOME_USUARIO    = usuario.nome;
                     sessionStorage.ID_USUARIO      = usuario.id_usuario;
-                    sessionStorage.ADMINISTRADOR   = usuario.id_administrador;
+                    sessionStorage.FK_CARGO           = usuario.id_cargo;
                     sessionStorage.EMPRESA         = usuario.fk_empresa;
                     sessionStorage.NOME_EMPRESA    = usuario.razao_social;
                     sessionStorage.setItem("id", usuario.fk_empresa); 
@@ -106,21 +106,21 @@
                     }
 
                 });
+            
+            // } else {
 
-            } else {
-
-                for (let i = 0; i < 3; i++) {
+            //     for (let i = 0; i < 3; i++) {
                     
-                    if (tentativas < 3) {
-                        respostaLogin.innerHTML = `Email e/ou senha inválido(s). Tente novamente.<br> Você tem mais ${2 - tentativas} tentativa(s).<br>`;
-                        break;
-                    } else {
-                        respostaLogin.innerHTML += `<br>Número máximo de tentativas atingido.<br> Tente novamente mais tarde!`;
-                        break;
+            //         if (tentativas < 3) {
+            //             respostaLogin.innerHTML = `Email e/ou senha inválido(s). Tente novamente.<br> Você tem mais ${2 - tentativas} tentativa(s).<br>`;
+            //             break;
+            //         } else {
+            //             respostaLogin.innerHTML += `<br>Número máximo de tentativas atingido.<br> Tente novamente mais tarde!`;
+            //             break;
                         
-                    }
-                }
-                tentativas++;
+            //         }
+            //     }
+            //     tentativas++;
                 console.log("Houve um erro ao tentar realizar o login!");
 
                 

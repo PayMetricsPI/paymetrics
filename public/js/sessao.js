@@ -14,7 +14,7 @@ function validarSessao() {
 }
 
 function validarAdmin() {
-    if (sessionStorage.ADMINISTRADOR == 1) {
+    if (sessionStorage.FK_CARGO == 1) {
         ul = document.getElementById("ul_links")
         ul.innerHTML += `<li>
                     <a class="nav-link py-3 d-flex mx-1 align-items-center" data-bs-placemnet="right" href="deletarUsuario.html">
