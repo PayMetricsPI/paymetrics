@@ -50,7 +50,7 @@ alerta_critico int not null,
 alerta_normal int not null,
 primary key (id_parametro,fk_servidor,fk_empresa,fk_componente),
 foreign key (fk_servidor, fk_empresa)references servidor(id_servidor, fk_empresa),
-foreign key (fk_componente) references componente (id_componente));
+);
 
 insert into empresa (razao_social)
 values
