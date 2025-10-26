@@ -12,7 +12,7 @@ router.post("/autenticar", function (req, res) {
     usuarioController.autenticar(req, res);
 });
 
-router.post("/renovar/:IdUsuario", function (req, res){
+router.post("/renovar/:IdUsuario", function (req, res) {
     usuarioController.renovar(req, res)
 })
 
@@ -24,11 +24,11 @@ router.delete("/deletar/:idUsuario", function (req, res) {
     usuarioController.deletar(req, res);
 })
 
-router.post("/redefinirSenha/:idUsuario", function(req, res) {
+router.post("/redefinirSenha/:idUsuario", function (req, res) {
     usuarioController.redefinirSenha(req, res);
 });
 
-router.get("/verificar/:idUsuario", function(req, res) {
+router.get("/verificar/:idUsuario", function (req, res) {
     usuarioController.verificar(req, res);
 });
 

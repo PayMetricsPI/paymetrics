@@ -1,6 +1,5 @@
 var database = require("../database/config");
 
-
 function criarServidores(servidores) {
     let queries = servidores.map(s => {
         return `
@@ -14,11 +13,11 @@ function criarServidores(servidores) {
 
 function deletarServidor(id_servidor, fk_empresa) {
 
-     if (id_servidor == null || fk_empresa == null) {
+    if (id_servidor == null || fk_empresa == null) {
         console.error("Erro: id_servidor ou fk_empresa indefinidos!");
         return Promise.reject("id_servidor ou fk_empresa indefinidos");
     }
-    
+
     var instrucaoSql = `
         delete from servidor 
         where id_servidor = ${id_servidor} AND fk_empresa = ${fk_empresa};
@@ -37,7 +36,7 @@ function listarServidores(fk_empresa) {
 }
 
 
-function atualizarServidor(id_servidor, nome, mac_address,tipo_cpu , ram, disco ) {
+function atualizarServidor(id_servidor, nome, mac_address, tipo_cpu, ram, disco) {
     var instrucaoSql = `
         update servidor
         set nome = '${nome}', mac_address = '${mac_address}', tipo_cpu = '${tipo_cpu}',
