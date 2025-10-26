@@ -1,89 +1,97 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./css/Dash1.css">
-    <title>Dashboard</title>
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Métricas</title>
 
-    <div class="sidebar">
-        <!-- Ícones do menu lateral -->
-    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="./css/navbar.css" />
+    <link rel="stylesheet" href="./css/Dash1.css" />
+    <link rel="stylesheet" href="./css/embreve.css" />
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" />
+    <link rel="shortcut icon" type="image/png" href="assets/icons/logo Paymetrics.png" />
+  </head>
+
+  <body>
+    <div class="page-bg"></div>
+    <div id="sidebar"></div>
 
     <div class="main-content">
-        <div class="header">
-            <h1>Métricas</h1>
-        </div>
-        
-        <div class="cartao">
-            <div class="metric">
-                <h2>9</h2>
-                <p>alertas</p>
-                <p>no último mês</p>
-            </div>
-            <div class="cartao">
-                <h2>120</h2>
-                <p>minutos de</p>
-                <p>indisponibilidade</p>
-                <p>no último mês</p>
-            </div>
-            <div class="cartao">
-                <h2>30/09</h2>
-                <p>Foi o dia com mais</p>
-                <p>alertas</p>
-            </div>
-        </div>
 
-        <div class="alertas-tempo">
-            <h2>Alertas por Tempo</h2>
-            <div class="charts">
-                <div class="chart">
-                    <h3>Alertas por dia da semana</h3>
-                    <div class="bar-chart">
-                        <div class="bar highlighted">B</div>
-                        <div class="bar">T</div>
-                        <div class="bar">Q</div>
-                        <div class="bar">S</div>
-                        <div class="bar">D</div>
-                    </div>
-                </div>
-                <div class="chart">
-                    <h3>Alertas por horário</h3>
-                    <div class="bar-chart">
-                        <div class="bar highlighted">B</div>
-                        <div class="bar">T</div>
-                        <div class="bar">Q</div>
-                        <div class="bar">S</div>
-                        <div class="bar">D</div>
-                    </div>
-                </div>
-            </div>
-        </div>
+      <!-- 🔹 BLOCO 1: Cards brancos -->
+      <section class="section-resumo">
+        <header class="header">
+          <h2>Alertas por tempo</h2>
+          <div class="filtro">
+            <label>Últimos</label>
+            <select id="select-tempo">
+              <option>1 Mês</option>
+              <option>3 Meses</option>
+              <option>6 Meses</option>
+            </select>
+          </div>
+        </header>
 
-        <div class="alertas-componentes">
-            <h2>Alertas por Componentes</h2>
-            <div class="components">
-                <div class="component">
-                    <h3>CPU</h3>
-                    <p>B</p>
-                </div>
-                <div class="component">
-                    <h3>RAM</h3>
-                    <p>B</p>
-                </div>
-                <div class="component">
-                    <h3>Disco</h3>
-                    <p>B</p>
-                </div>
-                <div class="component">
-                    <h3>Rede</h3>
-                    <p>B</p>
-                </div>
-            </div>
+        <main class="container" id="cards-alertas">
+          <div class="card">
+            <h2 id="card-alertas">9</h2>
+            <p id="texto-alertas">alertas<br />no último mês</p>
+          </div>
+          <div class="card">
+            <h2 id="card-minutos">120</h2>
+            <p id="texto-minutos">minutos de<br />indisponibilidade</p>
+          </div>
+          <div class="card">
+            <h2 id="card-dia">30/09</h2>
+            <p id="texto-dia">foi o dia com<br />mais alertas</p>
+          </div>
+        </main>
+      </section>
+
+      <!-- 🔶 BLOCO 2: Gráficos amarelos -->
+      <section class="Alertas-graficos">
+        <header class="header">
+          <h2>Alertas por tempo</h2>
+          <!-- não precisa de outro select -->
+        </header>
+
+        <div class="container">
+          <div class="grafico">
+            <h3>Alertas por dia da semana</h3>
+            <canvas id="graficoDia"></canvas>
+          </div>
+          <div class="grafico">
+            <h3>Alertas por horário</h3>
+            <canvas id="graficoHora"></canvas>
+          </div>
         </div>
+      </section>
+
+      <!-- ⚪ BLOCO 3: Gráficos por componente -->
+      <section class="section-graficos">
+        <header class="header">
+          <h2>Alertas por Componente</h2>
+          <div class="filtro">
+            <label>Últimos</label>
+            <select id="select-componentes">
+              <option>1 Mês</option>
+              <option>3 Meses</option>
+              <option>6 Meses</option>
+            </select>
+          </div>
+        </header>
+
+        <div class="container">
+          <div class="grafico"><h3>CPU</h3><canvas id="graficoCPU"></canvas></div>
+          <div class="grafico"><h3>RAM</h3><canvas id="graficoRAM"></canvas></div>
+          <div class="grafico"><h3>Disco</h3><canvas id="graficoDisco"></canvas></div>
+          <div class="grafico"><h3>Rede</h3><canvas id="graficoRede"></canvas></div>
+        </div>
+      </section>
     </div>
 
-</body>
+    <script src="js/header.js"></script>
+    <script src="./js/graficos.js"></script>
+  </body>
 </html>
