@@ -2,12 +2,8 @@ html, body {
   margin: 0;
   padding: 0;
   height: 100%;
-}
-
-body {
   font-family: 'Poppins', sans-serif;
   background-color: #f7f8fa;
-  min-height: 100vh;
   overflow-x: hidden;
 }
 
@@ -19,16 +15,12 @@ body {
   width: 5rem;
   background: linear-gradient(to right, #1d1d1d, #3f3e3d);
   box-shadow: 2px 0 8px rgba(0,0,0,0.25);
-  z-index: 1000;
-  overflow-x: hidden;
-  overflow-y: auto;
-  white-space: nowrap;
   transition: width 0.3s ease;
+  overflow: hidden;
+  z-index: 1000;
 }
 
-.sidebar:hover {
-  width: 18rem;
-}
+.sidebar:hover { width: 18rem; }
 
 .alertas, .dash, .config, .user {
   color: white;
@@ -50,15 +42,13 @@ body {
 }
 
 .main-content {
-  position: relative;
-  z-index: 1;
   margin-left: 5rem;
   width: calc(100% - 5rem);
-  transition: margin-left 0.3s ease, width 0.3s ease;
+  transition: margin-left 0.3s ease;
   min-height: 100vh;
   background-color: #f7f8fa;
-  box-sizing: border-box;
   padding-bottom: 40px;
+  box-sizing: border-box;
 }
 
 .sidebar:hover ~ .main-content {
@@ -73,31 +63,37 @@ body {
   padding: 20px 40px;
   color: #111;
   font-weight: bold;
-  margin-top: 10px;
-  box-sizing: border-box;
 }
 
 .header select {
   padding: 8px 16px;
   border-radius: 20px;
   border: 1px solid #000;
-  background: #fff8cc;
+  background: #ffffff;
   color: #111;
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
 }
-.header select {
-  background: #ffffff;
+
+.section-resumo,
+.Alertas-graficos,
+.section-graficos {
+  padding: 20px 0 40px;
 }
 
+.Alertas-graficos {
+  background-color: #f4a300;
+  border-top: 3px solid #000;
+}
 
 .container {
   display: flex;
   justify-content: center;
-  gap: 30px;
   flex-wrap: wrap;
-  padding: 30px;
+  gap: 30px;
+  padding: 0 40px;
+  box-sizing: border-box;
 }
 
 .card {
@@ -105,8 +101,8 @@ body {
   border-radius: 15px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.15);
   text-align: center;
-  padding: 25px;
-  width: 200px;
+  padding: 20px;
+  width: 300px;
   transition: 0.3s;
 }
 
@@ -115,23 +111,12 @@ body {
   box-shadow: 0 5px 12px rgba(0,0,0,0.2);
 }
 
-.Alertas-graficos {
-  background-color: #f4a300;
-  padding: 40px 40px 60px;
-  border-top: 3px solid #000;
-}
-
-.Alertas-graficos .header {
-  color: #111;
-}
-
 .section-graficos > .container {
-  display: grid !important;
+  display: grid;
   grid-template-columns: repeat(2, minmax(320px, 1fr));
   gap: 32px;
   justify-items: center;
-  align-items: start;
-  padding: 30px 40px;
+  padding: 0 40px;
 }
 
 .grafico {
@@ -143,7 +128,7 @@ body {
   max-width: 450px;
   box-shadow: 0 3px 8px rgba(0,0,0,0.2);
   text-align: center;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: 0.2s ease;
 }
 
 .grafico:hover {
@@ -152,15 +137,9 @@ body {
 }
 
 .grafico h3 {
-  text-align: center;
   margin-bottom: 20px;
   color: #111;
   font-weight: 700;
-}
-
-.filtro label {
-  margin-right: 8px;
-  font-weight: 500;
 }
 
 @media (max-width: 980px) {
