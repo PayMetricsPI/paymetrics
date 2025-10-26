@@ -1,0 +1,78 @@
+const data = []
+
+function novaMedicao(req, res){
+    const datetime = req.body.datetime;
+    // const empresa = req.body.empresa;
+    const codMaq = req.body.codMaquina;
+    const cpu = req.body.cpu;
+    const ram = req.body.ram;
+    const disco = req.body.disco;
+    const macAddress = req.body.mac;
+    const mbEnviados = req.body.mbEnviados;
+    const mbRecebidos = req.body.mbRecebidos;
+    const processos = req.body.processos;
+    const tempoBoot = req.body.tempoBoot;
+
+    const newData = {
+        datetime, codMaq, cpu, ram, disco, macAddress, mbEnviados, mbRecebidos, processos, tempoBoot
+    }
+    data.push(newData)
+    res.status(200).json(data)
+}
+
+// function obterMedicoesPorEmpresa(req, res){
+//     const empresa = req.params.empresa;
+
+//     const searchData = [];
+
+//     data.forEach(medicao => {
+//         console.log(medicao)
+//         if(medicao.empresa == empresa){
+//             searchData.push(medicao);
+//         }
+//     });
+
+//     res.status(200).json(searchData);
+// }
+
+function obterMedicoes(req, res){
+    res.status(200).json(data);
+}
+
+
+function obterMedicoesPorMAC(req, res){
+    const mac = req.params.mac;
+
+    const searchData = [];
+        data.forEach(medicao => {
+        console.log(medicao)
+        if(medicao.macAddress == mac){
+            searchData.push(medicao);
+        }
+    });
+
+    res.status(200).json(searchData);
+}
+
+function obterUltimaMedicaoPorMAC(req, res){
+    const mac = req.params.mac;
+
+    let searchData;
+    for(let i = data.length-1; i > 0; i--){
+        if(data[i].macAddress == mac){
+            searchData = data[i];
+            break
+        }
+    }
+
+    res.status(200).json(searchData);
+}
+
+
+module.exports = {
+    novaMedicao,
+    // obterMedicoesPorEmpresa,
+    obterMedicoesPorMAC,
+    obterUltimaMedicaoPorMAC,
+    obterMedicoes
+}

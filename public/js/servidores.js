@@ -126,6 +126,7 @@ function carregarServidores() {
             servidores.forEach(s => {
                 const div = document.createElement('div');
                 div.className = 'users_container';
+                div.style.cursor = 'pointer';
                 div.innerHTML = `
                   <div class="user_icon">
                     <img src="./assets/icons/servidor_.png" width="90px">
@@ -142,6 +143,16 @@ function carregarServidores() {
                         <button class="delete_user_button">Excluir</button>
                     </div>
                 `;
+
+               div.addEventListener('click', (event) => {
+          if (event.target.classList.contains('edit_user_button') || event.target.classList.contains('delete_user_button')) {
+            return;
+          }
+
+          sessionStorage.setItem('servidorSelecionado', JSON.stringify(s));
+
+          window.location.href = 'servidorDashboard.html';
+        });
                 usersDiv.appendChild(div);
                 div.querySelector('.edit_user_button').addEventListener('click', () =>
                     open_modal_edit_server(s.id_servidor, s.nome, s.mac_address, s.tipo_cpu, s.ram, s.disco)
