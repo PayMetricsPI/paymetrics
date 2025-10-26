@@ -5,6 +5,8 @@ const servidor = JSON.parse(sessionStorage.getItem('servidorSelecionado'));
 if (servidor) {
     document.getElementById('servidorNome').textContent = servidor.nome;
     document.getElementById('modelo_cpu').textContent = servidor.tipo_cpu;
+    document.getElementById('capacidade_ram').textContent = servidor.ram+"GB";
+    document.getElementById('capacidade_disco').textContent = servidor.disco+"TB";
 }
 
 function formatarDiferenca(timestamp) {
@@ -118,6 +120,7 @@ const chartCPU = new Chart(ctx1, {
         }]
     },
     options: {
+        maintainAspectRatio: false,
         circumference: 180,
         cutout: '80%',
         rotation: 270,
@@ -206,6 +209,7 @@ const chartRAM = new Chart(ctx3, {
         }]
     },
     options: {
+        maintainAspectRatio: false,
         circumference: 180,
         cutout: '80%',
         rotation: 270,
@@ -295,6 +299,7 @@ const chartDisco = new Chart(ctx5, {
         }]
     },
     options: {
+        maintainAspectRatio: false,
         circumference: 180,
         cutout: '80%',
         rotation: 270,
@@ -383,6 +388,7 @@ const chartMBEnviados = new Chart(ctx7, {
         }]
     },
     options: {
+        maintainAspectRatio: false,
         circumference: 180,
         cutout: '80%',
         rotation: 270,
@@ -429,6 +435,7 @@ const chartMBRecebidos = new Chart(ctx8, {
         }]
     },
     options: {
+        maintainAspectRatio: false,
         circumference: 180,
         cutout: '80%',
         rotation: 270,

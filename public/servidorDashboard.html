@@ -16,11 +16,11 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
-<body>
+<body onload="">
     <div id="sidebar"></div>
 
-    <div class="container">
-        <div class="main_content">
+    <div class="container header">
+        <div class="main_content header_title">
             <div class="icone"> <img src="./assets/imgs/Icone_Servidor.png" alt=""></div>
             <div class="servidor_nome">
                 <p id="servidorNome"></p>
@@ -42,109 +42,134 @@
         </div>
     </div>
 
+    <div class="container_percentages">
+        <div class="">
+            <h2>CPU</h2>
+            <canvas id="statusChart"></canvas>
+        </div>
+        <div class="">
+            <h2>RAM</h2>
+            <canvas id="statusRamChart"></canvas>
+        </div>
+        <div class="">
+            <h2>Disco</h2>
+            <canvas id="statusDiscoChart"></canvas>
+        </div>
+        <div class="">
+            <h2>Upload</h2>
+            <canvas id="statusRedeChart"></canvas>
+        </div>
+        <div class="">
+            <h2>Download</h2>
+            <canvas id="statusRedeChart2"></canvas>
+        </div>
+    </div>
+
     <div class="container">
+        <h2 class="Texto">CPU</h2>
         <div class="main_content">
             <div class="canvas">
                 <canvas id="CpuChart"></canvas>
             </div>
             <div class="dashboard_informacao">
-                <span class="Texto"></span>
-                <br>
-                <span class="Modelo">Modelo</span>
-                <span class="Texto" id="modelo_cpu"></span>
-                <br>
-                <span>Tempo de Atividade</span>
-                <span class="Texto2" id="boot_time">-</span>
+                <span class="info_title">Modelo</span>
+                <span class="Texto3" id="modelo_cpu">-</span>
+                <span class="info_title">Tempo de Atividade</span>
+                <span class="Texto3" id="boot_time">-</span>
             </div>
             <div class="container_limite">
                 <div class="limite">
-                    <span id="padrao">Limite padrão:</span> <span class="Texto3"> 80%</span>
+                    <h2 class="limite_header">Limite padrão:</h2> 
+                    <span class="limite_medida mid">80%</span>
                 </div>
                 <div class="limite">
-                    <span id="critico">Limite crítico:</span> <span class="Texto3"> 80%</span>
+                    <h2 class="limite_header">Limite crítico:</h2>
+                    <span class="limite_medida hig">80%</span>
                 </div>
-                <canvas id="statusChart"></canvas>
             </div>
         </div>
     </div>
-
-    <div class="espaco"></div>
     <div class="container">
+        <h2 class="Texto">RAM</h2>
         <div class="main_content">
             <div class="canvas">
                 <canvas id="RamChart"></canvas>
             </div>
             <div class="dashboard_informacao">
-                <span class="Texto">RAM</span>
-                <br>
-                <span>Capacidade</span>
-                <span class="Texto2">64gb</span>
+                <span class="info_title">Capacidade</span>
+                <span class="Texto3" id="capacidade_ram">-</span>
             </div>
             <div class="container_limite">
                 <div class="limite">
-                    <span id="padrao">Limite padrão:</span> <span class="Texto3"> 80%</span>
+                    <h2 class="limite_header">Limite padrão:</h2> 
+                    <span class="limite_medida mid">80%</span>
                 </div>
                 <div class="limite">
-                    <span id="critico">Limite crítico:</span> <span class="Texto3"> 80%</span>
+                    <h2 class="limite_header">Limite crítico:</h2>
+                    <span class="limite_medida hig">80%</span>
                 </div>
-                <canvas id="statusRamChart"></canvas>
             </div>
         </div>
     </div>
-
-    <div class="espaco"></div>
     <div class="container">
+        <h2 class="Texto">Disco</h2>
         <div class="main_content">
             <div class="canvas">
                 <canvas id="DiscoChart"></canvas>
             </div>
             <div class="dashboard_informacao">
-                <span class="Texto">Disco</span>
-                <br>
-                <span>Capacidade</span>
-                <span class="Texto2">4tb</span>
+                <span class="info_title">Capacidade</span>
+                <span class="Texto3" id="capacidade_disco">-</span>
             </div>
             <div class="container_limite">
                 <div class="limite">
-                    <span id="padrao">Limite padrão:</span> <span class="Texto3"> 80%</span>
+                    <h2 class="limite_header">Limite padrão:</h2> 
+                    <span class="limite_medida mid">80%</span>
                 </div>
                 <div class="limite">
-                    <span id="critico">Limite crítco:</span> <span class="Texto3"> 80%</span>
+                    <h2 class="limite_header">Limite crítico:</h2>
+                    <span class="limite_medida hig">80%</span>
                 </div>
-                <canvas id="statusDiscoChart"></canvas>
             </div>
         </div>
     </div>
-
-    <div class="espaco"></div>
-    <div class="container">
+    <div class="container last">
+        <h2 class="Texto">Rede</h2>
         <div class="main_content">
             <div class="canvas">
                 <canvas id="RedeChart" width="564" height="282"></canvas>
             </div>
-            <div class="dashboard_informacao">
-                <span class="Texto">Rede</span>
-                <span>Capacidade</span>
-                <span class="Texto2">10gb</span>
-            </div>
-            <div class="container_limite">
-                <div class="limite">
-                    <span id="padrao">Limite padrão:</span> <span class="Texto3"> 80%</span>
+            <div class="limites_container_wrapper">
+                <div class="container_limite rede">
+                    <div>
+                        <h3>Upload</h3>
+                        <div class="limites_container_2">
+                            <div class="limite">
+                                <h2 class="limite_header">Limite padrão:</h2>
+                                <span class="limite_medida mid">80%</span>
+                            </div>
+                            <div class="limite">
+                                <h2 class="limite_header">Limite crítico:</h2>
+                                <span class="limite_medida hig">80%</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="limite">
-                    <span id="critico">Limite crítico:</span> <span class="Texto3"> 80%</span>
+                <div class="container_limite rede">
+                    <div>
+                        <h3>Download</h3>
+                        <div class="limites_container_2">
+                            <div class="limite">
+                                <h2 class="limite_header">Limite padrão:</h2>
+                                <span class="limite_medida mid">80%</span>
+                            </div>
+                            <div class="limite">
+                                <h2 class="limite_header">Limite crítico:</h2>
+                                <span class="limite_medida hig">80%</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <canvas id="statusRedeChart"></canvas>
-            </div>
-
-            <div class="container_limite">
-                <div class="limite">
-                    <span id="padrao">Limite padrão:</span> <span class="Texto3"> 80%</span>
-                </div>
-                <div class="limite">
-                    <span id="critico">Limite crítico:</span> <span class="Texto3"> 80%</span>
-                </div>
-                <canvas id="statusRedeChart2"></canvas>
             </div>
         </div>
     </div>
