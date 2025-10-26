@@ -1,18 +1,18 @@
-function destacarMáximo(data, baseColor, corDeDestaque) {
-  const max = Math.max(...data);
-  return data.map(value => (value === max ? corDeDestaque : baseColor));
+function destacarMaior(valores, corNormal, corDestaque) {
+  const maior = Math.max(...valores);
+  return valores.map(v => v === maior ? corDestaque : corNormal);
 }
 
-function criarGrafico(id, labels, dados) {
+function criarGrafico(id, rotulos, dados) {
   const ctx = document.getElementById(id).getContext("2d");
   return new Chart(ctx, {
     type: "bar",
     data: {
-      labels,
+      labels: rotulos,
       datasets: [{
         label: "Alertas",
         data: dados,
-        backgroundColor: destacarMáximo(dados, "#f4a300", "#ff3333"),
+        backgroundColor: destacarMaior(dados, "#f4a300", "#ff3333"),
         borderRadius: 6
       }]
     },
@@ -57,7 +57,7 @@ const dadosPorPeriodo = {
   }
 };
 
-let chartDia, chartHora, chartCPU, chartRAM, chartDisco, chartRede;
+let graficos = [];
 
 function atualizarCards(periodo) {
   const { alertas, minutos, dia } = dadosPorPeriodo[periodo].resumo;
@@ -70,28 +70,26 @@ function atualizarCards(periodo) {
 }
 
 function atualizarTudo(periodo) {
-  const data = dadosPorPeriodo[periodo];
+  const dados = dadosPorPeriodo[periodo];
   const dias = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
   const horas = ["0h","2h","4h","6h","8h","10h","12h","14h","16h","18h","20h","22h"];
 
-  [chartDia, chartHora, chartCPU, chartRAM, chartDisco, chartRede].forEach(c => c && c.destroy());
-
-  chartDia = criarGrafico("graficoDia", dias, data.dia);
-  chartHora = criarGrafico("graficoHora", horas, data.hora);
-
-  chartCPU = criarGrafico("graficoCPU", dias, data.cpu);
-  chartRAM = criarGrafico("graficoRAM", dias, data.ram);
-  chartDisco = criarGrafico("graficoDisco", dias, data.disco);
-  chartRede = criarGrafico("graficoRede", dias, data.rede);
+  graficos.forEach(g => g.destroy());
+  graficos = [
+    criarGrafico("graficoDia", dias, dados.dia),
+    criarGrafico("graficoHora", horas, dados.hora),
+    criarGrafico("graficoCPU", dias, dados.cpu),
+    criarGrafico("graficoRAM", dias, dados.ram),
+    criarGrafico("graficoDisco", dias, dados.disco),
+    criarGrafico("graficoRede", dias, dados.rede)
+  ];
 
   atualizarCards(periodo);
 }
 
 document.addEventListener("DOMContentLoaded", () => {
   atualizarTudo("1 Mês");
-
-  const selects = document.querySelectorAll("select");
-  selects.forEach(select => {
+  document.querySelectorAll("select").forEach(select => {
     select.addEventListener("change", e => atualizarTudo(e.target.value));
   });
 });
