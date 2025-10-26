@@ -41,6 +41,13 @@ if (header) {
                       </a>                    
                 </li>
                  <li class="nav-item">
+                      <a class="nav-link py-3 d-flex mx-1 align-items-center" data-bs-placemnet="right" href="./DashPessoaEstrategia.html">
+                        <img src="assets/icons/chart-icon.png" class="bi mask2" width="32" height="32" alt="">
+                        <span class="dash">Dashboards Estratégica</span>
+                      </a>                    
+                </li>
+                
+                 <li class="nav-item">
                       <a class="nav-link py-3 d-flex mx-1 align-items-center" data-bs-placemnet="right" href="./servidor.html ">
                         <img src="assets/icons/servidor.png" class="bi mask2" width="32" height="32" alt="">
                         <span class="dash">Servidores</span>
@@ -58,6 +65,7 @@ if (header) {
                         <span class="user">Usuário</span>
                     </a>
                 </li>
+                
                 <li class="mt-auto">
                     <a class="nav-link py-3 d-flex mx-1 align-items-center" data-bs-placemnet="right" href="./index.html" onclick="limparSessao()">
                         <img role="img" class="bi mask" width="32" height="32" src="assets/icons/iconesair.png" alt="foto_perfil">
