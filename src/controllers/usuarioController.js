@@ -178,8 +178,8 @@ function verificar(req, res) {
     usuarioModel.verificar(id_usuario)
         .then(resultado => {
             if (resultado.length > 0) {
-                const { nome, email, empresa } = resultado[0];
-                res.status(200).json({ nome, email, empresa });
+                const { nome, email, empresa, cargo } = resultado[0];
+                res.status(200).json({ nome, email, empresa, cargo });
             } else {
                 res.status(404).send("Usuário não encontrado.");
             }
