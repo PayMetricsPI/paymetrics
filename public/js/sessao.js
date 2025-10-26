@@ -2,7 +2,7 @@
 function validarSessao() {
     var email = sessionStorage.EMAIL_USUARIO;
     var nome = sessionStorage.NOME_USUARIO;
-     const empresaId = sessionStorage.getItem("id"); 
+    const empresaId = sessionStorage.getItem("id"); 
 
     var usuario = document.getElementById("usuario");
 
