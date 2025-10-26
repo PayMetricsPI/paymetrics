@@ -1,164 +1,170 @@
-body {
-    font-family: Arial, sans-serif;
-    margin: 20px;
-    background-color: #f9f9f9;
-}
-
-h1 {
-    font-size: 24px;
-    margin-left: 270px; /* Espaço para o sidebar */
-    padding: 20px;
-}
-
-.page-bg {
-    background-color: #f9f9f9; /* Cor de fundo */
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -1; /* Coloca o fundo atrás do conteúdo */
-}
-
-.container {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap; /* Permite que os cartões se ajustem em linhas */
-    margin: 20px; /* Margem externa */
-    margin-left: 100px; /* Espaço para o sidebar */
-}
-.cartao {
-    width: 200px; 
-    height: 180px; 
-    display: flex;
-    align-items: center; 
-    justify-content: center; 
-    border-radius: 5px; 
-    border: 2px solid #f0ad4e; 
-    color: black; 
-    flex-direction: column; 
-    padding: 5px; /* Reduzido de 20px para 10px */
-    margin: 5px; /* Reduzido de 10px para 5px */
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); 
-    text-align: center; 
-}
-
-
-.cartao h2 {
-    font-size: 36px; /* Tamanho do título ajustado */
-    margin: 0;
-}
-
-.cartao p {
-    font-size: 14px; /* Tamanho do texto ajustado */
-    margin: 5px 0;
-    color: black; /* Mantendo o texto branco */
-}
-.seletor {
-    margin-left: 270px; /* Espaço para o sidebar */
-    padding: 20px; /* Preenchimento ao redor do seletor */
-    display: flex;
-    align-items: center;
-}
-
-.seletor label {
-    margin-right: 10px; /* Espaço entre o label e o seletor */
-}
-
-.seletor select {
-    padding: 5px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
 }
 
 body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    background-color: #f9f9f9;
+  font-family: 'Poppins', sans-serif;
+  background-color: #f7f8fa;
+  min-height: 100vh;
+  overflow-x: hidden;
 }
 
 .sidebar {
-    width: 200px;
-    background-color: #333;
-    color: white;
-    position: fixed;
-    height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 5rem;
+  background: linear-gradient(to right, #1d1d1d, #3f3e3d);
+  box-shadow: 2px 0 8px rgba(0,0,0,0.25);
+  z-index: 1000;
+  overflow-x: hidden;
+  overflow-y: auto;
+  white-space: nowrap;
+  transition: width 0.3s ease;
+}
+
+.sidebar:hover {
+  width: 18rem;
+}
+
+.alertas, .dash, .config, .user {
+  color: white;
+  opacity: 0;
+  transform: translateX(0);
+  transition: opacity 0.3s, transform 0.3s;
+  display: inline-block;
+  max-width: 0;
+  overflow: hidden;
+}
+
+.sidebar:hover .alertas,
+.sidebar:hover .dash,
+.sidebar:hover .config,
+.sidebar:hover .user {
+  opacity: 1;
+  transform: translateX(20px);
+  max-width: 120px;
 }
 
 .main-content {
-    margin-left: 220px; /* Espaço para a sidebar */
-    padding: 20px;
+  position: relative;
+  z-index: 1;
+  margin-left: 5rem;
+  width: calc(100% - 5rem);
+  transition: margin-left 0.3s ease, width 0.3s ease;
+  min-height: 100vh;
+  background-color: #f7f8fa;
+  box-sizing: border-box;
+  padding-bottom: 40px;
+}
+
+.sidebar:hover ~ .main-content {
+  margin-left: 18rem;
+  width: calc(100% - 18rem);
 }
 
 .header {
-    text-align: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 40px;
+  color: #111;
+  font-weight: bold;
+  margin-top: 10px;
+  box-sizing: border-box;
 }
 
-.metrics {
-    display: flex;
-    justify-content: space-between;
-    margin: 20px 0;
+.header select {
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: 1px solid #000;
+  background: #fff8cc;
+  color: #111;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+}
+.header select {
+  background: #ffffff;
 }
 
-.metric {
-    background-color: #fff;
-    border: 2px solid #f0ad4e;
-    border-radius: 5px;
-    padding: 20px;
-    text-align: center;
-    width: 30%;
+
+.container {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  flex-wrap: wrap;
+  padding: 30px;
 }
 
-.alertas-tempo {
-    background-color: #f9c74f;
-    padding: 20px;
-    border-radius: 5px;
+.card {
+  background-color: white;
+  border-radius: 15px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  text-align: center;
+  padding: 25px;
+  width: 200px;
+  transition: 0.3s;
 }
 
-.alertas-tempo .charts {
-    display: flex;
-    justify-content: space-between;
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 12px rgba(0,0,0,0.2);
 }
 
-.chart {
-    width: 48%;
+.Alertas-graficos {
+  background-color: #f4a300;
+  padding: 40px 40px 60px;
+  border-top: 3px solid #000;
 }
 
-.bar-chart {
-    display: flex;
-    justify-content: space-around;
-    margin-top: 10px;
+.Alertas-graficos .header {
+  color: #111;
 }
 
-.bar {
-    width: 18%;
-    background-color: #f9844a;
-    height: 50px;
-    transition: background-color 0.3s;
+.section-graficos > .container {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(320px, 1fr));
+  gap: 32px;
+  justify-items: center;
+  align-items: start;
+  padding: 30px 40px;
 }
 
-.bar.highlighted {
-    background-color: #e63946;
+.grafico {
+  background-color: white;
+  border: 2px solid #000;
+  border-radius: 15px;
+  padding: 20px;
+  width: 100%;
+  max-width: 450px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+  text-align: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.bar:hover {
-    background-color: #f3722c;
+.grafico:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 12px rgba(0,0,0,0.25);
 }
 
-.alertas-componentes {
-    margin-top: 20px;
+.grafico h3 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #111;
+  font-weight: 700;
 }
 
-.components {
-    display: flex;
-    justify-content: space-between;
+.filtro label {
+  margin-right: 8px;
+  font-weight: 500;
 }
 
-.component {
-    background-color: #fff;
-    border: 2px solid #ccc;
-    border-radius: 5px;
-    padding: 10px;
-    text-align: center;
-    width: 23%; /* Para 4 componentes em linha */
+@media (max-width: 980px) {
+  .section-graficos > .container {
+    grid-template-columns: 1fr;
+  }
 }
