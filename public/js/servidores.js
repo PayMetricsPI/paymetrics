@@ -23,8 +23,8 @@ let deleteServerID = null;
 
 
 function open_modal_create_server() {
-    out_create_server.classList.add('show');   
-    create_server_modal.classList.add('show'); 
+    out_create_server.classList.add('show');
+    create_server_modal.classList.add('show');
 }
 
 function close_modal_create_server() {
@@ -35,14 +35,14 @@ function close_modal_create_server() {
 
 
 function open_modal_edit_server(id, nome, mac, tipo_cpu, ram, disco) {
-    out_edit_server.classList.add('show');   
-    edit_server_modal.classList.add('show');  
+    out_edit_server.classList.add('show');
+    edit_server_modal.classList.add('show');
     edit_server_modal.querySelector('.nome_input').value = nome;
     edit_server_modal.querySelector('.mac_input').value = mac;
     edit_server_modal.querySelector('.tipo_cpu_input').value = tipo_cpu;
     edit_server_modal.setAttribute('idServidor', id);
-    edit_server_modal.querySelector('.ram_input').value = ram;   
-    edit_server_modal.querySelector('.disco_input').value = disco; 
+    edit_server_modal.querySelector('.ram_input').value = ram;
+    edit_server_modal.querySelector('.disco_input').value = disco;
 }
 
 function close_modal_edit_server() {
@@ -73,14 +73,14 @@ submit_button_create_server.addEventListener('click', () => {
     const tipo_cpu = create_server_modal.querySelector('.tipo_cpu_input').value.trim();
     const ram = create_server_modal.querySelector('.ram_input').value.trim();
     const disco = create_server_modal.querySelector('.disco_input').value.trim();
-    if (!nome || !mac ||  !tipo_cpu ||!ram || !disco) return alert("Preencha todos os campos!");
+    if (!nome || !mac || !tipo_cpu || !ram || !disco) return alert("Preencha todos os campos!");
     fetch(`/servidores/criarServidor`, {
         method: 'POST',
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ servidores: [{ fk_empresa, nome, mac_address: mac, tipo_cpu , ram, disco}] })
+        body: JSON.stringify({ servidores: [{ fk_empresa, nome, mac_address: mac, tipo_cpu, ram, disco }] })
     }).then(resp => resp.json())
-      .then(() => { close_modal_create_server(); carregarServidores(); })
-      .catch(console.error);
+        .then(() => { close_modal_create_server(); carregarServidores(); })
+        .catch(console.error);
 });
 
 close_edit_server_button.addEventListener('click', close_modal_edit_server);
@@ -96,10 +96,10 @@ submit_button_edit_server.addEventListener('click', () => {
     fetch(`/servidores/atualizarServidor/${id}`, {
         method: 'PUT',
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ nome, mac_address: mac,tipo_cpu , ram, disco })
+        body: JSON.stringify({ nome, mac_address: mac, tipo_cpu, ram, disco })
     }).then(resp => resp.json())
-      .then(() => { close_modal_edit_server(); carregarServidores(); })
-      .catch(console.error);
+        .then(() => { close_modal_edit_server(); carregarServidores(); })
+        .catch(console.error);
 });
 
 close_delete_server_button.addEventListener('click', close_modal_delete_server);
@@ -111,8 +111,8 @@ confirm_button_delete_server.addEventListener('click', () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ fk_empresa })
     }).then(resp => resp.json())
-      .then(() => { close_modal_delete_server(); carregarServidores(); })
-      .catch(console.error);
+        .then(() => { close_modal_delete_server(); carregarServidores(); })
+        .catch(console.error);
 });
 
 
@@ -137,29 +137,34 @@ function carregarServidores() {
                     <p class="server_tipo_cpu"> <strong>Modelo da cpu:</strong> ${s.tipo_cpu} </p>
                     <p class="server_ram"> <strong>Ram Gb: </strong> ${s.ram} </p>
                     <p class="server_disco"> <strong>Disco Tb: </strong> ${s.disco} </p>
-                    
+                `;
+                if (sessionStorage.getItem("CARGO") == "Analista") {
+                    div.innerHTML += `
                     <div class="user_controls">
                         <button class="edit_user_button">Editar</button>
                         <button class="delete_user_button">Excluir</button>
-                    </div>
-                `;
+                    </div>`
+                }
+                div.innerHTML += "</div>"
 
-               div.addEventListener('click', (event) => {
-          if (event.target.classList.contains('edit_user_button') || event.target.classList.contains('delete_user_button')) {
-            return;
-          }
+                div.addEventListener('click', (event) => {
+                    if (event.target.classList.contains('edit_user_button') || event.target.classList.contains('delete_user_button')) {
+                        return;
+                    }
 
-          sessionStorage.setItem('servidorSelecionado', JSON.stringify(s));
+                    sessionStorage.setItem('servidorSelecionado', JSON.stringify(s));
 
-          window.location.href = 'servidorDashboard.html';
-        });
+                    window.location.href = 'servidorDashboard.html';
+                });
                 usersDiv.appendChild(div);
-                div.querySelector('.edit_user_button').addEventListener('click', () =>
-                    open_modal_edit_server(s.id_servidor, s.nome, s.mac_address, s.tipo_cpu, s.ram, s.disco)
-                );
-                div.querySelector('.delete_user_button').addEventListener('click', () =>
-                    open_modal_delete_server(s.id_servidor)
-                );
+                if (sessionStorage.getItem("CARGO") == "Analista") {
+                    div.querySelector('.edit_user_button').addEventListener('click', () =>
+                        open_modal_edit_server(s.id_servidor, s.nome, s.mac_address, s.tipo_cpu, s.ram, s.disco)
+                    );
+                    div.querySelector('.delete_user_button').addEventListener('click', () =>
+                        open_modal_delete_server(s.id_servidor)
+                    );
+                }
             });
         })
         .catch(console.error);
