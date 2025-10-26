@@ -36,8 +36,9 @@ function listar(IdEmpresa){
     console.log("ACESSEI O USUARIO MODEL \n \n \t\t >> se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco \n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function listar():", IdEmpresa);
     var instrucaoSql = `select u.id_usuario as id, u.nome, u.email, e.razao_social as razao_social, u.fk_cargo as adm
         from usuarios u inner join 
-        empresa e on e.id_empresa = u.fk_empresa where e.id_empresa = ${IdEmpresa};`;
-    console .log("Executando a instrução SQL \n" + instrucaoSql);
+        empresa e on e.id_empresa = u.fk_empresa
+        inner join cargo c on c.id = u.fk_cargo where e.id_empresa = ${IdEmpresa};`;
+    console.log("Executando a instrução SQL \n" + instrucaoSql);
     return database.executar(instrucaoSql);
 }
 
