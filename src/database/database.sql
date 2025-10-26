@@ -67,7 +67,9 @@ insert into fk_cargo (nome) values
 ('RH'),
 ('Técnico'),
 ('Analista');
+
 select *from fk_cargo;
+
 
 insert into usuarios(fk_empresa, fk_cargo, nome, email, senha) values
 (1,1,'Samuel','samuel@gmail.com','Senha@123'),
@@ -84,4 +86,4 @@ insert into componente(nome, unidade_medida, peso)values
 ('Mb Recebidos - REDE', 'Bytes',3),
 ('DISCO', 'Porcentagem',1);
 
-select *from componente
+select *from componente;
