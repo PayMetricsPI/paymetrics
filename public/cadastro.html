@@ -57,7 +57,7 @@
                         </div>
                         <div class="form-check mb-3">
                             <input id="ipt_admin" type="checkbox" class="form-check-input">
-                            <label class="form-check-label" for="ipt_admin">Usuário administrador</label>
+                            <label class="form-check-label" for="ipt_admin">Cargo</label>
                         </div>
                         <button type="submit" class="btn btn-primary w-100 botao_redefinir" onclick="cadastrar(event)">Cadastrar</button>
                         <div id="div_mensagemTextoVazio"></div>
@@ -81,7 +81,7 @@ function cadastrar(event){
     
         event.preventDefault();
 
-        var administradorVar = ipt_admin.checked;
+        var cargoVar = ipt_admin.checked;
         var fk_empresaVar = sessionStorage.EMPRESA
         var nomeVar = ipt_nome.value;
         var emailVar = (ipt_email.value).toLowerCase();
@@ -89,8 +89,8 @@ function cadastrar(event){
         var senhaVar = ipt_senha.value;
         var senhaCVar = ipt_senha_confirm.value;
 
-        administradorVar = administradorVar ? 1 : 0;
-        console.log(administradorVar);
+        cargoVar = cargoVar ? 1 : 0;
+        console.log(cargoVar);
         
 
         output_email.innerHTML = "";
@@ -188,7 +188,7 @@ function cadastrar(event){
         emailCServer: emailCVar,
         senhaServer: senhaVar,
         senhaCServer: senhaCVar,
-        administradorServer: administradorVar,
+        cargoServer: cargoVar,
         fk_empresaServer: fk_empresaVar
       }),
     })

@@ -1,4 +1,4 @@
-var adm = sessionStorage.ADMINISTRADOR
+var adm = sessionStorage.FK_CARGO
 console.log(adm);
 
 // if (adm != "1") {
