@@ -1,11 +1,11 @@
 create database payMetrics;
-use payMetrics;
+use PayMetrics;
 
 create table empresa (
 id_empresa int auto_increment primary key,
 razao_social varchar(200) not null);
 
-create table fk_cargo(
+create table cargo(
 id int not null auto_increment primary key,
 nome varchar(200) not null);
 
@@ -18,7 +18,7 @@ email varchar(200) not null,
 senha varchar(200) not null,
 primary key (id_usuario, fk_empresa,fk_cargo),
 foreign key (fk_empresa) references empresa(id_empresa),
-foreign key (fk_cargo) references fk_cargo(id),
+foreign key (fk_cargo) references cargo(id),
 unique (email)
 );
 
@@ -50,7 +50,7 @@ alerta_critico int not null,
 alerta_normal int not null,
 primary key (id_parametro,fk_servidor,fk_empresa,fk_componente),
 foreign key (fk_servidor, fk_empresa)references servidor(id_servidor, fk_empresa),
-);
+foreign key (fk_componente) references componente (id_componente));
 
 insert into empresa (razao_social)
 values
@@ -63,13 +63,11 @@ values
 
 desc usuarios;
 
-insert into fk_cargo (nome) values
+insert into cargo (nome) values
 ('RH'),
 ('Técnico'),
 ('Analista');
-
-select *from fk_cargo;
-
+select *from cargo;
 
 insert into usuarios(fk_empresa, fk_cargo, nome, email, senha) values
 (1,1,'Samuel','samuel@gmail.com','Senha@123'),
@@ -86,7 +84,7 @@ insert into componente(nome, unidade_medida, peso)values
 ('Mb Recebidos - REDE', 'Bytes',3),
 ('DISCO', 'Porcentagem',1);
 
-select *from componente;
+select *from componente
 
 insert into servidor (nome, mac_address, tipo_cpu,ram,disco,fk_empresa)
 values("Alfa","04-58-5D-20-AA-0A","Xeon Silver 8 Core",64,4,1),
