@@ -85,8 +85,3 @@ insert into componente(nome, unidade_medida, peso)values
 ('DISCO', 'Porcentagem',1);
 
 select *from componente
-
-insert into servidor (nome, mac_address, tipo_cpu,ram,disco,fk_empresa)
-values("Alfa","04-58-5D-20-AA-0A","Xeon Silver 8 Core",64,4,1),
-	  ("Beta","00:0C:6E:3C:D1:6D","Xeon Gold 8 Core",50,5,1),
-      ("Omega","00:00:5E:00:53:AF","Xeon® Platinum 8450H",40,6,1);
