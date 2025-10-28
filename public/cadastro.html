@@ -84,17 +84,15 @@ function cadastrar(event){
     
         event.preventDefault();
 
-        var cargoVar = ipt_admin.checked;
         var fk_empresaVar = sessionStorage.EMPRESA
         var nomeVar = ipt_nome.value;
         var emailVar = (ipt_email.value).toLowerCase();
         var emailCVar = (ipt_email_confirm.value).toLowerCase();
         var senhaVar = ipt_senha.value;
         var senhaCVar = ipt_senha_confirm.value;
-
-        cargoVar = cargoVar ? 1 : 0;
-        console.log(cargoVar);
-        
+        var cargoVar = select_cargo.value;
+    
+    
 
         output_email.innerHTML = "";
         output_senha.innerHTML = "";
@@ -104,6 +102,12 @@ function cadastrar(event){
         var fk_empresa = sessionStorage.fk_empresa;
 
         var textoPreenchido = (nomeVar == '' || emailVar == '' || senhaVar == '' || senhaCVar == '');
+
+        if (cargoVar == "") {
+            div_mensagemTextoVazio.innerHTML = 'Selecione um cargo';
+            return;
+        }
+
 
         while (textoPreenchido) {
             div_mensagemTextoVazio.innerHTML = 'Preencha todos os campos';
@@ -213,6 +217,25 @@ function cadastrar(event){
 
     return false;
   }
+
+  window.onload = listarCargos;
+
+function listarCargos() {
+    fetch("/usuarios/listarCargos")
+        .then(resposta => {
+            if (resposta.ok) {
+                resposta.json().then(cargos => {
+                    cargos.forEach(c => {
+                        select_cargo.innerHTML += `
+                            <option value="${c.id}">${c.nome}</option>
+                        `;
+                    });
+                });
+            }
+        })
+        .catch(erro => console.error("Erro ao listar cargos:", erro));
+}
+
 
   function sair() {
     sessionStorage.clear();
