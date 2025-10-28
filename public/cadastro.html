@@ -55,10 +55,13 @@
                             <input id="ipt_senha_confirm" type="password" class="form-control" placeholder="Confirme sua senha...">
                             <div id="output_confirmacao"></div>
                         </div>
-                        <div class="form-check mb-3">
-                            <input id="ipt_admin" type="checkbox" class="form-check-input">
-                            <label class="form-check-label" for="ipt_admin">Cargo</label>
+                        <div class="mb-3">
+                            <p class="my-0">Cargo</p>
+                            <select id="select_cargo" class="form-control">
+                            <option value="">Selecione o cargo</option>
+                             </select>
                         </div>
+
                         <button type="submit" class="btn btn-primary w-100 botao_redefinir" onclick="cadastrar(event)">Cadastrar</button>
                         <div id="div_mensagemTextoVazio"></div>
                         </div>
