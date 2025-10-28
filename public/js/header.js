@@ -47,7 +47,7 @@ if (header) {
                       </a>                    
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link py-3 d-flex mx-1 align-items-center" data-bs-placemnet="right"href="./dashAlerta.html">
+                    <a class="nav-link py-3 d-flex mx-1 align-items-center" data-bs-placemnet="right"href="./dashAlertas.html">
                         <img src="assets/imgs/image_alerta.png" class="bi mask3" width="32" height="32" alt="">
                         <span class="config">Dashboard Alertas</span>
                     </a>

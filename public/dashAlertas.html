@@ -4,13 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/navbar.css">
     <link rel="stylesheet" href="css/dashAlerta.css">
+    <link rel="stylesheet" href="css/navbar.css">
+    <link rel="stylesheet" href="css/embreve.css">
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
     <title>PayMetrics | Dashboard alertas</title>
 </head>
 
 <body>
-    <script src="js/header.js"></script>
     <div id="sidebar"></div>
     <section class="dash_alertas">
         <div class="titulo">
@@ -87,34 +88,33 @@
                 <div class="cards">
                     <div class="servidor_critico_card">
                         <div class="titulo_critico">
-                            <img src="assets/imgs/servidor.png" alt="Servidor">
+                            <img src="assets/imgs/servidor.png" alt="avatar">
                             <div class="servidor_info">
                                 <p>Servidor 1B2XB</p>
                                 <p>A8.3C.37.21.6F.EB</p>
                             </div>
                             <div class="alertas_criticos">
-                                <p style="color: red;"><b>1 Crítico</b></p>
-                                <p>3 Alertas</p>
+                                <p style="color:#FF0000;font-weight:700;">1 Crítico</p>
+                                <p style="margin-left:10px;">3 Alertas</p>
                             </div>
                         </div>
                         <div class="card_info">
-                            <div class="alertas">
+                            <div class="alert_new">
                                 <h2>ALERTAS</h2>
-                                <div class="alertas_div card_box">
-                                    <div class="alertas_name">
-                                        <p>CPU</p>
-                                        <p>RAM</p>
-                                        <p>DISCO</p>
-                                        <p>REDE (up)</p>
-                                        <p>REDE (d)</p>
+                                <div class="alert_div card_box">
+                                    <div class="alert_name">
+                                        <span>CPU</span>
+                                        <span>RAM</span>
+                                        <span>DISCO</span>
+                                        <span>REDE (up)</span>
+                                        <span>REDE (dwn)</span>
                                     </div>
-
-                                    <div class="alertas_valores">
-                                        <p style="color: red; font-weight: bold;">90%</p>
-                                        <p style="color: #F7B216; font-weight: bold;">82%</p>
-                                        <p>20%</p>
-                                        <p style="color: #F7B216; font-weight: bold;">89%</p>
-                                        <p>55%</p>
+                                    <div class="alert_valores">
+                                        <p style="color:#FF0000;"><b>90%</b></p>
+                                        <p style="color:#F59E00;"><b>82%</b></p>
+                                        <p><b>20%</b></p>
+                                        <p style="color:#F59E00;"><b>89%</b></p>
+                                        <p><b>55%</b></p>
                                     </div>
                                 </div>
                             </div>
@@ -123,17 +123,17 @@
                                 <h2>INFO. HARDWARE</h2>
                                 <div class="card_box">
                                     <div class="hardware">
-                                        <div class="info_cpu espaco">
-                                            <p><b>CPU:</b> Threadripper</p>
+                                        <div class="espaco">
+                                            <p><strong>CPU:</strong> Threadripper</p>
                                         </div>
-                                        <div class="info_ram espaco">
-                                            <p><b>RAM:</b> 128GB</p>
+                                        <div class="espaco">
+                                            <p><strong>RAM:</strong> 128GB</p>
                                         </div>
-                                        <div class="info_disco espaco">
-                                            <p><b>Disco:</b> 10TB</p>
+                                        <div class="espaco">
+                                            <p><strong>Disco:</strong> 10TB</p>
                                         </div>
-                                        <div class="info_REDE espaco">
-                                            <p><b>Rede:</b> 10GB</p>
+                                        <div class="espaco">
+                                            <p><strong>Rede:</strong> 10GB</p>
                                         </div>
                                     </div>
                                 </div>
@@ -142,31 +142,35 @@
 
                     </div>
                 </div>
+
                 <div class="filter_lateral">
                     <h2>Filtrar alertas</h2>
                     <div class="check_filtro">
                         <div class="item_filtro">
-                            <input type="checkbox" id="cpu" name="cpu" value="cpu" checked>
+                            <input type="checkbox" id="cpu" checked>
                             <p>CPU</p>
                         </div>
 
                         <div class="item_filtro">
-                            <input type="checkbox" id="ram" name="ram" value="ram" checked>
+                            <input type="checkbox" id="ram" checked>
                             <p>RAM</p>
                         </div>
 
                         <div class="item_filtro">
-                            <input type="checkbox" id="disco" name="disco" value="disco" checked>
+                            <input type="checkbox" id="disco" checked>
                             <p>DISCO</p>
                         </div>
 
                         <div class="item_filtro">
-                            <input type="checkbox" id="rede" name="rede" value="rede" checked>
+                            <input type="checkbox" id="rede" checked>
                             <p>REDE</p>
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
     </section>
+    <script src="js/header.js"></script>
 </body>
 
 </html>
