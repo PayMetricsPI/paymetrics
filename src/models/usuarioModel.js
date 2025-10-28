@@ -17,6 +17,17 @@ function autenticar(email, senha) {
     return database.executar(instrucaoSql);
 }
 
+function listarCargos() {
+    console.log("ACESSEI O USUARIO MODEL: listarCargos()");
+    var instrucaoSql = `
+        SELECT id, nome 
+        FROM cargo;
+    `;
+    console.log("Executando a instrução SQL: \n" + instrucaoSql);
+    return database.executar(instrucaoSql);
+}
+
+
 function cadastrar(nome, email, senha, fk_cargo, fk_empresa) {
     console.log("ACESSEI O USUARIO MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function cadastrar():", nome, senha, email, administrador, fk_empresa);
     var instrucaoSql = `
@@ -73,5 +84,6 @@ module.exports = {
     listar,
     deletar,
     verificarSenha,
-    verificar
+    verificar,
+    listarCargos
 };
