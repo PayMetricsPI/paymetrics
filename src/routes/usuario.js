@@ -32,4 +32,8 @@ router.get("/verificar/:idUsuario", function (req, res) {
     usuarioController.verificar(req, res);
 });
 
+router.get("/listarCargos", function (req, res) {
+    usuarioController.listarCargos(req, res);
+});
+
 module.exports = router;
