@@ -603,7 +603,7 @@ if(cpuChart) cpuChart.destroy();
                             labels: ['06:00', '07:00', '08:00', '09:00', '10:00', '11:00'],
                             datasets: [{
                                 label: 'RAM',
-                                data: [30, 80, 50, 55, 45, 100],
+                                data: [50, 40, 70, 65, 75, 95],
                                 backgroundColor: ['rgb(192, 192, 192)',
                                     'rgb(192, 192, 192)',
                                     'rgb(192, 192, 192)',
@@ -692,7 +692,7 @@ if(cpuChart) cpuChart.destroy();
                             labels: ['06:00', '07:00', '08:00', '09:00', '10:00', '11:00'],
                             datasets: [{
                                 label: 'DISCO',
-                                data: [30, 80, 50, 55, 45, 100],
+                                data: [50, 40, 70, 65, 75, 95],
                                 backgroundColor: ['rgb(192, 192, 192)',
                                     'rgb(192, 192, 192)',
                                     'rgb(192, 192, 192)',
@@ -781,7 +781,7 @@ if(cpuChart) cpuChart.destroy();
                             labels: ['06:00', '07:00', '08:00', '09:00', '10:00', '11:00'],
                             datasets: [{
                                 label: 'Rede',
-                                data: [30, 80, 50, 55, 45, 100],
+                                data: [50, 40, 70, 65, 75, 95],
                                 backgroundColor: ['rgb(192, 192, 192)',
                                     'rgb(192, 192, 192)',
                                     'rgb(192, 192, 192)',
@@ -919,7 +919,7 @@ if(cpuChart) cpuChart.destroy();
                             labels: ['06:00', '07:00', '08:00', '09:00', '10:00', '11:00'],
                             datasets: [{
                                 label: 'CPU',
-                                data: [50, 40, 70, 65, 75, 95],
+                                data: [70, 50, 30, 40, 65, 90],
                                 backgroundColor: ['rgb(192, 192, 192)',
                                     'rgb(192, 192, 192)',
                                     'rgb(192, 192, 192)',
@@ -1009,7 +1009,7 @@ if(cpuChart) cpuChart.destroy();
                             labels: ['06:00', '07:00', '08:00', '09:00', '10:00', '11:00'],
                             datasets: [{
                                 label: 'RAM',
-                                data: [30, 80, 50, 55, 45, 100],
+                                data: [70, 50, 30, 40, 65, 90],
                                 backgroundColor: ['rgb(192, 192, 192)',
                                     'rgb(192, 192, 192)',
                                     'rgb(192, 192, 192)',
@@ -1098,7 +1098,7 @@ if(cpuChart) cpuChart.destroy();
                             labels: ['06:00', '07:00', '08:00', '09:00', '10:00', '11:00'],
                             datasets: [{
                                 label: 'DISCO',
-                                data: [30, 80, 50, 55, 45, 100],
+                                data: [70, 50, 30, 40, 65, 90],
                                 backgroundColor: ['rgb(192, 192, 192)',
                                     'rgb(192, 192, 192)',
                                     'rgb(192, 192, 192)',
@@ -1187,7 +1187,7 @@ if(cpuChart) cpuChart.destroy();
                             labels: ['06:00', '07:00', '08:00', '09:00', '10:00', '11:00'],
                             datasets: [{
                                 label: 'Rede',
-                                data: [30, 80, 50, 55, 45, 100],
+                                data: [70, 50, 30, 40, 65, 90],
                                 backgroundColor: ['rgb(192, 192, 192)',
                                     'rgb(192, 192, 192)',
                                     'rgb(192, 192, 192)',
@@ -1325,7 +1325,7 @@ if(cpuChart) cpuChart.destroy();
                             labels: ['06:00', '07:00', '08:00', '09:00', '10:00', '11:00'],
                             datasets: [{
                                 label: 'CPU',
-                                data: [50, 40, 70, 65, 75, 95],
+                                data: [85, 45, 90, 60, 65, 97],
                                 backgroundColor: ['rgb(192, 192, 192)',
                                     'rgb(192, 192, 192)',
                                     'rgb(192, 192, 192)',
@@ -1415,7 +1415,7 @@ if(cpuChart) cpuChart.destroy();
                             labels: ['06:00', '07:00', '08:00', '09:00', '10:00', '11:00'],
                             datasets: [{
                                 label: 'RAM',
-                                data: [30, 80, 50, 55, 45, 100],
+                                data: [85, 45, 90, 60, 65, 97],
                                 backgroundColor: ['rgb(192, 192, 192)',
                                     'rgb(192, 192, 192)',
                                     'rgb(192, 192, 192)',
@@ -1504,7 +1504,7 @@ if(cpuChart) cpuChart.destroy();
                             labels: ['06:00', '07:00', '08:00', '09:00', '10:00', '11:00'],
                             datasets: [{
                                 label: 'DISCO',
-                                data: [30, 80, 50, 55, 45, 100],
+                                data: [85, 45, 90, 60, 65, 97],
                                 backgroundColor: ['rgb(192, 192, 192)',
                                     'rgb(192, 192, 192)',
                                     'rgb(192, 192, 192)',
@@ -1593,7 +1593,7 @@ if(cpuChart) cpuChart.destroy();
                             labels: ['06:00', '07:00', '08:00', '09:00', '10:00', '11:00'],
                             datasets: [{
                                 label: 'Rede',
-                                data: [30, 80, 50, 55, 45, 100],
+                                data: [85, 45, 90, 60, 65, 97],
                                 backgroundColor: ['rgb(192, 192, 192)',
                                     'rgb(192, 192, 192)',
                                     'rgb(192, 192, 192)',
