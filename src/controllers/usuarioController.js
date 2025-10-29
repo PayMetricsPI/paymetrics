@@ -73,6 +73,22 @@ function cadastrar(req, res) {
     }
 }
 
+function listarCargos(req, res) {
+    usuarioModel.listarCargos()
+        .then(resultado => {
+            if (resultado.length > 0) {
+                res.status(200).json(resultado);
+            } else {
+                res.status(204).send("Nenhum cargo encontrado!");
+            }
+        })
+        .catch(erro => {
+            console.log(erro);
+            console.log("Houve um erro ao buscar os cargos.", erro.sqlMessage);
+            res.status(500).json(erro.sqlMessage);
+        });
+}
+
 function renovar(req, res) {
     var senha = req.body.senhaServer;
     var novaSenha = req.body.novaSenhaServer;
@@ -182,5 +198,6 @@ module.exports = {
     listar,
     deletar,
     redefinirSenha,
-    verificar
+    verificar,
+    listarCargos
 }
