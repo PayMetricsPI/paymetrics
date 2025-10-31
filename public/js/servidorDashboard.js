@@ -19,7 +19,6 @@ function formatarDiferenca(timestamp) {
 
     return `${dias.toString().padStart(2, '0')} dias, ${horas.toString().padStart(2, '0')} horas e ${minutos.toString().padStart(2, '0')} minutos`;
 }
-
 function buscarDados() {
     fetch(`/metrica/obterUltimaPorMAC/${servidor.mac_address}`, { method: 'GET' })
         .then((resultado) => resultado.json())
@@ -35,8 +34,13 @@ function buscarDados() {
         })
 }
 
-setInterval(buscarDados, 2000)
-buscarDados()
+
+
+let chartCPU = null;
+let chartRAM = null;
+let chartDisco = null;
+let chartMBEnviados = null;
+let chartMBRecebidos = null;
 
 function atualizarCPU(valorCPU) {
     chartCPU.data.datasets[0].data = [valorCPU, 100 - valorCPU];
@@ -73,1659 +77,1736 @@ let cpuChart = null;
 let ramChart = null;
 let discoChart = null;
 let redeChart = null;
-let chartMBEnviados = null;
-let chartMBRecebidos = null;
 
 let chartStatus = null;
 let chartStatusRam = null;
 let chartStatusDisco = null;
 
 function inicializarDashboard() {
-  const Periodo = document.getElementById('periodo');
-  Periodo.addEventListener('change', function () {
-    atualizarGraficoPorPeriodo(this.value);
-  });
-  atualizarGraficoPorPeriodo(Periodo.value);
+    const Periodo = document.getElementById('periodo');
+    Periodo.addEventListener('change', function () {
+        atualizarGraficoPorPeriodo(this.value);
+    });
+    atualizarGraficoPorPeriodo(Periodo.value);
 }
 
 function atualizarGraficoPorPeriodo(periodo) {
-if(cpuChart) cpuChart.destroy();
-  if(ramChart) ramChart.destroy();
-  if(discoChart) discoChart.destroy();
-  if(redeChart) redeChart.destroy();
-  if (chartMBEnviados) chartMBEnviados.destroy();
-  if (chartMBRecebidos) chartMBRecebidos.destroy(); 
-  if(chartStatus) chartStatus.destroy();
-  if (chartStatusRam) chartStatusRam.destroy();
-  if (chartStatusDisco) chartStatusDisco.destroy();
+    if (cpuChart) cpuChart.destroy();
+    if (ramChart) ramChart.destroy();
+    if (discoChart) discoChart.destroy();
+    if (redeChart) redeChart.destroy();
+    if (chartMBEnviados) chartMBEnviados.destroy();
+    if (chartMBRecebidos) chartMBRecebidos.destroy();
+    if (chartCPU) chartCPU.destroy();
+    if (chartRAM) chartRAM.destroy();
+    if (chartDisco) chartDisco.destroy();
 
-                if (periodo === "1") {
+    if (periodo === "1") {
 
-                      ctxCpu = document.getElementById('CpuChart').getContext('2d');
-                    cpuChart = new Chart(ctxCpu, {
-                        type: 'bar',
-                        data: {
-                            labels: ['06:00', '07:00', '08:00', '09:00', '10:00', '11:00'],
-                            datasets: [{
-                                label: 'CPU',
-                                data: [30, 80, 50, 55, 45, 100],
-                                backgroundColor: ['rgb(192, 192, 192)',
-                                    'rgb(192, 192, 192)',
-                                    'rgb(192, 192, 192)',
-                                    'rgb(192, 192, 192)',
-                                    'rgb(192, 192, 192)',
-                                    'rgb(242, 183, 48)',
-                                ],
-                                borderWidth: 1,
-                                borderRadius: 12,
-                            }]
-                        },
-                        options: {
-                            plugins: {
-                                title: {
-                                    display: true,
-                                    color: 'black',
-                                    text: 'Picos de CPU',
-                                    font: {
-                                        size: 28
-                                    }
-                                }
-                            },
-                            scales: {
-                                y: {
-                                    beginAtZero: true,
-                                    ticks: {
-                                        color: 'black'
-                                    }
-                                },
-                            }
+        ctxCpu = document.getElementById('CpuChart').getContext('2d');
+        cpuChart = new Chart(ctxCpu, {
+            type: 'bar',
+            data: {
+                labels: ['06:00', '07:00', '08:00', '09:00', '10:00', '11:00'],
+                datasets: [{
+                    label: 'CPU',
+                    data: [30, 80, 50, 55, 45, 100],
+                    backgroundColor: ['rgb(192, 192, 192)',
+                        'rgb(192, 192, 192)',
+                        'rgb(192, 192, 192)',
+                        'rgb(192, 192, 192)',
+                        'rgb(192, 192, 192)',
+                        'rgb(242, 183, 48)',
+                    ],
+                    borderWidth: 1,
+                    borderRadius: 12,
+                }]
+            },
+            options: {
+                plugins: {
+                    title: {
+                        display: true,
+                        color: 'black',
+                        text: 'Picos de CPU',
+                        font: {
+                            size: 28
                         }
-                    });
-
-
-                    const ctx1 = document.getElementById('statusChart');
-
-                    chartStatus =  new Chart(ctx1, {
-                        type: 'doughnut',
-                        data: {
-                            labels: [],
-                            datasets: [{
-                                label: 'CPU',
-                                data: [0, 100],
-                                backgroundColor: ['rgb(255,44,44)', "#e1e1e1ff"],
-                                hoverOffset: 4,
-                                borderWidth: 0,
-                            }]
-                        },
-                        options: {
-                            maintainAspectRatio: false,
-                            circumference: 180,
-                            cutout: '80%',
-                            rotation: 270,
-                            plugins: {
-                                tooltip: { enabled: false },
-                                legend: { display: false }
-                            }
-                        },
-                        plugins: [{
-                            id: 'center-text',
-                            beforeDraw: function (chart) {
-                                const { ctx, chartArea: { width, height } } = chart;
-                                const valor = Number(chart.data.datasets[0].data[0]).toFixed(0);
-                                ctx.save();
-
-                                ctx.font = 'bold 30px Arial';
-                                ctx.fillStyle = '#333';
-                                ctx.textAlign = 'center';
-                                ctx.textBaseline = 'top';
-                                ctx.fillText(`${valor}%`, width / 2, height / 2 + 10);
-
-                                ctx.font = 'bold 22px Arial';
-                                ctx.fillStyle = '#000';
-                                ctx.fillText('Em uso', width / 2, height / 2 + 60);
-
-                                ctx.restore();
-                            }
-                        }]
-                    });
-
-
-                    const ctxram = document.getElementById('RamChart').getContext('2d');
-
-                    ramChart = new Chart(ctxram, {
-                        type: 'bar',
-                        data: {
-                            labels: ['06:00', '07:00', '08:00', '09:00', '10:00', '11:00'],
-                            datasets: [{
-                                label: 'RAM',
-                                data: [30, 80, 50, 55, 45, 100],
-                                backgroundColor: ['rgb(192, 192, 192)',
-                                    'rgb(192, 192, 192)',
-                                    'rgb(192, 192, 192)',
-                                    'rgb(192, 192, 192)',
-                                    'rgb(192, 192, 192)',
-                                    'rgb(242, 183, 48)',
-                                ],
-                                borderWidth: 1,
-                                borderRadius: 12,
-                            }]
-                        },
-                        options: {
-                            plugins: {
-                                title: {
-                                    display: true,
-                                    color: 'black',
-                                    text: 'Picos de Ram',
-                                    font: {
-                                        size: 28
-                                    }
-                                }
-                            },
-                            scales: {
-                                y: {
-                                    beginAtZero: true,
-                                    ticks: {
-                                        color: 'black'
-                                    }
-                                },
-                            }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            color: 'black'
                         }
-                    });
-
-                    const ctx3 = document.getElementById('statusRamChart');
-
-                    chartStatusRam =  new Chart(ctx3, {
-                        type: 'doughnut',
-                        data: {
-                            labels: [],
-                            datasets: [{
-                                label: 'Ram',
-                                data: [0, 100],
-                                backgroundColor: ['rgb(255,44,44)', "#e1e1e1ff"],
-                                hoverOffset: 4,
-                                borderWidth: 0,
-                            }]
-                        },
-                        options: {
-                            maintainAspectRatio: false,
-                            circumference: 180,
-                            cutout: '80%',
-                            rotation: 270,
-                            plugins: {
-                                tooltip: { enabled: false },
-                                legend: { display: false }
-                            }
-                        },
-                        plugins: [{
-                            id: 'center-text',
-                            beforeDraw: function (chart) {
-                                const { ctx, chartArea: { width, height } } = chart;
-                                const valor = Number(chart.data.datasets[0].data[0]).toFixed(0);
-                                ctx.save();
-
-                                ctx.font = 'bold 30px Arial';
-                                ctx.fillStyle = '#333';
-                                ctx.textAlign = 'center';
-                                ctx.textBaseline = 'top';
-                                ctx.fillText(`${valor}%`, width / 2, height / 2 + 10);
-
-                                ctx.font = 'bold 22px Arial';
-                                ctx.fillStyle = '#000';
-                                ctx.fillText('Em uso', width / 2, height / 2 + 60);
-
-                                ctx.restore();
-                            }
-                        }]
-                    });
-
-
-                    const ctxdisco = document.getElementById('DiscoChart').getContext('2d');
-
-                    discoChart = new Chart(ctxdisco, {
-                        type: 'bar',
-                        data: {
-                            labels: ['06:00', '07:00', '08:00', '09:00', '10:00', '11:00'],
-                            datasets: [{
-                                label: 'DISCO',
-                                data: [30, 80, 50, 55, 45, 100],
-                                backgroundColor: ['rgb(192, 192, 192)',
-                                    'rgb(192, 192, 192)',
-                                    'rgb(192, 192, 192)',
-                                    'rgb(192, 192, 192)',
-                                    'rgb(192, 192, 192)',
-                                    'rgb(242, 183, 48)',
-                                ],
-                                borderWidth: 1,
-                                borderRadius: 12,
-                            }]
-                        },
-                        options: {
-                            plugins: {
-                                title: {
-                                    display: true,
-                                    color: 'black',
-                                    text: 'Picos de Disco',
-                                    font: {
-                                        size: 28
-                                    }
-                                }
-                            },
-                            scales: {
-                                y: {
-                                    beginAtZero: true,
-                                    ticks: {
-                                        color: 'black'
-                                    }
-                                },
-                            }
-                        }
-                    });
-
-
-                    const ctx5 = document.getElementById('statusDiscoChart');
-
-                    chartStatusDisco = new Chart(ctx5, {
-                        type: 'doughnut',
-                        data: {
-                            labels: [],
-                            datasets: [{
-                                label: 'Disco',
-                                data: [0, 100],
-                                backgroundColor: ['rgb(255,44,44)', "#e1e1e1ff"],
-                                hoverOffset: 4,
-                                borderWidth: 0,
-                            }]
-                        },
-                        options: {
-                            maintainAspectRatio: false,
-                            circumference: 180,
-                            cutout: '80%',
-                            rotation: 270,
-                            plugins: {
-                                tooltip: { enabled: false },
-                                legend: { display: false }
-                            }
-                        },
-                        plugins: [{
-                            id: 'center-text',
-                            beforeDraw: function (chart) {
-                                const { ctx, chartArea: { width, height } } = chart;
-                                const valor = Number(chart.data.datasets[0].data[0]).toFixed(0);
-                                ctx.save();
-
-                                ctx.font = 'bold 30px Arial';
-                                ctx.fillStyle = '#333';
-                                ctx.textAlign = 'center';
-                                ctx.textBaseline = 'top';
-                                ctx.fillText(`${valor}%`, width / 2, height / 2 + 10);
-
-                                ctx.font = 'bold 22px Arial';
-                                ctx.fillStyle = '#000';
-                                ctx.fillText('Em uso', width / 2, height / 2 + 60);
-
-                                ctx.restore();
-                            }
-                        }]
-                    });
-
-                    const ctxrede = document.getElementById('RedeChart').getContext('2d');
-
-                   redeChart = new Chart(ctxrede, {
-                        type: 'bar',
-                        data: {
-                            labels: ['06:00', '07:00', '08:00', '09:00', '10:00', '11:00'],
-                            datasets: [{
-                                label: 'Rede',
-                                data: [30, 80, 50, 55, 45, 100],
-                                backgroundColor: ['rgb(192, 192, 192)',
-                                    'rgb(192, 192, 192)',
-                                    'rgb(192, 192, 192)',
-                                    'rgb(192, 192, 192)',
-                                    'rgb(192, 192, 192)',
-                                    'rgb(242, 183, 48)',
-                                ],
-                                borderWidth: 1,
-                                borderRadius: 12,
-                            }]
-                        },
-                        options: {
-                            plugins: {
-                                title: {
-                                    display: true,
-                                    color: 'black',
-                                    text: 'Picos de Rede',
-                                    font: {
-                                        size: 28
-                                    }
-                                }
-                            },
-                            scales: {
-                                y: {
-                                    beginAtZero: true,
-                                    ticks: {
-                                        color: 'black'
-                                    }
-                                },
-                            }
-                        }
-                    });
-
-
-                    ctxMBEnviados = document.getElementById('statusRedeChart');
-
-                    chartMBEnviados = new Chart(ctxMBEnviados, {
-                        type: 'doughnut',
-                        data: {
-                            labels: [],
-                            datasets: [{
-                                label: 'Rede',
-                                data: [0, 100],
-                                backgroundColor: ['rgb(255,44,44)', "#e1e1e1ff"],
-                                hoverOffset: 4,
-                                borderWidth: 0,
-                            }]
-                        },
-                        options: {
-                            maintainAspectRatio: false,
-                            circumference: 180,
-                            cutout: '80%',
-                            rotation: 270,
-                            plugins: {
-                                tooltip: { enabled: false },
-                                legend: { display: false }
-                            }
-                        },
-                        plugins: [{
-                            id: 'center-text',
-                            beforeDraw: function (chart) {
-                                const { ctx, chartArea: { width, height } } = chart;
-                                const valor = Number(chart.data.datasets[0].data[0]).toFixed(0);
-                                ctx.save();
-
-                                ctx.font = 'bold 30px Arial';
-                                ctx.fillStyle = '#333';
-                                ctx.textAlign = 'center';
-                                ctx.textBaseline = 'top';
-                                ctx.fillText(`${valor}%`, width / 2, height / 2 + 10);
-
-                                ctx.font = 'bold 22px Arial';
-                                ctx.fillStyle = '#000';
-                                ctx.fillText('Em uso', width / 2, height / 2 + 60);
-
-                                ctx.restore();
-                            }
-                        }]
-                    });
-
-
-                    ctxMBRecebidos = document.getElementById('statusRedeChart2');
-
-                    chartMBRecebidos = new Chart(ctxMBRecebidos, {
-                        type: 'doughnut',
-                        data: {
-                            labels: [],
-                            datasets: [{
-                                label: 'Rede',
-                                data: [0, 100],
-                                backgroundColor: ['rgb(255,44,44)', "#e1e1e1ff"],
-                                hoverOffset: 4,
-                                borderWidth: 0,
-                            }]
-                        },
-                        options: {
-                            maintainAspectRatio: false,
-                            circumference: 180,
-                            cutout: '80%',
-                            rotation: 270,
-                            plugins: {
-                                tooltip: { enabled: false },
-                                legend: { display: false }
-                            }
-                        },
-                        plugins: [{
-                            id: 'center-text',
-                            beforeDraw: function (chart) {
-                                const { ctx, chartArea: { width, height } } = chart;
-                                const valor = Number(chart.data.datasets[0].data[0]).toFixed(0);
-                                ctx.save();
-
-                                ctx.font = 'bold 30px Arial';
-                                ctx.fillStyle = '#333';
-                                ctx.textAlign = 'center';
-                                ctx.textBaseline = 'top';
-                                ctx.fillText(`${valor}%`, width / 2, height / 2 + 10);
-
-                                ctx.font = 'bold 22px Arial';
-                                ctx.fillStyle = '#000';
-                                ctx.fillText('Em uso', width / 2, height / 2 + 60);
-
-                                ctx.restore();
-                            }
-                        }]
-                    });
-                }
-            else if (periodo === "2") {
-
-                const ctxCpu = document.getElementById('CpuChart').getContext('2d');
-                    cpuChart = new Chart(ctxCpu, {
-                        type: 'bar',
-                        data: {
-                            labels: ['06:00', '07:00', '08:00', '09:00', '10:00', '11:00'],
-                            datasets: [{
-                                label: 'CPU',
-                                data: [50, 40, 70, 65, 75, 95],
-                                backgroundColor: ['rgb(192, 192, 192)',
-                                    'rgb(192, 192, 192)',
-                                    'rgb(192, 192, 192)',
-                                    'rgb(192, 192, 192)',
-                                    'rgb(192, 192, 192)',
-                                    'rgb(242, 183, 48)',
-                                ],
-                                borderWidth: 1,
-                                borderRadius: 12,
-                            }]
-                        },
-                        options: {
-                            plugins: {
-                                title: {
-                                    display: true,
-                                    color: 'black',
-                                    text: 'Picos de CPU',
-                                    font: {
-                                        size: 28
-                                    }
-                                }
-                            },
-                            scales: {
-                                y: {
-                                    beginAtZero: true,
-                                    ticks: {
-                                        color: 'black'
-                                    }
-                                },
-                            }
-                        }
-                    });
-
-
-                    const ctx1 = document.getElementById('statusChart');
-
-                   chartStatus = new Chart(ctx1, {
-                        type: 'doughnut',
-                        data: {
-                            labels: [],
-                            datasets: [{
-                                label: 'CPU',
-                                data: [0, 100],
-                                backgroundColor: ['rgb(255,44,44)', "#e1e1e1ff"],
-                                hoverOffset: 4,
-                                borderWidth: 0,
-                            }]
-                        },
-                        options: {
-                            maintainAspectRatio: false,
-                            circumference: 180,
-                            cutout: '80%',
-                            rotation: 270,
-                            plugins: {
-                                tooltip: { enabled: false },
-                                legend: { display: false }
-                            }
-                        },
-                        plugins: [{
-                            id: 'center-text',
-                            beforeDraw: function (chart) {
-                                const { ctx, chartArea: { width, height } } = chart;
-                                const valor = Number(chart.data.datasets[0].data[0]).toFixed(0);
-                                ctx.save();
-
-                                ctx.font = 'bold 30px Arial';
-                                ctx.fillStyle = '#333';
-                                ctx.textAlign = 'center';
-                                ctx.textBaseline = 'top';
-                                ctx.fillText(`${valor}%`, width / 2, height / 2 + 10);
-
-                                ctx.font = 'bold 22px Arial';
-                                ctx.fillStyle = '#000';
-                                ctx.fillText('Em uso', width / 2, height / 2 + 60);
-
-                                ctx.restore();
-                            }
-                        }]
-                    });
-
-
-                    const ctxram = document.getElementById('RamChart').getContext('2d');
-
-                    ramChart = new Chart(ctxram, {
-                        type: 'bar',
-                        data: {
-                            labels: ['06:00', '07:00', '08:00', '09:00', '10:00', '11:00'],
-                            datasets: [{
-                                label: 'RAM',
-                                data: [50, 40, 70, 65, 75, 95],
-                                backgroundColor: ['rgb(192, 192, 192)',
-                                    'rgb(192, 192, 192)',
-                                    'rgb(192, 192, 192)',
-                                    'rgb(192, 192, 192)',
-                                    'rgb(192, 192, 192)',
-                                    'rgb(242, 183, 48)',
-                                ],
-                                borderWidth: 1,
-                                borderRadius: 12,
-                            }]
-                        },
-                        options: {
-                            plugins: {
-                                title: {
-                                    display: true,
-                                    color: 'black',
-                                    text: 'Picos de Ram',
-                                    font: {
-                                        size: 28
-                                    }
-                                }
-                            },
-                            scales: {
-                                y: {
-                                    beginAtZero: true,
-                                    ticks: {
-                                        color: 'black'
-                                    }
-                                },
-                            }
-                        }
-                    });
-
-                    const ctx3 = document.getElementById('statusRamChart');
-
-                  chartStatusRam = new Chart(ctx3, {
-                        type: 'doughnut',
-                        data: {
-                            labels: [],
-                            datasets: [{
-                                label: 'Ram',
-                                data: [0, 100],
-                                backgroundColor: ['rgb(255,44,44)', "#e1e1e1ff"],
-                                hoverOffset: 4,
-                                borderWidth: 0,
-                            }]
-                        },
-                        options: {
-                            maintainAspectRatio: false,
-                            circumference: 180,
-                            cutout: '80%',
-                            rotation: 270,
-                            plugins: {
-                                tooltip: { enabled: false },
-                                legend: { display: false }
-                            }
-                        },
-                        plugins: [{
-                            id: 'center-text',
-                            beforeDraw: function (chart) {
-                                const { ctx, chartArea: { width, height } } = chart;
-                                const valor = Number(chart.data.datasets[0].data[0]).toFixed(0);
-                                ctx.save();
-
-                                ctx.font = 'bold 30px Arial';
-                                ctx.fillStyle = '#333';
-                                ctx.textAlign = 'center';
-                                ctx.textBaseline = 'top';
-                                ctx.fillText(`${valor}%`, width / 2, height / 2 + 10);
-
-                                ctx.font = 'bold 22px Arial';
-                                ctx.fillStyle = '#000';
-                                ctx.fillText('Em uso', width / 2, height / 2 + 60);
-
-                                ctx.restore();
-                            }
-                        }]
-                    });
-
-
-                    const ctxdisco = document.getElementById('DiscoChart').getContext('2d');
-
-                    discoChart = new Chart(ctxdisco, {
-                        type: 'bar',
-                        data: {
-                            labels: ['06:00', '07:00', '08:00', '09:00', '10:00', '11:00'],
-                            datasets: [{
-                                label: 'DISCO',
-                                data: [50, 40, 70, 65, 75, 95],
-                                backgroundColor: ['rgb(192, 192, 192)',
-                                    'rgb(192, 192, 192)',
-                                    'rgb(192, 192, 192)',
-                                    'rgb(192, 192, 192)',
-                                    'rgb(192, 192, 192)',
-                                    'rgb(242, 183, 48)',
-                                ],
-                                borderWidth: 1,
-                                borderRadius: 12,
-                            }]
-                        },
-                        options: {
-                            plugins: {
-                                title: {
-                                    display: true,
-                                    color: 'black',
-                                    text: 'Picos de Disco',
-                                    font: {
-                                        size: 28
-                                    }
-                                }
-                            },
-                            scales: {
-                                y: {
-                                    beginAtZero: true,
-                                    ticks: {
-                                        color: 'black'
-                                    }
-                                },
-                            }
-                        }
-                    });
-
-
-                    const ctx5 = document.getElementById('statusDiscoChart');
-
-                    chartStatusDisco = new Chart(ctx5, {
-                        type: 'doughnut',
-                        data: {
-                            labels: [],
-                            datasets: [{
-                                label: 'Disco',
-                                data: [0, 100],
-                                backgroundColor: ['rgb(255,44,44)', "#e1e1e1ff"],
-                                hoverOffset: 4,
-                                borderWidth: 0,
-                            }]
-                        },
-                        options: {
-                            maintainAspectRatio: false,
-                            circumference: 180,
-                            cutout: '80%',
-                            rotation: 270,
-                            plugins: {
-                                tooltip: { enabled: false },
-                                legend: { display: false }
-                            }
-                        },
-                        plugins: [{
-                            id: 'center-text',
-                            beforeDraw: function (chart) {
-                                const { ctx, chartArea: { width, height } } = chart;
-                                const valor = Number(chart.data.datasets[0].data[0]).toFixed(0);
-                                ctx.save();
-
-                                ctx.font = 'bold 30px Arial';
-                                ctx.fillStyle = '#333';
-                                ctx.textAlign = 'center';
-                                ctx.textBaseline = 'top';
-                                ctx.fillText(`${valor}%`, width / 2, height / 2 + 10);
-
-                                ctx.font = 'bold 22px Arial';
-                                ctx.fillStyle = '#000';
-                                ctx.fillText('Em uso', width / 2, height / 2 + 60);
-
-                                ctx.restore();
-                            }
-                        }]
-                    });
-
-                    const ctxrede = document.getElementById('RedeChart').getContext('2d');
-
-                   redeChart = new Chart(ctxrede, {
-                        type: 'bar',
-                        data: {
-                            labels: ['06:00', '07:00', '08:00', '09:00', '10:00', '11:00'],
-                            datasets: [{
-                                label: 'Rede',
-                                data: [50, 40, 70, 65, 75, 95],
-                                backgroundColor: ['rgb(192, 192, 192)',
-                                    'rgb(192, 192, 192)',
-                                    'rgb(192, 192, 192)',
-                                    'rgb(192, 192, 192)',
-                                    'rgb(192, 192, 192)',
-                                    'rgb(242, 183, 48)',
-                                ],
-                                borderWidth: 1,
-                                borderRadius: 12,
-                            }]
-                        },
-                        options: {
-                            plugins: {
-                                title: {
-                                    display: true,
-                                    color: 'black',
-                                    text: 'Picos de Rede',
-                                    font: {
-                                        size: 28
-                                    }
-                                }
-                            },
-                            scales: {
-                                y: {
-                                    beginAtZero: true,
-                                    ticks: {
-                                        color: 'black'
-                                    }
-                                },
-                            }
-                        }
-                    });
-
-
-                    ctxMBEnviados = document.getElementById('statusRedeChart');
-
-                    chartMBEnviados = new Chart(ctxMBEnviados, {
-                        type: 'doughnut',
-                        data: {
-                            labels: [],
-                            datasets: [{
-                                label: 'Rede',
-                                data: [0, 100],
-                                backgroundColor: ['rgb(255,44,44)', "#e1e1e1ff"],
-                                hoverOffset: 4,
-                                borderWidth: 0,
-                            }]
-                        },
-                        options: {
-                            maintainAspectRatio: false,
-                            circumference: 180,
-                            cutout: '80%',
-                            rotation: 270,
-                            plugins: {
-                                tooltip: { enabled: false },
-                                legend: { display: false }
-                            }
-                        },
-                        plugins: [{
-                            id: 'center-text',
-                            beforeDraw: function (chart) {
-                                const { ctx, chartArea: { width, height } } = chart;
-                                const valor = Number(chart.data.datasets[0].data[0]).toFixed(0);
-                                ctx.save();
-
-                                ctx.font = 'bold 30px Arial';
-                                ctx.fillStyle = '#333';
-                                ctx.textAlign = 'center';
-                                ctx.textBaseline = 'top';
-                                ctx.fillText(`${valor}%`, width / 2, height / 2 + 10);
-
-                                ctx.font = 'bold 22px Arial';
-                                ctx.fillStyle = '#000';
-                                ctx.fillText('Em uso', width / 2, height / 2 + 60);
-
-                                ctx.restore();
-                            }
-                        }]
-                    });
-
-
-                    ctxMBRecebidos = document.getElementById('statusRedeChart2');
-
-                    chartMBRecebidos = new Chart(ctxMBRecebidos, {
-                        type: 'doughnut',
-                        data: {
-                            labels: [],
-                            datasets: [{
-                                label: 'Rede',
-                                data: [0, 100],
-                                backgroundColor: ['rgb(255,44,44)', "#e1e1e1ff"],
-                                hoverOffset: 4,
-                                borderWidth: 0,
-                            }]
-                        },
-                        options: {
-                            maintainAspectRatio: false,
-                            circumference: 180,
-                            cutout: '80%',
-                            rotation: 270,
-                            plugins: {
-                                tooltip: { enabled: false },
-                                legend: { display: false }
-                            }
-                        },
-                        plugins: [{
-                            id: 'center-text',
-                            beforeDraw: function (chart) {
-                                const { ctx, chartArea: { width, height } } = chart;
-                                const valor = Number(chart.data.datasets[0].data[0]).toFixed(0);
-                                ctx.save();
-
-                                ctx.font = 'bold 30px Arial';
-                                ctx.fillStyle = '#333';
-                                ctx.textAlign = 'center';
-                                ctx.textBaseline = 'top';
-                                ctx.fillText(`${valor}%`, width / 2, height / 2 + 10);
-
-                                ctx.font = 'bold 22px Arial';
-                                ctx.fillStyle = '#000';
-                                ctx.fillText('Em uso', width / 2, height / 2 + 60);
-
-                                ctx.restore();
-                            }
-                        }]
-                    });
-                }
-
-            if (periodo === "3") {
-
-               const ctxCpu = document.getElementById('CpuChart').getContext('2d');
-                    cpuChart = new Chart(ctxCpu, {
-                        type: 'bar',
-                        data: {
-                            labels: ['06:00', '07:00', '08:00', '09:00', '10:00', '11:00'],
-                            datasets: [{
-                                label: 'CPU',
-                                data: [70, 50, 30, 40, 65, 90],
-                                backgroundColor: ['rgb(192, 192, 192)',
-                                    'rgb(192, 192, 192)',
-                                    'rgb(192, 192, 192)',
-                                    'rgb(192, 192, 192)',
-                                    'rgb(192, 192, 192)',
-                                    'rgb(242, 183, 48)',
-                                ],
-                                borderWidth: 1,
-                                borderRadius: 12,
-                            }]
-                        },
-                        options: {
-                            plugins: {
-                                title: {
-                                    display: true,
-                                    color: 'black',
-                                    text: 'Picos de CPU',
-                                    font: {
-                                        size: 28
-                                    }
-                                }
-                            },
-                            scales: {
-                                y: {
-                                    beginAtZero: true,
-                                    ticks: {
-                                        color: 'black'
-                                    }
-                                },
-                            }
-                        }
-                    });
-
-
-                    const ctx1 = document.getElementById('statusChart');
-
-                  chartStatus = new Chart(ctx1, {
-                        type: 'doughnut',
-                        data: {
-                            labels: [],
-                            datasets: [{
-                                label: 'CPU',
-                                data: [0, 100],
-                                backgroundColor: ['rgb(255,44,44)', "#e1e1e1ff"],
-                                hoverOffset: 4,
-                                borderWidth: 0,
-                            }]
-                        },
-                        options: {
-                            maintainAspectRatio: false,
-                            circumference: 180,
-                            cutout: '80%',
-                            rotation: 270,
-                            plugins: {
-                                tooltip: { enabled: false },
-                                legend: { display: false }
-                            }
-                        },
-                        plugins: [{
-                            id: 'center-text',
-                            beforeDraw: function (chart) {
-                                const { ctx, chartArea: { width, height } } = chart;
-                                const valor = Number(chart.data.datasets[0].data[0]).toFixed(0);
-                                ctx.save();
-
-                                ctx.font = 'bold 30px Arial';
-                                ctx.fillStyle = '#333';
-                                ctx.textAlign = 'center';
-                                ctx.textBaseline = 'top';
-                                ctx.fillText(`${valor}%`, width / 2, height / 2 + 10);
-
-                                ctx.font = 'bold 22px Arial';
-                                ctx.fillStyle = '#000';
-                                ctx.fillText('Em uso', width / 2, height / 2 + 60);
-
-                                ctx.restore();
-                            }
-                        }]
-                    });
-
-
-                    const ctxram = document.getElementById('RamChart').getContext('2d');
-
-                    ramChart = new Chart(ctxram, {
-                        type: 'bar',
-                        data: {
-                            labels: ['06:00', '07:00', '08:00', '09:00', '10:00', '11:00'],
-                            datasets: [{
-                                label: 'RAM',
-                                data: [70, 50, 30, 40, 65, 90],
-                                backgroundColor: ['rgb(192, 192, 192)',
-                                    'rgb(192, 192, 192)',
-                                    'rgb(192, 192, 192)',
-                                    'rgb(192, 192, 192)',
-                                    'rgb(192, 192, 192)',
-                                    'rgb(242, 183, 48)',
-                                ],
-                                borderWidth: 1,
-                                borderRadius: 12,
-                            }]
-                        },
-                        options: {
-                            plugins: {
-                                title: {
-                                    display: true,
-                                    color: 'black',
-                                    text: 'Picos de Ram',
-                                    font: {
-                                        size: 28
-                                    }
-                                }
-                            },
-                            scales: {
-                                y: {
-                                    beginAtZero: true,
-                                    ticks: {
-                                        color: 'black'
-                                    }
-                                },
-                            }
-                        }
-                    });
-
-                    const ctx3 = document.getElementById('statusRamChart');
-
-                  chartStatusRam = new Chart(ctx3, {
-                        type: 'doughnut',
-                        data: {
-                            labels: [],
-                            datasets: [{
-                                label: 'Ram',
-                                data: [0, 100],
-                                backgroundColor: ['rgb(255,44,44)', "#e1e1e1ff"],
-                                hoverOffset: 4,
-                                borderWidth: 0,
-                            }]
-                        },
-                        options: {
-                            maintainAspectRatio: false,
-                            circumference: 180,
-                            cutout: '80%',
-                            rotation: 270,
-                            plugins: {
-                                tooltip: { enabled: false },
-                                legend: { display: false }
-                            }
-                        },
-                        plugins: [{
-                            id: 'center-text',
-                            beforeDraw: function (chart) {
-                                const { ctx, chartArea: { width, height } } = chart;
-                                const valor = Number(chart.data.datasets[0].data[0]).toFixed(0);
-                                ctx.save();
-
-                                ctx.font = 'bold 30px Arial';
-                                ctx.fillStyle = '#333';
-                                ctx.textAlign = 'center';
-                                ctx.textBaseline = 'top';
-                                ctx.fillText(`${valor}%`, width / 2, height / 2 + 10);
-
-                                ctx.font = 'bold 22px Arial';
-                                ctx.fillStyle = '#000';
-                                ctx.fillText('Em uso', width / 2, height / 2 + 60);
-
-                                ctx.restore();
-                            }
-                        }]
-                    });
-
-
-                    const ctxdisco = document.getElementById('DiscoChart').getContext('2d');
-
-                    discoChart = new Chart(ctxdisco, {
-                        type: 'bar',
-                        data: {
-                            labels: ['06:00', '07:00', '08:00', '09:00', '10:00', '11:00'],
-                            datasets: [{
-                                label: 'DISCO',
-                                data: [70, 50, 30, 40, 65, 90],
-                                backgroundColor: ['rgb(192, 192, 192)',
-                                    'rgb(192, 192, 192)',
-                                    'rgb(192, 192, 192)',
-                                    'rgb(192, 192, 192)',
-                                    'rgb(192, 192, 192)',
-                                    'rgb(242, 183, 48)',
-                                ],
-                                borderWidth: 1,
-                                borderRadius: 12,
-                            }]
-                        },
-                        options: {
-                            plugins: {
-                                title: {
-                                    display: true,
-                                    color: 'black',
-                                    text: 'Picos de Disco',
-                                    font: {
-                                        size: 28
-                                    }
-                                }
-                            },
-                            scales: {
-                                y: {
-                                    beginAtZero: true,
-                                    ticks: {
-                                        color: 'black'
-                                    }
-                                },
-                            }
-                        }
-                    });
-
-
-                    const ctx5 = document.getElementById('statusDiscoChart');
-
-                    chartStatusDisco = new Chart(ctx5, {
-                        type: 'doughnut',
-                        data: {
-                            labels: [],
-                            datasets: [{
-                                label: 'Disco',
-                                data: [0, 100],
-                                backgroundColor: ['rgb(255,44,44)', "#e1e1e1ff"],
-                                hoverOffset: 4,
-                                borderWidth: 0,
-                            }]
-                        },
-                        options: {
-                            maintainAspectRatio: false,
-                            circumference: 180,
-                            cutout: '80%',
-                            rotation: 270,
-                            plugins: {
-                                tooltip: { enabled: false },
-                                legend: { display: false }
-                            }
-                        },
-                        plugins: [{
-                            id: 'center-text',
-                            beforeDraw: function (chart) {
-                                const { ctx, chartArea: { width, height } } = chart;
-                                const valor = Number(chart.data.datasets[0].data[0]).toFixed(0);
-                                ctx.save();
-
-                                ctx.font = 'bold 30px Arial';
-                                ctx.fillStyle = '#333';
-                                ctx.textAlign = 'center';
-                                ctx.textBaseline = 'top';
-                                ctx.fillText(`${valor}%`, width / 2, height / 2 + 10);
-
-                                ctx.font = 'bold 22px Arial';
-                                ctx.fillStyle = '#000';
-                                ctx.fillText('Em uso', width / 2, height / 2 + 60);
-
-                                ctx.restore();
-                            }
-                        }]
-                    });
-
-                    const ctxrede = document.getElementById('RedeChart').getContext('2d');
-
-                   redeChart = new Chart(ctxrede, {
-                        type: 'bar',
-                        data: {
-                            labels: ['06:00', '07:00', '08:00', '09:00', '10:00', '11:00'],
-                            datasets: [{
-                                label: 'Rede',
-                                data: [70, 50, 30, 40, 65, 90],
-                                backgroundColor: ['rgb(192, 192, 192)',
-                                    'rgb(192, 192, 192)',
-                                    'rgb(192, 192, 192)',
-                                    'rgb(192, 192, 192)',
-                                    'rgb(192, 192, 192)',
-                                    'rgb(242, 183, 48)',
-                                ],
-                                borderWidth: 1,
-                                borderRadius: 12,
-                            }]
-                        },
-                        options: {
-                            plugins: {
-                                title: {
-                                    display: true,
-                                    color: 'black',
-                                    text: 'Picos de Rede',
-                                    font: {
-                                        size: 28
-                                    }
-                                }
-                            },
-                            scales: {
-                                y: {
-                                    beginAtZero: true,
-                                    ticks: {
-                                        color: 'black'
-                                    }
-                                },
-                            }
-                        }
-                    });
-
-
-                    ctxMBEnviados = document.getElementById('statusRedeChart');
-
-                    chartMBEnviados = new Chart(ctxMBEnviados, {
-                        type: 'doughnut',
-                        data: {
-                            labels: [],
-                            datasets: [{
-                                label: 'Rede',
-                                data: [0, 100],
-                                backgroundColor: ['rgb(255,44,44)', "#e1e1e1ff"],
-                                hoverOffset: 4,
-                                borderWidth: 0,
-                            }]
-                        },
-                        options: {
-                            maintainAspectRatio: false,
-                            circumference: 180,
-                            cutout: '80%',
-                            rotation: 270,
-                            plugins: {
-                                tooltip: { enabled: false },
-                                legend: { display: false }
-                            }
-                        },
-                        plugins: [{
-                            id: 'center-text',
-                            beforeDraw: function (chart) {
-                                const { ctx, chartArea: { width, height } } = chart;
-                                const valor = Number(chart.data.datasets[0].data[0]).toFixed(0);
-                                ctx.save();
-
-                                ctx.font = 'bold 30px Arial';
-                                ctx.fillStyle = '#333';
-                                ctx.textAlign = 'center';
-                                ctx.textBaseline = 'top';
-                                ctx.fillText(`${valor}%`, width / 2, height / 2 + 10);
-
-                                ctx.font = 'bold 22px Arial';
-                                ctx.fillStyle = '#000';
-                                ctx.fillText('Em uso', width / 2, height / 2 + 60);
-
-                                ctx.restore();
-                            }
-                        }]
-                    });
-
-
-                       ctxMBRecebidos = document.getElementById('statusRedeChart2');
-
-                    chartMBRecebidos = new Chart(ctxMBRecebidos, {
-                        type: 'doughnut',
-                        data: {
-                            labels: [],
-                            datasets: [{
-                                label: 'Rede',
-                                data: [0, 100],
-                                backgroundColor: ['rgb(255,44,44)', "#e1e1e1ff"],
-                                hoverOffset: 4,
-                                borderWidth: 0,
-                            }]
-                        },
-                        options: {
-                            maintainAspectRatio: false,
-                            circumference: 180,
-                            cutout: '80%',
-                            rotation: 270,
-                            plugins: {
-                                tooltip: { enabled: false },
-                                legend: { display: false }
-                            }
-                        },
-                        plugins: [{
-                            id: 'center-text',
-                            beforeDraw: function (chart) {
-                                const { ctx, chartArea: { width, height } } = chart;
-                                const valor = Number(chart.data.datasets[0].data[0]).toFixed(0);
-                                ctx.save();
-
-                                ctx.font = 'bold 30px Arial';
-                                ctx.fillStyle = '#333';
-                                ctx.textAlign = 'center';
-                                ctx.textBaseline = 'top';
-                                ctx.fillText(`${valor}%`, width / 2, height / 2 + 10);
-
-                                ctx.font = 'bold 22px Arial';
-                                ctx.fillStyle = '#000';
-                                ctx.fillText('Em uso', width / 2, height / 2 + 60);
-
-                                ctx.restore();
-                            }
-                        }]
-                    });
-                }
-
-            if (periodo === "4") {
-
-               const ctxCpu = document.getElementById('CpuChart').getContext('2d');
-                    cpuChart = new Chart(ctxCpu, {
-                        type: 'bar',
-                        data: {
-                            labels: ['06:00', '07:00', '08:00', '09:00', '10:00', '11:00'],
-                            datasets: [{
-                                label: 'CPU',
-                                data: [85, 45, 90, 60, 65, 97],
-                                backgroundColor: ['rgb(192, 192, 192)',
-                                    'rgb(192, 192, 192)',
-                                    'rgb(192, 192, 192)',
-                                    'rgb(192, 192, 192)',
-                                    'rgb(192, 192, 192)',
-                                    'rgb(242, 183, 48)',
-                                ],
-                                borderWidth: 1,
-                                borderRadius: 12,
-                            }]
-                        },
-                        options: {
-                            plugins: {
-                                title: {
-                                    display: true,
-                                    color: 'black',
-                                    text: 'Picos de CPU',
-                                    font: {
-                                        size: 28
-                                    }
-                                }
-                            },
-                            scales: {
-                                y: {
-                                    beginAtZero: true,
-                                    ticks: {
-                                        color: 'black'
-                                    }
-                                },
-                            }
-                        }
-                    });
-
-
-                    const ctx1 = document.getElementById('statusChart');
-
-                  chartStatus = new Chart(ctx1, {
-                        type: 'doughnut',
-                        data: {
-                            labels: [],
-                            datasets: [{
-                                label: 'CPU',
-                                data: [0, 100],
-                                backgroundColor: ['rgb(255,44,44)', "#e1e1e1ff"],
-                                hoverOffset: 4,
-                                borderWidth: 0,
-                            }]
-                        },
-                        options: {
-                            maintainAspectRatio: false,
-                            circumference: 180,
-                            cutout: '80%',
-                            rotation: 270,
-                            plugins: {
-                                tooltip: { enabled: false },
-                                legend: { display: false }
-                            }
-                        },
-                        plugins: [{
-                            id: 'center-text',
-                            beforeDraw: function (chart) {
-                                const { ctx, chartArea: { width, height } } = chart;
-                                const valor = Number(chart.data.datasets[0].data[0]).toFixed(0);
-                                ctx.save();
-
-                                ctx.font = 'bold 30px Arial';
-                                ctx.fillStyle = '#333';
-                                ctx.textAlign = 'center';
-                                ctx.textBaseline = 'top';
-                                ctx.fillText(`${valor}%`, width / 2, height / 2 + 10);
-
-                                ctx.font = 'bold 22px Arial';
-                                ctx.fillStyle = '#000';
-                                ctx.fillText('Em uso', width / 2, height / 2 + 60);
-
-                                ctx.restore();
-                            }
-                        }]
-                    });
-
-
-                    const ctxram = document.getElementById('RamChart').getContext('2d');
-
-                    ramChart = new Chart(ctxram, {
-                        type: 'bar',
-                        data: {
-                            labels: ['06:00', '07:00', '08:00', '09:00', '10:00', '11:00'],
-                            datasets: [{
-                                label: 'RAM',
-                                data: [85, 45, 90, 60, 65, 97],
-                                backgroundColor: ['rgb(192, 192, 192)',
-                                    'rgb(192, 192, 192)',
-                                    'rgb(192, 192, 192)',
-                                    'rgb(192, 192, 192)',
-                                    'rgb(192, 192, 192)',
-                                    'rgb(242, 183, 48)',
-                                ],
-                                borderWidth: 1,
-                                borderRadius: 12,
-                            }]
-                        },
-                        options: {
-                            plugins: {
-                                title: {
-                                    display: true,
-                                    color: 'black',
-                                    text: 'Picos de Ram',
-                                    font: {
-                                        size: 28
-                                    }
-                                }
-                            },
-                            scales: {
-                                y: {
-                                    beginAtZero: true,
-                                    ticks: {
-                                        color: 'black'
-                                    }
-                                },
-                            }
-                        }
-                    });
-
-                    const ctx3 = document.getElementById('statusRamChart');
-
-                  chartStatusRam = new Chart(ctx3, {
-                        type: 'doughnut',
-                        data: {
-                            labels: [],
-                            datasets: [{
-                                label: 'Ram',
-                                data: [0, 100],
-                                backgroundColor: ['rgb(255,44,44)', "#e1e1e1ff"],
-                                hoverOffset: 4,
-                                borderWidth: 0,
-                            }]
-                        },
-                        options: {
-                            maintainAspectRatio: false,
-                            circumference: 180,
-                            cutout: '80%',
-                            rotation: 270,
-                            plugins: {
-                                tooltip: { enabled: false },
-                                legend: { display: false }
-                            }
-                        },
-                        plugins: [{
-                            id: 'center-text',
-                            beforeDraw: function (chart) {
-                                const { ctx, chartArea: { width, height } } = chart;
-                                const valor = Number(chart.data.datasets[0].data[0]).toFixed(0);
-                                ctx.save();
-
-                                ctx.font = 'bold 30px Arial';
-                                ctx.fillStyle = '#333';
-                                ctx.textAlign = 'center';
-                                ctx.textBaseline = 'top';
-                                ctx.fillText(`${valor}%`, width / 2, height / 2 + 10);
-
-                                ctx.font = 'bold 22px Arial';
-                                ctx.fillStyle = '#000';
-                                ctx.fillText('Em uso', width / 2, height / 2 + 60);
-
-                                ctx.restore();
-                            }
-                        }]
-                    });
-
-
-                    const ctxdisco = document.getElementById('DiscoChart').getContext('2d');
-
-                    discoChart = new Chart(ctxdisco, {
-                        type: 'bar',
-                        data: {
-                            labels: ['06:00', '07:00', '08:00', '09:00', '10:00', '11:00'],
-                            datasets: [{
-                                label: 'DISCO',
-                                data: [85, 45, 90, 60, 65, 97],
-                                backgroundColor: ['rgb(192, 192, 192)',
-                                    'rgb(192, 192, 192)',
-                                    'rgb(192, 192, 192)',
-                                    'rgb(192, 192, 192)',
-                                    'rgb(192, 192, 192)',
-                                    'rgb(242, 183, 48)',
-                                ],
-                                borderWidth: 1,
-                                borderRadius: 12,
-                            }]
-                        },
-                        options: {
-                            plugins: {
-                                title: {
-                                    display: true,
-                                    color: 'black',
-                                    text: 'Picos de Disco',
-                                    font: {
-                                        size: 28
-                                    }
-                                }
-                            },
-                            scales: {
-                                y: {
-                                    beginAtZero: true,
-                                    ticks: {
-                                        color: 'black'
-                                    }
-                                },
-                            }
-                        }
-                    });
-
-
-                    const ctx5 = document.getElementById('statusDiscoChart');
-
-                    chartStatusDisco = new Chart(ctx5, {
-                        type: 'doughnut',
-                        data: {
-                            labels: [],
-                            datasets: [{
-                                label: 'Disco',
-                                data: [0, 100],
-                                backgroundColor: ['rgb(255,44,44)', "#e1e1e1ff"],
-                                hoverOffset: 4,
-                                borderWidth: 0,
-                            }]
-                        },
-                        options: {
-                            maintainAspectRatio: false,
-                            circumference: 180,
-                            cutout: '80%',
-                            rotation: 270,
-                            plugins: {
-                                tooltip: { enabled: false },
-                                legend: { display: false }
-                            }
-                        },
-                        plugins: [{
-                            id: 'center-text',
-                            beforeDraw: function (chart) {
-                                const { ctx, chartArea: { width, height } } = chart;
-                                const valor = Number(chart.data.datasets[0].data[0]).toFixed(0);
-                                ctx.save();
-
-                                ctx.font = 'bold 30px Arial';
-                                ctx.fillStyle = '#333';
-                                ctx.textAlign = 'center';
-                                ctx.textBaseline = 'top';
-                                ctx.fillText(`${valor}%`, width / 2, height / 2 + 10);
-
-                                ctx.font = 'bold 22px Arial';
-                                ctx.fillStyle = '#000';
-                                ctx.fillText('Em uso', width / 2, height / 2 + 60);
-
-                                ctx.restore();
-                            }
-                        }]
-                    });
-
-                    const ctxrede = document.getElementById('RedeChart').getContext('2d');
-
-                   redeChart = new Chart(ctxrede, {
-                        type: 'bar',
-                        data: {
-                            labels: ['06:00', '07:00', '08:00', '09:00', '10:00', '11:00'],
-                            datasets: [{
-                                label: 'Rede',
-                                data: [85, 45, 90, 60, 65, 97],
-                                backgroundColor: ['rgb(192, 192, 192)',
-                                    'rgb(192, 192, 192)',
-                                    'rgb(192, 192, 192)',
-                                    'rgb(192, 192, 192)',
-                                    'rgb(192, 192, 192)',
-                                    'rgb(242, 183, 48)',
-                                ],
-                                borderWidth: 1,
-                                borderRadius: 12,
-                            }]
-                        },
-                        options: {
-                            plugins: {
-                                title: {
-                                    display: true,
-                                    color: 'black',
-                                    text: 'Picos de Rede',
-                                    font: {
-                                        size: 28
-                                    }
-                                }
-                            },
-                            scales: {
-                                y: {
-                                    beginAtZero: true,
-                                    ticks: {
-                                        color: 'black'
-                                    }
-                                },
-                            }
-                        }
-                    });
-
-
-                    ctxMBEnviados = document.getElementById('statusRedeChart');
-
-                    chartMBEnviados = new Chart(ctxMBEnviados, {
-                        type: 'doughnut',
-                        data: {
-                            labels: [],
-                            datasets: [{
-                                label: 'Rede',
-                                data: [0, 100],
-                                backgroundColor: ['rgb(255,44,44)', "#e1e1e1ff"],
-                                hoverOffset: 4,
-                                borderWidth: 0,
-                            }]
-                        },
-                        options: {
-                            maintainAspectRatio: false,
-                            circumference: 180,
-                            cutout: '80%',
-                            rotation: 270,
-                            plugins: {
-                                tooltip: { enabled: false },
-                                legend: { display: false }
-                            }
-                        },
-                        plugins: [{
-                            id: 'center-text',
-                            beforeDraw: function (chart) {
-                                const { ctx, chartArea: { width, height } } = chart;
-                                const valor = Number(chart.data.datasets[0].data[0]).toFixed(0);
-                                ctx.save();
-
-                                ctx.font = 'bold 30px Arial';
-                                ctx.fillStyle = '#333';
-                                ctx.textAlign = 'center';
-                                ctx.textBaseline = 'top';
-                                ctx.fillText(`${valor}%`, width / 2, height / 2 + 10);
-
-                                ctx.font = 'bold 22px Arial';
-                                ctx.fillStyle = '#000';
-                                ctx.fillText('Em uso', width / 2, height / 2 + 60);
-
-                                ctx.restore();
-                            }
-                        }]
-                    });
-
-
-                   ctxMBRecebidos = document.getElementById('statusRedeChart2');
-
-                    chartMBRecebidos = new Chart(ctxMBRecebidos, {
-                        type: 'doughnut',
-                        data: {
-                            labels: [],
-                            datasets: [{
-                                label: 'Rede',
-                                data: [0, 100],
-                                backgroundColor: ['rgb(255,44,44)', "#e1e1e1ff"],
-                                hoverOffset: 4,
-                                borderWidth: 0,
-                            }]
-                        },
-                        options: {
-                            maintainAspectRatio: false,
-                            circumference: 180,
-                            cutout: '80%',
-                            rotation: 270,
-                            plugins: {
-                                tooltip: { enabled: false },
-                                legend: { display: false }
-                            }
-                        },
-                        plugins: [{
-                            id: 'center-text',
-                            beforeDraw: function (chart) {
-                                const { ctx, chartArea: { width, height } } = chart;
-                                const valor = Number(chart.data.datasets[0].data[0]).toFixed(0);
-                                ctx.save();
-
-                                ctx.font = 'bold 30px Arial';
-                                ctx.fillStyle = '#333';
-                                ctx.textAlign = 'center';
-                                ctx.textBaseline = 'top';
-                                ctx.fillText(`${valor}%`, width / 2, height / 2 + 10);
-
-                                ctx.font = 'bold 22px Arial';
-                                ctx.fillStyle = '#000';
-                                ctx.fillText('Em uso', width / 2, height / 2 + 60);
-
-                                ctx.restore();
-                            }
-                        }]
-                    });
+                    },
                 }
             }
+        });
+
+
+        const canvasStatus = document.getElementById('statusChart');
+        const existingStatus = Chart.getChart(canvasStatus);
+        if (existingStatus) {
+            existingStatus.destroy();
+        }
+
+        chartCPU = new Chart(canvasStatus, {
+            type: 'doughnut',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'CPU',
+                    data: [0, 100],
+                    backgroundColor: ['rgb(255,44,44)', "#e1e1e1ff"],
+                    hoverOffset: 4,
+                    borderWidth: 0,
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                circumference: 180,
+                cutout: '80%',
+                rotation: 270,
+                plugins: {
+                    tooltip: { enabled: false },
+                    legend: { display: false }
+                }
+            },
+            plugins: [{
+                id: 'center-text',
+                beforeDraw: function (chart) {
+                    const { ctx, chartArea: { width, height } } = chart;
+                    const valor = Number(chart.data.datasets[0].data[0]).toFixed(0);
+                    ctx.save();
+
+                    ctx.font = 'bold 30px Arial';
+                    ctx.fillStyle = '#333';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'top';
+                    ctx.fillText(`${valor}%`, width / 2, height / 2 + 10);
+
+                    ctx.font = 'bold 22px Arial';
+                    ctx.fillStyle = '#000';
+                    ctx.fillText('Em uso', width / 2, height / 2 + 60);
+
+                    ctx.restore();
+                }
+            }]
+        });
+
+
+        const ctxram = document.getElementById('RamChart').getContext('2d');
+
+        ramChart = new Chart(ctxram, {
+            type: 'bar',
+            data: {
+                labels: ['06:00', '07:00', '08:00', '09:00', '10:00', '11:00'],
+                datasets: [{
+                    label: 'RAM',
+                    data: [30, 80, 50, 55, 45, 100],
+                    backgroundColor: ['rgb(192, 192, 192)',
+                        'rgb(192, 192, 192)',
+                        'rgb(192, 192, 192)',
+                        'rgb(192, 192, 192)',
+                        'rgb(192, 192, 192)',
+                        'rgb(242, 183, 48)',
+                    ],
+                    borderWidth: 1,
+                    borderRadius: 12,
+                }]
+            },
+            options: {
+                plugins: {
+                    title: {
+                        display: true,
+                        color: 'black',
+                        text: 'Picos de Ram',
+                        font: {
+                            size: 28
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            color: 'black'
+                        }
+                    },
+                }
+            }
+        });
+
+        const canvasStatusram = document.getElementById('statusRamChart');
+        const existingStatusram = Chart.getChart(canvasStatusram);
+        if (existingStatusram) {
+            existingStatusram.destroy();
+        }
+
+        chartRAM = new Chart(canvasStatusram, {
+            type: 'doughnut',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Ram',
+                    data: [0, 100],
+                    backgroundColor: ['rgb(255,44,44)', "#e1e1e1ff"],
+                    hoverOffset: 4,
+                    borderWidth: 0,
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                circumference: 180,
+                cutout: '80%',
+                rotation: 270,
+                plugins: {
+                    tooltip: { enabled: false },
+                    legend: { display: false }
+                }
+            },
+            plugins: [{
+                id: 'center-text',
+                beforeDraw: function (chart) {
+                    const { ctx, chartArea: { width, height } } = chart;
+                    const valor = Number(chart.data.datasets[0].data[0]).toFixed(0);
+                    ctx.save();
+
+                    ctx.font = 'bold 30px Arial';
+                    ctx.fillStyle = '#333';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'top';
+                    ctx.fillText(`${valor}%`, width / 2, height / 2 + 10);
+
+                    ctx.font = 'bold 22px Arial';
+                    ctx.fillStyle = '#000';
+                    ctx.fillText('Em uso', width / 2, height / 2 + 60);
+
+                    ctx.restore();
+                }
+            }]
+        });
+
+
+        const ctxdisco = document.getElementById('DiscoChart').getContext('2d');
+
+        discoChart = new Chart(ctxdisco, {
+            type: 'bar',
+            data: {
+                labels: ['06:00', '07:00', '08:00', '09:00', '10:00', '11:00'],
+                datasets: [{
+                    label: 'DISCO',
+                    data: [30, 80, 50, 55, 45, 100],
+                    backgroundColor: ['rgb(192, 192, 192)',
+                        'rgb(192, 192, 192)',
+                        'rgb(192, 192, 192)',
+                        'rgb(192, 192, 192)',
+                        'rgb(192, 192, 192)',
+                        'rgb(242, 183, 48)',
+                    ],
+                    borderWidth: 1,
+                    borderRadius: 12,
+                }]
+            },
+            options: {
+                plugins: {
+                    title: {
+                        display: true,
+                        color: 'black',
+                        text: 'Picos de Disco',
+                        font: {
+                            size: 28
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            color: 'black'
+                        }
+                    },
+                }
+            }
+        });
+
+
+        const canvasStatusdisco = document.getElementById('statusDiscoChart');
+        const existingStatusdisco = Chart.getChart(canvasStatusdisco);
+        if (existingStatusdisco) {
+            existingStatusdisco.destroy();
+        }
+
+        chartDisco = new Chart(canvasStatusdisco, {
+            type: 'doughnut',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Disco',
+                    data: [0, 100],
+                    backgroundColor: ['rgb(255,44,44)', "#e1e1e1ff"],
+                    hoverOffset: 4,
+                    borderWidth: 0,
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                circumference: 180,
+                cutout: '80%',
+                rotation: 270,
+                plugins: {
+                    tooltip: { enabled: false },
+                    legend: { display: false }
+                }
+            },
+            plugins: [{
+                id: 'center-text',
+                beforeDraw: function (chart) {
+                    const { ctx, chartArea: { width, height } } = chart;
+                    const valor = Number(chart.data.datasets[0].data[0]).toFixed(0);
+                    ctx.save();
+
+                    ctx.font = 'bold 30px Arial';
+                    ctx.fillStyle = '#333';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'top';
+                    ctx.fillText(`${valor}%`, width / 2, height / 2 + 10);
+
+                    ctx.font = 'bold 22px Arial';
+                    ctx.fillStyle = '#000';
+                    ctx.fillText('Em uso', width / 2, height / 2 + 60);
+
+                    ctx.restore();
+                }
+            }]
+        });
+
+        const ctxrede = document.getElementById('RedeChart').getContext('2d');
+
+        redeChart = new Chart(ctxrede, {
+            type: 'bar',
+            data: {
+                labels: ['06:00', '07:00', '08:00', '09:00', '10:00', '11:00'],
+                datasets: [{
+                    label: 'Rede',
+                    data: [30, 80, 50, 55, 45, 100],
+                    backgroundColor: ['rgb(192, 192, 192)',
+                        'rgb(192, 192, 192)',
+                        'rgb(192, 192, 192)',
+                        'rgb(192, 192, 192)',
+                        'rgb(192, 192, 192)',
+                        'rgb(242, 183, 48)',
+                    ],
+                    borderWidth: 1,
+                    borderRadius: 12,
+                }]
+            },
+            options: {
+                plugins: {
+                    title: {
+                        display: true,
+                        color: 'black',
+                        text: 'Picos de Rede',
+                        font: {
+                            size: 28
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            color: 'black'
+                        }
+                    },
+                }
+            }
+        });
+
+
+        const canvasStatusrede1 = document.getElementById('statusRedeChart');
+        const existingStatusrede1 = Chart.getChart(canvasStatusrede1);
+        if (existingStatusrede1) {
+            existingStatusrede1.destroy();
+        }
+
+        chartMBEnviados = new Chart(canvasStatusrede1, {
+            type: 'doughnut',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Rede',
+                    data: [0, 100],
+                    backgroundColor: ['rgb(255,44,44)', "#e1e1e1ff"],
+                    hoverOffset: 4,
+                    borderWidth: 0,
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                circumference: 180,
+                cutout: '80%',
+                rotation: 270,
+                plugins: {
+                    tooltip: { enabled: false },
+                    legend: { display: false }
+                }
+            },
+            plugins: [{
+                id: 'center-text',
+                beforeDraw: function (chart) {
+                    const { ctx, chartArea: { width, height } } = chart;
+                    const valor = Number(chart.data.datasets[0].data[0]).toFixed(0);
+                    ctx.save();
+
+                    ctx.font = 'bold 30px Arial';
+                    ctx.fillStyle = '#333';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'top';
+                    ctx.fillText(`${valor}%`, width / 2, height / 2 + 10);
+
+                    ctx.font = 'bold 22px Arial';
+                    ctx.fillStyle = '#000';
+                    ctx.fillText('Em uso', width / 2, height / 2 + 60);
+
+                    ctx.restore();
+                }
+            }]
+        });
+
+
+        const canvasStatusrede2 = document.getElementById('statusRedeChart2');
+        const existingStatusrede2 = Chart.getChart(canvasStatusrede2);
+        if (existingStatusrede2) {
+            existingStatusrede2.destroy();
+        }
+
+        chartMBRecebidos = new Chart(canvasStatusrede2, {
+            type: 'doughnut',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Rede',
+                    data: [0, 100],
+                    backgroundColor: ['rgb(255,44,44)', "#e1e1e1ff"],
+                    hoverOffset: 4,
+                    borderWidth: 0,
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                circumference: 180,
+                cutout: '80%',
+                rotation: 270,
+                plugins: {
+                    tooltip: { enabled: false },
+                    legend: { display: false }
+                }
+            },
+            plugins: [{
+                id: 'center-text',
+                beforeDraw: function (chart) {
+                    const { ctx, chartArea: { width, height } } = chart;
+                    const valor = Number(chart.data.datasets[0].data[0]).toFixed(0);
+                    ctx.save();
+
+                    ctx.font = 'bold 30px Arial';
+                    ctx.fillStyle = '#333';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'top';
+                    ctx.fillText(`${valor}%`, width / 2, height / 2 + 10);
+
+                    ctx.font = 'bold 22px Arial';
+                    ctx.fillStyle = '#000';
+                    ctx.fillText('Em uso', width / 2, height / 2 + 60);
+
+                    ctx.restore();
+                }
+            }]
+        });
+    }
+    else if (periodo === "2") {
+
+        const ctxCpu = document.getElementById('CpuChart').getContext('2d');
+        cpuChart = new Chart(ctxCpu, {
+            type: 'bar',
+            data: {
+                labels: ['06:00', '07:00', '08:00', '09:00', '10:00', '11:00'],
+                datasets: [{
+                    label: 'CPU',
+                    data: [50, 40, 70, 65, 75, 95],
+                    backgroundColor: ['rgb(192, 192, 192)',
+                        'rgb(192, 192, 192)',
+                        'rgb(192, 192, 192)',
+                        'rgb(192, 192, 192)',
+                        'rgb(192, 192, 192)',
+                        'rgb(242, 183, 48)',
+                    ],
+                    borderWidth: 1,
+                    borderRadius: 12,
+                }]
+            },
+            options: {
+                plugins: {
+                    title: {
+                        display: true,
+                        color: 'black',
+                        text: 'Picos de CPU',
+                        font: {
+                            size: 28
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            color: 'black'
+                        }
+                    },
+                }
+            }
+        });
+
+
+        const canvasStatus = document.getElementById('statusChart');
+        const existingStatus = Chart.getChart(canvasStatus);
+        if (existingStatus) {
+            existingStatus.destroy();
+        }
+
+        chartCPU = new Chart(canvasStatus, {
+            type: 'doughnut',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'CPU',
+                    data: [0, 100],
+                    backgroundColor: ['rgb(255,44,44)', "#e1e1e1ff"],
+                    hoverOffset: 4,
+                    borderWidth: 0,
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                circumference: 180,
+                cutout: '80%',
+                rotation: 270,
+                plugins: {
+                    tooltip: { enabled: false },
+                    legend: { display: false }
+                }
+            },
+            plugins: [{
+                id: 'center-text',
+                beforeDraw: function (chart) {
+                    const { ctx, chartArea: { width, height } } = chart;
+                    const valor = Number(chart.data.datasets[0].data[0]).toFixed(0);
+                    ctx.save();
+
+                    ctx.font = 'bold 30px Arial';
+                    ctx.fillStyle = '#333';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'top';
+                    ctx.fillText(`${valor}%`, width / 2, height / 2 + 10);
+
+                    ctx.font = 'bold 22px Arial';
+                    ctx.fillStyle = '#000';
+                    ctx.fillText('Em uso', width / 2, height / 2 + 60);
+
+                    ctx.restore();
+                }
+            }]
+        });
+
+
+        const ctxram = document.getElementById('RamChart').getContext('2d');
+
+        ramChart = new Chart(ctxram, {
+            type: 'bar',
+            data: {
+                labels: ['06:00', '07:00', '08:00', '09:00', '10:00', '11:00'],
+                datasets: [{
+                    label: 'RAM',
+                    data: [50, 40, 70, 65, 75, 95],
+                    backgroundColor: ['rgb(192, 192, 192)',
+                        'rgb(192, 192, 192)',
+                        'rgb(192, 192, 192)',
+                        'rgb(192, 192, 192)',
+                        'rgb(192, 192, 192)',
+                        'rgb(242, 183, 48)',
+                    ],
+                    borderWidth: 1,
+                    borderRadius: 12,
+                }]
+            },
+            options: {
+                plugins: {
+                    title: {
+                        display: true,
+                        color: 'black',
+                        text: 'Picos de Ram',
+                        font: {
+                            size: 28
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            color: 'black'
+                        }
+                    },
+                }
+            }
+        });
+
+        const canvasStatusram = document.getElementById('statusRamChart');
+        const existingStatusram = Chart.getChart(canvasStatusram);
+        if (existingStatusram) {
+            existingStatusram.destroy();
+        }
+        chartRAM = new Chart(canvasStatusram, {
+            type: 'doughnut',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Ram',
+                    data: [0, 100],
+                    backgroundColor: ['rgb(255,44,44)', "#e1e1e1ff"],
+                    hoverOffset: 4,
+                    borderWidth: 0,
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                circumference: 180,
+                cutout: '80%',
+                rotation: 270,
+                plugins: {
+                    tooltip: { enabled: false },
+                    legend: { display: false }
+                }
+            },
+            plugins: [{
+                id: 'center-text',
+                beforeDraw: function (chart) {
+                    const { ctx, chartArea: { width, height } } = chart;
+                    const valor = Number(chart.data.datasets[0].data[0]).toFixed(0);
+                    ctx.save();
+
+                    ctx.font = 'bold 30px Arial';
+                    ctx.fillStyle = '#333';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'top';
+                    ctx.fillText(`${valor}%`, width / 2, height / 2 + 10);
+
+                    ctx.font = 'bold 22px Arial';
+                    ctx.fillStyle = '#000';
+                    ctx.fillText('Em uso', width / 2, height / 2 + 60);
+
+                    ctx.restore();
+                }
+            }]
+        });
+
+
+        const ctxdisco = document.getElementById('DiscoChart').getContext('2d');
+
+        discoChart = new Chart(ctxdisco, {
+            type: 'bar',
+            data: {
+                labels: ['06:00', '07:00', '08:00', '09:00', '10:00', '11:00'],
+                datasets: [{
+                    label: 'DISCO',
+                    data: [50, 40, 70, 65, 75, 95],
+                    backgroundColor: ['rgb(192, 192, 192)',
+                        'rgb(192, 192, 192)',
+                        'rgb(192, 192, 192)',
+                        'rgb(192, 192, 192)',
+                        'rgb(192, 192, 192)',
+                        'rgb(242, 183, 48)',
+                    ],
+                    borderWidth: 1,
+                    borderRadius: 12,
+                }]
+            },
+            options: {
+                plugins: {
+                    title: {
+                        display: true,
+                        color: 'black',
+                        text: 'Picos de Disco',
+                        font: {
+                            size: 28
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            color: 'black'
+                        }
+                    },
+                }
+            }
+        });
+
+
+        const canvasStatusdisco = document.getElementById('statusDiscoChart');
+        const existingStatusdisco = Chart.getChart(canvasStatusdisco);
+        if (existingStatusdisco) {
+            existingStatusdisco.destroy();
+        }
+
+        chartDisco = new Chart(canvasStatusdisco, {
+            type: 'doughnut',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Disco',
+                    data: [0, 100],
+                    backgroundColor: ['rgb(255,44,44)', "#e1e1e1ff"],
+                    hoverOffset: 4,
+                    borderWidth: 0,
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                circumference: 180,
+                cutout: '80%',
+                rotation: 270,
+                plugins: {
+                    tooltip: { enabled: false },
+                    legend: { display: false }
+                }
+            },
+            plugins: [{
+                id: 'center-text',
+                beforeDraw: function (chart) {
+                    const { ctx, chartArea: { width, height } } = chart;
+                    const valor = Number(chart.data.datasets[0].data[0]).toFixed(0);
+                    ctx.save();
+
+                    ctx.font = 'bold 30px Arial';
+                    ctx.fillStyle = '#333';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'top';
+                    ctx.fillText(`${valor}%`, width / 2, height / 2 + 10);
+
+                    ctx.font = 'bold 22px Arial';
+                    ctx.fillStyle = '#000';
+                    ctx.fillText('Em uso', width / 2, height / 2 + 60);
+
+                    ctx.restore();
+                }
+            }]
+        });
+
+        const ctxrede = document.getElementById('RedeChart').getContext('2d');
+
+        redeChart = new Chart(ctxrede, {
+            type: 'bar',
+            data: {
+                labels: ['06:00', '07:00', '08:00', '09:00', '10:00', '11:00'],
+                datasets: [{
+                    label: 'Rede',
+                    data: [50, 40, 70, 65, 75, 95],
+                    backgroundColor: ['rgb(192, 192, 192)',
+                        'rgb(192, 192, 192)',
+                        'rgb(192, 192, 192)',
+                        'rgb(192, 192, 192)',
+                        'rgb(192, 192, 192)',
+                        'rgb(242, 183, 48)',
+                    ],
+                    borderWidth: 1,
+                    borderRadius: 12,
+                }]
+            },
+            options: {
+                plugins: {
+                    title: {
+                        display: true,
+                        color: 'black',
+                        text: 'Picos de Rede',
+                        font: {
+                            size: 28
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            color: 'black'
+                        }
+                    },
+                }
+            }
+        });
+
+
+        const canvasStatusrede = document.getElementById('statusRedeChart');
+        const existingStatusrede = Chart.getChart(canvasStatusrede);
+        if (existingStatusrede) {
+            existingStatusrede.destroy();
+        }
+
+        chartMBEnviados = new Chart(canvasStatusrede, {
+            type: 'doughnut',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Rede',
+                    data: [0, 100],
+                    backgroundColor: ['rgb(255,44,44)', "#e1e1e1ff"],
+                    hoverOffset: 4,
+                    borderWidth: 0,
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                circumference: 180,
+                cutout: '80%',
+                rotation: 270,
+                plugins: {
+                    tooltip: { enabled: false },
+                    legend: { display: false }
+                }
+            },
+            plugins: [{
+                id: 'center-text',
+                beforeDraw: function (chart) {
+                    const { ctx, chartArea: { width, height } } = chart;
+                    const valor = Number(chart.data.datasets[0].data[0]).toFixed(0);
+                    ctx.save();
+
+                    ctx.font = 'bold 30px Arial';
+                    ctx.fillStyle = '#333';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'top';
+                    ctx.fillText(`${valor}%`, width / 2, height / 2 + 10);
+
+                    ctx.font = 'bold 22px Arial';
+                    ctx.fillStyle = '#000';
+                    ctx.fillText('Em uso', width / 2, height / 2 + 60);
+
+                    ctx.restore();
+                }
+            }]
+        });
+
+
+        const canvasStatusrede2 = document.getElementById('statusRedeChart2');
+        const existingStatusrede2 = Chart.getChart(canvasStatusrede2);
+        if (existingStatusrede2) {
+            existingStatusrede2.destroy();
+        }
+
+        chartMBRecebidos = new Chart(canvasStatusrede2, {
+            type: 'doughnut',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Rede',
+                    data: [0, 100],
+                    backgroundColor: ['rgb(255,44,44)', "#e1e1e1ff"],
+                    hoverOffset: 4,
+                    borderWidth: 0,
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                circumference: 180,
+                cutout: '80%',
+                rotation: 270,
+                plugins: {
+                    tooltip: { enabled: false },
+                    legend: { display: false }
+                }
+            },
+            plugins: [{
+                id: 'center-text',
+                beforeDraw: function (chart) {
+                    const { ctx, chartArea: { width, height } } = chart;
+                    const valor = Number(chart.data.datasets[0].data[0]).toFixed(0);
+                    ctx.save();
+
+                    ctx.font = 'bold 30px Arial';
+                    ctx.fillStyle = '#333';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'top';
+                    ctx.fillText(`${valor}%`, width / 2, height / 2 + 10);
+
+                    ctx.font = 'bold 22px Arial';
+                    ctx.fillStyle = '#000';
+                    ctx.fillText('Em uso', width / 2, height / 2 + 60);
+
+                    ctx.restore();
+                }
+            }]
+        });
+    }
+
+    if (periodo === "3") {
+
+        const ctxCpu = document.getElementById('CpuChart').getContext('2d');
+        cpuChart = new Chart(ctxCpu, {
+            type: 'bar',
+            data: {
+                labels: ['06:00', '07:00', '08:00', '09:00', '10:00', '11:00'],
+                datasets: [{
+                    label: 'CPU',
+                    data: [70, 50, 30, 40, 65, 90],
+                    backgroundColor: ['rgb(192, 192, 192)',
+                        'rgb(192, 192, 192)',
+                        'rgb(192, 192, 192)',
+                        'rgb(192, 192, 192)',
+                        'rgb(192, 192, 192)',
+                        'rgb(242, 183, 48)',
+                    ],
+                    borderWidth: 1,
+                    borderRadius: 12,
+                }]
+            },
+            options: {
+                plugins: {
+                    title: {
+                        display: true,
+                        color: 'black',
+                        text: 'Picos de CPU',
+                        font: {
+                            size: 28
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            color: 'black'
+                        }
+                    },
+                }
+            }
+        });
+
+
+        const canvasStatus = document.getElementById('statusChart');
+        const existingStatus = Chart.getChart(canvasStatus);
+        if (existingStatus) {
+            existingStatus.destroy();
+        }
+
+        chartCPU = new Chart(canvasStatus, {
+            type: 'doughnut',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'CPU',
+                    data: [0, 100],
+                    backgroundColor: ['rgb(255,44,44)', "#e1e1e1ff"],
+                    hoverOffset: 4,
+                    borderWidth: 0,
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                circumference: 180,
+                cutout: '80%',
+                rotation: 270,
+                plugins: {
+                    tooltip: { enabled: false },
+                    legend: { display: false }
+                }
+            },
+            plugins: [{
+                id: 'center-text',
+                beforeDraw: function (chart) {
+                    const { ctx, chartArea: { width, height } } = chart;
+                    const valor = Number(chart.data.datasets[0].data[0]).toFixed(0);
+                    ctx.save();
+
+                    ctx.font = 'bold 30px Arial';
+                    ctx.fillStyle = '#333';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'top';
+                    ctx.fillText(`${valor}%`, width / 2, height / 2 + 10);
+
+                    ctx.font = 'bold 22px Arial';
+                    ctx.fillStyle = '#000';
+                    ctx.fillText('Em uso', width / 2, height / 2 + 60);
+
+                    ctx.restore();
+                }
+            }]
+        });
+
+
+        const ctxram = document.getElementById('RamChart').getContext('2d');
+
+        ramChart = new Chart(ctxram, {
+            type: 'bar',
+            data: {
+                labels: ['06:00', '07:00', '08:00', '09:00', '10:00', '11:00'],
+                datasets: [{
+                    label: 'RAM',
+                    data: [70, 50, 30, 40, 65, 90],
+                    backgroundColor: ['rgb(192, 192, 192)',
+                        'rgb(192, 192, 192)',
+                        'rgb(192, 192, 192)',
+                        'rgb(192, 192, 192)',
+                        'rgb(192, 192, 192)',
+                        'rgb(242, 183, 48)',
+                    ],
+                    borderWidth: 1,
+                    borderRadius: 12,
+                }]
+            },
+            options: {
+                plugins: {
+                    title: {
+                        display: true,
+                        color: 'black',
+                        text: 'Picos de Ram',
+                        font: {
+                            size: 28
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            color: 'black'
+                        }
+                    },
+                }
+            }
+        });
+
+        const canvasStatusram = document.getElementById('statusRamChart');
+        const existingStatusram = Chart.getChart(canvasStatusram);
+        if (existingStatusram) {
+            existingStatusram.destroy();
+        }
+
+        chartRAM = new Chart(canvasStatusram, {
+            type: 'doughnut',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Ram',
+                    data: [0, 100],
+                    backgroundColor: ['rgb(255,44,44)', "#e1e1e1ff"],
+                    hoverOffset: 4,
+                    borderWidth: 0,
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                circumference: 180,
+                cutout: '80%',
+                rotation: 270,
+                plugins: {
+                    tooltip: { enabled: false },
+                    legend: { display: false }
+                }
+            },
+            plugins: [{
+                id: 'center-text',
+                beforeDraw: function (chart) {
+                    const { ctx, chartArea: { width, height } } = chart;
+                    const valor = Number(chart.data.datasets[0].data[0]).toFixed(0);
+                    ctx.save();
+
+                    ctx.font = 'bold 30px Arial';
+                    ctx.fillStyle = '#333';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'top';
+                    ctx.fillText(`${valor}%`, width / 2, height / 2 + 10);
+
+                    ctx.font = 'bold 22px Arial';
+                    ctx.fillStyle = '#000';
+                    ctx.fillText('Em uso', width / 2, height / 2 + 60);
+
+                    ctx.restore();
+                }
+            }]
+        });
+
+
+        const ctxdisco = document.getElementById('DiscoChart').getContext('2d');
+
+        discoChart = new Chart(ctxdisco, {
+            type: 'bar',
+            data: {
+                labels: ['06:00', '07:00', '08:00', '09:00', '10:00', '11:00'],
+                datasets: [{
+                    label: 'DISCO',
+                    data: [70, 50, 30, 40, 65, 90],
+                    backgroundColor: ['rgb(192, 192, 192)',
+                        'rgb(192, 192, 192)',
+                        'rgb(192, 192, 192)',
+                        'rgb(192, 192, 192)',
+                        'rgb(192, 192, 192)',
+                        'rgb(242, 183, 48)',
+                    ],
+                    borderWidth: 1,
+                    borderRadius: 12,
+                }]
+            },
+            options: {
+                plugins: {
+                    title: {
+                        display: true,
+                        color: 'black',
+                        text: 'Picos de Disco',
+                        font: {
+                            size: 28
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            color: 'black'
+                        }
+                    },
+                }
+            }
+        });
+
+
+        const canvasStatusdisco = document.getElementById('statusDiscoChart');
+        const existingStatusdisco = Chart.getChart(canvasStatusdisco);
+        if (existingStatusdisco) {
+            existingStatusdisco.destroy();
+        }
+
+        chartDisco = new Chart(canvasStatusdisco, {
+            type: 'doughnut',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Disco',
+                    data: [0, 100],
+                    backgroundColor: ['rgb(255,44,44)', "#e1e1e1ff"],
+                    hoverOffset: 4,
+                    borderWidth: 0,
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                circumference: 180,
+                cutout: '80%',
+                rotation: 270,
+                plugins: {
+                    tooltip: { enabled: false },
+                    legend: { display: false }
+                }
+            },
+            plugins: [{
+                id: 'center-text',
+                beforeDraw: function (chart) {
+                    const { ctx, chartArea: { width, height } } = chart;
+                    const valor = Number(chart.data.datasets[0].data[0]).toFixed(0);
+                    ctx.save();
+
+                    ctx.font = 'bold 30px Arial';
+                    ctx.fillStyle = '#333';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'top';
+                    ctx.fillText(`${valor}%`, width / 2, height / 2 + 10);
+
+                    ctx.font = 'bold 22px Arial';
+                    ctx.fillStyle = '#000';
+                    ctx.fillText('Em uso', width / 2, height / 2 + 60);
+
+                    ctx.restore();
+                }
+            }]
+        });
+
+        const ctxrede = document.getElementById('RedeChart').getContext('2d');
+
+        redeChart = new Chart(ctxrede, {
+            type: 'bar',
+            data: {
+                labels: ['06:00', '07:00', '08:00', '09:00', '10:00', '11:00'],
+                datasets: [{
+                    label: 'Rede',
+                    data: [70, 50, 30, 40, 65, 90],
+                    backgroundColor: ['rgb(192, 192, 192)',
+                        'rgb(192, 192, 192)',
+                        'rgb(192, 192, 192)',
+                        'rgb(192, 192, 192)',
+                        'rgb(192, 192, 192)',
+                        'rgb(242, 183, 48)',
+                    ],
+                    borderWidth: 1,
+                    borderRadius: 12,
+                }]
+            },
+            options: {
+                plugins: {
+                    title: {
+                        display: true,
+                        color: 'black',
+                        text: 'Picos de Rede',
+                        font: {
+                            size: 28
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            color: 'black'
+                        }
+                    },
+                }
+            }
+        });
+
+
+        const canvasStatusrede = document.getElementById('statusRedeChart');
+        const existingStatusrede = Chart.getChart(canvasStatusrede);
+        if (existingStatusrede) {
+            existingStatusrede.destroy();
+        }
+
+        chartMBEnviados = new Chart(canvasStatusrede, {
+            type: 'doughnut',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Rede',
+                    data: [0, 100],
+                    backgroundColor: ['rgb(255,44,44)', "#e1e1e1ff"],
+                    hoverOffset: 4,
+                    borderWidth: 0,
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                circumference: 180,
+                cutout: '80%',
+                rotation: 270,
+                plugins: {
+                    tooltip: { enabled: false },
+                    legend: { display: false }
+                }
+            },
+            plugins: [{
+                id: 'center-text',
+                beforeDraw: function (chart) {
+                    const { ctx, chartArea: { width, height } } = chart;
+                    const valor = Number(chart.data.datasets[0].data[0]).toFixed(0);
+                    ctx.save();
+
+                    ctx.font = 'bold 30px Arial';
+                    ctx.fillStyle = '#333';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'top';
+                    ctx.fillText(`${valor}%`, width / 2, height / 2 + 10);
+
+                    ctx.font = 'bold 22px Arial';
+                    ctx.fillStyle = '#000';
+                    ctx.fillText('Em uso', width / 2, height / 2 + 60);
+
+                    ctx.restore();
+                }
+            }]
+        });
+
+
+        const canvasStatusrede2 = document.getElementById('statusRedeChart2');
+        const existingStatusrede2 = Chart.getChart(canvasStatusrede2);
+        if (existingStatusrede2) {
+            existingStatusrede2.destroy();
+        }
+
+        chartMBRecebidos = new Chart(canvasStatusrede2, {
+            type: 'doughnut',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Rede',
+                    data: [0, 100],
+                    backgroundColor: ['rgb(255,44,44)', "#e1e1e1ff"],
+                    hoverOffset: 4,
+                    borderWidth: 0,
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                circumference: 180,
+                cutout: '80%',
+                rotation: 270,
+                plugins: {
+                    tooltip: { enabled: false },
+                    legend: { display: false }
+                }
+            },
+            plugins: [{
+                id: 'center-text',
+                beforeDraw: function (chart) {
+                    const { ctx, chartArea: { width, height } } = chart;
+                    const valor = Number(chart.data.datasets[0].data[0]).toFixed(0);
+                    ctx.save();
+
+                    ctx.font = 'bold 30px Arial';
+                    ctx.fillStyle = '#333';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'top';
+                    ctx.fillText(`${valor}%`, width / 2, height / 2 + 10);
+
+                    ctx.font = 'bold 22px Arial';
+                    ctx.fillStyle = '#000';
+                    ctx.fillText('Em uso', width / 2, height / 2 + 60);
+
+                    ctx.restore();
+                }
+            }]
+        });
+    }
+
+    if (periodo === "4") {
+
+        const ctxCpu = document.getElementById('CpuChart').getContext('2d');
+        cpuChart = new Chart(ctxCpu, {
+            type: 'bar',
+            data: {
+                labels: ['06:00', '07:00', '08:00', '09:00', '10:00', '11:00'],
+                datasets: [{
+                    label: 'CPU',
+                    data: [85, 45, 90, 60, 65, 97],
+                    backgroundColor: ['rgb(192, 192, 192)',
+                        'rgb(192, 192, 192)',
+                        'rgb(192, 192, 192)',
+                        'rgb(192, 192, 192)',
+                        'rgb(192, 192, 192)',
+                        'rgb(242, 183, 48)',
+                    ],
+                    borderWidth: 1,
+                    borderRadius: 12,
+                }]
+            },
+            options: {
+                plugins: {
+                    title: {
+                        display: true,
+                        color: 'black',
+                        text: 'Picos de CPU',
+                        font: {
+                            size: 28
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            color: 'black'
+                        }
+                    },
+                }
+            }
+        });
+
+
+        const canvasStatus = document.getElementById('statusChart');
+        const existingStatus = Chart.getChart(canvasStatus);
+        if (existingStatus) {
+            existingStatus.destroy();
+        }
+        chartCPU = new Chart(canvasStatus, {
+            type: 'doughnut',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'CPU',
+                    data: [0, 100],
+                    backgroundColor: ['rgb(255,44,44)', "#e1e1e1ff"],
+                    hoverOffset: 4,
+                    borderWidth: 0,
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                circumference: 180,
+                cutout: '80%',
+                rotation: 270,
+                plugins: {
+                    tooltip: { enabled: false },
+                    legend: { display: false }
+                }
+            },
+            plugins: [{
+                id: 'center-text',
+                beforeDraw: function (chart) {
+                    const { ctx, chartArea: { width, height } } = chart;
+                    const valor = Number(chart.data.datasets[0].data[0]).toFixed(0);
+                    ctx.save();
+
+                    ctx.font = 'bold 30px Arial';
+                    ctx.fillStyle = '#333';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'top';
+                    ctx.fillText(`${valor}%`, width / 2, height / 2 + 10);
+
+                    ctx.font = 'bold 22px Arial';
+                    ctx.fillStyle = '#000';
+                    ctx.fillText('Em uso', width / 2, height / 2 + 60);
+
+                    ctx.restore();
+                }
+            }]
+        });
+
+
+        const ctxram = document.getElementById('RamChart').getContext('2d');
+
+        ramChart = new Chart(ctxram, {
+            type: 'bar',
+            data: {
+                labels: ['06:00', '07:00', '08:00', '09:00', '10:00', '11:00'],
+                datasets: [{
+                    label: 'RAM',
+                    data: [85, 45, 90, 60, 65, 97],
+                    backgroundColor: ['rgb(192, 192, 192)',
+                        'rgb(192, 192, 192)',
+                        'rgb(192, 192, 192)',
+                        'rgb(192, 192, 192)',
+                        'rgb(192, 192, 192)',
+                        'rgb(242, 183, 48)',
+                    ],
+                    borderWidth: 1,
+                    borderRadius: 12,
+                }]
+            },
+            options: {
+                plugins: {
+                    title: {
+                        display: true,
+                        color: 'black',
+                        text: 'Picos de Ram',
+                        font: {
+                            size: 28
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            color: 'black'
+                        }
+                    },
+                }
+            }
+        });
+
+        const canvasStatusram = document.getElementById('statusRamChart');
+        const existingStatusram = Chart.getChart(canvasStatusram);
+        if (existingStatusram) {
+            existingStatusram.destroy();
+        }
+        chartRAM = new Chart(canvasStatusram, {
+            type: 'doughnut',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Ram',
+                    data: [0, 100],
+                    backgroundColor: ['rgb(255,44,44)', "#e1e1e1ff"],
+                    hoverOffset: 4,
+                    borderWidth: 0,
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                circumference: 180,
+                cutout: '80%',
+                rotation: 270,
+                plugins: {
+                    tooltip: { enabled: false },
+                    legend: { display: false }
+                }
+            },
+            plugins: [{
+                id: 'center-text',
+                beforeDraw: function (chart) {
+                    const { ctx, chartArea: { width, height } } = chart;
+                    const valor = Number(chart.data.datasets[0].data[0]).toFixed(0);
+                    ctx.save();
+
+                    ctx.font = 'bold 30px Arial';
+                    ctx.fillStyle = '#333';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'top';
+                    ctx.fillText(`${valor}%`, width / 2, height / 2 + 10);
+
+                    ctx.font = 'bold 22px Arial';
+                    ctx.fillStyle = '#000';
+                    ctx.fillText('Em uso', width / 2, height / 2 + 60);
+
+                    ctx.restore();
+                }
+            }]
+        });
+
+
+        const ctxdisco = document.getElementById('DiscoChart').getContext('2d');
+
+        discoChart = new Chart(ctxdisco, {
+            type: 'bar',
+            data: {
+                labels: ['06:00', '07:00', '08:00', '09:00', '10:00', '11:00'],
+                datasets: [{
+                    label: 'DISCO',
+                    data: [85, 45, 90, 60, 65, 97],
+                    backgroundColor: ['rgb(192, 192, 192)',
+                        'rgb(192, 192, 192)',
+                        'rgb(192, 192, 192)',
+                        'rgb(192, 192, 192)',
+                        'rgb(192, 192, 192)',
+                        'rgb(242, 183, 48)',
+                    ],
+                    borderWidth: 1,
+                    borderRadius: 12,
+                }]
+            },
+            options: {
+                plugins: {
+                    title: {
+                        display: true,
+                        color: 'black',
+                        text: 'Picos de Disco',
+                        font: {
+                            size: 28
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            color: 'black'
+                        }
+                    },
+                }
+            }
+        });
+
+
+        const canvasStatusdisco = document.getElementById('statusDiscoChart');
+        const existingStatusdisco = Chart.getChart(canvasStatusdisco);
+        if (existingStatusdisco) {
+            existingStatusdisco.destroy();
+        }
+
+        chartDisco = new Chart(canvasStatusdisco, {
+            type: 'doughnut',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Disco',
+                    data: [0, 100],
+                    backgroundColor: ['rgb(255,44,44)', "#e1e1e1ff"],
+                    hoverOffset: 4,
+                    borderWidth: 0,
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                circumference: 180,
+                cutout: '80%',
+                rotation: 270,
+                plugins: {
+                    tooltip: { enabled: false },
+                    legend: { display: false }
+                }
+            },
+            plugins: [{
+                id: 'center-text',
+                beforeDraw: function (chart) {
+                    const { ctx, chartArea: { width, height } } = chart;
+                    const valor = Number(chart.data.datasets[0].data[0]).toFixed(0);
+                    ctx.save();
+
+                    ctx.font = 'bold 30px Arial';
+                    ctx.fillStyle = '#333';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'top';
+                    ctx.fillText(`${valor}%`, width / 2, height / 2 + 10);
+
+                    ctx.font = 'bold 22px Arial';
+                    ctx.fillStyle = '#000';
+                    ctx.fillText('Em uso', width / 2, height / 2 + 60);
+
+                    ctx.restore();
+                }
+            }]
+        });
+
+        const ctxrede = document.getElementById('RedeChart').getContext('2d');
+
+        redeChart = new Chart(ctxrede, {
+            type: 'bar',
+            data: {
+                labels: ['06:00', '07:00', '08:00', '09:00', '10:00', '11:00'],
+                datasets: [{
+                    label: 'Rede',
+                    data: [85, 45, 90, 60, 65, 97],
+                    backgroundColor: ['rgb(192, 192, 192)',
+                        'rgb(192, 192, 192)',
+                        'rgb(192, 192, 192)',
+                        'rgb(192, 192, 192)',
+                        'rgb(192, 192, 192)',
+                        'rgb(242, 183, 48)',
+                    ],
+                    borderWidth: 1,
+                    borderRadius: 12,
+                }]
+            },
+            options: {
+                plugins: {
+                    title: {
+                        display: true,
+                        color: 'black',
+                        text: 'Picos de Rede',
+                        font: {
+                            size: 28
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            color: 'black'
+                        }
+                    },
+                }
+            }
+        });
+
+
+        const canvasStatusrede = document.getElementById('statusRedeChart');
+        const existingStatusrede = Chart.getChart(canvasStatusrede);
+        if (existingStatusrede) {
+            existingStatusrede.destroy();
+        }
+
+        chartMBEnviados = new Chart(canvasStatusrede, {
+            type: 'doughnut',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Rede',
+                    data: [0, 100],
+                    backgroundColor: ['rgb(255,44,44)', "#e1e1e1ff"],
+                    hoverOffset: 4,
+                    borderWidth: 0,
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                circumference: 180,
+                cutout: '80%',
+                rotation: 270,
+                plugins: {
+                    tooltip: { enabled: false },
+                    legend: { display: false }
+                }
+            },
+            plugins: [{
+                id: 'center-text',
+                beforeDraw: function (chart) {
+                    const { ctx, chartArea: { width, height } } = chart;
+                    const valor = Number(chart.data.datasets[0].data[0]).toFixed(0);
+                    ctx.save();
+
+                    ctx.font = 'bold 30px Arial';
+                    ctx.fillStyle = '#333';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'top';
+                    ctx.fillText(`${valor}%`, width / 2, height / 2 + 10);
+
+                    ctx.font = 'bold 22px Arial';
+                    ctx.fillStyle = '#000';
+                    ctx.fillText('Em uso', width / 2, height / 2 + 60);
+
+                    ctx.restore();
+                }
+            }]
+        });
+
+
+        const canvasStatusrede2 = document.getElementById('statusRedeChart2');
+        const existingStatusrede2 = Chart.getChart(canvasStatusrede2);
+        if (existingStatusrede2) {
+            existingStatusrede2.destroy();
+        }
+        chartMBRecebidos = new Chart(canvasStatusrede2, {
+            type: 'doughnut',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Rede',
+                    data: [0, 100],
+                    backgroundColor: ['rgb(255,44,44)', "#e1e1e1ff"],
+                    hoverOffset: 4,
+                    borderWidth: 0,
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                circumference: 180,
+                cutout: '80%',
+                rotation: 270,
+                plugins: {
+                    tooltip: { enabled: false },
+                    legend: { display: false }
+                }
+            },
+            plugins: [{
+                id: 'center-text',
+                beforeDraw: function (chart) {
+                    const { ctx, chartArea: { width, height } } = chart;
+                    const valor = Number(chart.data.datasets[0].data[0]).toFixed(0);
+                    ctx.save();
+
+                    ctx.font = 'bold 30px Arial';
+                    ctx.fillStyle = '#333';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'top';
+                    ctx.fillText(`${valor}%`, width / 2, height / 2 + 10);
+
+                    ctx.font = 'bold 22px Arial';
+                    ctx.fillStyle = '#000';
+                    ctx.fillText('Em uso', width / 2, height / 2 + 60);
+
+                    ctx.restore();
+                }
+            }]
+        });
+    }
+}
 window.onload = function () {
     const Periodo = document.getElementById('periodo');
     Periodo.addEventListener('change', function () {
         atualizarGraficoPorPeriodo(this.value);
     });
     atualizarGraficoPorPeriodo(Periodo.value);
+
+    setInterval(buscarDados, 2000)
+    buscarDados()
 }
