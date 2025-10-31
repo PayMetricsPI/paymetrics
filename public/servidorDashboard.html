@@ -16,7 +16,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
-<body onload="">
+<body onload="inicializarDashboard()">
     <div id="sidebar"></div>
 
     <div class="container header">
@@ -30,10 +30,10 @@
                 <label class="label" for="periodo">Últimos</label>
                 <div class="select_personalizar">
                     <select id="periodo">
-                        <option>1 Dia</option>
-                        <option>7 Dias</option>
-                        <option>30 Dias</option>
-                        <option>90 Dias</option>
+                        <option value="1">1 Dia</option>
+                        <option value="2">7 Dias</option>
+                        <option value="3">30 Dias</option>
+                        <option value="4">90 Dias</option>
                     </select>
                     <span class="select_cursor"></span>
                 </div>
