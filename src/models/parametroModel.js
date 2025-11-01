@@ -48,5 +48,5 @@ module.exports = {
     criarParametro,
     // deletarParametro,
     atualizarParametro,
-    // listarParametro
+    listarParametro
 };

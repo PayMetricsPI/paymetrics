@@ -1,5 +1,5 @@
 create database payMetrics;
-use PayMetrics;
+use payMetrics;
 
 create table empresa (
 id_empresa int auto_increment primary key,
@@ -84,4 +84,20 @@ insert into componente(nome, unidade_medida, peso)values
 ('Mb Recebidos - REDE', 'Bytes',3),
 ('DISCO', 'Porcentagem',1);
 
-select *from componente
+select *from componente;
+
+insert into servidor (nome, mac_address, tipo_cpu,ram,disco,fk_empresa)
+values("Alfa","00:19:B9:FB:E2:58","Xeon silver 8 core",64,4,1),
+	  ("Beta","00:0C:6E:3C:D1:6D","Xeon gold 8 core",50,5,1),
+      ("Omega","00:00:5E:00:53:AF","Xeon® Platinum 8450H",40,6,1);
+      
+      select * from servidor;
+      
+insert into parametro(fk_servidor,fk_empresa,fk_componente,alerta_critico,alerta_normal)
+values(2,1,1,90,80),
+		(2,1,2,90,80),
+        (2,1,3,90,80),
+        (2,1,4,90,80),
+        (2,1,5,90,80)
+
+        

@@ -3,9 +3,9 @@ var router = express.Router();
 
 var parametroController= require("../controllers/parametroController");
 
-// router.get("/:fk_empresa", function(req, res) {
-//     parametroController.listarServidores(req, res);
-// });
+router.get("/:fk_empresa", function(req, res) {
+    parametroController.listarServidores(req, res);
+});
 
 
 router.post("/criarParametro", function(req, res) {

@@ -9,6 +9,19 @@ if (servidor) {
     document.getElementById('capacidade_disco').textContent = servidor.disco + "TB";
 }
 
+if(servidor) {
+    document.getElementById('medida_cpu').textContent = servidor.nome;
+    document.getElementById('critico_cpu').textContent = servidor.tipo_cpu;
+    document.getElementById('medida_ram').textContent = servidor.ram + "GB";
+    document.getElementById('critico_ram').textContent = servidor.disco + "TB";
+    document.getElementById('medida_disco').textContent = servidor.nome;
+    document.getElementById('critico_disco').textContent = servidor.tipo_cpu;
+    document.getElementById('medida_rede1').textContent = servidor.ram + "GB";
+    document.getElementById('critico_rede1').textContent = servidor.disco + "TB";
+    document.getElementById('medida_rede2').textContent = servidor.ram + "GB";
+    document.getElementById('critico_rede2').textContent = servidor.disco + "TB";
+}
+
 function formatarDiferenca(timestamp) {
     const agora = Date.now() / 1000;
     const diffSegundos = Math.abs(agora - timestamp);
