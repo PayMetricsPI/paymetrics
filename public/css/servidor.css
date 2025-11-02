@@ -175,7 +175,7 @@
     padding: 20px;
     border-radius: 10px;
     width: 1000px;
-    height: 700px;
+    height: 450px;
     max-width: 90%;
     opacity: 0;
     pointer-events: none;
@@ -234,19 +234,54 @@
     margin-bottom: 10px;
 }
 
+.create_alerta_critico_content .line1 {
+    display: grid;
+    grid-template-columns: 300px 300px 300px;
+    margin-bottom: 20px;
+    margin-top: 20px;
+}
+
 .create_alerta_critico_content .rede_esp {
     display: grid;
     grid-template-columns: 250px 250px;
     gap: 5px;
 }
 
-.create_alerta_critico_content .rede_esp .enviados {
-    border-right: 10px solid rgb(95, 89, 89);
+.create_alerta_critico_content .rede_esp p {
+    font-weight: 500;
 }
 
-/* .div_botao{
+.create_alerta_critico_content .rede_esp .enviados {
+    border-right: 2px solid rgba(12, 11, 11, 0.308);
+}
 
-} */
+.create_alerta_critico_content .rede_esp .recebidos {
+    margin-left: 20px;
+}
+
+.create_alerta_critico_content .line2 {
+    display: grid;
+    grid-template-columns: 600px 200px;
+    align-items: end;
+}
+
+.div_botao .cancel_alert_button,
+.confirm_alert_button {
+    width: 95px;
+    color: #000;
+    border: none;
+    border-radius: 10px;
+    background-color: #cbcbcb;
+}
+
+.div_botao .cancel_alert_button {
+    background-color: #cbcbcb;
+}
+
+.div_botao .confirm_alert_button {
+    background-color: #FFD700;
+
+}
 
 
 
