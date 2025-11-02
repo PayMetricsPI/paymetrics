@@ -174,7 +174,8 @@
     background-color: #fff;
     padding: 20px;
     border-radius: 10px;
-    width: 900px;
+    width: 1000px;
+    height: 700px;
     max-width: 90%;
     opacity: 0;
     pointer-events: none;
@@ -186,11 +187,12 @@
     pointer-events: auto;
 }
 
-.create_alerta_critico_headers{
+.create_alerta_critico_headers {
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 0 20px;
+    margin-bottom: 20px;
 }
 
 .create_alerta_critico_headers span {
@@ -200,16 +202,51 @@
     color: #00000080;
 }
 
-.create_alerta_critico_content{
+.create_alerta_critico_content {
     margin-left: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 35px;
 }
 
-.create_alerta_critico_content h3{
+
+.create_alerta_critico_content h3 {
     font-size: 20px;
 }
 
+.create_alerta_critico_content .campo {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
 
+.create_alerta_critico_content label {
+    width: 120px;
+    font-weight: 500;
+}
 
+.create_alerta_critico_content input {
+    padding: 6px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 100px;
+    height: 30px;
+    margin-bottom: 10px;
+}
+
+.create_alerta_critico_content .rede_esp {
+    display: grid;
+    grid-template-columns: 250px 250px;
+    gap: 5px;
+}
+
+.create_alerta_critico_content .rede_esp .enviados {
+    border-right: 10px solid rgb(95, 89, 89);
+}
+
+/* .div_botao{
+
+} */
 
 
 
