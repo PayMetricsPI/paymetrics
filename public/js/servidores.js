@@ -1,6 +1,14 @@
 const usersDiv = document.querySelector('.users');
 const fk_empresa = Number(sessionStorage.getItem('id'));
 
+//import {open_modal_create_alerta_critico} from './parametro'
+
+function open_modal_create_alerta_critico() {
+    out_create_alerta_critico.classList.add('show');   
+    create_alerta_critico_modal.classList.add('show'); 
+}
+
+
 const out_create_server = document.getElementById('out_create_server');
 const create_server_modal = document.getElementById('create_server_modal');
 const close_create_server_button = document.getElementById('close_create_server_button');
@@ -79,7 +87,11 @@ submit_button_create_server.addEventListener('click', () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ servidores: [{ fk_empresa, nome, mac_address: mac, tipo_cpu, ram, disco }] })
     }).then(resp => resp.json())
-        .then(() => { close_modal_create_server(); carregarServidores(); })
+        .then(() => { 
+            close_modal_create_server(); 
+            carregarServidores();
+            open_modal_create_alerta_critico()
+        })
         .catch(console.error);
 });
 

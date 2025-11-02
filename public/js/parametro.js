@@ -2,7 +2,7 @@ const usersDiv = document.querySelector('.users');
 const fk_empresa = Number(sessionStorage.getItem('id'));
 
 const out_create_alerta_critico = document.getElementById('out_create_alerta_critico');
-const create_alerta_critico_alerta_critico = document.getElementById('create_alerta_critico_modal');
+const create_alerta_critico_modal = document.getElementById('create_alerta_critico_modal');
 const close_create_alerta_critico_button = document.getElementById('close_create_alerta_critico_button');
 const cancel_button_create_alerta_critico = document.getElementById('cancel_button_create_alerta_critico');
 const submit_button_create_alerta_critico = document.getElementById('submit_button_create_alerta_critico');
@@ -24,6 +24,13 @@ function close_modal_create_alerta_critico() {
     out_create_alerta_critico.classList.remove('show');
     create_alerta_critico_modal.classList.remove('show');
     create_alerta_critico_modal.querySelectorAll('input').forEach(i => i.value = '');
+}
+
+if (close_create_alerta_critico_button) {
+    close_create_alerta_critico_button.addEventListener('click', close_modal_create_alerta_critico);
+}
+if (cancel_button_create_alerta_critico) {
+    cancel_button_create_alerta_critico.addEventListener('click', close_modal_create_alerta_critico);
 }
 
 function open_modal_edit_alerta_critico(id, fk_componente, fk_empresa, fk_componente, alerta_critico, alerta_normal) {
@@ -58,7 +65,10 @@ submit_button_create_alerta_critico.addEventListener('click', () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ servidores: [{ fk_servidor, fk_componente, fk_empresa, fk_componente , alerta_critico, alerta_normal}] })
     }).then(resp => resp.json())
-      .then(() => { close_modal_create_alerta_critico(); carregarServidores(); })
+        .then(() => { 
+            close_modal_create_alerta_critico(); 
+            carregarServidores(); 
+        })
       .catch(console.error);
 });
 
