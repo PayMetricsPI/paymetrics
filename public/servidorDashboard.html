@@ -16,7 +16,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
-<body onload="">
+<body onload="inicializarDashboard()">
     <div id="sidebar"></div>
 
     <div class="container header">
@@ -30,10 +30,10 @@
                 <label class="label" for="periodo">Últimos</label>
                 <div class="select_personalizar">
                     <select id="periodo">
-                        <option>1 Dia</option>
-                        <option>7 Dias</option>
-                        <option>30 Dias</option>
-                        <option>90 Dias</option>
+                        <option value="1">1 Dia</option>
+                        <option value="2">7 Dias</option>
+                        <option value="3">30 Dias</option>
+                        <option value="4">90 Dias</option>
                     </select>
                     <span class="select_cursor"></span>
                 </div>
@@ -80,11 +80,11 @@
             <div class="container_limite">
                 <div class="limite">
                     <h2 class="limite_header">Limite padrão:</h2> 
-                    <span class="limite_medida mid">80%</span>
+                    <span class="limite_medida mid" id="lim_padrao_cpu">-%</span>
                 </div>
                 <div class="limite">
                     <h2 class="limite_header">Limite crítico:</h2>
-                    <span class="limite_medida hig">80%</span>
+                    <span class="limite_medida hig" id="lim_critico_cpu">-%</span>
                 </div>
             </div>
         </div>
@@ -102,11 +102,11 @@
             <div class="container_limite">
                 <div class="limite">
                     <h2 class="limite_header">Limite padrão:</h2> 
-                    <span class="limite_medida mid">80%</span>
+                    <span class="limite_medida mid" id="lim_padrao_ram">-%</span>
                 </div>
                 <div class="limite">
                     <h2 class="limite_header">Limite crítico:</h2>
-                    <span class="limite_medida hig">80%</span>
+                    <span class="limite_medida hig" id="lim_critico_ram">-%</span>
                 </div>
             </div>
         </div>
@@ -124,11 +124,11 @@
             <div class="container_limite">
                 <div class="limite">
                     <h2 class="limite_header">Limite padrão:</h2> 
-                    <span class="limite_medida mid">80%</span>
+                    <span class="limite_medida mid" id="lim_padrao_disco">-%</span>
                 </div>
                 <div class="limite">
                     <h2 class="limite_header">Limite crítico:</h2>
-                    <span class="limite_medida hig">80%</span>
+                    <span class="limite_medida hig" id="lim_critico_disco">-%</span>
                 </div>
             </div>
         </div>
@@ -146,11 +146,11 @@
                         <div class="limites_container_2">
                             <div class="limite">
                                 <h2 class="limite_header">Limite padrão:</h2>
-                                <span class="limite_medida mid">80%</span>
+                                <span class="limite_medida mid" id="lim_padrao_upload">-%</span>
                             </div>
                             <div class="limite">
                                 <h2 class="limite_header">Limite crítico:</h2>
-                                <span class="limite_medida hig">80%</span>
+                                <span class="limite_medida hig" id="lim_critico_upload">-%</span>
                             </div>
                         </div>
                     </div>
@@ -161,11 +161,11 @@
                         <div class="limites_container_2">
                             <div class="limite">
                                 <h2 class="limite_header">Limite padrão:</h2>
-                                <span class="limite_medida mid">80%</span>
+                                <span class="limite_medida mid" id="lim_padrao_download">-%</span>
                             </div>
                             <div class="limite">
                                 <h2 class="limite_header">Limite crítico:</h2>
-                                <span class="limite_medida hig">80%</span>
+                                <span class="limite_medida hig" id="lim_critico_download">-%</span>
                             </div>
                         </div>
                     </div>

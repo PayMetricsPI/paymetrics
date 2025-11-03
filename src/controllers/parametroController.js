@@ -1,5 +1,16 @@
 var parametroModel = require("../models/parametroModel");
 
+function listarParametro(req, res) {
+    const fk_servidor = req.params.fk_servidor;
+
+    parametroModel.listarParametro(fk_servidor)
+        .then(resultado => res.json(resultado))
+        .catch(erro => {
+            console.error("Erro ao listar parametros:", erro.sqlMessage || erro);
+            res.status(500).json({ error: erro.sqlMessage || erro });
+    });
+}
+
 async function criarParametro(req, res) {
     const parametros = req.body.parametros;
 
@@ -27,6 +38,8 @@ function atualizarParametro(req, res) {
 
 
 module.exports = {
+    atualizarParametro,
+    listarParametro,
     criarParametro,
     atualizarParametro
 };

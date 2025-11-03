@@ -1,5 +1,5 @@
 create database payMetrics;
-use PayMetrics;
+use payMetrics;
 
 create table empresa (
 id_empresa int auto_increment primary key,

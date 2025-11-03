@@ -18,12 +18,21 @@ function atualizarParametro(fk_servidor, fk_componente, id_parametro, alerta_cri
     var instrucaoSql = `
         update parametro
         set alerta_critico = ${alerta_critico}, alerta_normal = ${alerta_normal}
-        where id_parametro = ${id_parametro} and fk_servidor = '${fk_servidor}' and fk_componente = '${fk_componente}';
+        where id_parametro = ${id_parametro} and fk_servidor = '${fk_servidor}' and fk_componente = '${fk_componente}'
+        `;
+}
+
+function listarParametro(fk_servidor) {
+    var instrucaoSql = `
+        select * from parametro 
+        inner join componente on parametro.fk_componente = componente.id_componente
+        where fk_servidor = ${fk_servidor};
     `;
     return database.executar(instrucaoSql);
 }
 
 module.exports = {
     criarParametro,
-    atualizarParametro
+    atualizarParametro,
+    listarParametro
 };
