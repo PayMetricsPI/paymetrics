@@ -39,6 +39,7 @@ function close_modal_create_server() {
     create_server_modal.querySelectorAll('input').forEach(i => i.value = '');
 }
 
+
 function open_modal_edit_server(id, nome, mac, tipo_cpu, ram, disco) {
     out_edit_server.classList.add('show');
     edit_server_modal.classList.add('show');
@@ -48,20 +49,6 @@ function open_modal_edit_server(id, nome, mac, tipo_cpu, ram, disco) {
     edit_server_modal.setAttribute('idServidor', id);
     edit_server_modal.querySelector('.ram_input').value = ram;
     edit_server_modal.querySelector('.disco_input').value = disco;
-    const btnParametro = edit_server_modal.querySelector('#editar_alerta');
-    if (btnParametro) {
-        btnParametro.onclick = () => {
-            // Salvar ID do servidor no sessionStorage
-            sessionStorage.setItem('fk_servidor', id);
-            // Fechar modal de edição
-            close_modal_edit_server();
-            // Abrir modal de parâmetros
-            if (out_create_alerta_critico && create_alerta_critico_modal) {
-                out_create_alerta_critico.classList.add('show');
-                create_alerta_critico_modal.classList.add('show');
-            }
-        };
-    }
 }
 
 function close_modal_edit_server() {
@@ -101,6 +88,7 @@ submit_button_create_server.addEventListener('click', () => {
         .then((data) => {
             close_modal_create_server();
             carregarServidores();
+            console.log(data)
             if (out_create_alerta_critico && create_alerta_critico_modal) {
                 open_modal_create_alerta_critico(data.insertId);
             }

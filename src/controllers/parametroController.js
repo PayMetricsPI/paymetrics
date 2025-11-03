@@ -1,19 +1,12 @@
 var parametroModel = require("../models/parametroModel");
 
-function criarParametro(req, res) {
+async function criarParametro(req, res) {
     const parametros = req.body.parametros;
 
-    parametroModel.criarParametro(parametros)
-        .then(result => {
-            res.status(201).json({
-                message: "Parâmetros criados com sucesso",
-                insertId: result.insertId
-            });
-        })
-        .catch(erro => {
-            console.error("Erro ao criar parâmetros:", erro);
-            res.status(500).json({ error: "Erro interno ao criar parâmetros" });
-        });
+    await parametroModel.criarParametro(parametros);
+    return res.status(201).json({
+        message: "Parâmetros criados com sucesso"
+    });
 }
 
 function atualizarParametro(req, res) {

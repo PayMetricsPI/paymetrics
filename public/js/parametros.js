@@ -36,30 +36,13 @@ if (cancel_button_create_alerta_critico) {
     cancel_button_create_alerta_critico.addEventListener('click', close_modal_create_alerta_critico);
 }
 
-function open_modal_edit_alerta_critico() {
-    const outEditAlertaCritico = document.getElementById('out_edit_alerta_critico');
-    const editAlertaCriticoModal = document.getElementById('edit_alerta_critico_modal');
-
-    if (!outEditAlertaCritico || !editAlertaCriticoModal) {
-        console.error('Elementos do modal não encontrados');
-        return;
-    }
-
-    if (typeof close_modal_edit_server === 'function') {
-        close_modal_edit_server();
-    }
-
-    outEditAlertaCritico.classList.add('show');
-    editAlertaCriticoModal.classList.add('show');
+function open_modal_edit_alerta_critico(id, alerta_critico, alerta_normal) {
+    out_edit_alerta_critico.classList.add('show');
+    edit_alerta_critico_modal.classList.add('show');
+    edit_alerta_critico_modal.setAttribute('id_parametro', id);
+    edit_alerta_critico_modal.querySelector('.alerta_critico_input').value = alerta_critico;
+    edit_alerta_critico_modal.querySelector('.alerta_normal_input').value = alerta_normal;
 }
-
-const btnEditarAlerta = document.getElementById('editar_alerta');
-if (btnEditarAlerta) {
-    btnEditarAlerta.addEventListener('click', open_modal_edit_alerta_critico);
-} else {
-    console.error('Botão de editar alerta não encontrado');
-}
-
 
 function close_modal_edit_alerta_critico() {
     out_edit_alerta_critico.classList.remove('show');
@@ -76,7 +59,7 @@ close_create_alerta_critico_button.addEventListener('click', close_modal_create_
 cancel_button_create_alerta_critico.addEventListener('click', close_modal_create_alerta_critico);
 submit_button_create_alerta_critico.addEventListener('click', () => {
     const fk_servidor = create_alerta_critico_modal.getAttribute('fk_servidor');
-    const fk_empresa = Number(sessionStorage.getItem('fk_empresa'));
+    const fk_empresa = Number(sessionStorage.getItem('EMPRESA'));
 
     const parametros = [];
 
@@ -106,7 +89,7 @@ submit_button_create_alerta_critico.addEventListener('click', () => {
     parametros.push({
         fk_servidor,
         fk_empresa,
-        fk_componente: 5,
+        fk_componente:5,
         alerta_critico: Number(discoCritico),
         alerta_normal: Number(discoNormal)
     });
