@@ -64,7 +64,7 @@
         <label for="">Disco Tb</label>
         <input type="text" class="disco_input">
       </div>
-      <div class="edit_buttons">
+      <div class="edit_buttons_create">
         <button class="cancel_button" id="cancel_button_create_server">Cancelar</button>
         <button class="confirm_button" id="submit_button_create_server">Confirmar</button>
       </div>
@@ -148,7 +148,6 @@
     </div>
   </div>
 
-
   <div class="edit_server_modal modal_edit" id="edit_server_modal">
     <div class="edit_headers">
       <h3>Editar Servidor</h3>
@@ -176,7 +175,86 @@
     </div>
     <div class="edit_buttons">
       <button class="cancel_button" id="cancel_button_edit_server">Cancelar</button>
+      <button class="editar_button" id="editar_alerta">Parâmetro</button>
       <button class="confirm_button" id="submit_button_edit_server">Salvar</button>
+    </div>
+  </div>
+
+
+  <div class="edit_alerta_critico_modal modal_edit_alert" id="edit_alerta_critico_modal">
+    <div class="create_alerta_critico_headers">
+      <h3>Adicionar parâmetros</h3>
+      <span class="material-symbols-outlined" id="close_create_alerta_critico_button">x</span>
+    </div>
+    <div class="create_alerta_critico_content">
+      <div class="line1">
+        <div class="cpu">
+          <h3>CPU</h3>
+          <div class="campo">
+            <label>Alerta crítico</label>
+            <input type="number" data-componente="1" data-tipo="critico" class="alerta_input">
+          </div>
+          <div class="campo">
+            <label>Alerta normal</label>
+            <input type="number" data-componente="1" data-tipo="normal"  class="alerta_normal_input">
+          </div>
+        </div>
+        <div class="ram">
+          <h3>RAM</h3>
+          <div class="campo">
+            <label>Alerta crítico</label>
+            <input type="number" data-componente="2" data-tipo="critico" class="alerta_critico_input">
+          </div>
+          <div class="campo">
+            <label>Alerta normal</label>
+            <input type="number" data-componente="2" data-tipo="normal"  class="alerta_normal_input">
+          </div>
+        </div>
+        <div class="disco">
+          <h3>Disco</h3>
+          <div class="campo">
+            <label>Alerta crítico</label>
+            <input type="number" data-componente="5" data-tipo="critico" class="alerta_critico_input">
+          </div>
+          <div class="campo">
+            <label>Alerta normal</label>
+            <input type="number" data-componente="5" data-tipo="normal"  class="alerta_normal_input">
+          </div>
+        </div>
+      </div>
+      <div class="line2">
+        <div class="rede">
+          <h3>Rede</h3>
+          <div class="rede_esp">
+            <div class="enviados">
+              <p>Mb enviados</p>
+              <div class="campo">
+                <label>Alerta crítico</label>
+                <input type="number" data-componente="3" data-tipo="critico" class="alerta_critico_input">
+              </div>
+              <div class="campo">
+                <label>Alerta normal</label>
+                <input type="number" data-componente="3" data-tipo="normal"  class="alerta_normal_input">
+              </div>
+            </div>
+            <div class="recebidos">
+              <p>Mb recebidos</p>
+              <div class="campo">
+                <label>Alerta crítico</label>
+                <input type="number" data-componente="4" data-tipo="critico" class="alerta_critico_input">
+              </div>
+              <div class="campo">
+                <label>Alerta normal</label>
+                <input type="number" data-componente="4" data-tipo="normal"  class="alerta_normal_input">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="div_botao">
+          <button class="cancel_alert_button" id="cancel_button_create_alerta_critico">Cancelar</button>
+          <button class="confirm_alert_button" id="submit_button_create_alerta_critico">Confirmar</button>
+        </div>
+      </div>
     </div>
   </div>
 

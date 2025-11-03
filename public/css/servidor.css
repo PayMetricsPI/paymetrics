@@ -144,6 +144,17 @@
     pointer-events: auto;
 }
 
+
+.out_edit,
+.modal_edit_alert {
+    display: none;
+}
+
+.out_edit.show,
+.modal_edit_alert.show {
+    display: block;
+}
+
 .modal_edit {
     position: fixed;
     top: 50%;
@@ -441,6 +452,8 @@
 }
 
 .confirm_button {
+    height: 30px;
+    width: 90px;
     color: black;
     border: none;
     background-color: yellow;
@@ -451,10 +464,28 @@
     background-color: #FFD700;
 }
 
-.cancel_button {
+.edit_buttons_create .cancel_button {
     color: #000;
     border: none;
     background-color: #cbcbcb;
+    border-radius: 100px;
+}
+
+.edit_buttons .cancel_button {
+    height: 30px;
+    width: 90px;
+    color: #000;
+    border: none;
+    background-color: #cbcbcb;
+    border-radius: 100px;
+}
+
+.editar_button{
+    height: 30px;
+    width: 100px;
+    color: black;
+    border: none;
+    background-color: yellow;
     border-radius: 100px;
 }
 
@@ -462,6 +493,35 @@
     background-color: #a7a7a7;
 }
 
+.edit_buttons,
+.confirm_button,
+.cancel_button,
+.editar_button,
+.div_botao .confirm_alert_button,
+.div_botao .cancel_alert_button,
+.confirm_alert_button,
+.cancel_alert_button {
+    height: 40px;
+    min-width: 95px;
+    padding: 6px 18px;
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    white-space: nowrap;
+    box-sizing: border-box;
+}
+
+.cancel_button,
+.cancel_alert_button,
+.div_botao .cancel_alert_button {
+    background-color: #cbcbcb;
+    color: #000;
+    border: none;
+}
 
 @media (max-width: 768px) {
     .users_container {

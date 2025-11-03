@@ -17,14 +17,14 @@ function criarParametro(req, res) {
 }
 
 function atualizarParametro(req, res) {
-    const id_servidor = req.params.id_servidor;
+    const id_parametro = req.params.id_parametro;
     const {alerta_critico, alerta_normal} = req.body;
 
-    if (alerta_critico, alerta_normal) {
-        return res.status(400).json({ error: "Dados incompletos para atualizar parmetro" });
+    if (!id_parametro || !alerta_critico || !alerta_normal) {
+        return res.status(400).json({ error: "Dados incompletos para atualizar parametro" });
     }
 
-    parametroModel.atualizarParametro(id_parametro, nome, mac_address, tipo_cpu, ram, disco,)
+    parametroModel.atualizarParametro(id_parametro, alerta_critico, alerta_normal,)
         .then(resultado => res.status(200).json({ message: "Servidor atualizado com sucesso", resultado }))
         .catch(erro => {
             console.error("Erro ao atualizar o servidor:", erro.sqlMessage || erro);
