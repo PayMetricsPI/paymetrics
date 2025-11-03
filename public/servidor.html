@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,6 +13,7 @@
   <title>PayMetrics | Meus Servidores</title>
   <link rel="shortcut icon" type="image/png" href="assets/icons/logo Paymetrics.png">
 </head>
+
 <body>
   <div id="sidebar"></div>
 
@@ -27,10 +29,14 @@
       </div>
     </div>
   </div>
-  
+
   <div class="out_edit" id="out_create_server"></div>
   <div class="out_edit" id="out_edit_server"></div>
   <div class="out_edit" id="out_delete_server"></div>
+
+
+  <div class="out_edit" id="out_create_alerta_critico"></div>
+  <div class="out_edit" id="out_edit_alerta_critico"></div>
 
   <div class="create_server_modal modal_edit" id="create_server_modal">
     <div class="create_server_headers edit_headers">
@@ -46,7 +52,7 @@
         <label for="">MAC Address</label>
         <input type="text" class="mac_input">
       </div>
-       <div class="edit_field">
+      <div class="edit_field">
         <label for="">Modelo da cpu</label>
         <input type="text" class="tipo_cpu_input">
       </div>
@@ -58,11 +64,87 @@
         <label for="">Disco Tb</label>
         <input type="text" class="disco_input">
       </div>
-      <div class="edit_buttons">
+      <div class="edit_buttons_create">
         <button class="cancel_button" id="cancel_button_create_server">Cancelar</button>
         <button class="confirm_button" id="submit_button_create_server">Confirmar</button>
       </div>
-      
+    </div>
+  </div>
+
+  <div class="create_alerta_critico_modal modal_edit_alert" id="create_alerta_critico_modal">
+    <div class="create_alerta_critico_headers">
+      <h3>Adicionar parâmetros</h3>
+      <span class="material-symbols-outlined" id="close_create_alerta_critico_button">x</span>
+    </div>
+    <div class="create_alerta_critico_content">
+      <div class="line1">
+        <div class="cpu">
+          <h3>CPU</h3>
+          <div class="campo">
+            <label>Alerta crítico</label>
+            <input type="number" data-componente="1" data-tipo="critico" class="alerta_input" placeholder="84%">
+          </div>
+          <div class="campo">
+            <label>Alerta normal</label>
+            <input type="number" data-componente="1" data-tipo="normal"  class="alerta_normal_input"placeholder="79%">
+          </div>
+        </div>
+        <div class="ram">
+          <h3>RAM</h3>
+          <div class="campo">
+            <label>Alerta crítico</label>
+            <input type="number" data-componente="2" data-tipo="critico" class="alerta_critico_input" placeholder="90%">
+          </div>
+          <div class="campo">
+            <label>Alerta normal</label>
+            <input type="number" data-componente="2" data-tipo="normal"  class="alerta_normal_input" placeholder="87%">
+          </div>
+        </div>
+        <div class="disco">
+          <h3>Disco</h3>
+          <div class="campo">
+            <label>Alerta crítico</label>
+            <input type="number" data-componente="5" data-tipo="critico" class="alerta_critico_input" placeholder="73%" >
+          </div>
+          <div class="campo">
+            <label>Alerta normal</label>
+            <input type="number" data-componente="5" data-tipo="normal"  class="alerta_normal_input" placeholder="69%">
+          </div>
+        </div>
+      </div>
+      <div class="line2">
+        <div class="rede">
+          <h3>Rede</h3>
+          <div class="rede_esp">
+            <div class="enviados">
+              <p>Mb enviados</p>
+              <div class="campo">
+                <label>Alerta crítico</label>
+                <input type="number" data-componente="3" data-tipo="critico" class="alerta_critico_input" placeholder="63%">
+              </div>
+              <div class="campo">
+                <label>Alerta normal</label>
+                <input type="number" data-componente="3" data-tipo="normal"  class="alerta_normal_input" placeholder="50%">
+              </div>
+            </div>
+            <div class="recebidos">
+              <p>Mb recebidos</p>
+              <div class="campo">
+                <label>Alerta crítico</label>
+                <input type="number" data-componente="4" data-tipo="critico" class="alerta_critico_input" placeholder="83%">
+              </div>
+              <div class="campo">
+                <label>Alerta normal</label>
+                <input type="number" data-componente="4" data-tipo="normal"  class="alerta_normal_input" placeholder="56%">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="div_botao">
+          <button class="cancel_alert_button" id="cancel_button_create_alerta_critico">Cancelar</button>
+          <button class="confirm_alert_button" id="submit_button_create_alerta_critico">Confirmar</button>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -79,10 +161,10 @@
       <label for="">MAC Address</label>
       <input type="text" class="mac_input">
     </div>
-      <div class="edit_field">
-        <label for="">Modelo da cpu</label>
-        <input type="text" class="tipo_cpu_input">
-      </div>
+    <div class="edit_field">
+      <label for="">Modelo da cpu</label>
+      <input type="text" class="tipo_cpu_input">
+    </div>
     <div class="edit_field">
       <label for="">Ram Gb</label>
       <input type="text" class="ram_input">
@@ -111,6 +193,8 @@
 
   <script src="js/sessao.js"></script>
   <script src="js/header.js"></script>
-  <script src="js/servidores.js"></script>
+  <script src="js/servidores.js" type="module"></script>
+  <script src="js/parametros.js"></script>
 </body>
+
 </html>

@@ -1,6 +1,12 @@
 const usersDiv = document.querySelector('.users');
 const fk_empresa = Number(sessionStorage.getItem('id'));
 
+//import {open_modal_create_alerta_critico} from './parametro'
+
+const out_create_alerta_critico = document.getElementById('out_create_alerta_critico');
+const create_alerta_critico_modal = document.getElementById('create_alerta_critico_modal');
+
+
 const out_create_server = document.getElementById('out_create_server');
 const create_server_modal = document.getElementById('create_server_modal');
 const close_create_server_button = document.getElementById('close_create_server_button');
@@ -79,7 +85,14 @@ submit_button_create_server.addEventListener('click', () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ servidores: [{ fk_empresa, nome, mac_address: mac, tipo_cpu, ram, disco }] })
     }).then(resp => resp.json())
-        .then(() => { close_modal_create_server(); carregarServidores(); })
+        .then((data) => {
+            close_modal_create_server();
+            carregarServidores();
+            console.log(data)
+            if (out_create_alerta_critico && create_alerta_critico_modal) {
+                open_modal_create_alerta_critico(data.insertId);
+            }
+        })
         .catch(console.error);
 });
 
@@ -128,7 +141,7 @@ function carregarServidores() {
                 div.className = 'users_container';
                 div.style.cursor = 'pointer';
                 div.innerHTML = `
-                  <div class="user_icon">
+                  <div class="user_icon" fk_servidor="${s.id}">
                     <img src="./assets/icons/servidor_.png" width="90px">
                     </div>
                     <div class="user_info">

@@ -21,7 +21,14 @@ function criarServidores(req, res) {
     }
 
     servidorModel.criarServidores(servidores)
-        .then(resultado => res.status(201).json({ message: "Servidores criados com sucesso", insertedCount: resultado.affectedRows }))
+        .then(resultado => {
+            const insertId = resultado && resultado.insertId ? resultado.insertId : null;
+            return res.status(201).json({
+                message: "Servidores criados com sucesso",
+                insertedCount: resultado.affectedRows,
+                insertId // pode ser null se não houver
+            });
+        })
         .catch(erro => {
             console.error("Erro ao criar servidores:", erro.sqlMessage || erro);
             res.status(500).json({ error: "Houve um erro ao criar os servidores", details: erro.sqlMessage });
@@ -46,13 +53,13 @@ function deletarServidor(req, res) {
 
 function atualizarServidor(req, res) {
     const id_servidor = req.params.id_servidor;
-    const { nome, mac_address,tipo_cpu , ram, disco } = req.body;
+    const { nome, mac_address, tipo_cpu, ram, disco } = req.body;
 
-    if (!id_servidor || !nome  || !mac_address || !tipo_cpu || !ram || !disco) {
+    if (!id_servidor || !nome || !mac_address || !tipo_cpu || !ram || !disco) {
         return res.status(400).json({ error: "Dados incompletos para atualizar servidor" });
     }
 
-    servidorModel.atualizarServidor(id_servidor, nome, mac_address, tipo_cpu , ram,disco,)
+    servidorModel.atualizarServidor(id_servidor, nome, mac_address, tipo_cpu, ram, disco,)
         .then(resultado => res.status(200).json({ message: "Servidor atualizado com sucesso", resultado }))
         .catch(erro => {
             console.error("Erro ao atualizar o servidor:", erro.sqlMessage || erro);
