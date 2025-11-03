@@ -1,17 +1,15 @@
 var parametroModel = require("../models/parametroModel");
 
-// function listarParametro(req, res) {
-//     const fk_empresa = req.params.fk_empresa;
+function listarParametro(req, res) {
+    const fk_servidor = req.params.fk_servidor;
 
-//     parametroModel.listarParametros(fk_empresa)
-//         .then(resultado => res.json(resultado))
-//         .catch(erro => {
-//             console.error("Erro ao listar parametros:", erro.sqlMessage || erro);
-//             res.status(500).json({ error: erro.sqlMessage || erro });
-//         });
-
-// }
-
+    parametroModel.listarParametro(fk_servidor)
+        .then(resultado => res.json(resultado))
+        .catch(erro => {
+            console.error("Erro ao listar parametros:", erro.sqlMessage || erro);
+            res.status(500).json({ error: erro.sqlMessage || erro });
+    });
+}
 
 function criarParametro(req, res) {
     const parametros = req.body.parametros;
@@ -63,7 +61,7 @@ function atualizarParametro(req, res) {
 
 module.exports = {
     atualizarParametro,
-    // listarParametro,
+    listarParametro,
     criarParametro,
     // deletarParametro
 };

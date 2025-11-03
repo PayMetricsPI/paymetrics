@@ -19,6 +19,7 @@ function formatarDiferenca(timestamp) {
 
     return `${dias.toString().padStart(2, '0')} dias, ${horas.toString().padStart(2, '0')} horas e ${minutos.toString().padStart(2, '0')} minutos`;
 }
+
 function buscarDados() {
     fetch(`/metrica/obterUltimaPorMAC/${servidor.mac_address}`, { method: 'GET' })
         .then((resultado) => resultado.json())
@@ -31,10 +32,34 @@ function buscarDados() {
             atualizarBootTime(data.tempoBoot)
         }).catch(() => {
             console.log("rode o python :)")
-        })
+        });
+
+
+    const id_servidor = JSON.parse(sessionStorage.getItem('servidorSelecionado')).id_servidor
+
+    fetch("/parametro/obterParametro/"+id_servidor, { method: 'GET' })
+        .then((resultado) => resultado.json())
+        .then((data) => {
+            for(let i=0; i<data.length; i++){
+                if(data[i].nome == "CPU"){
+                    document.getElementById('lim_padrao_cpu').innerHTML = data[i].alerta_normal+"%";
+                    document.getElementById('lim_critico_cpu').innerHTML = data[i].alerta_critico+"%";
+                }else if(data[i].nome == "RAM"){
+                    document.getElementById('lim_padrao_ram').innerHTML = data[i].alerta_normal+"%";
+                    document.getElementById('lim_critico_ram').innerHTML = data[i].alerta_critico+"%";
+                }else if(data[i].nome == "Mb Enviados - REDE"){
+                    document.getElementById('lim_padrao_disco').innerHTML = data[i].alerta_normal+"%";
+                    document.getElementById('lim_critico_disco').innerHTML = data[i].alerta_critico+"%";
+                }else if(data[i].nome == "Mb Recebidos - REDE"){
+                    document.getElementById('lim_padrao_upload').innerHTML = data[i].alerta_normal+"%";
+                    document.getElementById('lim_critico_upload').innerHTML = data[i].alerta_critico+"%";
+                }else{
+                    document.getElementById('lim_padrao_download').innerHTML = data[i].alerta_normal+"%";
+                    document.getElementById('lim_critico_download').innerHTML = data[i].alerta_critico+"%";
+                }
+            }
+        });
 }
-
-
 
 let chartCPU = null;
 let chartRAM = null;

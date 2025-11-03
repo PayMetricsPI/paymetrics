@@ -36,10 +36,11 @@ function atualizarParametro(fk_servidor,fk_empresa,fk_componente,alerta_critico,
     return database.executar(instrucaoSql);
 }
 
-function listarParametro(fk_empresa) {
+function listarParametro(fk_servidor) {
     var instrucaoSql = `
         select * from parametro 
-        where fk_empresa = ${fk_empresa};
+        inner join componente on parametro.fk_componente = componente.id_componente
+        where fk_servidor = ${fk_servidor};
     `;
     return database.executar(instrucaoSql);
 }
@@ -48,5 +49,5 @@ module.exports = {
     criarParametro,
     // deletarParametro,
     atualizarParametro,
-    // listarParametro
+    listarParametro
 };
