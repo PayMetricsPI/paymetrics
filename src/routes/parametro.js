@@ -1,25 +1,14 @@
-var express = require("express");
-var router = express.Router();
+const express = require("express");
+const router = express.Router();
+const parametroController = require("../controllers/parametroController");
 
-var parametroController= require("../controllers/parametroController");
-
-// router.get("/:fk_empresa", function(req, res) {
-//     parametroController.listarServidores(req, res);
-// });
-
-
-router.post("/criarParametro", function(req, res) {
+router.post('/criarParametro', (req, res) => {
     parametroController.criarParametro(req, res);
 });
 
-router.put("/atualizarParametro/:id_servidor", function(req, res) {
+router.put("/atualizarParametro/:id_servidor", function (req, res) {
     parametroController.atualizarParametro(req, res);
 });
-
-
-// router.post("/deletarServidor/:id_servidor", function(req, res) {
-//     parametroController.deletarServidor(req, res);
-// });
 
 
 module.exports = router;

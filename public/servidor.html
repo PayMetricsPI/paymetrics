@@ -37,7 +37,6 @@
 
   <div class="out_edit" id="out_create_alerta_critico"></div>
   <div class="out_edit" id="out_edit_alerta_critico"></div>
-  <div class="out_edit" id="out_edit_alerta_critico"></div>
 
   <div class="create_server_modal modal_edit" id="create_server_modal">
     <div class="create_server_headers edit_headers">
@@ -83,33 +82,33 @@
           <h3>CPU</h3>
           <div class="campo">
             <label>Alerta crítico</label>
-            <input type="number" class="alerta_critico_input">
+            <input type="number" data-componente="1" data-tipo="critico" class="alerta_input">
           </div>
           <div class="campo">
             <label>Alerta normal</label>
-            <input type="number" class="alerta_normal_input">
+            <input type="number" data-componente="1" data-tipo="normal"  class="alerta_normal_input">
           </div>
         </div>
         <div class="ram">
           <h3>RAM</h3>
           <div class="campo">
             <label>Alerta crítico</label>
-            <input type="number" class="alerta_critico_input">
+            <input type="number" data-componente="2" data-tipo="critico" class="alerta_critico_input">
           </div>
           <div class="campo">
             <label>Alerta normal</label>
-            <input type="number" class="alerta_normal_input">
+            <input type="number" data-componente="2" data-tipo="normal"  class="alerta_normal_input">
           </div>
         </div>
         <div class="disco">
           <h3>Disco</h3>
           <div class="campo">
             <label>Alerta crítico</label>
-            <input type="number" class="alerta_critico_input">
+            <input type="number" data-componente="5" data-tipo="critico" class="alerta_critico_input">
           </div>
           <div class="campo">
             <label>Alerta normal</label>
-            <input type="number" class="alerta_normal_input">
+            <input type="number" data-componente="5" data-tipo="normal"  class="alerta_normal_input">
           </div>
         </div>
       </div>
@@ -121,22 +120,22 @@
               <p>Mb enviados</p>
               <div class="campo">
                 <label>Alerta crítico</label>
-                <input type="number" class="alerta_critico_input">
+                <input type="number" data-componente="3" data-tipo="critico" class="alerta_critico_input">
               </div>
               <div class="campo">
                 <label>Alerta normal</label>
-                <input type="number" class="alerta_normal_input">
+                <input type="number" data-componente="3" data-tipo="normal"  class="alerta_normal_input">
               </div>
             </div>
             <div class="recebidos">
               <p>Mb recebidos</p>
               <div class="campo">
                 <label>Alerta crítico</label>
-                <input type="number" class="alerta_critico_input">
+                <input type="number" data-componente="4" data-tipo="critico" class="alerta_critico_input">
               </div>
               <div class="campo">
                 <label>Alerta normal</label>
-                <input type="number" class="alerta_normal_input">
+                <input type="number" data-componente="4" data-tipo="normal"  class="alerta_normal_input">
               </div>
             </div>
           </div>
@@ -196,7 +195,7 @@
   <script src="js/sessao.js"></script>
   <script src="js/header.js"></script>
   <script src="js/servidores.js" type="module"></script>
-  <script src="js/parametro.js"></script>
+  <script src="js/parametros.js"></script>
 </body>
 
 </html>

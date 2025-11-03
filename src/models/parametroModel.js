@@ -1,52 +1,29 @@
 var database = require("../database/config");
 
-function criarParametro(servidores) {
-    let queries = servidores.map(s => {
-        return `
-            insert into parametro (fk_servidor,fk_empresa,fk_componente,alerta_critico, alerta_normal)
-            VALUES ('${s.fk_servidor}','${s.fk_empresa}'),'${s.fk_componente}','${s.alerta_critico}', '${s.alerta_normal}';
-        `;
-    }).join("\n");
+function criarParametro(parametros) {
+    console.log(parametros)
+    parametros.map(p =>{
+        database.executar(
+            `
+            insert into parametro (fk_servidor, fk_empresa, fk_componente, alerta_critico, alerta_normal)
+            VALUES (${p.fk_servidor}, ${p.fk_empresa}, ${p.fk_componente}, ${p.alerta_critico}, ${p.alerta_normal});
+            `
+        );
+    });
 
-    return database.executar(queries);
+    return
 }
 
-// function deletarParametro(id_servidor, fk_empresa) {
-
-//      if (id_servidor == null || fk_empresa == null) {
-//         console.error("Erro: id_servidor ou fk_empresa indefinidos!");
-//         return Promise.reject("id_servidor ou fk_empresa indefinidos");
-//     }
-    
-//     var instrucaoSql = `
-//         delete from servidor 
-//         where id_servidor = ${id_servidor} AND fk_empresa = ${fk_empresa};
-//     `;
-//     console.log("Executando a instrução SQL:\n" + instrucaoSql);
-//     return database.executar(instrucaoSql);
-// }
-
-function atualizarParametro(fk_servidor,fk_empresa,fk_componente,alerta_critico, alerta_normal) {
+function atualizarParametro(fk_servidor, fk_componente, id_parametro, alerta_critico, alerta_normal) {
     var instrucaoSql = `
-        update paramtro
-        set fk_servidor = '${fk_servidor}', fk_empresa = '${fk_empresa}', fk_componente = '${fk_componente}',
-        alerta_critico = ${alerta_critico}, alerta_normal = ${alerta_normal}
-        where id_paramtro = ${id_paramtro};
-    `;
-    return database.executar(instrucaoSql);
-}
-
-function listarParametro(fk_empresa) {
-    var instrucaoSql = `
-        select * from parametro 
-        where fk_empresa = ${fk_empresa};
+        update parametro
+        set alerta_critico = ${alerta_critico}, alerta_normal = ${alerta_normal}
+        where id_parametro = ${id_parametro} and fk_servidor = '${fk_servidor}' and fk_componente = '${fk_componente}';
     `;
     return database.executar(instrucaoSql);
 }
 
 module.exports = {
     criarParametro,
-    // deletarParametro,
-    atualizarParametro,
-    // listarParametro
+    atualizarParametro
 };
