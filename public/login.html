@@ -38,7 +38,7 @@
                                     <p id="respostaLogin" class="text-danger mt-2"></p>
                                 </div>
                         </div>
-                        <button type="submit" class="btn btn-primary w-100 my-4" onclick="login(event)">Login</button>
+                        <button id="botao" type="submit" class="btn btn-primary w-100 my-4" onclick="login(event)">Login</button>
                     </form>
                 </div>
             </div>
@@ -49,98 +49,5 @@
 </body>
 <script src="node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 <script src="js/sessao.js"></script>
-<script>
-
-            tentativas = 0;
-
-    function login(event) {
-
-        event.preventDefault();
-
-        var emailVar = ipt_email.value;
-        var senhaVar = ipt_senha.value;
-
-        if (emailVar == "" || senhaVar == "") {
-            respostaLogin.innerHTML = "Preencha todos os campos.";
-            return false;
-        }
-
-        if (tentativas >= 3) {
-            respostaLogin.innerHTML += `Número máximo de tentativas atingido.<br> Tente novamente mais tarde!`;
-            return;
-        }
-
-
-        fetch("/usuarios/autenticar", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                emailServer: emailVar,
-                senhaServer: senhaVar
-            })
-        }).then(function (resposta) {
-            console.log("ESTOU NO THEN DO entrar()!")
-
-            if (resposta.ok) {
-                console.log(resposta);
-
-                resposta.json().then(json => {
-                   console.log(json);
-                   console.log("JSON recebido:", json);
-                   console.log("Primeiro elemento:", json[0]);
-
-                    let usuario = json;
-
-                    sessionStorage.EMAIL_USUARIO   = usuario.email;
-                    sessionStorage.NOME_USUARIO    = usuario.nome;
-                    sessionStorage.ID_USUARIO      = usuario.id_usuario;
-                    sessionStorage.ADMINISTRADOR   = usuario.id_administrador;
-                    sessionStorage.EMPRESA         = usuario.fk_empresa;
-                    sessionStorage.NOME_EMPRESA    = usuario.razao_social;
-
-                    if (sessionStorage.EMAIL_USUARIO == 'julia@sptech.com') {
-                        setTimeout(function () {
-                            window.location.href = "embreve.html";
-                        }, 1000);
-                    } else {
-                        setTimeout(function () {
-                            window.location.href = "embreve.html";
-                        }, 1000);
-                    }
-
-                });
-
-            } else {
-
-                for (let i = 0; i < 3; i++) {
-                    
-                    if (tentativas < 3) {
-                        respostaLogin.innerHTML = `Email e/ou senha inválido(s). Tente novamente.<br> Você tem mais ${2 - tentativas} tentativa(s).<br>`;
-                        break;
-                    } else {
-                        respostaLogin.innerHTML += `<br>Número máximo de tentativas atingido.<br> Tente novamente mais tarde!`;
-                        break;
-                        
-                    }
-                }
-                tentativas++;
-                console.log("Houve um erro ao tentar realizar o login!");
-
-                
-
-                resposta.text().then(texto => {
-                    console.error(texto);
-                });
-            }
-
-        }).catch(function (erro) {
-            console.log(erro);
-        })
-
-        return false;
-    }
-</script>
-
+<script src="js/login.js"></script>
 </html>

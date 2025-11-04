@@ -4,10 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./css/style.css">
-    <link rel="stylesheet" href="./css/navbar.css">
-    <link rel="stylesheet" href="./css/embreve.css">
-    <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./css/embreve.css">
+     <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
     <!-- <script src="js/validacao.js"></script> -->
     <title>PayMetrics | Cadastro</title>
     <link rel="shortcut icon" type="imagex/png" href="assets/icons/logo Paymetrics.png">
@@ -23,13 +22,13 @@
             <svg style="transform: rotate(-180deg)" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 30 30"><rect width="30" height="30" fill="none"/><path fill="#000" d="M8.293 2.293a1 1 0 0 1 1.414 0l4.5 4.5a1 1 0 0 1 0 1.414l-4.5 4.5a1 1 0 0 1-1.414-1.414L11 8.5H1.5a1 1 0 0 1 0-2H11L8.293 3.707a1 1 0 0 1 0-1.414"/></svg>
         </a>
     </div>
-    <div class="flex-grow-1 d-flex justify-content-center align-items-center">
+    <div class="flex-grow-1 d-flex justify-content-center align-items-center" style="margin-top: 13vh;">
         <div class="p-4 shadow w-100 row w-100 justify-content-center align-items-center rounded" style="max-width: 1200px;">
             <div class="col-md-6 d-none d-md-flex justify-content-center align-items-center">
                 <img src="assets/imgs/CRUDimage.png" alt="Banner" class="img-fluid" style="max-height: 600px; max-width: 100%; object-fit: contain;">
             </div>
             <div class="col-md-6 d-flex justify-content-center align-items-center">
-                <div class="" style="max-width: 400px;">
+                <div class="" style="width: 80%;">
                     <h3 class="text-center mb-4">Cadastro</h3>
                     <form>
                         <div class="mb-3">
@@ -55,11 +54,14 @@
                             <input id="ipt_senha_confirm" type="password" class="form-control" placeholder="Confirme sua senha...">
                             <div id="output_confirmacao"></div>
                         </div>
-                        <div class="form-check mb-3">
-                            <input id="ipt_admin" type="checkbox" class="form-check-input">
-                            <label class="form-check-label" for="ipt_admin">Usuário administrador</label>
+                        <div class="mb-3">
+                            <p class="my-0">Cargo</p>
+                            <select id="select_cargo" class="form-control">
+                            <option value="">Selecione o cargo</option>
+                             </select>
                         </div>
-                        <button type="submit" class="btn btn-primary w-100" onclick="cadastrar(event)">Cadastrar</button>
+
+                        <button type="submit" class="btn btn-primary w-100 botao_redefinir" onclick="cadastrar(event)">Cadastrar</button>
                         <div id="div_mensagemTextoVazio"></div>
                         </div>
                         
@@ -81,17 +83,15 @@ function cadastrar(event){
     
         event.preventDefault();
 
-        var administradorVar = ipt_admin.checked;
         var fk_empresaVar = sessionStorage.EMPRESA
         var nomeVar = ipt_nome.value;
         var emailVar = (ipt_email.value).toLowerCase();
         var emailCVar = (ipt_email_confirm.value).toLowerCase();
         var senhaVar = ipt_senha.value;
         var senhaCVar = ipt_senha_confirm.value;
-
-        administradorVar = administradorVar ? 1 : 0;
-        console.log(administradorVar);
-        
+        var cargoVar = select_cargo.value;
+    
+    
 
         output_email.innerHTML = "";
         output_senha.innerHTML = "";
@@ -101,6 +101,12 @@ function cadastrar(event){
         var fk_empresa = sessionStorage.fk_empresa;
 
         var textoPreenchido = (nomeVar == '' || emailVar == '' || senhaVar == '' || senhaCVar == '');
+
+        if (cargoVar == "") {
+            div_mensagemTextoVazio.innerHTML = 'Selecione um cargo';
+            return;
+        }
+
 
         while (textoPreenchido) {
             div_mensagemTextoVazio.innerHTML = 'Preencha todos os campos';
@@ -188,7 +194,7 @@ function cadastrar(event){
         emailCServer: emailCVar,
         senhaServer: senhaVar,
         senhaCServer: senhaCVar,
-        administradorServer: administradorVar,
+        fk_cargoServer: cargoVar,
         fk_empresaServer: fk_empresaVar
       }),
     })
@@ -210,6 +216,25 @@ function cadastrar(event){
 
     return false;
   }
+
+  window.onload = listarCargos;
+
+function listarCargos() {
+    fetch("/usuarios/listarCargos")
+        .then(resposta => {
+            if (resposta.ok) {
+                resposta.json().then(cargos => {
+                    cargos.forEach(c => {
+                        select_cargo.innerHTML += `
+                            <option value="${c.id}">${c.nome}</option>
+                        `;
+                    });
+                });
+            }
+        })
+        .catch(erro => console.error("Erro ao listar cargos:", erro));
+}
+
 
   function sair() {
     sessionStorage.clear();

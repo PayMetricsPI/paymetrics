@@ -16,11 +16,10 @@ function carregarPerfil() {
                     document.getElementById('nome').innerText = resposta.nome
                     document.getElementById('email').innerText = resposta.email
                     document.getElementById('empresa').innerText = resposta.empresa
+                    document.getElementById('cargo').innerText = resposta.cargo
                 });
             } else {
                 throw "Houve um erro na API!";
             }
         }).catch(console.error);
 }
-
-window.onload = carregarPerfil;

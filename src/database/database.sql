@@ -1,98 +1,87 @@
-create database PayMetrics;
-use PayMetrics;
-
-create table endereco (
-id_endereco int auto_increment,
-logradouro varchar(200) not null,
-numero varchar(40) not null,
-cidade varchar(100) not null,
-sigla_estado char(2) not null,
-sigla_pais char(2) not null,
-cartao_postal varchar(40) not null,
-primary key (id_endereco)
-);
+create database payMetrics;
+use payMetrics;
 
 create table empresa (
-id_empresa int auto_increment,
-razão_social varchar(200) not null,
-fk_endereco int, 
-primary key (id_empresa),
-foreign key (fk_endereco)
-references endereco(id_endereco)
-);
+id_empresa int auto_increment primary key,
+razao_social varchar(200) not null);
 
-create table contato (
-id_contato int auto_increment,
-nome_contato varchar(100),
-telefone varchar(20),
-email_contato varchar(200),
-fk_empresa int,
-primary key (id_contato),
-foreign key (fk_empresa)
-references empresa(id_empresa) 
-);
-
+create table cargo(
+id int not null auto_increment primary key,
+nome varchar(200) not null);
 
 create table usuarios (
 id_usuario int auto_increment,
+fk_empresa int not null,
+fk_cargo int not null,
 nome varchar(200) not null,
 email varchar(200) not null,
 senha varchar(200) not null,
-administrador boolean default false,
-fk_empresa int not null,
-primary key (id_usuario),
+primary key (id_usuario, fk_empresa,fk_cargo),
 foreign key (fk_empresa) references empresa(id_empresa),
+foreign key (fk_cargo) references cargo(id),
 unique (email)
 );
 
-create table maquina (
-id_maquina int auto_increment primary key,
-mac_adress varchar(45),
-fk_empresa int,
+create table servidor (
+id_servidor int not null auto_increment,
+fk_empresa int not null,
+nome varchar(200),
+mac_address varchar(50) not null,
+tipo_cpu varchar(100) not null,
+ram int not null,
+disco int not null,
+primary key (id_servidor, fk_empresa),
 foreign key (fk_empresa) references empresa(id_empresa)
 );
 
-create table componente (
-id_componente int auto_increment primary key,
-nome_componente varchar(45),
-unidade_medida decimal(10,2)
-);
+create table componente(
+id_componente int not null auto_increment,
+nome varchar(200) not null,
+unidade_medida varchar(50),
+peso int,
+primary key (id_componente));
 
-create table componente_maquina (
-fk_maquina int,
-fk_componente int,
-limite_hardware decimal(10,2),
-foreign key (fk_maquina) references maquina(id_maquina),
-foreign key (fk_componente) references componente(id_componente),
-primary key (fk_maquina, fk_componente)
-);
+create table parametro(
+id_parametro int not null auto_increment,
+fk_servidor int not null,
+fk_empresa int not null,
+fk_componente int not null,
+alerta_critico int not null,
+alerta_normal int not null,
+primary key (id_parametro,fk_servidor,fk_empresa,fk_componente),
+foreign key (fk_servidor, fk_empresa)references servidor(id_servidor, fk_empresa),
+foreign key (fk_componente) references componente (id_componente));
 
-insert into endereco (logradouro, numero, cidade, sigla_estado, sigla_pais, cartao_postal)
+insert into empresa (razao_social)
 values
-('7th Avenue', '410 Terry', 'Seattle', 'WA', 'US', '98109'),
-('Avenida Juscelino Kubitschek', '2041', 'São Paulo', 'SP', 'BR', '04543-011'),
-('Marcel-Breuer-Strasse', '12', 'Munique', 'BY', 'DE', '80807'),
-('Rue de l\Héronnière', '67', 'Clichy', 'ID', 'FR', '92110'),
-('West Georgia Street', '402', 'Vancouver', 'BC', 'CA', 'V6B 5A1'),
-('Calle Ramírez de Prado', '5', 'Madrid', 'MD', 'ES', '28045');
+('Amazon.com Inc.'),
+('Amazon Brasil Ltda.'),
+('Amazon Deutschland GmbH'),
+('Amazon France SAS'),
+('Amazon Canada ULC'),
+('Amazon Spain Services SL');
 
-insert into empresa (razão_social, fk_endereco)
-values
-('Amazon.com Inc.', 1),
-('Amazon Brasil Ltda.', 2),
-('Amazon Deutschland GmbH', 3),
-('Amazon France SAS', 4),
-('Amazon Canada ULC', 5), 
-('Amazon Spain Services SL', 6); 
+desc usuarios;
 
-insert into contato (nome_contato, telefone, email_contato, fk_empresa)
-values
-('Andy Jassy', '+1-206-555-0100', 'andy.jassy@amazon.com', 1),
-('Mariana Roth', '+55-11-5555-0101', 'mariana.roth@amazon.com.br', 2),
-('Ralf Kleber', '+49-89-5555-0102', 'ralf.kleber@amazon.de', 3),
-('Frédéric Duval', '+33-1-5555-0103', 'frederic.duval@amazon.fr', 4),
-('Jesse Dougherty', '+1-604-555-0104', 'jesse.dougherty@amazon.ca', 5),
-('Mariangela Marseglia', '+34-91-5555-0105', 'mariangela.marseglia@amazon.es', 6);
+insert into cargo (nome) values
+('RH'),
+('Técnico'),
+('Analista');
+select *from cargo;
 
-select * from usuarios;
--- update usuarios set senha = {NovaSenha} where id_usuario = {ID_USUARIO};
+insert into usuarios(fk_empresa, fk_cargo, nome, email, senha) values
+(1,1,'Samuel','samuel@gmail.com','Senha@123'),
+(1,2,'Guilherme','guigo@gmail.com','Senha@123'),
+(1,3,'Bruno','bruninho@gmail.com','Senha@123');
+
+select *from usuarios;
+
+desc componente;
+insert into componente(nome, unidade_medida, peso)values
+('CPU', 'Porcentagem',2),
+('RAM', 'Porcentagem',3),
+('Mb Enviados - REDE', 'Bytes',3),
+('Mb Recebidos - REDE', 'Bytes',3),
+('DISCO', 'Porcentagem',1);
+
+select *from componente
