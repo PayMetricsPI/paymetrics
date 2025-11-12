@@ -137,6 +137,7 @@
   text-align: center;
 }
 .limite_header{
+  max-width: 100px;
   font-size: 20px;
   text-align: center;
 }

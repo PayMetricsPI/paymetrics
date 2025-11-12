@@ -21,7 +21,7 @@
 
     <div class="container header">
         <div class="main_content header_title">
-            <div class="icone"> <img src="./assets/imgs/Icone_Servidor.png" alt=""></div>
+            <div class="icone"> <img src="./assets/imgs/Rectangle 30.png" alt=""></div>
             <div class="servidor_nome">
                 <p id="servidorNome"></p>
             </div>
@@ -42,7 +42,7 @@
         </div>
     </div>
 
-<div class="container"></div>
+    <div class="container"></div>
 
     <div class="container_percentages">
         <div class="">
@@ -81,7 +81,7 @@
             </div>
             <div class="container_limite">
                 <div class="limite">
-                    <h2 class="limite_header">Limite padrão:</h2> 
+                    <h2 class="limite_header">Limite padrão:</h2>
                     <span class="limite_medida mid" id="lim_padrao_cpu">-%</span>
                 </div>
                 <div class="limite">
@@ -103,7 +103,7 @@
             </div>
             <div class="container_limite">
                 <div class="limite">
-                    <h2 class="limite_header">Limite padrão:</h2> 
+                    <h2 class="limite_header">Limite padrão:</h2>
                     <span class="limite_medida mid" id="lim_padrao_ram">-%</span>
                 </div>
                 <div class="limite">
@@ -125,7 +125,7 @@
             </div>
             <div class="container_limite">
                 <div class="limite">
-                    <h2 class="limite_header">Limite padrão:</h2> 
+                    <h2 class="limite_header">Limite padrão:</h2>
                     <span class="limite_medida mid" id="lim_padrao_disco">-%</span>
                 </div>
                 <div class="limite">
@@ -135,7 +135,8 @@
             </div>
         </div>
     </div>
-    <div class="container last">
+
+    <div class="container">
         <h2 class="Texto">Rede</h2>
         <div class="main_content">
             <div class="canvas">
@@ -143,8 +144,35 @@
             </div>
             <div class="limites_container_wrapper">
                 <div class="container_limite rede">
+
+                    <div class="container_limite rede">
+                        <div>
+                            <div class="limites_container_2">
+                                <div class="limite">
+                                    <h2 class="limite_header">Limite padrão:</h2>
+                                    <span class="limite_medida mid" id="lim_padrao_download">-%</span>
+                                </div>
+                                <div class="limite">
+                                    <h2 class="limite_header">Limite crítico:</h2>
+                                    <span class="limite_medida hig" id="lim_critico_download">-%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container last">
+        <h2 class="Texto"></h2>
+        <div class="main_content">
+            <div class="canvas">
+                <canvas id="RedeChart2" width="564" height="282"></canvas>
+            </div>
+            <div class="limites_container_wrapper">
+                <div class="container_limite rede">
                     <div>
-                        <h3>Upload</h3>
                         <div class="limites_container_2">
                             <div class="limite">
                                 <h2 class="limite_header">Limite padrão:</h2>
@@ -157,21 +185,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="container_limite rede">
-                    <div>
-                        <h3>Download</h3>
-                        <div class="limites_container_2">
-                            <div class="limite">
-                                <h2 class="limite_header">Limite padrão:</h2>
-                                <span class="limite_medida mid" id="lim_padrao_download">-%</span>
-                            </div>
-                            <div class="limite">
-                                <h2 class="limite_header">Limite crítico:</h2>
-                                <span class="limite_medida hig" id="lim_critico_download">-%</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+
             </div>
         </div>
     </div>

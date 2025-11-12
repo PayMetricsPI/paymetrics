@@ -37,25 +37,25 @@ function buscarDados() {
 
     const id_servidor = JSON.parse(sessionStorage.getItem('servidorSelecionado')).id_servidor
 
-    fetch("/parametro/obterParametro/"+id_servidor, { method: 'GET' })
+    fetch("/parametro/obterParametro/" + id_servidor, { method: 'GET' })
         .then((resultado) => resultado.json())
         .then((data) => {
-            for(let i=0; i<data.length; i++){
-                if(data[i].nome == "CPU"){
-                    document.getElementById('lim_padrao_cpu').innerHTML = data[i].alerta_normal+"%";
-                    document.getElementById('lim_critico_cpu').innerHTML = data[i].alerta_critico+"%";
-                }else if(data[i].nome == "RAM"){
-                    document.getElementById('lim_padrao_ram').innerHTML = data[i].alerta_normal+"%";
-                    document.getElementById('lim_critico_ram').innerHTML = data[i].alerta_critico+"%";
-                }else if(data[i].nome == "Mb Enviados - REDE"){
-                    document.getElementById('lim_padrao_disco').innerHTML = data[i].alerta_normal+"%";
-                    document.getElementById('lim_critico_disco').innerHTML = data[i].alerta_critico+"%";
-                }else if(data[i].nome == "Mb Recebidos - REDE"){
-                    document.getElementById('lim_padrao_upload').innerHTML = data[i].alerta_normal+"%";
-                    document.getElementById('lim_critico_upload').innerHTML = data[i].alerta_critico+"%";
-                }else{
-                    document.getElementById('lim_padrao_download').innerHTML = data[i].alerta_normal+"%";
-                    document.getElementById('lim_critico_download').innerHTML = data[i].alerta_critico+"%";
+            for (let i = 0; i < data.length; i++) {
+                if (data[i].nome == "CPU") {
+                    document.getElementById('lim_padrao_cpu').innerHTML = data[i].alerta_normal + "%";
+                    document.getElementById('lim_critico_cpu').innerHTML = data[i].alerta_critico + "%";
+                } else if (data[i].nome == "RAM") {
+                    document.getElementById('lim_padrao_ram').innerHTML = data[i].alerta_normal + "%";
+                    document.getElementById('lim_critico_ram').innerHTML = data[i].alerta_critico + "%";
+                } else if (data[i].nome == "Mb Enviados - REDE") {
+                    document.getElementById('lim_padrao_disco').innerHTML = data[i].alerta_normal + "%";
+                    document.getElementById('lim_critico_disco').innerHTML = data[i].alerta_critico + "%";
+                } else if (data[i].nome == "Mb Recebidos - REDE") {
+                    document.getElementById('lim_padrao_upload').innerHTML = data[i].alerta_normal + "%";
+                    document.getElementById('lim_critico_upload').innerHTML = data[i].alerta_critico + "%";
+                } else {
+                    document.getElementById('lim_padrao_download').innerHTML = data[i].alerta_normal + "%";
+                    document.getElementById('lim_critico_download').innerHTML = data[i].alerta_critico + "%";
                 }
             }
         });
@@ -102,6 +102,7 @@ let cpuChart = null;
 let ramChart = null;
 let discoChart = null;
 let redeChart = null;
+let redeChart2 = null;
 
 let chartStatus = null;
 let chartStatusRam = null;
@@ -120,6 +121,7 @@ function atualizarGraficoPorPeriodo(periodo) {
     if (ramChart) ramChart.destroy();
     if (discoChart) discoChart.destroy();
     if (redeChart) redeChart.destroy();
+    if (redeChart2) redeChart2.destroy();
     if (chartMBEnviados) chartMBEnviados.destroy();
     if (chartMBRecebidos) chartMBRecebidos.destroy();
     if (chartCPU) chartCPU.destroy();
@@ -132,16 +134,16 @@ function atualizarGraficoPorPeriodo(periodo) {
         cpuChart = new Chart(ctxCpu, {
             type: 'bar',
             data: {
-                labels: ['06:00', '07:00', '08:00', '09:00', '10:00', '11:00'],
+                labels: ['20:00', '21:00', '22:00', '23:00', '00:00', '01:00'],
                 datasets: [{
                     label: 'CPU',
                     data: [30, 80, 50, 55, 45, 100],
-                    backgroundColor: ['rgb(192, 192, 192)',
-                        'rgb(192, 192, 192)',
-                        'rgb(192, 192, 192)',
-                        'rgb(192, 192, 192)',
-                        'rgb(192, 192, 192)',
+                    backgroundColor: ['rgba(29, 173, 0, 1)',
                         'rgb(242, 183, 48)',
+                        'rgba(29, 173, 0, 1)',
+                        'rgba(29, 173, 0, 1)',
+                        'rgba(29, 173, 0, 1)',
+                        'rgba(233, 0, 0, 1)',
                     ],
                     borderWidth: 1,
                     borderRadius: 12,
@@ -152,7 +154,7 @@ function atualizarGraficoPorPeriodo(periodo) {
                     title: {
                         display: true,
                         color: 'black',
-                        text: 'Picos de CPU',
+                        text: 'Quantidade de alertas - CPU',
                         font: {
                             size: 28
                         }
@@ -226,16 +228,16 @@ function atualizarGraficoPorPeriodo(periodo) {
         ramChart = new Chart(ctxram, {
             type: 'bar',
             data: {
-                labels: ['06:00', '07:00', '08:00', '09:00', '10:00', '11:00'],
+                labels: ['20:00', '21:00', '22:00', '23:00', '00:00', '01:00'],
                 datasets: [{
                     label: 'RAM',
                     data: [30, 80, 50, 55, 45, 100],
-                    backgroundColor: ['rgb(192, 192, 192)',
-                        'rgb(192, 192, 192)',
-                        'rgb(192, 192, 192)',
-                        'rgb(192, 192, 192)',
-                        'rgb(192, 192, 192)',
+                    backgroundColor: ['rgba(29, 173, 0, 1)',
                         'rgb(242, 183, 48)',
+                        'rgba(29, 173, 0, 1)',
+                        'rgba(29, 173, 0, 1)',
+                        'rgba(29, 173, 0, 1)',
+                        'rgba(233, 0, 0, 1)',
                     ],
                     borderWidth: 1,
                     borderRadius: 12,
@@ -246,7 +248,7 @@ function atualizarGraficoPorPeriodo(periodo) {
                     title: {
                         display: true,
                         color: 'black',
-                        text: 'Picos de Ram',
+                        text: 'Quantidade de alertas - RAM',
                         font: {
                             size: 28
                         }
@@ -319,16 +321,16 @@ function atualizarGraficoPorPeriodo(periodo) {
         discoChart = new Chart(ctxdisco, {
             type: 'bar',
             data: {
-                labels: ['06:00', '07:00', '08:00', '09:00', '10:00', '11:00'],
+                labels: ['20:00', '21:00', '22:00', '23:00', '00:00', '01:00'],
                 datasets: [{
                     label: 'DISCO',
                     data: [30, 80, 50, 55, 45, 100],
-                    backgroundColor: ['rgb(192, 192, 192)',
-                        'rgb(192, 192, 192)',
-                        'rgb(192, 192, 192)',
-                        'rgb(192, 192, 192)',
-                        'rgb(192, 192, 192)',
+                    backgroundColor: ['rgba(29, 173, 0, 1)',
                         'rgb(242, 183, 48)',
+                        'rgba(29, 173, 0, 1)',
+                        'rgba(29, 173, 0, 1)',
+                        'rgba(29, 173, 0, 1)',
+                        'rgba(233, 0, 0, 1)',
                     ],
                     borderWidth: 1,
                     borderRadius: 12,
@@ -339,7 +341,7 @@ function atualizarGraficoPorPeriodo(periodo) {
                     title: {
                         display: true,
                         color: 'black',
-                        text: 'Picos de Disco',
+                        text: 'Quantidade de Alertas - Disco',
                         font: {
                             size: 28
                         }
@@ -412,16 +414,16 @@ function atualizarGraficoPorPeriodo(periodo) {
         redeChart = new Chart(ctxrede, {
             type: 'bar',
             data: {
-                labels: ['06:00', '07:00', '08:00', '09:00', '10:00', '11:00'],
+                labels: ['20:00', '21:00', '22:00', '23:00', '00:00', '01:00'],
                 datasets: [{
                     label: 'Rede',
                     data: [30, 80, 50, 55, 45, 100],
-                    backgroundColor: ['rgb(192, 192, 192)',
-                        'rgb(192, 192, 192)',
-                        'rgb(192, 192, 192)',
-                        'rgb(192, 192, 192)',
-                        'rgb(192, 192, 192)',
+                    backgroundColor: ['rgba(29, 173, 0, 1)',
                         'rgb(242, 183, 48)',
+                        'rgba(29, 173, 0, 1)',
+                        'rgba(29, 173, 0, 1)',
+                        'rgba(29, 173, 0, 1)',
+                        'rgba(233, 0, 0, 1)',
                     ],
                     borderWidth: 1,
                     borderRadius: 12,
@@ -432,7 +434,7 @@ function atualizarGraficoPorPeriodo(periodo) {
                     title: {
                         display: true,
                         color: 'black',
-                        text: 'Picos de Rede',
+                        text: 'Quantidade de Alertas - Download',
                         font: {
                             size: 28
                         }
@@ -500,6 +502,46 @@ function atualizarGraficoPorPeriodo(periodo) {
             }]
         });
 
+        ctxrede2 = document.getElementById('RedeChart2').getContext('2d');
+        redeChart2 = new Chart(ctxrede2, {
+            type: 'bar',
+            data: {
+                labels: ['20:00', '21:00', '22:00', '23:00', '00:00', '01:00'],
+                datasets: [{
+                    label: 'CPU',
+                    data: [30, 80, 50, 55, 45, 100],
+                    backgroundColor: ['rgba(29, 173, 0, 1)',
+                        'rgb(242, 183, 48)',
+                        'rgba(29, 173, 0, 1)',
+                        'rgba(29, 173, 0, 1)',
+                        'rgba(29, 173, 0, 1)',
+                        'rgba(233, 0, 0, 1)',
+                    ],
+                    borderWidth: 1,
+                    borderRadius: 12,
+                }]
+            },
+            options: {
+                plugins: {
+                    title: {
+                        display: true,
+                        color: 'black',
+                        text: 'Quantidade de alertas - Upload',
+                        font: {
+                            size: 28
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            color: 'black'
+                        }
+                    },
+                }
+            }
+        });
 
         const canvasStatusrede2 = document.getElementById('statusRedeChart2');
         const existingStatusrede2 = Chart.getChart(canvasStatusrede2);
@@ -557,16 +599,16 @@ function atualizarGraficoPorPeriodo(periodo) {
         cpuChart = new Chart(ctxCpu, {
             type: 'bar',
             data: {
-                labels: ['06:00', '07:00', '08:00', '09:00', '10:00', '11:00'],
+                labels: ['20:00', '21:00', '22:00', '23:00', '00:00', '01:00'],
                 datasets: [{
                     label: 'CPU',
                     data: [50, 40, 70, 65, 75, 95],
-                    backgroundColor: ['rgb(192, 192, 192)',
-                        'rgb(192, 192, 192)',
-                        'rgb(192, 192, 192)',
-                        'rgb(192, 192, 192)',
-                        'rgb(192, 192, 192)',
-                        'rgb(242, 183, 48)',
+                    backgroundColor: ['rgba(29, 173, 0, 1)',
+                        'rgba(29, 173, 0, 1)',
+                        'rgba(29, 173, 0, 1)',
+                        'rgba(29, 173, 0, 1)',
+                        'rgba(29, 173, 0, 1)',
+                        'rgba(233, 0, 0, 1)',
                     ],
                     borderWidth: 1,
                     borderRadius: 12,
@@ -577,7 +619,7 @@ function atualizarGraficoPorPeriodo(periodo) {
                     title: {
                         display: true,
                         color: 'black',
-                        text: 'Picos de CPU',
+                        text: 'Quantidade de alertas - CPU',
                         font: {
                             size: 28
                         }
@@ -651,16 +693,16 @@ function atualizarGraficoPorPeriodo(periodo) {
         ramChart = new Chart(ctxram, {
             type: 'bar',
             data: {
-                labels: ['06:00', '07:00', '08:00', '09:00', '10:00', '11:00'],
+                labels: ['20:00', '21:00', '22:00', '23:00', '00:00', '01:00'],
                 datasets: [{
                     label: 'RAM',
                     data: [50, 40, 70, 65, 75, 95],
-                    backgroundColor: ['rgb(192, 192, 192)',
-                        'rgb(192, 192, 192)',
-                        'rgb(192, 192, 192)',
-                        'rgb(192, 192, 192)',
-                        'rgb(192, 192, 192)',
-                        'rgb(242, 183, 48)',
+                    backgroundColor: ['rgba(29, 173, 0, 1)',
+                        'rgba(29, 173, 0, 1)',
+                        'rgba(29, 173, 0, 1)',
+                        'rgba(29, 173, 0, 1)',
+                        'rgba(29, 173, 0, 1)',
+                        'rgba(233, 0, 0, 1)',
                     ],
                     borderWidth: 1,
                     borderRadius: 12,
@@ -671,7 +713,7 @@ function atualizarGraficoPorPeriodo(periodo) {
                     title: {
                         display: true,
                         color: 'black',
-                        text: 'Picos de Ram',
+                        text: 'Quantidade de alertas - RAM',
                         font: {
                             size: 28
                         }
@@ -743,16 +785,16 @@ function atualizarGraficoPorPeriodo(periodo) {
         discoChart = new Chart(ctxdisco, {
             type: 'bar',
             data: {
-                labels: ['06:00', '07:00', '08:00', '09:00', '10:00', '11:00'],
+                labels: ['20:00', '21:00', '22:00', '23:00', '00:00', '01:00'],
                 datasets: [{
                     label: 'DISCO',
                     data: [50, 40, 70, 65, 75, 95],
-                    backgroundColor: ['rgb(192, 192, 192)',
-                        'rgb(192, 192, 192)',
-                        'rgb(192, 192, 192)',
-                        'rgb(192, 192, 192)',
-                        'rgb(192, 192, 192)',
-                        'rgb(242, 183, 48)',
+                    backgroundColor: ['rgba(29, 173, 0, 1)',
+                        'rgba(29, 173, 0, 1)',
+                        'rgba(29, 173, 0, 1)',
+                        'rgba(29, 173, 0, 1)',
+                        'rgba(29, 173, 0, 1)',
+                        'rgba(233, 0, 0, 1)',
                     ],
                     borderWidth: 1,
                     borderRadius: 12,
@@ -763,7 +805,7 @@ function atualizarGraficoPorPeriodo(periodo) {
                     title: {
                         display: true,
                         color: 'black',
-                        text: 'Picos de Disco',
+                        text: 'Quantidade de Alertas - Disco',
                         font: {
                             size: 28
                         }
@@ -836,16 +878,16 @@ function atualizarGraficoPorPeriodo(periodo) {
         redeChart = new Chart(ctxrede, {
             type: 'bar',
             data: {
-                labels: ['06:00', '07:00', '08:00', '09:00', '10:00', '11:00'],
+                labels: ['20:00', '21:00', '22:00', '23:00', '00:00', '01:00'],
                 datasets: [{
                     label: 'Rede',
                     data: [50, 40, 70, 65, 75, 95],
-                    backgroundColor: ['rgb(192, 192, 192)',
-                        'rgb(192, 192, 192)',
-                        'rgb(192, 192, 192)',
-                        'rgb(192, 192, 192)',
-                        'rgb(192, 192, 192)',
-                        'rgb(242, 183, 48)',
+                    backgroundColor: ['rgba(29, 173, 0, 1)',
+                        'rgba(29, 173, 0, 1)',
+                        'rgba(29, 173, 0, 1)',
+                        'rgba(29, 173, 0, 1)',
+                        'rgba(29, 173, 0, 1)',
+                        'rgba(233, 0, 0, 1)',
                     ],
                     borderWidth: 1,
                     borderRadius: 12,
@@ -856,7 +898,7 @@ function atualizarGraficoPorPeriodo(periodo) {
                     title: {
                         display: true,
                         color: 'black',
-                        text: 'Picos de Rede',
+                        text: 'Quantidade de Alertas - Download',
                         font: {
                             size: 28
                         }
@@ -924,6 +966,46 @@ function atualizarGraficoPorPeriodo(periodo) {
             }]
         });
 
+        ctxrede2 = document.getElementById('RedeChart2').getContext('2d');
+        redeChart2 = new Chart(ctxrede2, {
+            type: 'bar',
+            data: {
+                labels: ['20:00', '21:00', '22:00', '23:00', '00:00', '01:00'],
+                datasets: [{
+                    label: 'CPU',
+                    data: [30, 80, 50, 55, 45, 100],
+                    backgroundColor: ['rgba(29, 173, 0, 1)',
+                        'rgb(242, 183, 48)',
+                        'rgba(29, 173, 0, 1)',
+                        'rgba(29, 173, 0, 1)',
+                        'rgba(29, 173, 0, 1)',
+                        'rgba(233, 0, 0, 1)',
+                    ],
+                    borderWidth: 1,
+                    borderRadius: 12,
+                }]
+            },
+            options: {
+                plugins: {
+                    title: {
+                        display: true,
+                        color: 'black',
+                        text: 'Quantidade de alertas - Upload',
+                        font: {
+                            size: 28
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            color: 'black'
+                        }
+                    },
+                }
+            }
+        });
 
         const canvasStatusrede2 = document.getElementById('statusRedeChart2');
         const existingStatusrede2 = Chart.getChart(canvasStatusrede2);
@@ -982,16 +1064,16 @@ function atualizarGraficoPorPeriodo(periodo) {
         cpuChart = new Chart(ctxCpu, {
             type: 'bar',
             data: {
-                labels: ['06:00', '07:00', '08:00', '09:00', '10:00', '11:00'],
+                labels: ['20:00', '21:00', '22:00', '23:00', '00:00', '01:00'],
                 datasets: [{
                     label: 'CPU',
-                    data: [70, 50, 30, 40, 65, 90],
-                    backgroundColor: ['rgb(192, 192, 192)',
-                        'rgb(192, 192, 192)',
-                        'rgb(192, 192, 192)',
-                        'rgb(192, 192, 192)',
-                        'rgb(192, 192, 192)',
-                        'rgb(242, 183, 48)',
+                    data: [85, 50, 30, 40, 65, 90],
+                    backgroundColor: ['rgb(242, 183, 48)',
+                        'rgba(29, 173, 0, 1)',
+                        'rgba(29, 173, 0, 1)',
+                        'rgba(29, 173, 0, 1)',
+                        'rgba(29, 173, 0, 1)',
+                        'rgba(233, 0, 0, 1)',
                     ],
                     borderWidth: 1,
                     borderRadius: 12,
@@ -1002,7 +1084,7 @@ function atualizarGraficoPorPeriodo(periodo) {
                     title: {
                         display: true,
                         color: 'black',
-                        text: 'Picos de CPU',
+                        text: 'Quantidade de alertas - CPU',
                         font: {
                             size: 28
                         }
@@ -1076,16 +1158,16 @@ function atualizarGraficoPorPeriodo(periodo) {
         ramChart = new Chart(ctxram, {
             type: 'bar',
             data: {
-                labels: ['06:00', '07:00', '08:00', '09:00', '10:00', '11:00'],
+                labels: ['20:00', '21:00', '22:00', '23:00', '00:00', '01:00'],
                 datasets: [{
                     label: 'RAM',
-                    data: [70, 50, 30, 40, 65, 90],
-                    backgroundColor: ['rgb(192, 192, 192)',
-                        'rgb(192, 192, 192)',
-                        'rgb(192, 192, 192)',
-                        'rgb(192, 192, 192)',
-                        'rgb(192, 192, 192)',
-                        'rgb(242, 183, 48)',
+                    data: [85, 50, 30, 40, 65, 90],
+                    backgroundColor: ['rgb(242, 183, 48)',
+                        'rgba(29, 173, 0, 1)',
+                        'rgba(29, 173, 0, 1)',
+                        'rgba(29, 173, 0, 1)',
+                        'rgba(29, 173, 0, 1)',
+                        'rgba(233, 0, 0, 1)',
                     ],
                     borderWidth: 1,
                     borderRadius: 12,
@@ -1096,7 +1178,7 @@ function atualizarGraficoPorPeriodo(periodo) {
                     title: {
                         display: true,
                         color: 'black',
-                        text: 'Picos de Ram',
+                        text: 'Quantidade de alertas - RAM',
                         font: {
                             size: 28
                         }
@@ -1169,16 +1251,16 @@ function atualizarGraficoPorPeriodo(periodo) {
         discoChart = new Chart(ctxdisco, {
             type: 'bar',
             data: {
-                labels: ['06:00', '07:00', '08:00', '09:00', '10:00', '11:00'],
+                labels: ['20:00', '21:00', '22:00', '23:00', '00:00', '01:00'],
                 datasets: [{
                     label: 'DISCO',
-                    data: [70, 50, 30, 40, 65, 90],
-                    backgroundColor: ['rgb(192, 192, 192)',
-                        'rgb(192, 192, 192)',
-                        'rgb(192, 192, 192)',
-                        'rgb(192, 192, 192)',
-                        'rgb(192, 192, 192)',
-                        'rgb(242, 183, 48)',
+                    data: [85, 50, 30, 40, 65, 90],
+                    backgroundColor: ['rgb(242, 183, 48)',
+                        'rgba(29, 173, 0, 1)',
+                        'rgba(29, 173, 0, 1)',
+                        'rgba(29, 173, 0, 1)',
+                        'rgba(29, 173, 0, 1)',
+                        'rgba(233, 0, 0, 1)',
                     ],
                     borderWidth: 1,
                     borderRadius: 12,
@@ -1189,7 +1271,7 @@ function atualizarGraficoPorPeriodo(periodo) {
                     title: {
                         display: true,
                         color: 'black',
-                        text: 'Picos de Disco',
+                        text: 'Quantidade de Alertas - Disco',
                         font: {
                             size: 28
                         }
@@ -1262,16 +1344,16 @@ function atualizarGraficoPorPeriodo(periodo) {
         redeChart = new Chart(ctxrede, {
             type: 'bar',
             data: {
-                labels: ['06:00', '07:00', '08:00', '09:00', '10:00', '11:00'],
+                labels: ['20:00', '21:00', '22:00', '23:00', '00:00', '01:00'],
                 datasets: [{
                     label: 'Rede',
-                    data: [70, 50, 30, 40, 65, 90],
-                    backgroundColor: ['rgb(192, 192, 192)',
-                        'rgb(192, 192, 192)',
-                        'rgb(192, 192, 192)',
-                        'rgb(192, 192, 192)',
-                        'rgb(192, 192, 192)',
-                        'rgb(242, 183, 48)',
+                    data: [85, 50, 30, 40, 65, 90],
+                    backgroundColor: ['rgb(242, 183, 48)',
+                        'rgba(29, 173, 0, 1)',
+                        'rgba(29, 173, 0, 1)',
+                        'rgba(29, 173, 0, 1)',
+                        'rgba(29, 173, 0, 1)',
+                        'rgba(233, 0, 0, 1)',
                     ],
                     borderWidth: 1,
                     borderRadius: 12,
@@ -1282,7 +1364,7 @@ function atualizarGraficoPorPeriodo(periodo) {
                     title: {
                         display: true,
                         color: 'black',
-                        text: 'Picos de Rede',
+                        text: 'Quantidade de Alertas - Download',
                         font: {
                             size: 28
                         }
@@ -1350,6 +1432,46 @@ function atualizarGraficoPorPeriodo(periodo) {
             }]
         });
 
+        ctxrede2 = document.getElementById('RedeChart2').getContext('2d');
+        redeChart2 = new Chart(ctxrede2, {
+            type: 'bar',
+            data: {
+                labels: ['20:00', '21:00', '22:00', '23:00', '00:00', '01:00'],
+                datasets: [{
+                    label: 'CPU',
+                    data: [30, 80, 50, 55, 45, 100],
+                    backgroundColor: ['rgba(29, 173, 0, 1)',
+                        'rgb(242, 183, 48)',
+                        'rgba(29, 173, 0, 1)',
+                        'rgba(29, 173, 0, 1)',
+                        'rgba(29, 173, 0, 1)',
+                        'rgba(233, 0, 0, 1)',
+                    ],
+                    borderWidth: 1,
+                    borderRadius: 12,
+                }]
+            },
+            options: {
+                plugins: {
+                    title: {
+                        display: true,
+                        color: 'black',
+                        text: 'Quantidade de alertas - Upload',
+                        font: {
+                            size: 28
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            color: 'black'
+                        }
+                    },
+                }
+            }
+        });
 
         const canvasStatusrede2 = document.getElementById('statusRedeChart2');
         const existingStatusrede2 = Chart.getChart(canvasStatusrede2);
@@ -1408,16 +1530,16 @@ function atualizarGraficoPorPeriodo(periodo) {
         cpuChart = new Chart(ctxCpu, {
             type: 'bar',
             data: {
-                labels: ['06:00', '07:00', '08:00', '09:00', '10:00', '11:00'],
+                labels: ['20:00', '21:00', '22:00', '23:00', '00:00', '01:00'],
                 datasets: [{
                     label: 'CPU',
                     data: [85, 45, 90, 60, 65, 97],
-                    backgroundColor: ['rgb(192, 192, 192)',
-                        'rgb(192, 192, 192)',
-                        'rgb(192, 192, 192)',
-                        'rgb(192, 192, 192)',
-                        'rgb(192, 192, 192)',
-                        'rgb(242, 183, 48)',
+                    backgroundColor: ['rgb(242, 183, 48)',
+                        'rgba(29, 173, 0, 1)',
+                        'rgba(255, 0, 0, 1)',
+                        'rgba(29, 173, 0, 1)',
+                        'rgba(29, 173, 0, 1)',
+                        'rgba(255, 0, 0, 1)',
                     ],
                     borderWidth: 1,
                     borderRadius: 12,
@@ -1428,7 +1550,7 @@ function atualizarGraficoPorPeriodo(periodo) {
                     title: {
                         display: true,
                         color: 'black',
-                        text: 'Picos de CPU',
+                        text: 'Quantidade de alertas - CPU',
                         font: {
                             size: 28
                         }
@@ -1501,16 +1623,16 @@ function atualizarGraficoPorPeriodo(periodo) {
         ramChart = new Chart(ctxram, {
             type: 'bar',
             data: {
-                labels: ['06:00', '07:00', '08:00', '09:00', '10:00', '11:00'],
+                labels: ['20:00', '21:00', '22:00', '23:00', '00:00', '01:00'],
                 datasets: [{
                     label: 'RAM',
                     data: [85, 45, 90, 60, 65, 97],
-                    backgroundColor: ['rgb(192, 192, 192)',
-                        'rgb(192, 192, 192)',
-                        'rgb(192, 192, 192)',
-                        'rgb(192, 192, 192)',
-                        'rgb(192, 192, 192)',
-                        'rgb(242, 183, 48)',
+                    backgroundColor: ['rgb(242, 183, 48)',
+                        'rgba(29, 173, 0, 1)',
+                        'rgba(255, 0, 0, 1)',
+                        'rgba(29, 173, 0, 1)',
+                        'rgba(29, 173, 0, 1)',
+                        'rgba(255, 0, 0, 1)',
                     ],
                     borderWidth: 1,
                     borderRadius: 12,
@@ -1521,7 +1643,7 @@ function atualizarGraficoPorPeriodo(periodo) {
                     title: {
                         display: true,
                         color: 'black',
-                        text: 'Picos de Ram',
+                        text: 'Quantidade de alertas - RAM',
                         font: {
                             size: 28
                         }
@@ -1593,16 +1715,15 @@ function atualizarGraficoPorPeriodo(periodo) {
         discoChart = new Chart(ctxdisco, {
             type: 'bar',
             data: {
-                labels: ['06:00', '07:00', '08:00', '09:00', '10:00', '11:00'],
+                labels: ['20:00', '21:00', '22:00', '23:00', '00:00', '01:00'],
                 datasets: [{
                     label: 'DISCO',
-                    data: [85, 45, 90, 60, 65, 97],
-                    backgroundColor: ['rgb(192, 192, 192)',
-                        'rgb(192, 192, 192)',
-                        'rgb(192, 192, 192)',
-                        'rgb(192, 192, 192)',
-                        'rgb(192, 192, 192)',
-                        'rgb(242, 183, 48)',
+                    backgroundColor: ['rgb(242, 183, 48)',
+                        'rgba(29, 173, 0, 1)',
+                        'rgba(255, 0, 0, 1)',
+                        'rgba(29, 173, 0, 1)',
+                        'rgba(29, 173, 0, 1)',
+                        'rgba(255, 0, 0, 1)',
                     ],
                     borderWidth: 1,
                     borderRadius: 12,
@@ -1613,7 +1734,7 @@ function atualizarGraficoPorPeriodo(periodo) {
                     title: {
                         display: true,
                         color: 'black',
-                        text: 'Picos de Disco',
+                        text: 'Quantidade de Alertas - Disco',
                         font: {
                             size: 28
                         }
@@ -1686,16 +1807,16 @@ function atualizarGraficoPorPeriodo(periodo) {
         redeChart = new Chart(ctxrede, {
             type: 'bar',
             data: {
-                labels: ['06:00', '07:00', '08:00', '09:00', '10:00', '11:00'],
+                labels: ['20:00', '21:00', '22:00', '23:00', '00:00', '01:00'],
                 datasets: [{
                     label: 'Rede',
                     data: [85, 45, 90, 60, 65, 97],
-                    backgroundColor: ['rgb(192, 192, 192)',
-                        'rgb(192, 192, 192)',
-                        'rgb(192, 192, 192)',
-                        'rgb(192, 192, 192)',
-                        'rgb(192, 192, 192)',
-                        'rgb(242, 183, 48)',
+                    backgroundColor: ['rgb(242, 183, 48)',
+                        'rgba(29, 173, 0, 1)',
+                        'rgba(255, 0, 0, 1)',
+                        'rgba(29, 173, 0, 1)',
+                        'rgba(29, 173, 0, 1)',
+                        'rgba(255, 0, 0, 1)',
                     ],
                     borderWidth: 1,
                     borderRadius: 12,
@@ -1706,7 +1827,7 @@ function atualizarGraficoPorPeriodo(periodo) {
                     title: {
                         display: true,
                         color: 'black',
-                        text: 'Picos de Rede',
+                        text: 'Quantidade de Alertas - Download',
                         font: {
                             size: 28
                         }
@@ -1774,6 +1895,46 @@ function atualizarGraficoPorPeriodo(periodo) {
             }]
         });
 
+        ctxrede2 = document.getElementById('RedeChart2').getContext('2d');
+        redeChart2 = new Chart(ctxrede2, {
+            type: 'bar',
+            data: {
+                labels: ['20:00', '21:00', '22:00', '23:00', '00:00', '01:00'],
+                datasets: [{
+                    label: 'CPU',
+                    data: [30, 80, 50, 55, 45, 100],
+                    backgroundColor: ['rgba(29, 173, 0, 1)',
+                        'rgb(242, 183, 48)',
+                        'rgba(29, 173, 0, 1)',
+                        'rgba(29, 173, 0, 1)',
+                        'rgba(29, 173, 0, 1)',
+                        'rgba(233, 0, 0, 1)',
+                    ],
+                    borderWidth: 1,
+                    borderRadius: 12,
+                }]
+            },
+            options: {
+                plugins: {
+                    title: {
+                        display: true,
+                        color: 'black',
+                        text: 'Quantidade de alertas - Upload',
+                        font: {
+                            size: 28
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            color: 'black'
+                        }
+                    },
+                }
+            }
+        });
 
         const canvasStatusrede2 = document.getElementById('statusRedeChart2');
         const existingStatusrede2 = Chart.getChart(canvasStatusrede2);
