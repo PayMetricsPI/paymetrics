@@ -103,6 +103,7 @@ let ramChart = null;
 let discoChart = null;
 let redeChart = null;
 let redeChart2 = null;
+let reqChart = null;
 
 let chartStatus = null;
 let chartStatusRam = null;
@@ -122,6 +123,7 @@ function atualizarGraficoPorPeriodo(periodo) {
     if (discoChart) discoChart.destroy();
     if (redeChart) redeChart.destroy();
     if (redeChart2) redeChart2.destroy();
+    if (reqChart) reqChart.destroy();
     if (chartMBEnviados) chartMBEnviados.destroy();
     if (chartMBRecebidos) chartMBRecebidos.destroy();
     if (chartCPU) chartCPU.destroy();
@@ -592,7 +594,50 @@ function atualizarGraficoPorPeriodo(periodo) {
                 }
             }]
         });
+
+
+        ctxReq = document.getElementById('reqChart').getContext('2d');
+        reqChart = new Chart(ctxReq, {
+            type: 'bar',
+            data: {
+                labels: ['20:00', '21:00', '22:00', '23:00', '00:00', '01:00'],
+                datasets: [{
+                    label: 'CPU',
+                    data: [30, 80, 50, 55, 45, 100],
+                    backgroundColor: ['rgba(29, 173, 0, 1)',
+                        'rgb(242, 183, 48)',
+                        'rgba(29, 173, 0, 1)',
+                        'rgba(29, 173, 0, 1)',
+                        'rgba(29, 173, 0, 1)',
+                        'rgba(233, 0, 0, 1)',
+                    ],
+                    borderWidth: 1,
+                    borderRadius: 12,
+                }]
+            },
+            options: {
+                plugins: {
+                    title: {
+                        display: true,
+                        color: 'black',
+                        text: 'Quantidade de requisições',
+                        font: {
+                            size: 28
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            color: 'black'
+                        }
+                    },
+                }
+            }
+        });
     }
+
     else if (periodo === "2") {
 
         const ctxCpu = document.getElementById('CpuChart').getContext('2d');
@@ -1056,6 +1101,49 @@ function atualizarGraficoPorPeriodo(periodo) {
                 }
             }]
         });
+
+        ctxReq = document.getElementById('reqChart').getContext('2d');
+        reqChart = new Chart(ctxReq, {
+            type: 'bar',
+            data: {
+                labels: ['20:00', '21:00', '22:00', '23:00', '00:00', '01:00'],
+                datasets: [{
+                    label: 'CPU',
+                    data: [30, 80, 50, 55, 45, 100],
+                    backgroundColor: ['rgba(29, 173, 0, 1)',
+                        'rgb(242, 183, 48)',
+                        'rgba(29, 173, 0, 1)',
+                        'rgba(29, 173, 0, 1)',
+                        'rgba(29, 173, 0, 1)',
+                        'rgba(233, 0, 0, 1)',
+                    ],
+                    borderWidth: 1,
+                    borderRadius: 12,
+                }]
+            },
+            options: {
+                plugins: {
+                    title: {
+                        display: true,
+                        color: 'black',
+                        text: 'Quantidade de requisições',
+                        font: {
+                            size: 28
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            color: 'black'
+                        }
+                    },
+                }
+            }
+        });
+
+
     }
 
     if (periodo === "3") {
@@ -1522,6 +1610,49 @@ function atualizarGraficoPorPeriodo(periodo) {
                 }
             }]
         });
+
+        ctxReq = document.getElementById('reqChart').getContext('2d');
+        reqChart = new Chart(ctxReq, {
+            type: 'bar',
+            data: {
+                labels: ['20:00', '21:00', '22:00', '23:00', '00:00', '01:00'],
+                datasets: [{
+                    label: 'CPU',
+                    data: [30, 80, 50, 55, 45, 100],
+                    backgroundColor: ['rgba(29, 173, 0, 1)',
+                        'rgb(242, 183, 48)',
+                        'rgba(29, 173, 0, 1)',
+                        'rgba(29, 173, 0, 1)',
+                        'rgba(29, 173, 0, 1)',
+                        'rgba(233, 0, 0, 1)',
+                    ],
+                    borderWidth: 1,
+                    borderRadius: 12,
+                }]
+            },
+            options: {
+                plugins: {
+                    title: {
+                        display: true,
+                        color: 'black',
+                        text: 'Quantidade de requisições',
+                        font: {
+                            size: 28
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            color: 'black'
+                        }
+                    },
+                }
+            }
+        });
+
+
     }
 
     if (periodo === "4") {
@@ -1984,6 +2115,48 @@ function atualizarGraficoPorPeriodo(periodo) {
                 }
             }]
         });
+
+        ctxReq = document.getElementById('reqChart').getContext('2d');
+        reqChart = new Chart(ctxReq, {
+            type: 'bar',
+            data: {
+                labels: ['20:00', '21:00', '22:00', '23:00', '00:00', '01:00'],
+                datasets: [{
+                    label: 'CPU',
+                    data: [30, 80, 50, 55, 45, 100],
+                    backgroundColor: ['rgba(29, 173, 0, 1)',
+                        'rgb(242, 183, 48)',
+                        'rgba(29, 173, 0, 1)',
+                        'rgba(29, 173, 0, 1)',
+                        'rgba(29, 173, 0, 1)',
+                        'rgba(233, 0, 0, 1)',
+                    ],
+                    borderWidth: 1,
+                    borderRadius: 12,
+                }]
+            },
+            options: {
+                plugins: {
+                    title: {
+                        display: true,
+                        color: 'black',
+                        text: 'Quantidade de requisições',
+                        font: {
+                            size: 28
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            color: 'black'
+                        }
+                    },
+                }
+            }
+        });
+
     }
 }
 window.onload = function () {

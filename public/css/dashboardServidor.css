@@ -120,6 +120,10 @@
     flex: 1;
 }
 
+#limite{
+  font-size: 32px;
+}
+
 .container_limite{
     display: flex;
     flex-direction: row;
