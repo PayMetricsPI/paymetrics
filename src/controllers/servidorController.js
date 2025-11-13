@@ -55,11 +55,11 @@ function atualizarServidor(req, res) {
     const id_servidor = req.params.id_servidor;
     const { nome, mac_address, tipo_cpu, ram, disco } = req.body;
 
-    if (!id_servidor || !nome || !mac_address || !tipo_cpu || !ram || !disco) {
+    if (!id_servidor || !nome || !mac_address || pais || estado || !tipo_cpu || !ram || !disco) {
         return res.status(400).json({ error: "Dados incompletos para atualizar servidor" });
     }
 
-    servidorModel.atualizarServidor(id_servidor, nome, mac_address, tipo_cpu, ram, disco,)
+    servidorModel.atualizarServidor(id_servidor, nome,pais, estado, mac_address, tipo_cpu, ram, disco,)
         .then(resultado => res.status(200).json({ message: "Servidor atualizado com sucesso", resultado }))
         .catch(erro => {
             console.error("Erro ao atualizar o servidor:", erro.sqlMessage || erro);
