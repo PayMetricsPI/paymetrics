@@ -1017,10 +1017,10 @@ function atualizarGraficoPorPeriodo(periodo) {
             data: {
                 labels: ['20:00', '21:00', '22:00', '23:00', '00:00', '01:00'],
                 datasets: [{
-                    label: 'CPU',
-                    data: [30, 80, 50, 55, 45, 100],
+                    label: 'Rede',
+                    data: [50, 40, 70, 65, 75, 95],
                     backgroundColor: ['rgba(29, 173, 0, 1)',
-                        'rgb(242, 183, 48)',
+                        'rgba(29, 173, 0, 1)',
                         'rgba(29, 173, 0, 1)',
                         'rgba(29, 173, 0, 1)',
                         'rgba(29, 173, 0, 1)',
@@ -1108,10 +1108,10 @@ function atualizarGraficoPorPeriodo(periodo) {
             data: {
                 labels: ['20:00', '21:00', '22:00', '23:00', '00:00', '01:00'],
                 datasets: [{
-                    label: 'CPU',
-                    data: [30, 80, 50, 55, 45, 100],
+                    label: 'Requisições',
+                    data: [50, 40, 70, 65, 75, 95],
                     backgroundColor: ['rgba(29, 173, 0, 1)',
-                        'rgb(242, 183, 48)',
+                        'rgba(29, 173, 0, 1)',
                         'rgba(29, 173, 0, 1)',
                         'rgba(29, 173, 0, 1)',
                         'rgba(29, 173, 0, 1)',
@@ -1526,10 +1526,10 @@ function atualizarGraficoPorPeriodo(periodo) {
             data: {
                 labels: ['20:00', '21:00', '22:00', '23:00', '00:00', '01:00'],
                 datasets: [{
-                    label: 'CPU',
-                    data: [30, 80, 50, 55, 45, 100],
-                    backgroundColor: ['rgba(29, 173, 0, 1)',
-                        'rgb(242, 183, 48)',
+                    label: 'Rede',
+                    data: [85, 50, 30, 40, 65, 90],
+                    backgroundColor: ['rgb(242, 183, 48)',
+                        'rgba(29, 173, 0, 1)',
                         'rgba(29, 173, 0, 1)',
                         'rgba(29, 173, 0, 1)',
                         'rgba(29, 173, 0, 1)',
@@ -1617,10 +1617,10 @@ function atualizarGraficoPorPeriodo(periodo) {
             data: {
                 labels: ['20:00', '21:00', '22:00', '23:00', '00:00', '01:00'],
                 datasets: [{
-                    label: 'CPU',
-                    data: [30, 80, 50, 55, 45, 100],
-                    backgroundColor: ['rgba(29, 173, 0, 1)',
-                        'rgb(242, 183, 48)',
+                    label: 'Requisições',
+                    data: [85, 50, 30, 40, 65, 90],
+                    backgroundColor: ['rgb(242, 183, 48)',
+                        'rgba(29, 173, 0, 1)',
                         'rgba(29, 173, 0, 1)',
                         'rgba(29, 173, 0, 1)',
                         'rgba(29, 173, 0, 1)',
@@ -1849,6 +1849,7 @@ function atualizarGraficoPorPeriodo(periodo) {
                 labels: ['20:00', '21:00', '22:00', '23:00', '00:00', '01:00'],
                 datasets: [{
                     label: 'DISCO',
+                    data: [85, 45, 90, 60, 65, 97],
                     backgroundColor: ['rgb(242, 183, 48)',
                         'rgba(29, 173, 0, 1)',
                         'rgba(255, 0, 0, 1)',
@@ -2032,7 +2033,7 @@ function atualizarGraficoPorPeriodo(periodo) {
             data: {
                 labels: ['20:00', '21:00', '22:00', '23:00', '00:00', '01:00'],
                 datasets: [{
-                    label: 'CPU',
+                    label: 'Rede',
                     data: [30, 80, 50, 55, 45, 100],
                     backgroundColor: ['rgba(29, 173, 0, 1)',
                         'rgb(242, 183, 48)',
@@ -2122,7 +2123,7 @@ function atualizarGraficoPorPeriodo(periodo) {
             data: {
                 labels: ['20:00', '21:00', '22:00', '23:00', '00:00', '01:00'],
                 datasets: [{
-                    label: 'CPU',
+                    label: 'Requisições',
                     data: [30, 80, 50, 55, 45, 100],
                     backgroundColor: ['rgba(29, 173, 0, 1)',
                         'rgb(242, 183, 48)',
