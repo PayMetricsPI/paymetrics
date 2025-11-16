@@ -26,7 +26,7 @@ function criarServidores(req, res) {
             return res.status(201).json({
                 message: "Servidores criados com sucesso",
                 insertedCount: resultado.affectedRows,
-                insertId // pode ser null se não houver
+                insertId 
             });
         })
         .catch(erro => {
@@ -53,9 +53,9 @@ function deletarServidor(req, res) {
 
 function atualizarServidor(req, res) {
     const id_servidor = req.params.id_servidor;
-    const { nome, mac_address, tipo_cpu, ram, disco } = req.body;
+    const { nome,pais, estado, mac_address, tipo_cpu, ram, disco } = req.body;
 
-    if (!id_servidor || !nome || !mac_address || pais || estado || !tipo_cpu || !ram || !disco) {
+    if (!id_servidor || !nome || !mac_address || !pais || !estado || !tipo_cpu || !ram || !disco) {
         return res.status(400).json({ error: "Dados incompletos para atualizar servidor" });
     }
 
