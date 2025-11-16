@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PayMetrics | Dash de alertas</title>
+    <link rel="stylesheet" href="css/navbar.css">
+    <link rel="stylesheet" href="css/embreve.css">
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+</head>
+
+<body>
+    <div id="sidebar"></div>
+    <section class="dash_jira">
+        <div class="titulo">
+            <h1>Alertas</h1>
+        </div>
+        <div class="info">
+           <div class="kpi_critico">
+                <h1>1</h1><br>
+                <p>Servidores em alertas críticos</p>
+           </div>
+           <div class="kpi_atencao">
+                <h1>2</h1><br>
+                <p>Servidores em alertas de atenção</p>
+        </div>
+        <div class="servidores_alertas">
+            <div class="titulo_ser">
+                <h2>Servidores em alertas</h2>
+            </div>
+            <div class="servidor_card">
+                <img src="./assets/icons/servidor_jira.png" alt="Servidor">
+                <p>Nome do servidor</p>
+                <p>Mac</p>
+                <p style = "color: red;"><b>Crítico !</b></p>
+            </div>
+             <div class="servidor_card">
+                <img src="./assets/icons/servidor_jira.png" alt="Servidor">
+                <p>Nome do servidor</p>
+                <p>Mac</p>
+                <p style = "color: #f7b116;"><b>Alerta !</b></p>
+            </div>
+        </div>
+    </section>
+    <script src="js/header.js"></script>  
+</body>
+</html>
