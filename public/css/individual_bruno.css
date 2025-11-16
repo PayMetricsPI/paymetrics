@@ -1,0 +1,81 @@
+*{
+    font-family: "Montserrat", sans-serif;
+}
+body{
+    background-color: #F2F2F2;
+    padding: 10vh 4vw 0px 9vw;
+}
+h1{
+    font-weight: 700;
+    font-size: 32px;
+}
+h2{
+    font-weight: 700;
+    font-size: 25px;
+}
+.mini{
+    font-size: 14px;
+    opacity: 50%;
+}
+.previsao_por_setor{
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 50px;
+}
+.setores{
+    display: flex;
+    /* gap: 25px; */
+    margin-top: 30px;
+    justify-content: space-between;
+}
+
+h3{
+    font-size: 16px;
+    font-weight: bold;
+}
+.setor{
+    width: 18vw;
+}
+.setores .bar{
+    width: 1px;
+    opacity: 20%;
+    background-color: black;
+    border-radius: 10px;
+}
+.setor h3 > .material-symbols-outlined{
+    font-size: 48px;
+}
+.setor h3{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.variacao_mes_atual, .indice_vendas_reais{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.variacao_mes_atual h4, .indice_vendas_reais h4{
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+}
+.variacao_mes_atual h4{
+    margin-left: -10px;
+}
+
+.variacao_mes_atual h4.red{
+    color: #EC3636;
+}
+.variacao_mes_atual h4.green{
+    color: #11AD24;
+}
+
+.setor .metricas{
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: space-between;
+}
