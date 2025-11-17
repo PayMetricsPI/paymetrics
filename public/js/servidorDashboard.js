@@ -2,11 +2,56 @@ const usersDiv = document.querySelector('.users');
 const fk_empresa = Number(sessionStorage.getItem('id'));
 const servidor = JSON.parse(sessionStorage.getItem('servidorSelecionado'));
 
+seEffect(() => {
+    fetch('/s3/downloadCSV/.csv')
+      .then(res => {
+        if (!res.ok) throw new Error('Erro na resposta do S3');
+        return res.json();
+      })
+      .then(response => {
+        setData(response.data);
+      })
+      .catch(err => {
+        console.error(err);
+        setError('Erro ao carregar dados');
+      });
+  }, []);
+
+const alertaCPU = data.map(row => row['alertaCPU']);
+const alertaRAM = data.map(row => row['alertaRAM']);
+const alertaDisco = data.map(row => row['alertaDisco']);
+const alertaDownload = data.map(row => row['alertaDownload']);
+const alertaUpload = data.map(row => row['alertaUpload']);
+
+const alertaCriticoCPU = data.map(row => row['alertaCriticoCPU']);
+const alertaCriticoRAM = data.map(row => row['alertaCriticoRAM']);
+const alertaCriticoDisco = data.map(row => row['alertaCriticoDisco']);
+const alertaCriticoDownload = data.map(row => row['alertaCriticoDownload']);
+const alertaCriticoUpload = data.map(row => row['alertaCriticoUpload']);
+
+const qtdAlertaCPU = alertaCPU.length
+const qtdAlertaRAM = alertaRAM.length
+const qtdAlertaDisco = alertaDisco.length
+const qtdAlertaDownload = alertaDownload.length
+const qtdAlertaUpload = alertaUpload.length
+
+const qtdAlertaCriticoCPU = alertaCriticoCPU.length
+const qtdAlertaCriticoRAM = alertaCriticoRAM.length
+const qtdAlertaCriticoDisco = alertaCriticoDisco.length
+const qtdAlertaCriticoDownload = alertaCriticoDownload.length
+const qtdAlertaCriticoUpload = alertaCriticoUpload.length
+
+const somaAlertas = qtdAlertaCPU + qtdAlertaRAM + qtdAlertaDisco + qtdAlertaDownload + qtdAlertaUpload
+const somaAlertaCriticos = qtdAlertaCriticoCPU + qtdAlertaCriticoRAM + qtdAlertaCriticoDisco + qtdAlertaCriticoDownload + qtdAlertaCriticoUpload
+
+
 if (servidor) {
     document.getElementById('servidorNome').textContent = servidor.nome;
     document.getElementById('modelo_cpu').textContent = servidor.tipo_cpu;
     document.getElementById('capacidade_ram').textContent = servidor.ram + "GB";
     document.getElementById('capacidade_disco').textContent = servidor.disco + "TB";
+    document.getElementById('alerta_numero_padrao').textContent = somaAlertas
+    document.getElementById('alerta_numero_critico').textContent = somaAlertaCriticos
 }
 
 function formatarDiferenca(timestamp) {

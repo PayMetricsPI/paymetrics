@@ -7,5 +7,9 @@ router.post("/uploadCSV", function(req, res){
     s3Controller.novoCSVBucket(req, res)
 })
 
+router.get("/donwloadCSV", function(req, res){
+    s3Controller.trustedCSVBucket(req,res)
+})
+
 
 module.exports = router;
