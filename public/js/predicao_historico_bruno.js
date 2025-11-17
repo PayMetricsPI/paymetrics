@@ -1,4 +1,7 @@
-const ctx = document.getElementById("roupas_chart");
+const ctx_roupas = document.getElementById("roupas_chart");
+const ctx_alimentos = document.getElementById("alimentos_chart");
+const ctx_farmacia = document.getElementById("farmacia_chart");
+const ctx_movel = document.getElementById("moveis_chart");
 
 const labels = [
     "2024-01", "2024-02", "2024-03", "2024-04", "2024-05",
@@ -24,7 +27,7 @@ for (prev of previsoes) {
     }
 }
 
-new Chart(ctx, {
+const graph_options = {
     type: 'line',
     data: {
         labels: labels,
@@ -76,4 +79,9 @@ new Chart(ctx, {
             y: { beginAtZero: false }
         }
     }
-});
+}
+
+new Chart(ctx_roupas, graph_options);
+new Chart(ctx_alimentos, graph_options);
+new Chart(ctx_farmacia, graph_options);
+new Chart(ctx_movel, graph_options);
