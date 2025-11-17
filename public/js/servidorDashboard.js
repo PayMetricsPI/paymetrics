@@ -2,7 +2,23 @@ const usersDiv = document.querySelector('.users');
 const fk_empresa = Number(sessionStorage.getItem('id'));
 const servidor = JSON.parse(sessionStorage.getItem('servidorSelecionado'));
 
-seEffect(() => {
+let cpuChart = null;
+let ramChart = null;
+let discoChart = null;
+let redeChart = null;
+let redeChart2 = null;
+let reqChart = null;
+
+let chartCPU = null;
+let chartRAM = null;
+let chartDisco = null;
+let chartMBEnviados = null;
+let chartMBRecebidos = null;
+
+let chartStatus = null;
+let chartStatusRam = null;
+let chartStatusDisco = null;
+
     fetch('/s3/downloadCSV/.csv')
         .then(res => {
             if (!res.ok) throw new Error('Erro na resposta do S3');
@@ -13,9 +29,7 @@ seEffect(() => {
         })
         .catch(err => {
             console.error(err);
-            setError('Erro ao carregar dados');
         });
-}, []);
 
 const alertaCPU = data.map(row => row['alertaCPU']);
 const alertaRAM = data.map(row => row['alertaRAM']);
@@ -116,12 +130,6 @@ function buscarDados() {
         });
 }
 
-let chartCPU = null;
-let chartRAM = null;
-let chartDisco = null;
-let chartMBEnviados = null;
-let chartMBRecebidos = null;
-
 function atualizarCPU(valorCPU) {
     chartCPU.data.datasets[0].data = [valorCPU, 100 - valorCPU];
     chartCPU.update();
@@ -152,17 +160,6 @@ Periodo.addEventListener('change', function () {
     const valorSelecionado = this.value;
     atualizarGraficoPorPeriodo(valorSelecionado);
 });
-
-let cpuChart = null;
-let ramChart = null;
-let discoChart = null;
-let redeChart = null;
-let redeChart2 = null;
-let reqChart = null;
-
-let chartStatus = null;
-let chartStatusRam = null;
-let chartStatusDisco = null;
 
 function inicializarDashboard() {
     const Periodo = document.getElementById('periodo');
