@@ -203,6 +203,16 @@ h1.center_title{
 .pred_hist{
     display: flex;
     align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+.month_selector select{
+    width: 230px;
+}
+
+.pred_hist .title{
+    display: flex;
+    align-items: center;
     gap: 20px;
 }
 
@@ -224,7 +234,7 @@ h1.center_title{
     margin-top: 25px;
 }
 
-.sim .selects select{
+select{
     appearance: none;
     -webkit-appearance: none;
     -moz-appearance: none;
