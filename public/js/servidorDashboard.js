@@ -4,18 +4,18 @@ const servidor = JSON.parse(sessionStorage.getItem('servidorSelecionado'));
 
 seEffect(() => {
     fetch('/s3/downloadCSV/.csv')
-      .then(res => {
-        if (!res.ok) throw new Error('Erro na resposta do S3');
-        return res.json();
-      })
-      .then(response => {
-        setData(response.data);
-      })
-      .catch(err => {
-        console.error(err);
-        setError('Erro ao carregar dados');
-      });
-  }, []);
+        .then(res => {
+            if (!res.ok) throw new Error('Erro na resposta do S3');
+            return res.json();
+        })
+        .then(response => {
+            setData(response.data);
+        })
+        .catch(err => {
+            console.error(err);
+            setError('Erro ao carregar dados');
+        });
+}, []);
 
 const alertaCPU = data.map(row => row['alertaCPU']);
 const alertaRAM = data.map(row => row['alertaRAM']);
@@ -52,6 +52,16 @@ if (servidor) {
     document.getElementById('capacidade_disco').textContent = servidor.disco + "TB";
     document.getElementById('alerta_numero_padrao').textContent = somaAlertas
     document.getElementById('alerta_numero_critico').textContent = somaAlertaCriticos
+    document.getElementById('critico_CPU').textContent = qtdAlertaCriticoCPU
+    document.getElementById('padrao_CPU').textContent = qtdAlertaCPU
+    document.getElementById('critico_RAM').textContent = qtdAlertaCriticoRAM
+    document.getElementById('padrao_RAM').textContent = qtdAlertaRAM
+    document.getElementById('critico_Disco').textContent = qtdAlertaCriticoDisco
+    document.getElementById('padrao_Disco').textContent = qtdAlertaDisco
+    document.getElementById('critico_Download').textContent = qtdAlertaCriticoDownload
+    document.getElementById('padrao_Download').textContent = qtdAlertaDownload
+    document.getElementById('padrao_Upload').textContent = qtdAlertaCriticoUpload
+    ocument.getElementById('critico_Upload').textContent = qtdAlertaUpload
 }
 
 function formatarDiferenca(timestamp) {
