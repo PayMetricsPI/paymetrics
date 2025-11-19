@@ -1,0 +1,257 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
+body,
+html {
+    overflow-x: hidden;
+    background-color: #f2f1f1;
+}
+
+.dash_servidor {
+    margin-top: 50px;
+}
+
+.servidor_info {
+    margin-left: 200px;
+    display: flex;
+    align-items: center;
+    padding: 20px 0;
+    gap: 20px;
+}
+
+.info_servidor {
+    width: 200px;
+}
+
+.servidor_info img {
+    width: 65px;
+}
+
+.kpi {
+    display: flex;
+    flex-direction: row;
+    margin-left: 300px;
+}
+
+.nome,
+.mac {
+    font-size: 15px;
+}
+
+.kpi_aberto,
+.kpi_fechado {
+    text-align: center;
+    padding: 12px 20px;
+    border-radius: 12px;
+    width: 130px;
+    border: 1px solid white;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.07);
+    background-color: white;
+    margin-left: 20px;
+}
+
+.kpi_aberto p,
+.kpi_fechado p {
+    font-size: 12px;
+}
+
+.componentes_jira {
+    margin-top: 30px;
+}
+
+.componentes_jira .titulo_jira {
+    display: flex;
+    margin-left: 200px;
+}
+
+.componente-line {
+    margin-top: 30px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background-color: white;
+    border-radius: 20px;
+    width: 700px;
+    height: 150px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 40px;
+}
+
+.componente {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    margin-left: 10px;
+}
+
+.label {
+    margin-bottom: 5px;
+    font-weight: 600;
+}
+
+.circulo {
+    width: 50px;
+    height: 50px;
+    border: 6px solid;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.red {
+    color: #e53935;
+}
+
+.red .circulo {
+    border-color: #e53935;
+}
+
+.yellow {
+    color: #f9a825;
+}
+
+.yellow .circulo {
+    border-color: #f9a825;
+}
+
+.green {
+    color: #43a047;
+}
+
+.green .circulo {
+    border-color: #43a047;
+}
+
+
+.chamados {
+    margin-top: 40px;
+    background: #F5AF1B;
+    width: 100%;
+}
+
+.titulo_cha {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 30px 30px;
+    border-radius: 10px 10px 0 0;
+    margin-left: 100px;
+    margin-right: 100px;
+}
+
+.titulo_cha select {
+    padding: 5px 10px;
+    border-radius: 10px;
+    border: none;
+    font-size: 14px;
+    background: white;
+}
+
+.tickets {
+    background: #F5AF1B;
+    padding-bottom: 25px;
+}
+
+.card_ticket {
+    background: #ffffff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 18px;
+    padding: 22px 36px;
+    margin: 18px auto;
+    width: 700px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
+    position: relative;
+    overflow: hidden;
+}
+
+.card_ticket::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 90px;
+    height: 90px;
+    background: #fdc960;
+    border-radius: 0 18px 0 80px;
+}
+
+.card_ticket>* {
+    z-index: 2;
+}
+
+.lado_esq {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.lado_esq .resol {
+    font-size: 16px;
+    font-weight: 600;
+    margin-right: 8px;
+}
+
+.lado_esq .info_text {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+}
+
+.lado_esq .info_text p {
+    margin: 0;
+    font-size: 15px;
+    color: #222;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
+.info_text .status {
+    color: #e53935;
+    font-weight: 800;
+    font-size: 18px;
+    margin-bottom: 2px;
+}
+
+.percent {
+    color: #e53935;
+    font-weight: 800;
+    margin-left: 8px;
+    font-size: 16px;
+}
+
+.lado_esq input[type="checkbox"] {
+    transform: scale(1.2);
+    accent-color: #43a047;
+    margin-right: 10px;
+}
+
+.lado_dir {
+    display: flex;
+    align-items: flex-end;
+    text-align: right;
+    gap: 18px;
+    flex: 1 1 auto;
+    min-width: 0;
+    flex-direction: column;
+    margin-right: 100px;
+}
+.lado_dir p{
+    font-size: 15px;
+}
