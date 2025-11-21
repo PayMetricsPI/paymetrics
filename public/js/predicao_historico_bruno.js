@@ -3,6 +3,34 @@ const ctx_alimentos = document.getElementById("alimentos_chart");
 const ctx_farmacia = document.getElementById("farmacia_chart");
 const ctx_movel = document.getElementById("moveis_chart");
 
+preverProxMes("roupas")
+preverProxMes("alimentos")
+preverProxMes("farmacia")
+preverProxMes("moveis")
+
+function preverProxMes(type){
+    fetch(`http://localhost:5000/obter/previsao/prox/${type}`).then(
+        (res) => {
+            res.json().then((json) => {
+                indice = document.getElementById(`indice_${type}`)
+                variacao = document.getElementById(`variacao_${type}`)
+                variacao_icon = document.getElementById(`variacao_${type}_icon`)
+
+                indice.innerText = parseFloat(json.previsao).toFixed(2)
+                variacao.innerText = parseFloat(json.variacao).toFixed(1).replace("-", "")
+
+                if(parseFloat(json.variacao) <= 0){
+                    variacao_icon.innerText = "arrow_drop_down"
+                    variacao_icon.parentElement.classList.add("red")
+                }else{
+                    variacao_icon.innerText = "arrow_drop_up"
+                    variacao_icon.parentElement.classList.add("green")
+                }
+            })
+        }
+    )
+}
+
 const labels = [
     "2024-01", "2024-02", "2024-03", "2024-04", "2024-05",
     "2024-06", "2024-07", "2024-08", "2024-09", "2024-10"
