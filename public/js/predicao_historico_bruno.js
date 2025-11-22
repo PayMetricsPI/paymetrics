@@ -8,6 +8,46 @@ preverProxMes("alimentos")
 preverProxMes("farmacia")
 preverProxMes("moveis")
 
+async function buscarDadosGrafico(type, anos, meses){
+    const res = await fetch(`http://localhost:5000/obter/previsao/ano/${type}/${anos}/${meses}`)
+    return await res.json()
+}
+
+async function atualizarGrafico(grafico, type, anos, meses){
+    const label = []
+    const hist = []
+    const prev = []
+    const erroUpper = []
+    const erroLower = []
+    
+    const dados = await buscarDadosGrafico(type, anos, meses)
+
+    for(med of dados){
+        label.push(new Date(med.data).toLocaleDateString("pt-BR", { timeZone: "UTC" }))
+        if(med.previsao){
+            if(prev[prev.length-1] == null) hist.push(med.vendas)
+            prev.push(med.vendas)
+            erroUpper.push(parseFloat(med.vendas)+parseFloat(med.mae))
+            erroLower.push(parseFloat(med.vendas)-parseFloat(med.mae))
+        }else{
+            hist.push(med.vendas)
+            prev.push(null)
+            erroUpper.push(null)
+            erroLower.push(null)
+        }
+    }
+
+    console.log(dados)
+
+    grafico.data.labels = label;
+    grafico.data.datasets[0].data = hist;
+    grafico.data.datasets[1].data = prev;
+    grafico.data.datasets[2].data = erroUpper;
+    grafico.data.datasets[3].data = erroLower;
+    
+    grafico.update();
+}
+
 function preverProxMes(type){
     fetch(`http://localhost:5000/obter/previsao/prox/${type}`).then(
         (res) => {
@@ -15,10 +55,10 @@ function preverProxMes(type){
                 indice = document.getElementById(`indice_${type}`)
                 variacao = document.getElementById(`variacao_${type}`)
                 variacao_icon = document.getElementById(`variacao_${type}_icon`)
-
+                
                 indice.innerText = parseFloat(json.previsao).toFixed(2)
                 variacao.innerText = parseFloat(json.variacao).toFixed(1).replace("-", "")
-
+                
                 if(parseFloat(json.variacao) <= 0){
                     variacao_icon.innerText = "arrow_drop_down"
                     variacao_icon.parentElement.classList.add("red")
@@ -31,38 +71,14 @@ function preverProxMes(type){
     )
 }
 
-const labels = [
-    "2024-01", "2024-02", "2024-03", "2024-04", "2024-05",
-    "2024-06", "2024-07", "2024-08", "2024-09", "2024-10"
-];
-
-const historico = [10, 12, 13, 15, 18];
-
-const previsoes = [null, null, null, null, 18, 19, 20, 22, 23, 25];
-
-const erro = 5;
-
-const previsaoUpper = [];
-const previsaoLower = [];
-
-for (prev of previsoes) {
-    if (prev == null) {
-        previsaoUpper.push(null);
-        previsaoLower.push(null);
-    } else {
-        previsaoUpper.push(prev + erro);
-        previsaoLower.push(prev - erro);
-    }
-}
-
 const graph_options = {
     type: 'line',
     data: {
-        labels: labels,
+        labels: [],
         datasets: [
             {
                 label: 'Histórico',
-                data: historico,
+                data: [],
                 borderColor: 'blue',
                 borderWidth: 3,
                 pointRadius: 2,
@@ -71,7 +87,7 @@ const graph_options = {
             },
             {
                 label: 'Previsão',
-                data: previsoes,
+                data: [],
                 borderColor: "#FFB100",
                 borderDash: [6, 4],
                 borderWidth: 3,
@@ -81,7 +97,7 @@ const graph_options = {
             },
             {
                 label: 'Limite superior',
-                data: previsaoUpper,
+                data: [],
                 fill: '+1',
                 borderColor: 'rgba(0,0,0,0)',
                 backgroundColor: 'rgba(255,165,0,0.2)',
@@ -90,7 +106,7 @@ const graph_options = {
             },
             {
                 label: 'Limite inferior',
-                data: previsaoLower,
+                data: [],
                 fill: false,
                 borderColor: 'rgba(0,0,0,0)',
                 backgroundColor: 'rgba(255,165,0,0.2)',
@@ -109,7 +125,12 @@ const graph_options = {
     }
 }
 
-new Chart(ctx_roupas, graph_options);
-new Chart(ctx_alimentos, graph_options);
-new Chart(ctx_farmacia, graph_options);
-new Chart(ctx_movel, graph_options);
+const roupas_chart = new Chart(ctx_roupas, graph_options);
+const alimentos_chart = new Chart(ctx_alimentos, graph_options);
+const farmacia_chart = new Chart(ctx_farmacia, graph_options);
+const moveis_chart = new Chart(ctx_movel, graph_options);
+
+atualizarGrafico(roupas_chart, "roupas", 1, 4)
+atualizarGrafico(alimentos_chart, "alimentos", 1, 4)
+atualizarGrafico(farmacia_chart, "farmacia", 1, 4)
+atualizarGrafico(moveis_chart, "moveis", 1, 4)
