@@ -22,7 +22,7 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
 </head>
 
-<body>
+<body onload="obterNoticias()">
     <div id="sidebar"></div>
     <h1>Comportamento de mercado</h1>
     <div class="previsao_por_setor">
@@ -291,11 +291,11 @@
                         <h2>Predição</h2>
                     </div>
                     <div class="month_selector">
-                        <select name="" id="">
-                            <option value="">Anual</option>
-                            <option value="">Bienal</option>
-                            <option value="">Trienal</option>
-                            <option value="">Todo o período</option>
+                        <select name="" id="slc_roupas">
+                            <option value="1">Anual</option>
+                            <option value="2">Bienal</option>
+                            <option value="3">Trienal</option>
+                            <option value="-">Todo o período</option>
                         </select>
                     </div>
                 </div>
@@ -343,11 +343,11 @@
                         <h2>Predição</h2>
                     </div>
                     <div class="month_selector">
-                        <select name="" id="">
-                            <option value="">Anual</option>
-                            <option value="">Bienal</option>
-                            <option value="">Trienal</option>
-                            <option value="">Todo o período</option>
+                        <select name="" id="slc_alimentos">
+                            <option value="1">Anual</option>
+                            <option value="2">Bienal</option>
+                            <option value="3">Trienal</option>
+                            <option value="-">Todo o período</option>
                         </select>
                     </div>
                 </div>
@@ -395,11 +395,11 @@
                         <h2>Predição</h2>
                     </div>
                     <div class="month_selector">
-                        <select name="" id="">
-                            <option value="">Anual</option>
-                            <option value="">Bienal</option>
-                            <option value="">Trienal</option>
-                            <option value="">Todo o período</option>
+                        <select name="" id="slc_farmacia">
+                            <option value="1">Anual</option>
+                            <option value="2">Bienal</option>
+                            <option value="3">Trienal</option>
+                            <option value="-">Todo o período</option>
                         </select>
                     </div>
                 </div>
@@ -447,11 +447,11 @@
                         <h2>Predição</h2>
                     </div>
                     <div class="month_selector">
-                        <select name="" id="">
-                            <option value="">Anual</option>
-                            <option value="">Bienal</option>
-                            <option value="">Trienal</option>
-                            <option value="">Todo o período</option>
+                        <select name="" id="slc_moveis">
+                            <option value="1">Anual</option>
+                            <option value="2">Bienal</option>
+                            <option value="3">Trienal</option>
+                            <option value="-">Todo o período</option>
                         </select>
                     </div>
                 </div>
@@ -494,3 +494,4 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="js/carrossel.js"></script>
 <script src="js/predicao_historico_bruno.js"></script>
+<script src="js/noticias_bruno.js"></script>

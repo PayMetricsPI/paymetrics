@@ -23,7 +23,11 @@ async function atualizarGrafico(grafico, type, anos, meses){
     const dados = await buscarDadosGrafico(type, anos, meses)
 
     for(med of dados){
-        label.push(new Date(med.data).toLocaleDateString("pt-BR", { timeZone: "UTC" }))
+        label.push(new Date(med.data).toLocaleDateString("pt-BR", {
+            timeZone: "UTC",
+            month: "numeric",
+            year: "numeric"
+        }))
         if(med.previsao){
             if(prev[prev.length-1] == null) hist.push(med.vendas)
             prev.push(med.vendas)
@@ -134,3 +138,24 @@ atualizarGrafico(roupas_chart, "roupas", 1, 4)
 atualizarGrafico(alimentos_chart, "alimentos", 1, 4)
 atualizarGrafico(farmacia_chart, "farmacia", 1, 4)
 atualizarGrafico(moveis_chart, "moveis", 1, 4)
+
+const slc_roupas = document.getElementById("slc_roupas");
+const slc_alimentos = document.getElementById("slc_alimentos");
+const slc_farmacia = document.getElementById("slc_farmacia");
+const slc_moveis = document.getElementById("slc_moveis");
+
+slc_roupas.addEventListener("change", (e) => {
+    atualizarGrafico(roupas_chart, "roupas", e.target.value, 4)
+})
+
+slc_alimentos.addEventListener("change", (e) => {
+    atualizarGrafico(alimentos_chart, "alimentos", e.target.value, 4)
+})
+
+slc_farmacia.addEventListener("change", (e) => {
+    atualizarGrafico(farmacia_chart, "farmacia", e.target.value, 4)
+})
+
+slc_moveis.addEventListener("change", (e) => {
+    atualizarGrafico(moveis_chart, "moveis", e.target.value, 4)
+})
