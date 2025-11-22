@@ -223,15 +223,35 @@ h1.center_title{
     align-items: center;
     justify-content: space-between;
     width: 100%;
+    margin-bottom: 20px;
+}
+.month_selector{
+    display: flex;
+    gap: 20px;
+}
+.month_selector > div{
+    display: flex;
+    flex-direction: column;
+}
+.month_selector > div > p{
+    margin-bottom: 0;
 }
 .month_selector select{
     width: 230px;
+}
+
+.month_selector .meses_select{
+    width: 170px;
 }
 
 .pred_hist .title{
     display: flex;
     align-items: center;
     gap: 20px;
+    align-self: flex-end;
+}
+.pred_hist .title h2{
+    margin-bottom: 0;
 }
 
 .bar_divisor{

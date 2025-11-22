@@ -144,18 +144,72 @@ const slc_alimentos = document.getElementById("slc_alimentos");
 const slc_farmacia = document.getElementById("slc_farmacia");
 const slc_moveis = document.getElementById("slc_moveis");
 
+const slc_roupas_meses = document.getElementById("slc_roupas_meses");
+const slc_alimentos_meses = document.getElementById("slc_alimentos_meses");
+const slc_farmacia_meses = document.getElementById("slc_farmacia_meses");
+const slc_moveis_meses = document.getElementById("slc_moveis_meses");
+
 slc_roupas.addEventListener("change", (e) => {
-    atualizarGrafico(roupas_chart, "roupas", e.target.value, 4)
+    if (slc_roupas.value === "1") {
+        slc_roupas_meses.querySelector('option[value="12"]').disabled = true;
+        if (slc_roupas_meses.value === "12") {
+            slc_roupas_meses.value = "6";
+        }
+    } else {
+        slc_roupas_meses.querySelector('option[value="12"]').disabled = false;
+    }
+    atualizarGrafico(roupas_chart, "roupas", slc_roupas.value, slc_roupas_meses.value)
 })
 
 slc_alimentos.addEventListener("change", (e) => {
-    atualizarGrafico(alimentos_chart, "alimentos", e.target.value, 4)
+    if (slc_alimentos.value === "1") {
+        slc_alimentos_meses.querySelector('option[value="12"]').disabled = true;
+        if (slc_alimentos_meses.value === "12") {
+            slc_alimentos_meses.value = "6";
+        }
+    } else {
+        slc_alimentos_meses.querySelector('option[value="12"]').disabled = false;
+    }
+    atualizarGrafico(alimentos_chart, "alimentos", slc_alimentos.value, slc_alimentos_meses.value)
 })
 
 slc_farmacia.addEventListener("change", (e) => {
-    atualizarGrafico(farmacia_chart, "farmacia", e.target.value, 4)
+    if (slc_farmacia.value === "1") {
+        slc_farmacia_meses.querySelector('option[value="12"]').disabled = true;
+        if (slc_farmacia_meses.value === "12") {
+            slc_farmacia_meses.value = "6";
+        }
+    } else {
+        slc_farmacia_meses.querySelector('option[value="12"]').disabled = false;
+    }
+    atualizarGrafico(farmacia_chart, "farmacia", slc_farmacia.value, slc_farmacia_meses.value)
 })
 
 slc_moveis.addEventListener("change", (e) => {
-    atualizarGrafico(moveis_chart, "moveis", e.target.value, 4)
+    if (slc_moveis.value === "1") {
+        slc_moveis_meses.querySelector('option[value="12"]').disabled = true;
+        if (slc_moveis_meses.value === "12") {
+            slc_moveis_meses.value = "6";
+        }
+    } else {
+        slc_moveis_meses.querySelector('option[value="12"]').disabled = false;
+    }
+    atualizarGrafico(moveis_chart, "moveis", slc_moveis.value, slc_moveis_meses.value)
+})
+
+
+slc_roupas_meses.addEventListener("change", (e) => {
+    atualizarGrafico(roupas_chart, "roupas", slc_roupas.value, slc_roupas_meses.value)
+})
+
+slc_alimentos_meses.addEventListener("change", (e) => {
+    atualizarGrafico(alimentos_chart, "alimentos", slc_alimentos.value, slc_alimentos_meses.value)
+})
+
+slc_farmacia_meses.addEventListener("change", (e) => {
+    atualizarGrafico(farmacia_chart, "farmacia", slc_farmacia.value, slc_farmacia_meses.value)
+})
+
+slc_moveis_meses.addEventListener("change", (e) => {
+    atualizarGrafico(moveis_chart, "moveis", slc_moveis.value, slc_moveis_meses.value)
 })
