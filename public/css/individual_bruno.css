@@ -199,7 +199,7 @@ h1.center_title{
     text-align: center;
     margin-top: 40px;
 }
-.prev_sim_container > div{
+.prev_sim_container > .prev, .sim, .res{
     background-color: #fff;
     border-radius: 10px;
     box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
@@ -214,8 +214,12 @@ h1.center_title{
 .prev{
     flex: 2;
 }
-.sim{
+.sim_res{
+    background-color: transparent;
     flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
 }
 
 .pred_hist{
@@ -295,7 +299,9 @@ select{
     gap: 32px;
     justify-content: center;
 }
-
+.sim .selects select{
+    width: 170px;
+}
 .sim button{
     background-color: #FFB100;
     padding: 12px 24px;
@@ -310,4 +316,16 @@ select{
     display: flex;
     justify-content: center;
     margin-top: 20px;
+}
+
+.simulacao_result{
+    font-size: 32px;
+    font-weight: 600;
+    text-align: center;
+    margin-top: 20px;
+}
+
+.simulacao_result span{
+    font-size: 18px;
+    color: rgba(0, 0, 0, 0.35);
 }

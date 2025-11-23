@@ -226,3 +226,64 @@ function simular(element){
         })
     })
 }
+
+function obterLimites(){
+    fetch("http://localhost:5000/obter/limites/data")
+    .then(res => res.json())
+    .then(limites => {
+
+        const selectsContainer = document.getElementsByClassName("selects");
+
+        const hoje = new Date();
+        const anoAtual = hoje.getFullYear();
+        const mesAtual = hoje.getMonth() + 1;
+
+        for (const div of selectsContainer) {
+
+            const selectMes = div.children[0];
+            const selectAno = div.children[1];
+            const tipo = selectMes.getAttribute("type");
+
+            const limite = limites.find(item => item.type === tipo);
+            if (!limite) continue;
+
+            const limiteAno = limite.year;
+            const limiteMes = limite.month;
+
+            for (const opt of selectAno.options) {
+                const ano = parseInt(opt.value);
+                opt.disabled = ano > limiteAno;
+            }
+
+            function atualizarMeses() {
+                const anoSelecionado = parseInt(selectAno.value);
+
+                for (const opt of selectMes.options) {
+                    const mes = parseInt(opt.value);
+
+                    opt.disabled = false;
+
+                    if (anoSelecionado === anoAtual && mes < mesAtual) {
+                        opt.disabled = true;
+                    }
+
+                    if (anoSelecionado === limiteAno && mes > limiteMes) {
+                        opt.disabled = true;
+                    }
+                }
+
+                if (selectMes.options[selectMes.selectedIndex].disabled) {
+                    if (!selectMes.querySelector(`option[value='${mesAtual}']`)?.disabled) {
+                        selectMes.value = mesAtual;
+                    }
+                    else {
+                        selectMes.value = limiteMes;
+                    }
+                }
+            }
+
+            atualizarMeses();
+            selectAno.addEventListener("change", atualizarMeses);
+        }
+    });
+}

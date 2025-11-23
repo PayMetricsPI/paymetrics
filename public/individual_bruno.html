@@ -22,7 +22,7 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
 </head>
 
-<body onload="obterNoticias()">
+<body onload="obterNoticias();obterLimites()">
     <div id="sidebar"></div>
     <h1>Comportamento de mercado</h1>
     <div class="previsao_por_setor">
@@ -185,30 +185,38 @@
                 <h3>Índice de Vendas Reais (média 2022 = 100)</h3>
                 <canvas id="roupas_chart"></canvas>
             </div>
-            <div class="sim">
-                <h2>Área de simulação</h2>
-                <div class="selects">
-                    <select name="" id="" type="roupas">
-                        <option value="1">Janeiro</option>
-                        <option value="2">Fevereiro</option>
-                        <option value="3">Março</option>
-                        <option value="4">Abril</option>
-                        <option value="5">Maio</option>
-                        <option value="6">Junho</option>
-                        <option value="7">Julho</option>
-                        <option value="8">Agosto</option>
-                        <option value="9">Setembro</option>
-                        <option value="10">Outubro</option>
-                        <option value="11">Novembro</option>
-                        <option value="12">Dezembro</option>
-                    </select>
-                    <select name="" id="">
-                        <option value="2025">2025</option>
-                        <option value="2026">2026</option>
-                    </select>
+            <div class="sim_res">
+                <div class="sim">
+                    <h2>Área de simulação</h2>
+                    <div class="selects">
+                        <select name="" id="" type="roupas">
+                            <option value="1">Janeiro</option>
+                            <option value="2">Fevereiro</option>
+                            <option value="3">Março</option>
+                            <option value="4">Abril</option>
+                            <option value="5">Maio</option>
+                            <option value="6">Junho</option>
+                            <option value="7">Julho</option>
+                            <option value="8">Agosto</option>
+                            <option value="9">Setembro</option>
+                            <option value="10">Outubro</option>
+                            <option value="11">Novembro</option>
+                            <option value="12">Dezembro</option>
+                        </select>
+                        <select name="" id="">
+                            <option value="2025">2025</option>
+                            <option value="2026">2026</option>
+                        </select>
+                    </div>
+                    <div class="button_container">
+                        <button onclick="simular(this)">Simular</button>
+                    </div>
                 </div>
-                <div class="button_container">
-                    <button onclick="simular(this)">Simular</button>
+                <div class="res">
+                    <h2>Resultado da simulação</h2>
+                    <div class="simulacao_result">
+                        199.78 <span>Índice de Vendas Reais</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -250,30 +258,38 @@
                 <h3>Índice de Vendas Reais (média 2022 = 100)</h3>
                 <canvas id="alimentos_chart"></canvas>
             </div>
-            <div class="sim">
-                <h2>Área de simulação</h2>
-                <div class="selects">
-                    <select name="" id="" type="alimentos">
-                        <option value="1">Janeiro</option>
-                        <option value="2">Fevereiro</option>
-                        <option value="3">Março</option>
-                        <option value="4">Abril</option>
-                        <option value="5">Maio</option>
-                        <option value="6">Junho</option>
-                        <option value="7">Julho</option>
-                        <option value="8">Agosto</option>
-                        <option value="9">Setembro</option>
-                        <option value="10">Outubro</option>
-                        <option value="11">Novembro</option>
-                        <option value="12">Dezembro</option>
-                    </select>
-                    <select name="" id="">
-                        <option value="2025">2025</option>
-                        <option value="2026">2026</option>
-                    </select>
+            <div class="sim_res">
+                <div class="sim">
+                    <h2>Área de simulação</h2>
+                    <div class="selects">
+                        <select name="" id="" type="alimentos">
+                            <option value="1">Janeiro</option>
+                            <option value="2">Fevereiro</option>
+                            <option value="3">Março</option>
+                            <option value="4">Abril</option>
+                            <option value="5">Maio</option>
+                            <option value="6">Junho</option>
+                            <option value="7">Julho</option>
+                            <option value="8">Agosto</option>
+                            <option value="9">Setembro</option>
+                            <option value="10">Outubro</option>
+                            <option value="11">Novembro</option>
+                            <option value="12">Dezembro</option>
+                        </select>
+                        <select name="" id="">
+                            <option value="2025">2025</option>
+                            <option value="2026">2026</option>
+                        </select>
+                    </div>
+                    <div class="button_container">
+                        <button onclick="simular(this)">Simular</button>
+                    </div>
                 </div>
-                <div class="button_container">
-                    <button onclick="simular(this)">Simular</button>
+                <div class="res">
+                    <h2>Resultado da simulação</h2>
+                    <div class="simulacao_result">
+                        199.78 <span>Índice de Vendas Reais</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -315,30 +331,38 @@
                 <h3>Índice de Vendas Reais (média 2022 = 100)</h3>
                 <canvas id="farmacia_chart"></canvas>
             </div>
-            <div class="sim">
-                <h2>Área de simulação</h2>
-                <div class="selects">
-                    <select name="" id="" type="farmacia">
-                        <option value="1">Janeiro</option>
-                        <option value="2">Fevereiro</option>
-                        <option value="3">Março</option>
-                        <option value="4">Abril</option>
-                        <option value="5">Maio</option>
-                        <option value="6">Junho</option>
-                        <option value="7">Julho</option>
-                        <option value="8">Agosto</option>
-                        <option value="9">Setembro</option>
-                        <option value="10">Outubro</option>
-                        <option value="11">Novembro</option>
-                        <option value="12">Dezembro</option>
-                    </select>
-                    <select name="" id="">
-                        <option value="2025">2025</option>
-                        <option value="2026">2026</option>
-                    </select>
+            <div class="sim_res">
+                <div class="sim">
+                    <h2>Área de simulação</h2>
+                    <div class="selects">
+                        <select name="" id="" type="farmacia">
+                            <option value="1">Janeiro</option>
+                            <option value="2">Fevereiro</option>
+                            <option value="3">Março</option>
+                            <option value="4">Abril</option>
+                            <option value="5">Maio</option>
+                            <option value="6">Junho</option>
+                            <option value="7">Julho</option>
+                            <option value="8">Agosto</option>
+                            <option value="9">Setembro</option>
+                            <option value="10">Outubro</option>
+                            <option value="11">Novembro</option>
+                            <option value="12">Dezembro</option>
+                        </select>
+                        <select name="" id="">
+                            <option value="2025">2025</option>
+                            <option value="2026">2026</option>
+                        </select>
+                    </div>
+                    <div class="button_container">
+                        <button onclick="simular(this)">Simular</button>
+                    </div>
                 </div>
-                <div class="button_container">
-                    <button onclick="simular(this)">Simular</button>
+                <div class="res">
+                    <h2>Resultado da simulação</h2>
+                    <div class="simulacao_result">
+                        199.78 <span>Índice de Vendas Reais</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -380,30 +404,38 @@
                 <h3>Índice de Vendas Reais (média 2022 = 100)</h3>
                 <canvas id="moveis_chart"></canvas>
             </div>
-            <div class="sim">
-                <h2>Área de simulação</h2>
-                <div class="selects">
-                    <select name="" id="" type="moveis">
-                        <option value="1">Janeiro</option>
-                        <option value="2">Fevereiro</option>
-                        <option value="3">Março</option>
-                        <option value="4">Abril</option>
-                        <option value="5">Maio</option>
-                        <option value="6">Junho</option>
-                        <option value="7">Julho</option>
-                        <option value="8">Agosto</option>
-                        <option value="9">Setembro</option>
-                        <option value="10">Outubro</option>
-                        <option value="11">Novembro</option>
-                        <option value="12">Dezembro</option>
-                    </select>
-                    <select name="" id="">
-                        <option value="2025">2025</option>
-                        <option value="2026">2026</option>
-                    </select>
+            <div class="sim_res">
+                <div class="sim">
+                    <h2>Área de simulação</h2>
+                    <div class="selects">
+                        <select name="" id="" type="moveis">
+                            <option value="1">Janeiro</option>
+                            <option value="2">Fevereiro</option>
+                            <option value="3">Março</option>
+                            <option value="4">Abril</option>
+                            <option value="5">Maio</option>
+                            <option value="6">Junho</option>
+                            <option value="7">Julho</option>
+                            <option value="8">Agosto</option>
+                            <option value="9">Setembro</option>
+                            <option value="10">Outubro</option>
+                            <option value="11">Novembro</option>
+                            <option value="12">Dezembro</option>
+                        </select>
+                        <select name="" id="">
+                            <option value="2025">2025</option>
+                            <option value="2026">2026</option>
+                        </select>
+                    </div>
+                    <div class="button_container">
+                        <button onclick="simular(this)">Simular</button>
+                    </div>
                 </div>
-                <div class="button_container">
-                    <button onclick="simular(this)">Simular</button>
+                <div class="res">
+                    <h2>Resultado da simulação</h2>
+                    <div class="simulacao_result">
+                        199.78 <span>Índice de Vendas Reais</span>
+                    </div>
                 </div>
             </div>
         </div>
