@@ -213,3 +213,16 @@ slc_farmacia_meses.addEventListener("change", (e) => {
 slc_moveis_meses.addEventListener("change", (e) => {
     atualizarGrafico(moveis_chart, "moveis", slc_moveis.value, slc_moveis_meses.value)
 })
+
+
+function simular(element){
+    const select_mes = element.parentElement.parentElement.getElementsByClassName("selects")[0].children[0].value;
+    const select_ano = element.parentElement.parentElement.getElementsByClassName("selects")[0].children[1].value;
+    const type = element.parentElement.parentElement.getElementsByClassName("selects")[0].children[0].getAttribute("type");
+    
+    fetch(`http://localhost:5000/obter/previsao/roupas/${select_ano}/${select_mes}`).then(res => {
+        res.json().then(data => {
+            console.log(data)
+        })
+    })
+}
