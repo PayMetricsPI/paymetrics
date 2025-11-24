@@ -329,3 +329,65 @@ select{
     font-size: 18px;
     color: rgba(0, 0, 0, 0.35);
 }
+
+.segmentos{
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 24px;
+}
+.segmentos > div{
+    width: 40%;
+    background-color: #F2F2F2;
+    display: flex;
+    align-items: center;
+    padding: 24px;
+    gap: 24px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.25s;
+    user-select: none;
+}
+.segmentos div span.material-symbols-outlined{
+    font-size: 36px;
+}
+
+.prev h4{
+    margin: 32px 0 24px 0;
+    font-size: 20px;
+    text-align: center;
+    font-weight: 600;
+}
+.segmentos > div:hover{
+    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+    background-color: #cecece;
+}
+
+.segmentos > div.seg_roupas.seg_select{
+    background-color: #00009c;
+    color: #fff;
+    font-weight: 600;
+}
+
+
+.segmentos > div.seg_alimentos.seg_select{
+    background-color: #c25e00;
+    color: #fff;
+    font-weight: 600;
+}
+
+.segmentos > div.seg_farmacia.seg_select{
+    background-color: #9c0000;
+    color: #fff;
+    font-weight: 600;
+}
+
+.segmentos > div.seg_moveis.seg_select{
+    background-color: #70009c;
+    color: #fff;
+    font-weight: 600;
+}
+
+.prev_sim_title_container{
+    margin-top: 24px;
+}

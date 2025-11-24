@@ -1,123 +1,111 @@
-const ctx_roupas = document.getElementById("roupas_chart");
-const ctx_alimentos = document.getElementById("alimentos_chart");
-const ctx_farmacia = document.getElementById("farmacia_chart");
-const ctx_movel = document.getElementById("moveis_chart");
+const ctx_geral = document.getElementById("geral_chart");
 
-preverProxMes("roupas")
-preverProxMes("alimentos")
-preverProxMes("farmacia")
-preverProxMes("moveis")
+preverProxMes("roupas");
+preverProxMes("alimentos");
+preverProxMes("farmacia");
+preverProxMes("moveis");
 
-async function buscarDadosGrafico(type, anos, meses){
-    const res = await fetch(`http://localhost:5000/obter/previsao/ano/${type}/${anos}/${meses}`)
-    return await res.json()
+const coresSegmentos = {
+    roupas: "#00009c",
+    alimentos: "#c25e00",
+    farmacia: "#9c0000",
+    moveis: "#70009c"
+};
+
+async function buscarDadosGrafico(type, anos, meses) {
+    const res = await fetch(`http://localhost:5000/obter/previsao/ano/${type}/${anos}/${meses}`);
+    return await res.json();
 }
 
-async function atualizarGrafico(grafico, type, anos, meses){
-    const label = []
-    const hist = []
-    const prev = []
-    const erroUpper = []
-    const erroLower = []
-    
-    const dados = await buscarDadosGrafico(type, anos, meses)
+async function obterDatasetDoSegmento(type, anos, meses) {
+    const dados = await buscarDadosGrafico(type, anos, meses);
 
-    for(med of dados){
-        label.push(new Date(med.data).toLocaleDateString("pt-BR", {
-            timeZone: "UTC",
-            month: "numeric",
-            year: "numeric"
-        }))
-        if(med.previsao){
-            if(prev[prev.length-1] == null) hist.push(med.vendas)
-            prev.push(med.vendas)
-            erroUpper.push(parseFloat(med.vendas)+parseFloat(med.mae))
-            erroLower.push(parseFloat(med.vendas)-parseFloat(med.mae))
-        }else{
-            hist.push(med.vendas)
-            prev.push(null)
-            erroUpper.push(null)
-            erroLower.push(null)
+    const hist = [];
+    const prev = [];
+    const erroUpper = [];
+    const erroLower = [];
+
+    for (const med of dados) {
+        if (med.previsao) {
+            if (prev[prev.length - 1] == null) hist.push(med.vendas);
+            prev.push(med.vendas);
+            erroUpper.push(parseFloat(med.vendas) + parseFloat(med.mae));
+            erroLower.push(parseFloat(med.vendas) - parseFloat(med.mae));
+        } else {
+            hist.push(med.vendas);
+            prev.push(null);
+            erroUpper.push(null);
+            erroLower.push(null);
         }
     }
 
-    console.log(dados)
-
-    grafico.data.labels = label;
-    grafico.data.datasets[0].data = hist;
-    grafico.data.datasets[1].data = prev;
-    grafico.data.datasets[2].data = erroUpper;
-    grafico.data.datasets[3].data = erroLower;
-    
-    grafico.update();
+    return [
+        {
+            label: `Histórico ${type}`,
+            data: hist,
+            borderColor: coresSegmentos[type],
+            borderWidth: 3,
+            pointRadius: 2,
+            tension: 0.4
+        },
+        {
+            label: `Previsão ${type}`,
+            data: prev,
+            borderColor: coresSegmentos[type],
+            borderDash: [6, 4],
+            borderWidth: 3,
+            pointRadius: 3,
+            tension: 0.4
+        },
+        {
+            label: `Upper ${type}`,
+            data: erroUpper,
+            fill: '+1',
+            borderColor: "rgba(0,0,0,0)",
+            backgroundColor: coresSegmentos[type] + "33",
+            pointRadius: 0,
+            tension: 0.4
+        },
+        {
+            label: `Lower ${type}`,
+            data: erroLower,
+            fill: false,
+            borderColor: "rgba(0,0,0,0)",
+            backgroundColor: coresSegmentos[type] + "33",
+            pointRadius: 0,
+            tension: 0.4
+        }
+    ];
 }
 
-function preverProxMes(type){
+function preverProxMes(type) {
     fetch(`http://localhost:5000/obter/previsao/prox/${type}`).then(
         (res) => {
             res.json().then((json) => {
-                indice = document.getElementById(`indice_${type}`)
-                variacao = document.getElementById(`variacao_${type}`)
-                variacao_icon = document.getElementById(`variacao_${type}_icon`)
-                
-                indice.innerText = parseFloat(json.previsao).toFixed(2)
-                variacao.innerText = parseFloat(json.variacao).toFixed(1).replace("-", "")
-                
-                if(parseFloat(json.variacao) <= 0){
-                    variacao_icon.innerText = "arrow_drop_down"
-                    variacao_icon.parentElement.classList.add("red")
-                }else{
-                    variacao_icon.innerText = "arrow_drop_up"
-                    variacao_icon.parentElement.classList.add("green")
+                indice = document.getElementById(`indice_${type}`);
+                variacao = document.getElementById(`variacao_${type}`);
+                variacao_icon = document.getElementById(`variacao_${type}_icon`);
+
+                indice.innerText = parseFloat(json.previsao).toFixed(2);
+                variacao.innerText = parseFloat(json.variacao).toFixed(1).replace("-", "");
+
+                if (parseFloat(json.variacao) <= 0) {
+                    variacao_icon.innerText = "arrow_drop_down";
+                    variacao_icon.parentElement.classList.add("red");
+                } else {
+                    variacao_icon.innerText = "arrow_drop_up";
+                    variacao_icon.parentElement.classList.add("green");
                 }
-            })
+            });
         }
-    )
+    );
 }
 
 const graph_options = {
     type: 'line',
     data: {
         labels: [],
-        datasets: [
-            {
-                label: 'Histórico',
-                data: [],
-                borderColor: 'blue',
-                borderWidth: 3,
-                pointRadius: 2,
-                pointHoverRadius: 2,
-                tension: 0.4
-            },
-            {
-                label: 'Previsão',
-                data: [],
-                borderColor: "#FFB100",
-                borderDash: [6, 4],
-                borderWidth: 3,
-                pointRadius: 3,
-                pointHoverRadius: 5,
-                tension: 0.4
-            },
-            {
-                label: 'Limite superior',
-                data: [],
-                fill: '+1',
-                borderColor: 'rgba(0,0,0,0)',
-                backgroundColor: 'rgba(255,165,0,0.2)',
-                pointRadius: 0,
-                tension: 0.4
-            },
-            {
-                label: 'Limite inferior',
-                data: [],
-                fill: false,
-                borderColor: 'rgba(0,0,0,0)',
-                backgroundColor: 'rgba(255,165,0,0.2)',
-                pointRadius: 0,
-                tension: 0.4
-            }
-        ]
+        datasets: []
     },
     options: {
         plugins: {
@@ -127,163 +115,163 @@ const graph_options = {
             y: { beginAtZero: false }
         }
     }
-}
+};
 
-const roupas_chart = new Chart(ctx_roupas, graph_options);
-const alimentos_chart = new Chart(ctx_alimentos, graph_options);
-const farmacia_chart = new Chart(ctx_farmacia, graph_options);
-const moveis_chart = new Chart(ctx_movel, graph_options);
+const geral_chart = new Chart(ctx_geral, graph_options);
 
-atualizarGrafico(roupas_chart, "roupas", 1, 4)
-atualizarGrafico(alimentos_chart, "alimentos", 1, 4)
-atualizarGrafico(farmacia_chart, "farmacia", 1, 4)
-atualizarGrafico(moveis_chart, "moveis", 1, 4)
+const slc_tempo_visualizacao = document.getElementById("slc_tempo_visualizacao");
+const slc_tempo_previsao = document.getElementById("slc_tempo_previsao");
 
-const slc_roupas = document.getElementById("slc_roupas");
-const slc_alimentos = document.getElementById("slc_alimentos");
-const slc_farmacia = document.getElementById("slc_farmacia");
-const slc_moveis = document.getElementById("slc_moveis");
-
-const slc_roupas_meses = document.getElementById("slc_roupas_meses");
-const slc_alimentos_meses = document.getElementById("slc_alimentos_meses");
-const slc_farmacia_meses = document.getElementById("slc_farmacia_meses");
-const slc_moveis_meses = document.getElementById("slc_moveis_meses");
-
-slc_roupas.addEventListener("change", (e) => {
-    if (slc_roupas.value === "1") {
-        slc_roupas_meses.querySelector('option[value="12"]').disabled = true;
-        if (slc_roupas_meses.value === "12") {
-            slc_roupas_meses.value = "6";
+slc_tempo_visualizacao.addEventListener("change", (e) => {
+    if (slc_tempo_visualizacao.value === "1") {
+        slc_tempo_previsao.querySelector('option[value="12"]').disabled = true;
+        if (slc_tempo_previsao.value === "12") {
+            slc_tempo_previsao.value = "6";
         }
     } else {
-        slc_roupas_meses.querySelector('option[value="12"]').disabled = false;
+        slc_tempo_previsao.querySelector('option[value="12"]').disabled = false;
     }
-    atualizarGrafico(roupas_chart, "roupas", slc_roupas.value, slc_roupas_meses.value)
-})
 
-slc_alimentos.addEventListener("change", (e) => {
-    if (slc_alimentos.value === "1") {
-        slc_alimentos_meses.querySelector('option[value="12"]').disabled = true;
-        if (slc_alimentos_meses.value === "12") {
-            slc_alimentos_meses.value = "6";
-        }
-    } else {
-        slc_alimentos_meses.querySelector('option[value="12"]').disabled = false;
-    }
-    atualizarGrafico(alimentos_chart, "alimentos", slc_alimentos.value, slc_alimentos_meses.value)
-})
+    atualizarTodosSegmentos();
+});
 
-slc_farmacia.addEventListener("change", (e) => {
-    if (slc_farmacia.value === "1") {
-        slc_farmacia_meses.querySelector('option[value="12"]').disabled = true;
-        if (slc_farmacia_meses.value === "12") {
-            slc_farmacia_meses.value = "6";
-        }
-    } else {
-        slc_farmacia_meses.querySelector('option[value="12"]').disabled = false;
-    }
-    atualizarGrafico(farmacia_chart, "farmacia", slc_farmacia.value, slc_farmacia_meses.value)
-})
+slc_tempo_previsao.addEventListener("change", (e) => {
+    atualizarTodosSegmentos();
+});
 
-slc_moveis.addEventListener("change", (e) => {
-    if (slc_moveis.value === "1") {
-        slc_moveis_meses.querySelector('option[value="12"]').disabled = true;
-        if (slc_moveis_meses.value === "12") {
-            slc_moveis_meses.value = "6";
-        }
-    } else {
-        slc_moveis_meses.querySelector('option[value="12"]').disabled = false;
-    }
-    atualizarGrafico(moveis_chart, "moveis", slc_moveis.value, slc_moveis_meses.value)
-})
-
-
-slc_roupas_meses.addEventListener("change", (e) => {
-    atualizarGrafico(roupas_chart, "roupas", slc_roupas.value, slc_roupas_meses.value)
-})
-
-slc_alimentos_meses.addEventListener("change", (e) => {
-    atualizarGrafico(alimentos_chart, "alimentos", slc_alimentos.value, slc_alimentos_meses.value)
-})
-
-slc_farmacia_meses.addEventListener("change", (e) => {
-    atualizarGrafico(farmacia_chart, "farmacia", slc_farmacia.value, slc_farmacia_meses.value)
-})
-
-slc_moveis_meses.addEventListener("change", (e) => {
-    atualizarGrafico(moveis_chart, "moveis", slc_moveis.value, slc_moveis_meses.value)
-})
-
-
-function simular(element){
+function simular(element) {
     const select_mes = element.parentElement.parentElement.getElementsByClassName("selects")[0].children[0].value;
     const select_ano = element.parentElement.parentElement.getElementsByClassName("selects")[0].children[1].value;
     const type = element.parentElement.parentElement.getElementsByClassName("selects")[0].children[0].getAttribute("type");
-    
+
     fetch(`http://localhost:5000/obter/previsao/roupas/${select_ano}/${select_mes}`).then(res => {
         res.json().then(data => {
-            console.log(data)
-        })
-    })
-}
-
-function obterLimites(){
-    fetch("http://localhost:5000/obter/limites/data")
-    .then(res => res.json())
-    .then(limites => {
-
-        const selectsContainer = document.getElementsByClassName("selects");
-
-        const hoje = new Date();
-        const anoAtual = hoje.getFullYear();
-        const mesAtual = hoje.getMonth() + 1;
-
-        for (const div of selectsContainer) {
-
-            const selectMes = div.children[0];
-            const selectAno = div.children[1];
-            const tipo = selectMes.getAttribute("type");
-
-            const limite = limites.find(item => item.type === tipo);
-            if (!limite) continue;
-
-            const limiteAno = limite.year;
-            const limiteMes = limite.month;
-
-            for (const opt of selectAno.options) {
-                const ano = parseInt(opt.value);
-                opt.disabled = ano > limiteAno;
-            }
-
-            function atualizarMeses() {
-                const anoSelecionado = parseInt(selectAno.value);
-
-                for (const opt of selectMes.options) {
-                    const mes = parseInt(opt.value);
-
-                    opt.disabled = false;
-
-                    if (anoSelecionado === anoAtual && mes < mesAtual) {
-                        opt.disabled = true;
-                    }
-
-                    if (anoSelecionado === limiteAno && mes > limiteMes) {
-                        opt.disabled = true;
-                    }
-                }
-
-                if (selectMes.options[selectMes.selectedIndex].disabled) {
-                    if (!selectMes.querySelector(`option[value='${mesAtual}']`)?.disabled) {
-                        selectMes.value = mesAtual;
-                    }
-                    else {
-                        selectMes.value = limiteMes;
-                    }
-                }
-            }
-
-            atualizarMeses();
-            selectAno.addEventListener("change", atualizarMeses);
-        }
+            console.log(data);
+        });
     });
 }
+
+function obterLimites() {
+    fetch("http://localhost:5000/obter/limites/data")
+        .then(res => res.json())
+        .then(limites => {
+
+            const selectsContainer = document.getElementsByClassName("selects");
+
+            const hoje = new Date();
+            const anoAtual = hoje.getFullYear();
+            const mesAtual = hoje.getMonth() + 1;
+
+            for (const div of selectsContainer) {
+
+                const selectMes = div.children[0];
+                const selectAno = div.children[1];
+                const tipo = selectMes.getAttribute("type");
+
+                const limite = limites.find(item => item.type === tipo);
+                if (!limite) continue;
+
+                const limiteAno = limite.year;
+                const limiteMes = limite.month;
+
+                for (const opt of selectAno.options) {
+                    const ano = parseInt(opt.value);
+                    opt.disabled = ano > limiteAno;
+                }
+
+                function atualizarMeses() {
+                    const anoSelecionado = parseInt(selectAno.value);
+
+                    for (const opt of selectMes.options) {
+                        const mes = parseInt(opt.value);
+
+                        opt.disabled = false;
+
+                        if (anoSelecionado === anoAtual && mes < mesAtual) {
+                            opt.disabled = true;
+                        }
+
+                        if (anoSelecionado === limiteAno && mes > limiteMes) {
+                            opt.disabled = true;
+                        }
+                    }
+
+                    if (selectMes.options[selectMes.selectedIndex].disabled) {
+                        if (!selectMes.querySelector(`option[value='${mesAtual}']`).disabled) {
+                            selectMes.value = mesAtual;
+                        }
+                        else {
+                            selectMes.value = limiteMes;
+                        }
+                    }
+                }
+
+                atualizarMeses();
+                selectAno.addEventListener("change", atualizarMeses);
+            }
+        });
+}
+
+async function selectSegmento(element) {
+    const anos = slc_tempo_visualizacao.value;
+    const meses = slc_tempo_previsao.value;
+    const type = element.getAttribute("data-type");
+
+    if (element.classList.contains("seg_select")) {
+        element.classList.remove("seg_select");
+
+        geral_chart.data.datasets = geral_chart.data.datasets.filter(ds => !ds.label.includes(type));
+        geral_chart.update();
+        return;
+    }
+
+    element.classList.add("seg_select");
+
+    const datasets = await obterDatasetDoSegmento(type, anos, meses);
+
+    datasets.forEach(ds => geral_chart.data.datasets.push(ds));
+
+    geral_chart.update();
+}
+
+async function atualizarTodosSegmentos() {
+    const anos = slc_tempo_visualizacao.value;
+    const meses = slc_tempo_previsao.value;
+
+    const el_selecionados = document.querySelectorAll(".segmentos > div.seg_select")
+    const selecionados = []
+
+    for(sel of el_selecionados){
+        selecionados.push(sel.getAttribute("data-type"))
+    }
+
+    if (selecionados.length === 0) {
+        geral_chart.data.labels = [];
+        geral_chart.data.datasets = [];
+        geral_chart.update();
+        return;
+    }
+
+    const dadosBase = await buscarDadosGrafico(selecionados[0], anos, meses);
+    const labels = dadosBase.map(med =>
+        new Date(med.data).toLocaleDateString("pt-BR", {
+            timeZone: "UTC",
+            month: "numeric",
+            year: "numeric"
+        })
+    );
+
+    geral_chart.data.labels = labels;
+    geral_chart.data.datasets = [];
+
+    for (const type of selecionados) {
+        const datasets = await obterDatasetDoSegmento(type, anos, meses);
+        datasets.forEach(ds => geral_chart.data.datasets.push(ds));
+    }
+
+    geral_chart.update();
+}
+
+window.addEventListener("DOMContentLoaded", () => {
+    setTimeout(() => atualizarTodosSegmentos(), 50);
+});
