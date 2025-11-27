@@ -22,13 +22,13 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
 </head>
 
-<body onload="obterNoticias();obterLimites()">
+<body onload="obterNoticias();obterLimites();mostrarProxMes()">
     <div id="sidebar"></div>
     <h1>Comportamento de mercado</h1>
     <div class="previsao_por_setor">
         <h2>
             <span>Previsão por setor de vendas <span class="mini">varejo</span></span>
-            <span>Dezembro</span>
+            <span id="prox_mes_show">-</span>
         </h2>
         <div class="setores">
             <div class="setor">

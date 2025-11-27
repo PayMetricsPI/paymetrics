@@ -275,3 +275,18 @@ async function atualizarTodosSegmentos() {
 window.addEventListener("DOMContentLoaded", () => {
     setTimeout(() => atualizarTodosSegmentos(), 50);
 });
+
+function mostrarProxMes(){
+    const local = document.getElementById("prox_mes_show");
+
+    const proxMes = new Date();
+    proxMes.setMonth(proxMes.getMonth()+1)
+
+    let proxMesTxt = proxMes.toLocaleString('pt-br', {
+        month: 'long'
+    })
+
+    proxMesTxt = proxMesTxt.charAt(0).toUpperCase() + proxMesTxt.slice(1)
+
+    local.innerHTML = proxMesTxt;
+}
