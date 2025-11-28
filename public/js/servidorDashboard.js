@@ -2,7 +2,7 @@ const usersDiv = document.querySelector('.users');
 const fkempresa = Number(sessionStorage.getItem('id'));
 const servidor = JSON.parse(sessionStorage.getItem('servidorSelecionado'));
 
-let data;
+
 let cpuChart = null;
 let ramChart = null;
 let discoChart = null;
@@ -18,55 +18,68 @@ let chartStatus = null;
 let chartStatusRam = null;
 let chartStatusDisco = null;
 
+// Dados do fetch
+let data;
+
+// Dados adicionais
+let estatisticasAlertas = null;
+let blocosCPU = [];
 
 fetch('/s3/downloadJSON')
-    .then(res => {
-        if (!res.ok) throw new Error('Erro na resposta do S3');
-        return res.json();
-    })
-    .then(response => {
-        data = response.data;
-        calcularAlertas();
-    })
-    .catch(err => console.error(err));
-
+  .then(res => {
+    if (!res.ok) throw new Error('Erro na resposta do S3');
+    return res.json();
+  })
+.then(response => {
+  data = response.data.flat();
+  calcularAlertas();
+})
+  .catch(err => console.error(err));
 
 function calcularAlertas() {
 
-    if (servidor) {
+    if(servidor){
 
-        const alertaCPU = data.filter(row => row.cpu_status === "NORMAL").length;
-        const alertaRAM = data.filter(row => row.ram_status === "NORMAL").length;
-        const alertaDisco = data.filter(row => row.disco_status === "NORMAL").length;
-        const alertaDownload = data.filter(row => row.mb_enviados_status === "NORMAL").length;
-        const alertaUpload = data.filter(row => row.mb_recebidos_status === "NORMAL").length;
+  const mac = servidor.mac_address;
+  const servidorData = data.filter(row => row.mac_address === mac);
 
-        const alertaCriticoCPU = data.filter(row => row.cpu_status_critico === "CRITICO").length;
-        const alertaCriticoRAM = data.filter(row => row.ram_status_critico === "CRITICO").length;
-        const alertaCriticoDisco = data.filter(row => row.disco_status_critico === "CRITICO").length;
-        const alertaCriticoDownload = data.filter(row => row.mb_enviados_status_critico === "CRITICO").length;
-        const alertaCriticoUpload = data.filter(row => row.mb_recebidos_status_critico === "CRITICO").length;
+  const alertaCPU = data.filter(row => row.cpu_status === "NORMAL").length;
+  const alertaRAM = data.filter(row => row.ram_status === "NORMAL").length;
+  const alertaDisco = data.filter(row => row.disco_status === "NORMAL").length;
+  const alertaDownload = data.filter(row => row.mb_enviados_status === "NORMAL").length;
+  const alertaUpload = data.filter(row => row.mb_recebidos_status === "NORMAL").length;
 
-        const somaAlertas = alertaCPU + alertaRAM + alertaDisco + alertaDownload + alertaUpload;
-        const somaAlertaCriticos = alertaCriticoCPU + alertaCriticoRAM + alertaCriticoDisco + alertaCriticoDownload + alertaCriticoUpload;
+  const alertaCriticoCPU = data.filter(row => row.cpu_status_critico === "CRITICO").length;
+  const alertaCriticoRAM = data.filter(row => row.ram_status_critico === "CRITICO").length;
+  const alertaCriticoDisco = data.filter(row => row.disco_status_critico === "CRITICO").length;
+  const alertaCriticoDownload = data.filter(row => row.mb_enviados_status_critico === "CRITICO").length;
+  const alertaCriticoUpload = data.filter(row => row.mb_recebidos_status_critico === "CRITICO").length;
 
-        document.getElementById('alerta_numero_padrao').textContent = somaAlertas;
-        document.getElementById('alerta_numero_critico').textContent = somaAlertaCriticos;
+  const somaAlertas = alertaCPU + alertaRAM + alertaDisco + alertaDownload + alertaUpload;
+  const somaAlertaCriticos = alertaCriticoCPU + alertaCriticoRAM + alertaCriticoDisco + alertaCriticoDownload + alertaCriticoUpload;
 
-        document.getElementById('critico_CPU').textContent = alertaCriticoCPU;
-        document.getElementById('padrao_CPU').textContent = alertaCPU;
+  estatisticasAlertas = {
+    normal:  [alertaCPU, alertaRAM, alertaDisco, alertaUpload, alertaDownload],
+    critico: [alertaCriticoCPU, alertaCriticoRAM, alertaCriticoDisco, alertaCriticoUpload, alertaCriticoDownload]
+  };
 
-        document.getElementById('critico_RAM').textContent = alertaCriticoRAM;
-        document.getElementById('padrao_RAM').textContent = alertaRAM;
+  document.getElementById('alerta_numero_padrao').textContent = somaAlertas;
+  document.getElementById('alerta_numero_critico').textContent = somaAlertaCriticos;
 
-        document.getElementById('critico_Disco').textContent = alertaCriticoDisco;
-        document.getElementById('padrao_Disco').textContent = alertaDisco;
+  document.getElementById('critico_CPU').textContent = alertaCriticoCPU;
+  document.getElementById('padrao_CPU').textContent = alertaCPU;
 
-        document.getElementById('critico_Download').textContent = alertaCriticoDownload;
-        document.getElementById('padrao_Download').textContent = alertaDownload;
+  document.getElementById('critico_RAM').textContent = alertaCriticoRAM;
+  document.getElementById('padrao_RAM').textContent = alertaRAM;
 
-        document.getElementById('critico_Upload').textContent = alertaCriticoUpload;
-        document.getElementById('padrao_Upload').textContent = alertaUpload;
+  document.getElementById('critico_Disco').textContent = alertaCriticoDisco;
+  document.getElementById('padrao_Disco').textContent = alertaDisco;
+
+  document.getElementById('critico_Download').textContent = alertaCriticoDownload;
+  document.getElementById('padrao_Download').textContent = alertaDownload;
+
+  document.getElementById('critico_Upload').textContent = alertaCriticoUpload;
+  document.getElementById('padrao_Upload').textContent = alertaUpload;
     }
 }
 
