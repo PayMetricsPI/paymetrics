@@ -294,7 +294,7 @@
   align-self: center;
   align-items: center;
   justify-content: center;
-  gap: 140px;
+  gap: 80px;
   border-radius: 10px;
   border-color: rgb(243, 186, 0);
   border-style: solid;
@@ -318,24 +318,48 @@
 .cpu {
   display: flex;
   flex-direction: column;
+  background-color: #FFF3E0;
+  border-radius: 10px;
+  padding: 30px;
 }
 
 .ram {
   display: flex;
   flex-direction: column;
+    display: flex;
+  flex-direction: column;
+  background-color: #E3F2FD;
+  border-radius: 10px;
+  padding: 30px;
 }
 
 .disco {
   display: flex;
   flex-direction: column;
+    display: flex;
+  flex-direction: column;
+  background-color: #E8F5E9;
+  border-radius: 10px;
+  padding: 30px;
 }
 
 .upload {
   display: flex;
   flex-direction: column;
+    display: flex;
+  flex-direction: column;
+  background-color: #F3E5F5; 
+  border-radius: 10px;
+  padding: 30px;
 }
 
 .download {
   display: flex;
   flex-direction: column;
+    display: flex;
+  flex-direction: column;
+  background-color: #fae0e4;
+  border-radius: 10px;
+  padding: 30px;
+  box-shadow: black;
 }

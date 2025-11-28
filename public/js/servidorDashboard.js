@@ -19,44 +19,35 @@ let chartStatus = null;
 let chartStatusRam = null;
 let chartStatusDisco = null;
 
-    fetch('/s3/downloadCSV/.csv')
-        .then(res => {
-            if (!res.ok) throw new Error('Erro na resposta do S3');
-            return res.json();
-        })
-        .then(response => {
-            setData(response.data);
-        })
-        .catch(err => {
-            console.error(err);
-        });
 
-const alertaCPU = data.map(row => row['alertaCPU']);
-const alertaRAM = data.map(row => row['alertaRAM']);
-const alertaDisco = data.map(row => row['alertaDisco']);
-const alertaDownload = data.map(row => row['alertaDownload']);
-const alertaUpload = data.map(row => row['alertaUpload']);
+fetch('/s3/downloadCSV/.csv')
+    .then(res => {
+        if (!res.ok) throw new Error('Erro na resposta do S3');
+        return res.json();
+    })
+    .then(response => {
+        setData(response.data);
+    })
+    .catch(err => {
+        console.error(err);
+    });
 
-const alertaCriticoCPU = data.map(row => row['alertaCriticoCPU']);
-const alertaCriticoRAM = data.map(row => row['alertaCriticoRAM']);
-const alertaCriticoDisco = data.map(row => row['alertaCriticoDisco']);
-const alertaCriticoDownload = data.map(row => row['alertaCriticoDownload']);
-const alertaCriticoUpload = data.map(row => row['alertaCriticoUpload']);
 
-const qtdAlertaCPU = alertaCPU.length
-const qtdAlertaRAM = alertaRAM.length
-const qtdAlertaDisco = alertaDisco.length
-const qtdAlertaDownload = alertaDownload.length
-const qtdAlertaUpload = alertaUpload.length
+const alertaCPU = data.filter(row => row.cpu_status === "NORMAL").length;
+const alertaRAM = data.filter(row => row.ram_status === "NORMAL").length;
+const alertaDisco = data.filter(row => row.disco_status === "NORMAL").length;
+const alertaDownload = data.filter(row => row.mb_enviados_status === "NORMAL").length;
+const alertaUpload = data.filter(row => row.mb_recebidos_status == "NORMAL").length;
 
-const qtdAlertaCriticoCPU = alertaCriticoCPU.length
-const qtdAlertaCriticoRAM = alertaCriticoRAM.length
-const qtdAlertaCriticoDisco = alertaCriticoDisco.length
-const qtdAlertaCriticoDownload = alertaCriticoDownload.length
-const qtdAlertaCriticoUpload = alertaCriticoUpload.length
 
-const somaAlertas = qtdAlertaCPU + qtdAlertaRAM + qtdAlertaDisco + qtdAlertaDownload + qtdAlertaUpload
-const somaAlertaCriticos = qtdAlertaCriticoCPU + qtdAlertaCriticoRAM + qtdAlertaCriticoDisco + qtdAlertaCriticoDownload + qtdAlertaCriticoUpload
+const alertaCriticoCPU = data.filter(row => row.cpu_status_critico === "CRITICO").length;
+const alertaCriticoRAM = data.filter(row => row.ram_status_critico === "CRITICO").length;
+const alertaCriticoDisco = data.filter(row => row.disco_status_critico === "CRITICO").length;
+const alertaCriticoDownload = data.filter(row => row.mb_enviados_status_critico === "CRITICO").length;
+const alertaCriticoUpload = data.filter(row => row.mb_recebidos_status_critico === "CRITICO").length;
+
+const somaAlertas = alertaCPU + alertaRAM + alertaDisco + alertaDownload + alertaUpload
+const somaAlertaCriticos = alertaCriticoCPU + alertaCriticoRAM + alertaCriticoDisco + alertaCriticoDownload + alertaCriticoUpload
 
 
 if (servidor) {
@@ -169,6 +160,7 @@ function inicializarDashboard() {
     atualizarGraficoPorPeriodo(Periodo.value);
 }
 
+
 function atualizarGraficoPorPeriodo(periodo) {
     if (cpuChart) cpuChart.destroy();
     if (ramChart) ramChart.destroy();
@@ -183,6 +175,26 @@ function atualizarGraficoPorPeriodo(periodo) {
     if (chartDisco) chartDisco.destroy();
 
     if (periodo === "1") {
+        
+//         const data = {
+//   labels: ['20:00', '21:00', '22:00', '23:00', '00:00', '01:00'],
+//   datasets: [
+//     {
+//       label: 'Quantidade Alertas',
+//       data: qtdAlertaCPU,                     
+//       backgroundColor: 'rgba(255, 206, 86, 0.8)',
+//       borderColor: 'rgba(255, 206, 86, 1)',
+//       borderWidth: 1,
+//     },
+//     {
+//       label: 'Quantidade Críticos',
+//       data: qtdAlertaCriticoCPU,                     
+//       backgroundColor: 'rgba(255, 99, 132, 0.8)', 
+//       borderColor: 'rgba(255, 99, 132, 1)',
+//       borderWidth: 1,
+//     }
+//   ]
+// };
 
         ctxCpu = document.getElementById('CpuChart').getContext('2d');
         cpuChart = new Chart(ctxCpu, {
