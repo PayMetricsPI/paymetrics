@@ -3,12 +3,12 @@ var router = express.Router();
 
 var s3Controller = require('../controllers/s3Controller')
 
-router.post("/uploadCSV", function(req, res){
+router.post("/uploadCSV", function (req, res) {
     s3Controller.novoCSVBucket(req, res)
 })
 
-router.get("/donwloadCSV", function(req, res){
-    s3Controller.trustedCSVBucket(req,res)
+router.get("/downloadJSON", function (req, res) {
+    s3Controller.clientJSONBucket(req, res)
 })
 
 
