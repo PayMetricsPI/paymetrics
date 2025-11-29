@@ -290,3 +290,19 @@ function mostrarProxMes(){
 
     local.innerHTML = proxMesTxt;
 }
+
+function obterMetricasRandomForest(){
+    fetch("http://localhost:5000/obter/metricas").then(res => res.json())
+        .then(json => {
+            const containers = document.querySelectorAll(".values_modal_metricas")
+            for(let i=0; i<json.length; i++){
+                containers[i].children[0].innerHTML = `<strong>R²</strong>: ${parseFloat(json[i].r2).toFixed(2)}`
+                containers[i].children[1].innerHTML = `<strong>MAE</strong>: ${parseFloat(json[i].mae).toFixed(2)}`
+            }
+        })
+}
+
+function modalToggle(){
+    const modal = document.querySelector('.out_modal_metricas');
+    modal.classList.toggle("showed_out")
+}

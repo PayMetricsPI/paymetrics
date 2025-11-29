@@ -22,7 +22,7 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
 </head>
 
-<body onload="obterNoticias();obterLimites();mostrarProxMes()">
+<body onload="obterNoticias();obterLimites();mostrarProxMes();obterMetricasRandomForest()">
     <div id="sidebar"></div>
     <h1>Comportamento de mercado</h1>
     <div class="previsao_por_setor">
@@ -131,7 +131,7 @@
     </div>
 
     <h1 class="center_title"><span class="destaque">Previsão</span> e <span class="destaque">Simulação</span> por
-    segmentos <span class="mini">usando Random Forest 🌲</span></h1>
+        segmentos <span class="mini">usando Random Forest 🌲</span></h1>
     <div class="prev_sim_title_container">
         <div class="prev_sim_container">
             <div class="prev">
@@ -140,6 +140,9 @@
                         <h2>Histórico</h2>
                         <span class="bar_divisor">/</span>
                         <h2>Predição</h2>
+                        <span class="material-symbols-outlined info_metricas" onclick="modalToggle()">
+                            info
+                        </span>
                     </div>
                     <div class="month_selector">
                         <div class="select">
@@ -248,6 +251,62 @@
         <div class="carrossel" id="carrossel">
         </div>
     </div>
+
+    <div class="out_modal_metricas" onclick="modalToggle()">
+        <div class="modal_metricas" onclick="event.stopPropagation()">
+            <div class="top_options_modal">
+                <h2>Métricas estatísticas da previsão por segmento</h2>
+
+                <div class="close_modal" onclick="modalToggle()">
+                    <span class="material-symbols-outlined">close</span>
+                </div>
+            </div>
+
+            <div class="content_modal">
+                <div class="segmento_modal">
+                    <div class="segmento_title_modal">
+                        <span class="material-symbols-outlined">checkroom</span>
+                        Tecidos, vestuário e calçados
+                    </div>
+                    <div class="values_modal_metricas">
+                        <p>R²: -</p>
+                        <p>MAE: -</p>
+                    </div>
+                </div>
+                <div class="segmento_modal">
+                    <div class="segmento_title_modal">
+                        <span class="material-symbols-outlined">fork_spoon</span>
+                        Hipermercados, alimentos, bebidas e fumo
+                    </div>
+                    <div class="values_modal_metricas">
+                        <p>R²: -</p>
+                        <p>MAE: -</p>
+                    </div>
+                </div>
+                <div class="segmento_modal">
+                    <div class="segmento_title_modal">
+                        <span class="material-symbols-outlined">pill</span>
+                        Farmacêuticos, ortopédicos, de perfumaria e cosméticos
+                    </div>
+                    <div class="values_modal_metricas">
+                        <p>R²: -</p>
+                        <p>MAE: -</p>
+                    </div>
+                </div>
+                <div class="segmento_modal">
+                    <div class="segmento_title_modal">
+                        <span class="material-symbols-outlined">chair</span>
+                        Móveis e eletrodomésticos
+                    </div>
+                    <div class="values_modal_metricas">
+                        <p>R²: -</p>
+                        <p>MAE: -</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </body>
 
 </html>
