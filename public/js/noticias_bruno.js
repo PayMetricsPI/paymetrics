@@ -14,6 +14,8 @@ async function obterNoticias() {
 
     const carrossel = document.getElementById("carrossel");
 
+    console.log(data)
+
     for (const news of data) {
         let imgUrl = news.Image;
 

@@ -191,11 +191,21 @@ h1.center_title{
     text-align: center;
     margin-top: 40px;
 }
-.prev_sim_container > .prev, .sim, .res{
+.prev_sim_container > .prev, .sim, .res_card{
     background-color: #fff;
     border-radius: 10px;
     box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
     padding: 32px 46px;
+}
+
+.res{
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    overflow-y: auto;
+    max-height: 550px;
+    padding: 16px;
+    box-sizing: border-box;
 }
 
 .prev_sim_container{
@@ -286,10 +296,20 @@ select{
     width: 40%;
     cursor: pointer;
 }
+.sim .selects .row{
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+}
 .sim .selects{
     display: flex;
-    gap: 32px;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+}
+#segmento_select{
+    width: 100%;
+    /* margin: 0 16px; */
 }
 .sim .selects select{
     width: 170px;
@@ -310,16 +330,42 @@ select{
     margin-top: 20px;
 }
 
-.simulacao_result{
-    font-size: 32px;
-    font-weight: 600;
+.simulacao_result {
     text-align: center;
-    margin-top: 20px;
+    margin-top: 18px;
+}
+.indice_vendas, .indice_vendas_otimista, .indice_vendas_pessimista, .mae_sim{
+    font-size: 22px;
+    font-weight: 600;
 }
 
-.simulacao_result span{
+/* .simulacao_result span:not(#indice_vendas, #indice_vendas_otimista, #indice_vendas_pessimista, #mae_sim){
     font-size: 18px;
-    color: rgba(0, 0, 0, 0.35);
+    color: rgba(0, 0, 0, 0.65);
+} */
+
+.otimista, .pessimista{
+    font-weight: 600;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.pes_otims{
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+}
+.otimista{
+    color: #119120;
+}
+.pessimista{
+    color: #9c0000;
+}
+.simulacao_result p {
+    text-align: left;
+}
+.indice_vendas_otim_pess{
+    font-size: 28px;
 }
 
 .segmentos{
@@ -503,4 +549,13 @@ select{
     border: 3px solid #EC3636;
     background-color: #ec363621;
     color: #EC3636;
+}
+
+.simulacao_res_title{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.icon_sim{
+    font-size: 36px !important;
 }
