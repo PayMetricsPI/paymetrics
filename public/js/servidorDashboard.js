@@ -18,6 +18,20 @@ let chartDisco = null;
 let chartMBEnviados = null;
 let chartMBRecebidos = null;
 
+let alertaCPU = null;
+let alertaRAM = null;
+let alertaDisco = null;
+let alertaDownload = null;
+let alertaUpload = null;
+
+let alertaCriticoCPU = null;
+let alertaCriticoRAM = null;
+let alertaCriticoDisco = null;
+let alertaCriticoDownload = null;
+let alertaCriticoUpload = null;
+
+
+
 // Variáveis globais
 let data = [];
 let jsonSeparados = {
@@ -60,17 +74,17 @@ function calcularAlertas(dataFiltro = data) {
     
     console.log('SERVIDOR DATA após filtro MAC:', servidorData.length, 'linhas');
     
-  const alertaCPU = data.filter(row => row.cpu_status === "NORMAL").length;
-  const alertaRAM = data.filter(row => row.ram_status === "NORMAL").length;
-  const alertaDisco = data.filter(row => row.disco_status === "NORMAL").length;
-  const alertaDownload = data.filter(row => row.mb_enviados_status === "NORMAL").length;
-  const alertaUpload = data.filter(row => row.mb_recebidos_status === "NORMAL").length;
+   alertaCPU = data.filter(row => row.cpu_status === "NORMAL").length;
+   alertaRAM = data.filter(row => row.ram_status === "NORMAL").length;
+   alertaDisco = data.filter(row => row.disco_status === "NORMAL").length;
+   alertaDownload = data.filter(row => row.mb_enviados_status === "NORMAL").length;
+   alertaUpload = data.filter(row => row.mb_recebidos_status === "NORMAL").length;
 
-  const alertaCriticoCPU = data.filter(row => row.cpu_status_critico === "CRITICO").length;
-  const alertaCriticoRAM = data.filter(row => row.ram_status_critico === "CRITICO").length;
-  const alertaCriticoDisco = data.filter(row => row.disco_status_critico === "CRITICO").length;
-  const alertaCriticoDownload = data.filter(row => row.mb_enviados_status_critico === "CRITICO").length;
-  const alertaCriticoUpload = data.filter(row => row.mb_recebidos_status_critico === "CRITICO").length;
+   alertaCriticoCPU = data.filter(row => row.cpu_status_critico === "CRITICO").length;
+   alertaCriticoRAM = data.filter(row => row.ram_status_critico === "CRITICO").length;
+   alertaCriticoDisco = data.filter(row => row.disco_status_critico === "CRITICO").length;
+   alertaCriticoDownload = data.filter(row => row.mb_enviados_status_critico === "CRITICO").length;
+   alertaCriticoUpload = data.filter(row => row.mb_recebidos_status_critico === "CRITICO").length;
     
     const somaAlertas = alertaCPU + alertaRAM + alertaDisco + alertaDownload + alertaUpload;
     const somaAlertaCriticos = alertaCriticoCPU + alertaCriticoRAM + alertaCriticoDisco + alertaCriticoDownload + alertaCriticoUpload;
@@ -189,6 +203,13 @@ function atualizarBootTime(bootTime) {
   boottime.innerHTML = formatarDiferenca(bootTime);
 }
 
+
+
+function contarAlertasPorPeriodo(blocoDados, metrica) {
+  if (!blocoDados || !Array.isArray(blocoDados)) return 0;
+  return blocoDados.filter(row => row[metrica] && row[metrica] !== "NORMAL").length;
+}
+
 function atualizarGraficoPorPeriodo(periodo) {
   // Destroy charts
   if (cpuChart) cpuChart.destroy();
@@ -235,6 +256,48 @@ function atualizarGraficoPorPeriodo(periodo) {
         //     }
         //   ]
         // };
+    
+// const data = {
+//   labels: ['20:00', '21:00', '22:00', '23:00', '00:00', '01:00'],
+//   datasets: [
+//     {
+//       label: 'Alertas padrão',
+//       data: [1, 0, 2, 3, 1, 2],   // qtd padrão por hora
+//       backgroundColor: '#F4B000', // amarelo
+//       stack: 'alerts'
+//     },
+//     {
+//       label: 'Alertas críticos',
+//       data: [0, 3, 0, 0, 2, 3],   // qtd críticos por hora
+//       backgroundColor: '#E53935', // vermelho
+//       stack: 'alerts'
+//     }
+//   ]
+// };
+
+// new Chart(ctx, {
+//   type: 'bar',
+//   data,
+//   options: {
+//     scales: {
+//       x: { stacked: true },
+//       y: { stacked: true }
+//     }
+//   }
+// });
+            
+const ultimos5CPUs = jsonSeparados.ultimos5.map((bloco, idx) => {
+  if (!Array.isArray(bloco)) return 0;
+  const qtd = bloco.filter(row => row.cpustatus && row.cpustatus !== "NORMAL").length;
+  console.log(`bloco ${idx} -> CPU alertas:`, qtd);
+  return qtd;
+});
+
+console.log('jsonSeparados.ultimos5:', jsonSeparados.ultimos5);
+console.log('tipo:', Array.isArray(jsonSeparados.ultimos5));
+console.log('length:', jsonSeparados.ultimos5?.length);
+
+console.log('CPU ultimos5 por bloco:', ultimos5CPUs);
 
         ctxCpu = document.getElementById('CpuChart').getContext('2d');
         cpuChart = new Chart(ctxCpu, {
@@ -243,7 +306,7 @@ function atualizarGraficoPorPeriodo(periodo) {
                 labels: ['20:00', '21:00', '22:00', '23:00', '00:00', '01:00'],
                 datasets: [{
                     label: 'CPU',
-                    data: [30, 80, 50, 55, 45, 100],
+                    data: ultimos5CPUs,
                     backgroundColor: ['rgba(29, 173, 0, 1)',
                         'rgb(242, 183, 48)',
                         'rgba(29, 173, 0, 1)',
@@ -744,14 +807,21 @@ function atualizarGraficoPorPeriodo(periodo) {
 
     else if (periodo === "2") {
 
+const penultimos5CPU = jsonSeparados.penultimos5.map((bloco, idx) => {
+  if (!Array.isArray(bloco)) return 0;
+  const qtd = bloco.filter(row => row.cpu_status && row.cpu_status == "NORMAL").length;
+  console.log(`bloco ${idx} -> CPU alertas:`, qtd);
+  return qtd;
+});
+
         const ctxCpu = document.getElementById('CpuChart').getContext('2d');
         cpuChart = new Chart(ctxCpu, {
             type: 'bar',
             data: {
-                labels: ['20:00', '21:00', '22:00', '23:00', '00:00', '01:00'],
+                labels: ['20:00', '21:00', '22:00', '23:00', '00:00'],
                 datasets: [{
                     label: 'CPU',
-                    data: [50, 40, 70, 65, 75, 95],
+                    data: penultimos5CPU,
                     backgroundColor: ['rgba(29, 173, 0, 1)',
                         'rgba(29, 173, 0, 1)',
                         'rgba(29, 173, 0, 1)',
@@ -1252,14 +1322,21 @@ function atualizarGraficoPorPeriodo(periodo) {
 
     if (periodo === "3") {
 
+const posteriores5primeirosCPU = jsonSeparados.posteriores5primeiros.map((bloco, idx) => {
+  if (!Array.isArray(bloco)) return 0;
+  const qtd = bloco.filter(row => row.cpu_status && row.cpu_status == "NORMAL").length;
+  console.log(`bloco ${idx} -> CPU alertas:`, qtd);
+  return qtd;
+});
+
         const ctxCpu = document.getElementById('CpuChart').getContext('2d');
         cpuChart = new Chart(ctxCpu, {
             type: 'bar',
             data: {
-                labels: ['20:00', '21:00', '22:00', '23:00', '00:00', '01:00'],
+                labels: ['20:00', '21:00', '22:00', '23:00', '00:00'],
                 datasets: [{
                     label: 'CPU',
-                    data: [85, 50, 30, 40, 65, 90],
+                    data: posteriores5primeirosCPU,
                     backgroundColor: ['rgb(242, 183, 48)',
                         'rgba(29, 173, 0, 1)',
                         'rgba(29, 173, 0, 1)',
@@ -1761,14 +1838,23 @@ function atualizarGraficoPorPeriodo(periodo) {
 
     if (periodo === "4") {
 
+        
+const primeiros5CPU = jsonSeparados.primeiros5.map((bloco, idx) => {
+  if (!Array.isArray(bloco)) return 0;
+  const qtd = bloco.filter(row => row.cpu_status && row.cpu_status == "NORMAL").length;
+  console.log(`bloco ${idx} -> CPU alertas:`, qtd);
+  return qtd;
+});
+console.log('cpuAlertasPorBloco:', primeiros5CPU)
+
         const ctxCpu = document.getElementById('CpuChart').getContext('2d');
         cpuChart = new Chart(ctxCpu, {
             type: 'bar',
             data: {
-                labels: ['20:00', '21:00', '22:00', '23:00', '00:00', '01:00'],
+                labels: ['20:00', '21:00', '22:00', '23:00'],
                 datasets: [{
                     label: 'CPU',
-                    data: [85, 45, 90, 60, 65, 97],
+                    data: primeiros5CPU,
                     backgroundColor: ['rgb(242, 183, 48)',
                         'rgba(29, 173, 0, 1)',
                         'rgba(255, 0, 0, 1)',
@@ -2265,13 +2351,12 @@ function atualizarGraficoPorPeriodo(periodo) {
     }
 }
 window.onload = function () {
-    carregarDados()
+  carregarDados().then(() => {
     const Periodo = document.getElementById('periodo');
-    Periodo.addEventListener('change', function () {
-        atualizarGraficoPorPeriodo(this.value);
-    });
-    atualizarGraficoPorPeriodo(Periodo.value);
+    Periodo.addEventListener('change', () => atualizarGraficoPorPeriodo(Periodo.value));
+    atualizarGraficoPorPeriodo(Periodo.value); 
+  });
 
-    setInterval(buscarDados, 2000)
-    buscarDados()
-}
+  setInterval(buscarDados, 2000);
+  buscarDados();
+};
