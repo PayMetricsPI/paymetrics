@@ -176,6 +176,46 @@
     pointer-events: auto;
 }
 
+/* MODAL DE CRIAR SERVIDOR – diminuir */
+.modal_edit,
+.create_server_modal {
+    width: 320px !important;
+    padding: 12px !important;
+    border-radius: 15px !important;
+}
+#create_server_modal,
+#edit_server_modal {
+    width: 320px !important;
+    max-width: 90% !important;
+    padding: 15px !important;
+    border-radius: 15px !important;
+}
+
+/* diminuir campos */
+.create_server_content input,
+.edit_field_duplo select {
+    height: 38px !important;
+    font-size: 14px !important;
+    padding: 10px 15px !important;
+}
+
+/* diminuir título */
+.modal_edit h3,
+.create_server_modal h3 {
+    font-size: 20px !important;
+}
+
+/* diminuir botões */
+.edit_buttons_create button,
+.confirm_button,
+.cancel_button {
+    height: 32px !important;
+    min-width: 80px !important;
+    font-size: 13px !important;
+    padding: 5px 15px !important;
+}
+
+
 .modal_edit_alert {
     position: fixed;
     top: 50%;
@@ -243,6 +283,55 @@
     width: 100px;
     height: 30px;
     margin-bottom: 10px;
+}
+
+/* container dos dois selects */
+.edit_field_duplo {
+  display: flex;
+  gap: 20px;
+  width: 100%;
+}
+
+/* cada campo ocupa metade */
+.edit_field_duplo .pequeno {
+  flex: 1;
+}
+
+/* estilização igual aos inputs */
+.edit_field_duplo select {
+  width: 100%;
+  padding: 10px;
+  border-radius: 18px;
+  border: 2px solid yellow;
+  background-color: #f0f0f0;
+  font-size: 15px;
+}
+
+
+.edit_field_duplo {
+    display: flex;
+    gap: 15px;
+    width: 100%;
+    margin-top: -5px;
+}
+
+.edit_field_duplo .pequeno {
+    flex: 1;
+}
+
+.edit_field_duplo select {
+    width: 100%;
+    height: 45px;
+    padding: 10px 15px;
+    border-radius: 100px;
+    border: 2px solid yellow;
+    background-color: #f4f4f4;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+.edit_field_duplo label {
+    margin-left: 20px;
 }
 
 .create_alerta_critico_content .line1 {
@@ -550,4 +639,98 @@
         bottom: 3vh;
         padding: 10px 20px;
     }
+}
+
+/* diminuir inputs do modal */
+#create_server_modal input,
+#edit_server_modal input {
+    padding: 8px 15px !important;
+    height: 35px !important;
+    border-radius: 8px !important;
+}
+
+/* diminuir selects do modal */
+#create_server_modal select,
+#edit_server_modal select {
+    padding: 8px 12px !important;
+    height: 35px !important;
+    border-radius: 8px !important;
+}
+
+/* diminui os campos duplos */
+.edit_field_duplo select {
+    height: 35px !important;
+    padding: 8px 12px !important;
+    border-radius: 8px !important;
+}
+
+/* diminuindo título */
+#create_server_modal h3,
+#edit_server_modal h3 {
+    font-size: 18px !important;
+}
+
+/* diminuir espaçamento dos blocos */
+.edit_field,
+.create_server_content .edit_field {
+    margin-bottom: 10px !important;
+}
+
+/* diminuir largura real do modal */
+#create_server_modal,
+#edit_server_modal {
+    width: 300px !important;
+    padding: 15px !important;
+}
+/* diminuir realmente o modal */
+#create_server_modal,
+#edit_server_modal {
+    width: 280px !important;
+    padding: 10px !important;
+    border-radius: 12px !important;
+}
+
+/* inputs menores */
+#create_server_modal input,
+#edit_server_modal input {
+    width: 90% !important;     /* <<< diminui a largura */
+    height: 32px !important;
+    padding: 6px 10px !important;
+    border-radius: 6px !important;
+    font-size: 13px !important;
+    margin: 0 auto !important;
+}
+
+/* selects menores */
+#create_server_modal select,
+#edit_server_modal select {
+    width: 90% !important;
+    height: 32px !important;
+    padding: 4px 10px !important;
+    border-radius: 6px !important;
+    font-size: 13px !important;
+}
+
+/* container de país + estado */
+.edit_field_duplo {
+    gap: 8px !important;
+}
+
+.edit_field_duplo select {
+    width: 100% !important;
+    height: 32px !important;
+    padding: 4px 8px !important;
+    border-radius: 6px !important;
+}
+
+/* diminui textos */
+#create_server_modal label,
+#edit_server_modal label {
+    font-size: 13px !important;
+}
+
+/* título menor */
+#create_server_modal h3,
+#edit_server_modal h3 {
+    font-size: 18px !important;
 }

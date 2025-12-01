@@ -1,149 +1,390 @@
+/* RESET E BASE */
 html, body {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  font-family: 'Poppins', sans-serif;
-  background-color: #f7f8fa;
-  overflow-x: hidden;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: 'Poppins', sans-serif;
+    background-color: #f7f8fa; /* Fundo suave */
+    overflow-x: hidden;
 }
 
+/* 🧭 SIDEBAR (Apenas o estilo necessário para o layout) */
 .sidebar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 100vh;
-  width: 5rem;
-  background: linear-gradient(to right, #1d1d1d, #3f3e3d);
-  box-shadow: 2px 0 8px rgba(0,0,0,0.25);
-  transition: width 0.3s ease;
-  overflow: hidden;
-  z-index: 1000;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 5rem;
+    background: linear-gradient(to right, #1d1d1d, #3f3e3d);
+    box-shadow: 2px 0 8px rgba(0,0,0,0.25);
+    transition: width 0.3s ease;
+    overflow: hidden;
+    z-index: 1000;
 }
 
 .sidebar:hover { width: 18rem; }
 
+/* Placeholder para o texto da Sidebar, invisível por padrão */
 .alertas, .dash, .config, .user {
-  color: white;
-  opacity: 0;
-  transform: translateX(0);
-  transition: opacity 0.3s, transform 0.3s;
-  display: inline-block;
-  max-width: 0;
-  overflow: hidden;
+    color: white;
+    opacity: 0;
+    display: inline-block;
+    max-width: 0;
+    overflow: hidden;
+    transition: opacity 0.3s, transform 0.3s;
 }
 
 .sidebar:hover .alertas,
 .sidebar:hover .dash,
 .sidebar:hover .config,
 .sidebar:hover .user {
-  opacity: 1;
-  transform: translateX(20px);
-  max-width: 120px;
+    opacity: 1;
+    transform: translateX(20px);
+    max-width: 120px;
 }
 
+/* 🖼️ MAIN CONTENT */
 .main-content {
-  margin-left: 5rem;
-  width: calc(100% - 5rem);
-  transition: margin-left 0.3s ease;
-  min-height: 100vh;
-  background-color: #f7f8fa;
-  padding-bottom: 40px;
-  box-sizing: border-box;
+    margin-left: 5rem;
+    width: calc(100% - 5rem);
+    transition: margin-left 0.3s ease;
+    min-height: 100vh;
+    background-color: #f7f8fa;
+    padding-bottom: 40px;
+    box-sizing: border-box;
 }
 
 .sidebar:hover ~ .main-content {
-  margin-left: 18rem;
-  width: calc(100% - 18rem);
+    margin-left: 18rem;
+    width: calc(100% - 18rem);
 }
 
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20px 40px;
-  color: #111;
-  font-weight: bold;
+/* CONTAINER GERAL DO DASHBOARD */
+.dashboard-container {
+    padding: 40px 60px 0; /* Ajuste o padding para cima */
 }
 
-.header select {
-  padding: 8px 16px;
-  border-radius: 20px;
-  border: 1px solid #000;
-  background: #ffffff;
-  color: #111;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
+.titulo {
+    font-size: 36px; /* Aumenta ligeiramente para destaque */
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-bottom: 30px; 
 }
 
-.section-resumo,
-.Alertas-graficos,
-.section-graficos {
-  padding: 20px 0 40px;
+
+.cards-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-top: 0; 
+
 }
 
-.Alertas-graficos {
-  background-color: #f4a300;
-  border-top: 3px solid #000;
+.mini-card {
+    background: #fff;
+    padding: 22px 28px;
+    border-radius: 16px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.1); /* Sombra mais suave */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 130px;
+    transition: transform 0.2s; /* Efeito hover */
 }
 
-.container {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 30px;
-  padding: 0 40px;
-  box-sizing: border-box;
+.mini-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
 }
 
-.card {
-  background-color: white;
-  border-radius: 15px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-  text-align: center;
-  padding: 20px;
-  width: 300px;
-  transition: 0.3s;
+.mini-title {
+    font-size: 13px; /* Reduz ligeiramente */
+    font-weight: 600;
+    color: #666; /* Cor mais suave */
+    margin-bottom: 4px;
 }
 
-.card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 5px 12px rgba(0,0,0,0.2);
+.mini-value {
+    font-size: 38px; /* Aumenta para destaque */
+    font-weight: 700;
+    color: #111;
+    line-height: 1;
 }
 
-.section-graficos > .container {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(320px, 1fr));
-  gap: 32px;
-  justify-items: center;
-  padding: 0 40px;
+.mini-diff {
+    font-size: 13px;
+    font-weight: 600;
+    margin-top: 8px;
 }
 
-.grafico {
-  background-color: white;
-  border: 2px solid #000;
-  border-radius: 15px;
-  padding: 20px;
-  width: 100%;
-  max-width: 450px;
-  box-shadow: 0 3px 8px rgba(0,0,0,0.2);
-  text-align: center;
-  transition: 0.2s ease;
+/* Cores específicas para as variações */
+.mini-card:nth-child(1) .mini-diff { color: #15b300; } /* Sucesso Global (Verde) */
+.mini-card:nth-child(3) .mini-diff { color: #e6a500; } /* Latência Global (Amarelo/Alerta) */
+
+/* 📊 GRID DE DISTRIBUIÇÃO (Gráfico e Mapa) */
+/* ... (Seu CSS anterior permanece igual até aqui) ... */
+
+/* 📊 GRID DE DISTRIBUIÇÃO (Gráfico e Mapa) */
+.distribuicao-grid {
+    display: grid;
+    /* Ajusta as colunas para dar mais espaço ao gráfico e tornar o mapa mais retangular */
+    grid-template-columns: 1.5fr 1fr; /* Gráfico um pouco mais largo, mapa mais estreito */
+    gap: 40px;
+    align-items: start;
+    margin-top: 40px;
+    padding: 0 60px; /* Alinha com o dashboard-container */
 }
 
-.grafico:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 5px 12px rgba(0,0,0,0.25);
+.bloco-esquerda {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 }
 
-.grafico h3 {
-  margin-bottom: 20px;
-  color: #111;
-  font-weight: 700;
+.bloco-direita {
+    display: flex;
+    flex-direction: column;
+    align-self: end;
+}
+#selectPais{
+    width: 140px;
+    height: 30px;
+    border-style: dotted solid double dashed;
+
+
 }
 
-@media (max-width: 980px) {
-  .section-graficos > .container {
-    grid-template-columns: 1fr;
-  }
+#bfChart {
+    background: white;
+    border-radius: 18px;
+    padding: 25px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.10);
+    width: 100% !important;
+    height: 300px !important; /* Aumenta a altura para ficar mais retangular */
+}
+
+canvas {
+    background: transparent !important;
+}
+
+/* Legenda do Gráfico */
+.chart-legend {
+    display: flex;
+    gap: 25px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #444;
+    margin-bottom: 0;
+    padding-left: 10px;
+}
+.circle{
+    background-color: yellow;
+
+}
+
+.chart-legend span {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.chart-legend .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+
+/* 🗺️ MAPA (AnyChart) */
+.titulo-mapa {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-bottom: 15px;
+    text-align: center;
+}
+.status.ok {
+    background-color: #C8E6C9; /* verde claro */
+    color: #2E7D32; /* verde escuro */
+    padding: 4px 10px;
+    border-radius: 8px;
+    font-weight: 600;
+}
+
+
+.mapa-container {
+    width: 100%; /* Permite que o mapa ocupe a largura da sua coluna */
+}
+
+#miniMapa {
+    width: 500px !important;
+    height: 300px !important; /* Ajusta a altura para corresponder ao gráfico e ficar retangular */
+    border-radius: 18px !important;
+    background: #fff !important; /* Fundo branco para o mapa */
+    box-shadow: 0 6px 18px rgba(0,0,0,0.10);
+    overflow: hidden;
+}
+
+.tabelas{
+    display: flex;
+    justify-content:row;
+    justify-items: center;
+
+}
+.latency-table {
+    background: #fff;
+    padding: 25px 30px; 
+    border-radius: 16px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+    margin: 40px 60px 40px 60px; 
+    width: 1500px;
+}
+
+
+.latency-table h3 {
+    margin: 0 0 16px 0; 
+    font-size: 20px;
+    font-weight: 700;
+    color: #111;
+}
+
+.latency-table table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.latency-table thead th {
+    text-align: left;
+    padding: 12px 10px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #999; 
+    border-bottom: 2px solid #e5e5e5;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.latency-table tbody tr {
+    transition: background-color 0.15s;
+}
+
+.latency-table tbody tr:hover {
+    background-color: #fcfcfc;
+}
+
+.latency-table td {
+    padding: 15px 10px; 
+    border-bottom: 1px solid #f1f1f1;
+    font-size: 14px;
+    color: #333;
+}
+
+.latency-table tbody tr:last-child td {
+    border-bottom: none; /* Remove a borda do último item */
+}
+
+.Financeiro-table {
+    background: #fff;
+    padding: 25px 30px; 
+    border-radius: 16px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+    margin: 40px 60px 40px 0px;
+    width: 1500px;
+}
+
+
+.Financeiro-table h3 {
+    margin: 0 0 16px 0; 
+    font-size: 20px;
+    font-weight: 700;
+    color: #111;
+}
+
+.Financeiro-table table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.Financeiro-table thead th {
+    text-align: left;
+    padding: 12px 10px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #999; 
+    border-bottom: 2px solid #e5e5e5;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.Financeiro-table tbody tr {
+    transition: background-color 0.15s;
+}
+
+.Financeiro-table tbody tr:hover {
+    background-color: #fcfcfc;
+}
+
+.Financeiro-table td {
+    padding: 15px 10px; 
+    border-bottom: 1px solid #f1f1f1;
+    font-size: 14px;
+    color: #333;
+}
+
+.Financeiro-tablet body tr:last-child td {
+    border-bottom: none; 
+}
+
+
+.status {
+    font-weight: 600;
+    padding: 5px 12px; /* Ajusta o padding */
+    border-radius: 20px; /* Deixa a borda mais arredondada (pill) */
+    display: inline-block;
+    font-size: 12px;
+}
+
+.status.critical {
+    color: #b71c1c;
+    background: #ffebee;
+}
+
+.status.warning {
+    color: #e6a500;
+    background: #fff8e1;
+}
+
+/* Outros elementos não utilizados na revisão, mas importantes */
+.bf-alert, .btn-voltar {
+    /* Manter estilos originais ou remover se não forem mais necessários */
+}
+
+#selectPais {
+    width: 160px;
+    padding: 8px 12px;
+    border: 1px solid #d4d4d4;
+    border-radius: 8px;
+    background: #ffffff;
+    font-size: 15px;
+    font-weight: 600;
+    color: #222;
+    outline: none;
+    cursor: pointer;
+    transition: 0.2s ease-in-out;
+    appearance: none; /* remove estilo padrão */
+    background-image: url("data:image/svg+xml;utf8,<svg fill='black' height='14' viewBox='0 0 24 24' width='14' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 14px;
+    height: 40px;
+}
+
+/* Hover */
+#selectPais:hover {
+    border-color: #888;
+}
+
+/* Foco */
+#selectPais:focus {
+    border-color: #1e88e5;
+    box-shadow: 0 0 6px rgba(30,136,229,0.4);
 }
