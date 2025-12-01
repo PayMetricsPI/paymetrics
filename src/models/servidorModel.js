@@ -1,18 +1,32 @@
 var database = require("../database/config");
 
 function criarServidores(servidores) {
-    let queries = servidores.map(s => {
-        return `
-            INSERT INTO servidor 
-                (nome, pais, estado, mac_address, tipo_cpu, ram, disco, fk_empresa)
-            VALUES 
-                ('${s.nome}', '${s.pais}', '${s.estado}', '${s.mac_address}',
-                '${s.tipo_cpu}', '${s.ram}', '${s.disco}', ${s.fk_empresa});
-        `;
-    }).join("\n");
+    let promises = servidores.map(s => {
 
-    return database.executar(queries);
+        let sqlServidor = `
+            INSERT INTO servidor 
+                (fk_empresa, ipEC2, pais, estado, mac_address, tipo_cpu, ram, disco)
+            VALUES 
+                (${s.fk_empresa}, '${s.ipEc2}', '${s.pais}', '${s.estado}', '${s.mac_address}',
+                 '${s.tipo_cpu}', ${s.ram}, ${s.disco});
+        `;
+
+        return database.executar(sqlServidor).then(resultado => {
+            const fk_servidor = resultado.insertId;
+
+            let sqlParametro = `
+                INSERT INTO parametro (fk_servidor, fk_empresa, fk_componente, alerta_critico, alerta_normal)
+                VALUES (${fk_servidor}, ${s.fk_empresa}, 5, 0, 0);
+            `;
+
+            return database.executar(sqlParametro);
+        });
+    });
+
+    return Promise.all(promises);
 }
+
+
     function deletarServidor(id_servidor, fk_empresa) {
 
     if (id_servidor == null || fk_empresa == null) {
@@ -46,14 +60,15 @@ function listarServidores(fk_empresa) {
 }
 
 
-function atualizarServidor(id_servidor, nome, pais, estado, mac_address, tipo_cpu, ram, disco) {
+function atualizarServidor(id_servidor, nome, pais,ipEc2, estado, mac_address, tipo_cpu, ram, disco) {
     var instrucaoSql = `
-        UPDATE servidor
-        SET 
+        update servidor
+        set 
             nome = '${nome}',
             pais = '${pais}',
             estado = '${estado}',
             mac_address = '${mac_address}',
+            ipEc2 = '${ipEc2}',
             tipo_cpu = '${tipo_cpu}',
             disco = '${disco}',
             ram = '${ram}'
@@ -62,9 +77,32 @@ function atualizarServidor(id_servidor, nome, pais, estado, mac_address, tipo_cp
     return database.executar(instrucaoSql);
 }
 
+function mapaGlobal(fk_empresa) {
+     var instrucaoSql = `
+        select      pais, COUNT(*) AS quantidade
+        FROM servidor
+        WHERE fk_empresa = ${fk_empresa}
+        GROUP BY pais;
+    `;
+    return database.executar(instrucaoSql);
+}
+
+function mapaEstados(fk_empresa, pais) {
+    const sql = `
+        select estado, COUNT(*) AS quantidade
+        from servidor
+        where fk_empresa = ${fk_empresa} AND pais = '${pais}'
+        GROUP BY estado;
+    `;
+    return database.executar(sql);
+}
+
+
 module.exports = {
     criarServidores,
     deletarServidor,
     listarServidores,
-    atualizarServidor
+    atualizarServidor,
+    mapaGlobal,
+    mapaEstados
 };

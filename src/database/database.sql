@@ -25,7 +25,7 @@ unique (email)
 create table servidor (
 id_servidor int not null auto_increment,
 fk_empresa int not null,
-nome varchar(200),
+ip varchar(200),
 pais varchar(200),
 estado varchar(200),
 mac_address varchar(50) not null,
