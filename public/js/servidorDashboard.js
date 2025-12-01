@@ -30,7 +30,8 @@ let alertaCriticoDisco = null;
 let alertaCriticoDownload = null;
 let alertaCriticoUpload = null;
 
-
+let somaAlertaCriticos = null;
+let somaAlertas = null;
 
 // Variáveis globais
 let data = [];
@@ -52,9 +53,9 @@ function carregarDados() {
             // Separar períodos
             jsonSeparados.total = todosBlocos;
             jsonSeparados.ultimos5 = todosBlocos.slice(-5);
-            jsonSeparados.primeiros5 = todosBlocos.slice(0, 5);
-            jsonSeparados.penultimos5 = todosBlocos.slice(-10, -5);
-            jsonSeparados.posteriores5primeiros = todosBlocos.slice(5, 10);
+            jsonSeparados.primeiros5 = todosBlocos.slice(-10);
+            jsonSeparados.penultimos5 = todosBlocos.slice(-15);
+            jsonSeparados.posteriores5primeiros = todosBlocos.slice(-20);
 
 
             data = todosBlocos.slice(-20).flat();
@@ -86,8 +87,8 @@ function calcularAlertas(dataFiltro = data) {
         alertaCriticoDownload = data.filter(row => row.mb_enviados_status_critico === "CRITICO").length;
         alertaCriticoUpload = data.filter(row => row.mb_recebidos_status_critico === "CRITICO").length;
 
-        const somaAlertas = alertaCPU + alertaRAM + alertaDisco + alertaDownload + alertaUpload;
-        const somaAlertaCriticos = alertaCriticoCPU + alertaCriticoRAM + alertaCriticoDisco + alertaCriticoDownload + alertaCriticoUpload;
+        somaAlertas = alertaCPU + alertaRAM + alertaDisco + alertaDownload + alertaUpload;
+        somaAlertaCriticos = alertaCriticoCPU + alertaCriticoRAM + alertaCriticoDisco + alertaCriticoDownload + alertaCriticoUpload;
 
         estatisticasAlertas = {
             normal: [alertaCPU, alertaRAM, alertaDisco, alertaUpload, alertaDownload],
@@ -234,7 +235,19 @@ function atualizarGraficoPorPeriodo(periodo) {
     console.log('PERÍODO', periodo, 'linhas brutas:', dataFiltro.length);
     calcularAlertas(dataFiltro);
 
+        if(periodo == 1){
+            labels = ['20:00', '20:15', '20:30', '20:45', '21:00;']
+        } else if (periodo == 2){
+            labels = ['04:50', '09:40', '14:30', '19:20', '00:00']
+        } else if (periodo == 3){
+            labels = [ 'sexta','sabado','domingo'] 
+        } else if (periodo == 4){
+             labels = ['sexta','sabado','domingo','segunda','terça','quarta', 'quinta',] 
+        }
+
+
     if (periodo === "1") {
+
 
         //         const data = {
         //   labels: ['20:00', '21:00', '22:00', '23:00', '00:00', '01:00'],
@@ -285,6 +298,23 @@ function atualizarGraficoPorPeriodo(periodo) {
         //   }
         // });
 
+        //         data: {
+        //     labels: ['20:00', '21:00', '22:00', '23:00', '00:00', '01:00'],
+        //     datasets: [{
+        //         label: 'CPU',
+        //         data: ultimos5CPU,
+        //         backgroundColor: ['rgba(29, 173, 0, 1)',
+        //             'rgb(242, 183, 48)',
+        //             'rgba(29, 173, 0, 1)',
+        //             'rgba(29, 173, 0, 1)',
+        //             'rgba(29, 173, 0, 1)',
+        //             'rgba(233, 0, 0, 1)',
+        //         ],
+        //         borderWidth: 1,
+        //         borderRadius: 12,
+        //     }]
+        // },
+
         const ultimos5CPU = jsonSeparados.ultimos5.map((bloco, idx) => {
             if (!Array.isArray(bloco)) return 0;
             const qtd = bloco.filter(row => row.cpu_status && row.cpu_status == "NORMAL").length;
@@ -309,39 +339,46 @@ function atualizarGraficoPorPeriodo(periodo) {
         cpuChart = new Chart(ctxCpu, {
             type: 'bar',
             data: {
-                labels: ['20:00', '21:00', '22:00', '23:00', '00:00', '01:00'],
-                datasets: [{
-                    label: 'CPU',
-                    data: ultimos5CPU,
-                    backgroundColor: ['rgba(29, 173, 0, 1)',
-                        'rgb(242, 183, 48)',
-                        'rgba(29, 173, 0, 1)',
-                        'rgba(29, 173, 0, 1)',
-                        'rgba(29, 173, 0, 1)',
-                        'rgba(233, 0, 0, 1)',
-                    ],
-                    borderWidth: 1,
-                    borderRadius: 12,
-                }]
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Alertas padrão',
+                        data: ultimos5CPU,
+                        backgroundColor: '#F4B000',
+                        stack: 'alerts', borderWidth: 1,
+                        borderRadius: 10,
+                    },
+                    {
+                        label: 'Alertas críticos',
+                        data: ultimos5CPUCritico,
+                        backgroundColor: '#E53935',
+                         borderWidth: 1,
+                        borderRadius: 10,
+                    }
+                ],
+                borderWidth: 1,
+                borderRadius: 12,
             },
             options: {
                 plugins: {
                     title: {
                         display: true,
+                        text: 'Quantidade de Alertas - CPU',
                         color: 'black',
-                        text: 'Quantidade de alertas - CPU',
-                        font: {
-                            size: 28
-                        }
+                        font: { size: 28 }
                     }
                 },
+                responsive: true,
                 scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            color: 'black'
-                        }
+                    x: {
+                        stacked: true,
+                        ticks: { color: 'black' }
                     },
+                    y: {
+                        stacked: true,
+                        beginAtZero: true,
+                        ticks: { color: 'black' }
+                    }
                 }
             }
         });
@@ -416,39 +453,45 @@ function atualizarGraficoPorPeriodo(periodo) {
         ramChart = new Chart(ctxram, {
             type: 'bar',
             data: {
-                labels: ['20:00', '21:00', '22:00', '23:00', '00:00', '01:00'],
-                datasets: [{
-                    label: 'RAM',
-                    data: ultimos5RAM,
-                    backgroundColor: ['rgba(29, 173, 0, 1)',
-                        'rgb(242, 183, 48)',
-                        'rgba(29, 173, 0, 1)',
-                        'rgba(29, 173, 0, 1)',
-                        'rgba(29, 173, 0, 1)',
-                        'rgba(233, 0, 0, 1)',
-                    ],
-                    borderWidth: 1,
-                    borderRadius: 12,
-                }]
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Alertas padrão',
+                        data: ultimos5RAM,
+                        backgroundColor: '#F4B000',
+                        stack: 'alerts',
+                        borderWidth: 1,
+                        borderRadius: 10,
+                    },
+                    {
+                        label: 'Alertas críticos',
+                        data: ultimos5RAMCritico,
+                        backgroundColor: '#E53935',
+                        borderWidth: 1,
+                        borderRadius: 10,
+                    }
+                ],
             },
             options: {
                 plugins: {
                     title: {
                         display: true,
+                        text: 'Quantidade de Alertas - RAM',
                         color: 'black',
-                        text: 'Quantidade de alertas - RAM',
-                        font: {
-                            size: 28
-                        }
+                        font: { size: 28 }
                     }
                 },
+                responsive: true,
                 scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            color: 'black'
-                        }
+                    x: {
+                        stacked: true,
+                        ticks: { color: 'black' }
                     },
+                    y: {
+                        stacked: true,
+                        beginAtZero: true,
+                        ticks: { color: 'black' }
+                    }
                 }
             }
         });
@@ -522,39 +565,43 @@ function atualizarGraficoPorPeriodo(periodo) {
         discoChart = new Chart(ctxdisco, {
             type: 'bar',
             data: {
-                labels: ['20:00', '21:00', '22:00', '23:00', '00:00', '01:00'],
-                datasets: [{
-                    label: 'DISCO',
-                    data: ultimos5Disco,
-                    backgroundColor: ['rgba(29, 173, 0, 1)',
-                        'rgb(242, 183, 48)',
-                        'rgba(29, 173, 0, 1)',
-                        'rgba(29, 173, 0, 1)',
-                        'rgba(29, 173, 0, 1)',
-                        'rgba(233, 0, 0, 1)',
-                    ],
-                    borderWidth: 1,
-                    borderRadius: 12,
-                }]
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Alertas padrão',
+                        data: ultimos5Disco,
+                        backgroundColor: '#F4B000',
+                        stack: 'alerts', borderWidth: 1,
+                        borderRadius: 10,
+                    },
+                    {
+                        label: 'Alertas críticos',
+                        data: ultimos5DiscoCritico,
+                        backgroundColor: '#E53935', borderWidth: 1,
+                        borderRadius: 10,
+                    }
+                ]
             },
             options: {
                 plugins: {
                     title: {
                         display: true,
-                        color: 'black',
                         text: 'Quantidade de Alertas - Disco',
-                        font: {
-                            size: 28
-                        }
+                        color: 'black',
+                        font: { size: 28 }
                     }
                 },
+                responsive: true,
                 scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            color: 'black'
-                        }
+                    x: {
+                        stacked: true,
+                        ticks: { color: 'black' }
                     },
+                    y: {
+                        stacked: true,
+                        beginAtZero: true,
+                        ticks: { color: 'black' }
+                    }
                 }
             }
         });
@@ -630,39 +677,43 @@ function atualizarGraficoPorPeriodo(periodo) {
         redeChart = new Chart(ctxrede, {
             type: 'bar',
             data: {
-                labels: ['20:00', '21:00', '22:00', '23:00', '00:00', '01:00'],
-                datasets: [{
-                    label: 'Rede',
-                    data: ultimos5Download,
-                    backgroundColor: ['rgba(29, 173, 0, 1)',
-                        'rgb(242, 183, 48)',
-                        'rgba(29, 173, 0, 1)',
-                        'rgba(29, 173, 0, 1)',
-                        'rgba(29, 173, 0, 1)',
-                        'rgba(233, 0, 0, 1)',
-                    ],
-                    borderWidth: 1,
-                    borderRadius: 12,
-                }]
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Alertas padrão',
+                        data: ultimos5Download,
+                        backgroundColor: '#F4B000',
+                        stack: 'alerts', borderWidth: 1,
+                        borderRadius: 10,
+                    },
+                    {
+                        label: 'Alertas críticos',
+                        data: ultimos5DownloadCritico,
+                        backgroundColor: '#E53935', borderWidth: 1,
+                        borderRadius: 10,
+                    }
+                ]
             },
             options: {
                 plugins: {
                     title: {
                         display: true,
-                        color: 'black',
                         text: 'Quantidade de Alertas - Download',
-                        font: {
-                            size: 28
-                        }
+                        color: 'black',
+                        font: { size: 28 }
                     }
                 },
+                responsive: true,
                 scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            color: 'black'
-                        }
+                    x: {
+                        stacked: true,
+                        ticks: { color: 'black' }
                     },
+                    y: {
+                        stacked: true,
+                        beginAtZero: true,
+                        ticks: { color: 'black' }
+                    }
                 }
             }
         });
@@ -735,39 +786,43 @@ function atualizarGraficoPorPeriodo(periodo) {
         redeChart2 = new Chart(ctxrede2, {
             type: 'bar',
             data: {
-                labels: ['20:00', '21:00', '22:00', '23:00', '00:00', '01:00'],
-                datasets: [{
-                    label: 'CPU',
-                    data: ultimos5Upload,
-                    backgroundColor: ['rgba(29, 173, 0, 1)',
-                        'rgb(242, 183, 48)',
-                        'rgba(29, 173, 0, 1)',
-                        'rgba(29, 173, 0, 1)',
-                        'rgba(29, 173, 0, 1)',
-                        'rgba(233, 0, 0, 1)',
-                    ],
-                    borderWidth: 1,
-                    borderRadius: 12,
-                }]
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Alertas padrão',
+                        data: ultimos5Upload,
+                        backgroundColor: '#F4B000',
+                        stack: 'alerts', borderWidth: 1,
+                        borderRadius: 10,
+                    },
+                    {
+                        label: 'Alertas críticos',
+                        data: ultimos5UploadCritico,
+                        backgroundColor: '#E53935', borderWidth: 1,
+                        borderRadius: 10,
+                    }
+                ]
             },
             options: {
                 plugins: {
                     title: {
                         display: true,
+                        text: 'Quantidade de Alertas - Upload',
                         color: 'black',
-                        text: 'Quantidade de alertas - Upload',
-                        font: {
-                            size: 28
-                        }
+                        font: { size: 28 }
                     }
                 },
+                responsive: true,
                 scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            color: 'black'
-                        }
+                    x: {
+                        stacked: true,
+                        ticks: { color: 'black' }
                     },
+                    y: {
+                        stacked: true,
+                        beginAtZero: true,
+                        ticks: { color: 'black' }
+                    }
                 }
             }
         });
@@ -863,6 +918,11 @@ function atualizarGraficoPorPeriodo(periodo) {
                 }
             }
         });
+
+        // somaAlertas = ultimos5CPU + ultimos5RAM + ultimos5Disco + ultimos5Download + ultimos5Upload
+
+        // document.getElementById('alerta_numero_padrao').textContent = somaAlertas;
+        // document.getElementById('alerta_numero_critico').textContent = somaAlertaCriticos;
     }
 
     else if (periodo === "2") {
@@ -885,39 +945,43 @@ function atualizarGraficoPorPeriodo(periodo) {
         cpuChart = new Chart(ctxCpu, {
             type: 'bar',
             data: {
-                labels: ['20:00', '21:00', '22:00', '23:00', '00:00'],
-                datasets: [{
-                    label: 'CPU',
-                    data: penultimos5CPU,
-                    backgroundColor: ['rgba(29, 173, 0, 1)',
-                        'rgba(29, 173, 0, 1)',
-                        'rgba(29, 173, 0, 1)',
-                        'rgba(29, 173, 0, 1)',
-                        'rgba(29, 173, 0, 1)',
-                        'rgba(233, 0, 0, 1)',
-                    ],
-                    borderWidth: 1,
-                    borderRadius: 12,
-                }]
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Alertas padrão',
+                        data: penultimos5CPU,
+                        backgroundColor: '#F4B000',
+                        stack: 'alerts', borderWidth: 1,
+                        borderRadius: 10,
+                    },
+                    {
+                        label: 'Alertas críticos',
+                        data: penultimos5CPUCritico,
+                        backgroundColor: '#E53935', borderWidth: 1,
+                        borderRadius: 10,
+                    }
+                ]
             },
             options: {
                 plugins: {
                     title: {
                         display: true,
+                        text: 'Quantidade de Alertas - CPU',
                         color: 'black',
-                        text: 'Quantidade de alertas - CPU',
-                        font: {
-                            size: 28
-                        }
+                        font: { size: 28 }
                     }
                 },
+                responsive: true,
                 scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            color: 'black'
-                        }
+                    x: {
+                        stacked: true,
+                        ticks: { color: 'black' }
                     },
+                    y: {
+                        stacked: true,
+                        beginAtZero: true,
+                        ticks: { color: 'black' }
+                    }
                 }
             }
         });
@@ -991,39 +1055,43 @@ function atualizarGraficoPorPeriodo(periodo) {
         ramChart = new Chart(ctxram, {
             type: 'bar',
             data: {
-                labels: ['20:00', '21:00', '22:00', '23:00', '00:00', '01:00'],
-                datasets: [{
-                    label: 'RAM',
-                    data: penultimos5RAM,
-                    backgroundColor: ['rgba(29, 173, 0, 1)',
-                        'rgba(29, 173, 0, 1)',
-                        'rgba(29, 173, 0, 1)',
-                        'rgba(29, 173, 0, 1)',
-                        'rgba(29, 173, 0, 1)',
-                        'rgba(233, 0, 0, 1)',
-                    ],
-                    borderWidth: 1,
-                    borderRadius: 12,
-                }]
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Alertas padrão',
+                        data: penultimos5RAM,
+                        backgroundColor: '#F4B000',
+                        stack: 'alerts', borderWidth: 1,
+                        borderRadius: 10,
+                    },
+                    {
+                        label: 'Alertas críticos',
+                        data: penultimos5RAMCritico,
+                        backgroundColor: '#E53935', borderWidth: 1,
+                        borderRadius: 10,
+                    }
+                ]
             },
             options: {
                 plugins: {
                     title: {
                         display: true,
+                        text: 'Quantidade de Alertas - RAM',
                         color: 'black',
-                        text: 'Quantidade de alertas - RAM',
-                        font: {
-                            size: 28
-                        }
+                        font: { size: 28 }
                     }
                 },
+                responsive: true,
                 scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            color: 'black'
-                        }
+                    x: {
+                        stacked: true,
+                        ticks: { color: 'black' }
                     },
+                    y: {
+                        stacked: true,
+                        beginAtZero: true,
+                        ticks: { color: 'black' }
+                    }
                 }
             }
         });
@@ -1096,39 +1164,43 @@ function atualizarGraficoPorPeriodo(periodo) {
         discoChart = new Chart(ctxdisco, {
             type: 'bar',
             data: {
-                labels: ['20:00', '21:00', '22:00', '23:00', '00:00', '01:00'],
-                datasets: [{
-                    label: 'DISCO',
-                    data: penultimos5Disco,
-                    backgroundColor: ['rgba(29, 173, 0, 1)',
-                        'rgba(29, 173, 0, 1)',
-                        'rgba(29, 173, 0, 1)',
-                        'rgba(29, 173, 0, 1)',
-                        'rgba(29, 173, 0, 1)',
-                        'rgba(233, 0, 0, 1)',
-                    ],
-                    borderWidth: 1,
-                    borderRadius: 12,
-                }]
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Alertas padrão',
+                        data: penultimos5Disco,
+                        backgroundColor: '#F4B000',
+                        stack: 'alerts', borderWidth: 1,
+                        borderRadius: 10,
+                    },
+                    {
+                        label: 'Alertas críticos',
+                        data: penultimos5DiscoCritico,
+                        backgroundColor: '#E53935', borderWidth: 1,
+                        borderRadius: 10,
+                    }
+                ]
             },
             options: {
                 plugins: {
                     title: {
                         display: true,
-                        color: 'black',
                         text: 'Quantidade de Alertas - Disco',
-                        font: {
-                            size: 28
-                        }
+                        color: 'black',
+                        font: { size: 28 }
                     }
                 },
+                responsive: true,
                 scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            color: 'black'
-                        }
+                    x: {
+                        stacked: true,
+                        ticks: { color: 'black' }
                     },
+                    y: {
+                        stacked: true,
+                        beginAtZero: true,
+                        ticks: { color: 'black' }
+                    }
                 }
             }
         });
@@ -1184,14 +1256,14 @@ function atualizarGraficoPorPeriodo(periodo) {
             }]
         });
 
-        const penultimos5Upload = jsonSeparados.penultimos5.map((bloco, idx) => {
+        const penultimos5Download = jsonSeparados.penultimos5.map((bloco, idx) => {
             if (!Array.isArray(bloco)) return 0;
             const qtd = bloco.filter(row => row.mb_enviados_status && row.mb_enviados_status == "NORMAL").length;
             console.log(`bloco ${idx} -> RAM alertas:`, qtd);
             return qtd;
         });
 
-        const penultimos5UploadCritico = jsonSeparados.penultimos5.map((bloco, idx) => {
+        const penultimos5DownloadCritico = jsonSeparados.penultimos5.map((bloco, idx) => {
             if (!Array.isArray(bloco)) return 0;
             const qtd = bloco.filter(row => row.mb_enviados_status_critico && row.mb_enviados_status_critico == "CRITICO").length;
             console.log(`bloco ${idx} -> RAM alertas:`, qtd);
@@ -1202,39 +1274,43 @@ function atualizarGraficoPorPeriodo(periodo) {
         redeChart = new Chart(ctxrede, {
             type: 'bar',
             data: {
-                labels: ['20:00', '21:00', '22:00', '23:00', '00:00', '01:00'],
-                datasets: [{
-                    label: 'Rede',
-                    data: penultimos5Upload,
-                    backgroundColor: ['rgba(29, 173, 0, 1)',
-                        'rgba(29, 173, 0, 1)',
-                        'rgba(29, 173, 0, 1)',
-                        'rgba(29, 173, 0, 1)',
-                        'rgba(29, 173, 0, 1)',
-                        'rgba(233, 0, 0, 1)',
-                    ],
-                    borderWidth: 1,
-                    borderRadius: 12,
-                }]
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Alertas padrão',
+                        data: penultimos5Download,
+                        backgroundColor: '#F4B000',
+                        stack: 'alerts', borderWidth: 1,
+                        borderRadius: 10,
+                    },
+                    {
+                        label: 'Alertas críticos',
+                        data: penultimos5DownloadCritico,
+                        backgroundColor: '#E53935', borderWidth: 1,
+                        borderRadius: 10,
+                    }
+                ]
             },
             options: {
                 plugins: {
                     title: {
                         display: true,
-                        color: 'black',
                         text: 'Quantidade de Alertas - Download',
-                        font: {
-                            size: 28
-                        }
+                        color: 'black',
+                        font: { size: 28 }
                     }
                 },
+                responsive: true,
                 scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            color: 'black'
-                        }
+                    x: {
+                        stacked: true,
+                        ticks: { color: 'black' }
                     },
+                    y: {
+                        stacked: true,
+                        beginAtZero: true,
+                        ticks: { color: 'black' }
+                    }
                 }
             }
         });
@@ -1290,14 +1366,14 @@ function atualizarGraficoPorPeriodo(periodo) {
             }]
         });
 
-        const penultimos5Download = jsonSeparados.penultimos5.map((bloco, idx) => {
+        const penultimos5Upload = jsonSeparados.penultimos5.map((bloco, idx) => {
             if (!Array.isArray(bloco)) return 0;
             const qtd = bloco.filter(row => row.mb_recebidos_status && row.mb_recebidos_status == "NORMAL").length;
             console.log(`bloco ${idx} -> Upload alertas:`, qtd);
             return qtd;
         });
 
-        const penultimos5DownloadCritico = jsonSeparados.penultimos5.map((bloco, idx) => {
+        const penultimos5UploadCritico = jsonSeparados.penultimos5.map((bloco, idx) => {
             if (!Array.isArray(bloco)) return 0;
             const qtd = bloco.filter(row => row.mb_recebidos_status_critico && row.mb_recebidos_status_critico == "CRITICO").length;
             console.log(`bloco ${idx} -> Upload alertas:`, qtd);
@@ -1308,39 +1384,43 @@ function atualizarGraficoPorPeriodo(periodo) {
         redeChart2 = new Chart(ctxrede2, {
             type: 'bar',
             data: {
-                labels: ['20:00', '21:00', '22:00', '23:00', '00:00', '01:00'],
-                datasets: [{
-                    label: 'Rede',
-                    data: penultimos5Download,
-                    backgroundColor: ['rgba(29, 173, 0, 1)',
-                        'rgba(29, 173, 0, 1)',
-                        'rgba(29, 173, 0, 1)',
-                        'rgba(29, 173, 0, 1)',
-                        'rgba(29, 173, 0, 1)',
-                        'rgba(233, 0, 0, 1)',
-                    ],
-                    borderWidth: 1,
-                    borderRadius: 12,
-                }]
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Alertas padrão',
+                        data: penultimos5Upload,
+                        backgroundColor: '#F4B000',
+                        stack: 'alerts', borderWidth: 1,
+                        borderRadius: 10,
+                    },
+                    {
+                        label: 'Alertas críticos',
+                        data: penultimos5UploadCritico,
+                        backgroundColor: '#E53935', borderWidth: 1,
+                        borderRadius: 10,
+                    }
+                ]
             },
             options: {
                 plugins: {
                     title: {
                         display: true,
+                        text: 'Quantidade de Alertas - Upload',
                         color: 'black',
-                        text: 'Quantidade de alertas - Upload',
-                        font: {
-                            size: 28
-                        }
+                        font: { size: 28 }
                     }
                 },
+                responsive: true,
                 scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            color: 'black'
-                        }
+                    x: {
+                        stacked: true,
+                        ticks: { color: 'black' }
                     },
+                    y: {
+                        stacked: true,
+                        beginAtZero: true,
+                        ticks: { color: 'black' }
+                    }
                 }
             }
         });
@@ -1460,39 +1540,43 @@ function atualizarGraficoPorPeriodo(periodo) {
         cpuChart = new Chart(ctxCpu, {
             type: 'bar',
             data: {
-                labels: ['20:00', '21:00', '22:00', '23:00', '00:00'],
-                datasets: [{
-                    label: 'CPU',
-                    data: posteriores5primeirosCPU,
-                    backgroundColor: ['rgb(242, 183, 48)',
-                        'rgba(29, 173, 0, 1)',
-                        'rgba(29, 173, 0, 1)',
-                        'rgba(29, 173, 0, 1)',
-                        'rgba(29, 173, 0, 1)',
-                        'rgba(233, 0, 0, 1)',
-                    ],
-                    borderWidth: 1,
-                    borderRadius: 12,
-                }]
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Alertas padrão',
+                        data: posteriores5primeirosCPU,
+                        backgroundColor: '#F4B000',
+                        stack: 'alerts', borderWidth: 1,
+                        borderRadius: 10,
+                    },
+                    {
+                        label: 'Alertas críticos',
+                        data: posteriores5primeirosCPUCritico,
+                        backgroundColor: '#E53935', borderWidth: 1,
+                        borderRadius: 10,
+                    }
+                ]
             },
             options: {
                 plugins: {
                     title: {
                         display: true,
+                        text: 'Quantidade de Alertas - CPU',
                         color: 'black',
-                        text: 'Quantidade de alertas - CPU',
-                        font: {
-                            size: 28
-                        }
+                        font: { size: 28 }
                     }
                 },
+                responsive: true,
                 scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            color: 'black'
-                        }
+                    x: {
+                        stacked: true,
+                        ticks: { color: 'black' }
                     },
+                    y: {
+                        stacked: true,
+                        beginAtZero: true,
+                        ticks: { color: 'black' }
+                    }
                 }
             }
         });
@@ -1568,39 +1652,43 @@ function atualizarGraficoPorPeriodo(periodo) {
         ramChart = new Chart(ctxram, {
             type: 'bar',
             data: {
-                labels: ['20:00', '21:00', '22:00', '23:00', '00:00', '01:00'],
-                datasets: [{
-                    label: 'RAM',
-                    data: posteriores5primeirosRAM,
-                    backgroundColor: ['rgb(242, 183, 48)',
-                        'rgba(29, 173, 0, 1)',
-                        'rgba(29, 173, 0, 1)',
-                        'rgba(29, 173, 0, 1)',
-                        'rgba(29, 173, 0, 1)',
-                        'rgba(233, 0, 0, 1)',
-                    ],
-                    borderWidth: 1,
-                    borderRadius: 12,
-                }]
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Alertas padrão',
+                        data: posteriores5primeirosRAM,
+                        backgroundColor: '#F4B000',
+                        stack: 'alerts', borderWidth: 1,
+                        borderRadius: 10,
+                    },
+                    {
+                        label: 'Alertas críticos',
+                        data: posteriores5primeirosRAMCritico,
+                        backgroundColor: '#E53935', borderWidth: 1,
+                        borderRadius: 10,
+                    }
+                ]
             },
             options: {
                 plugins: {
                     title: {
                         display: true,
+                        text: 'Quantidade de Alertas - RAM',
                         color: 'black',
-                        text: 'Quantidade de alertas - RAM',
-                        font: {
-                            size: 28
-                        }
+                        font: { size: 28 }
                     }
                 },
+                responsive: true,
                 scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            color: 'black'
-                        }
+                    x: {
+                        stacked: true,
+                        ticks: { color: 'black' }
                     },
+                    y: {
+                        stacked: true,
+                        beginAtZero: true,
+                        ticks: { color: 'black' }
+                    }
                 }
             }
         });
@@ -1675,39 +1763,43 @@ function atualizarGraficoPorPeriodo(periodo) {
         discoChart = new Chart(ctxdisco, {
             type: 'bar',
             data: {
-                labels: ['20:00', '21:00', '22:00', '23:00', '00:00', '01:00'],
-                datasets: [{
-                    label: 'DISCO',
-                    data: posteriores5primeirosDisco,
-                    backgroundColor: ['rgb(242, 183, 48)',
-                        'rgba(29, 173, 0, 1)',
-                        'rgba(29, 173, 0, 1)',
-                        'rgba(29, 173, 0, 1)',
-                        'rgba(29, 173, 0, 1)',
-                        'rgba(233, 0, 0, 1)',
-                    ],
-                    borderWidth: 1,
-                    borderRadius: 12,
-                }]
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Alertas padrão',
+                        data: posteriores5primeirosDisco,
+                        backgroundColor: '#F4B000',
+                        stack: 'alerts', borderWidth: 1,
+                        borderRadius: 10,
+                    },
+                    {
+                        label: 'Alertas críticos',
+                        data: posteriores5primeirosDiscoCritico,
+                        backgroundColor: '#E53935', borderWidth: 1,
+                        borderRadius: 10,
+                    }
+                ]
             },
             options: {
                 plugins: {
                     title: {
                         display: true,
-                        color: 'black',
                         text: 'Quantidade de Alertas - Disco',
-                        font: {
-                            size: 28
-                        }
+                        color: 'black',
+                        font: { size: 28 }
                     }
                 },
+                responsive: true,
                 scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            color: 'black'
-                        }
+                    x: {
+                        stacked: true,
+                        ticks: { color: 'black' }
                     },
+                    y: {
+                        stacked: true,
+                        beginAtZero: true,
+                        ticks: { color: 'black' }
+                    }
                 }
             }
         });
@@ -1783,39 +1875,43 @@ function atualizarGraficoPorPeriodo(periodo) {
         redeChart = new Chart(ctxrede, {
             type: 'bar',
             data: {
-                labels: ['20:00', '21:00', '22:00', '23:00', '00:00', '01:00'],
-                datasets: [{
-                    label: 'Rede',
-                    data: posteriores5primeirosDownload,
-                    backgroundColor: ['rgb(242, 183, 48)',
-                        'rgba(29, 173, 0, 1)',
-                        'rgba(29, 173, 0, 1)',
-                        'rgba(29, 173, 0, 1)',
-                        'rgba(29, 173, 0, 1)',
-                        'rgba(233, 0, 0, 1)',
-                    ],
-                    borderWidth: 1,
-                    borderRadius: 12,
-                }]
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Alertas padrão',
+                        data: posteriores5primeirosDownload,
+                        backgroundColor: '#F4B000',
+                        stack: 'alerts', borderWidth: 1,
+                        borderRadius: 10,
+                    },
+                    {
+                        label: 'Alertas críticos',
+                        data: posteriores5primeirosDownloadCritico,
+                        backgroundColor: '#E53935', borderWidth: 1,
+                        borderRadius: 10,
+                    }
+                ]
             },
             options: {
                 plugins: {
                     title: {
                         display: true,
-                        color: 'black',
                         text: 'Quantidade de Alertas - Download',
-                        font: {
-                            size: 28
-                        }
+                        color: 'black',
+                        font: { size: 28 }
                     }
                 },
+                responsive: true,
                 scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            color: 'black'
-                        }
+                    x: {
+                        stacked: true,
+                        ticks: { color: 'black' }
                     },
+                    y: {
+                        stacked: true,
+                        beginAtZero: true,
+                        ticks: { color: 'black' }
+                    }
                 }
             }
         });
@@ -1889,39 +1985,43 @@ function atualizarGraficoPorPeriodo(periodo) {
         redeChart2 = new Chart(ctxrede2, {
             type: 'bar',
             data: {
-                labels: ['20:00', '21:00', '22:00', '23:00', '00:00', '01:00'],
-                datasets: [{
-                    label: 'Rede',
-                    data: posteriores5primeirosUpload,
-                    backgroundColor: ['rgb(242, 183, 48)',
-                        'rgba(29, 173, 0, 1)',
-                        'rgba(29, 173, 0, 1)',
-                        'rgba(29, 173, 0, 1)',
-                        'rgba(29, 173, 0, 1)',
-                        'rgba(233, 0, 0, 1)',
-                    ],
-                    borderWidth: 1,
-                    borderRadius: 12,
-                }]
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Alertas padrão',
+                        data: posteriores5primeirosUpload,
+                        backgroundColor: '#F4B000',
+                        stack: 'alerts', borderWidth: 1,
+                        borderRadius: 10,
+                    },
+                    {
+                        label: 'Alertas críticos',
+                        data: posteriores5primeirosUploadCritico,
+                        backgroundColor: '#E53935', borderWidth: 1,
+                        borderRadius: 10,
+                    }
+                ]
             },
             options: {
                 plugins: {
                     title: {
                         display: true,
+                        text: 'Quantidade de Alertas - Upload',
                         color: 'black',
-                        text: 'Quantidade de alertas - Upload',
-                        font: {
-                            size: 28
-                        }
+                        font: { size: 28 }
                     }
                 },
+                responsive: true,
                 scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            color: 'black'
-                        }
+                    x: {
+                        stacked: true,
+                        ticks: { color: 'black' }
                     },
+                    y: {
+                        stacked: true,
+                        beginAtZero: true,
+                        ticks: { color: 'black' }
+                    }
                 }
             }
         });
@@ -2044,39 +2144,43 @@ function atualizarGraficoPorPeriodo(periodo) {
         cpuChart = new Chart(ctxCpu, {
             type: 'bar',
             data: {
-                labels: ['20:00', '21:00', '22:00', '23:00'],
-                datasets: [{
-                    label: 'CPU',
-                    data: primeiros5CPU,
-                    backgroundColor: ['rgb(242, 183, 48)',
-                        'rgba(29, 173, 0, 1)',
-                        'rgba(255, 0, 0, 1)',
-                        'rgba(29, 173, 0, 1)',
-                        'rgba(29, 173, 0, 1)',
-                        'rgba(255, 0, 0, 1)',
-                    ],
-                    borderWidth: 1,
-                    borderRadius: 12,
-                }]
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Alertas padrão',
+                        data: primeiros5CPU,
+                        backgroundColor: '#F4B000',
+                        stack: 'alerts', borderWidth: 1,
+                        borderRadius: 10,
+                    },
+                    {
+                        label: 'Alertas críticos',
+                        data: primeiros5CPUCritico,
+                        backgroundColor: '#E53935', borderWidth: 1,
+                        borderRadius: 10,
+                    }
+                ]
             },
             options: {
                 plugins: {
                     title: {
                         display: true,
+                        text: 'Quantidade de Alertas - CPU',
                         color: 'black',
-                        text: 'Quantidade de alertas - CPU',
-                        font: {
-                            size: 28
-                        }
+                        font: { size: 28 }
                     }
                 },
+                responsive: true,
                 scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            color: 'black'
-                        }
+                    x: {
+                        stacked: true,
+                        ticks: { color: 'black' }
                     },
+                    y: {
+                        stacked: true,
+                        beginAtZero: true,
+                        ticks: { color: 'black' }
+                    }
                 }
             }
         });
@@ -2151,39 +2255,43 @@ function atualizarGraficoPorPeriodo(periodo) {
         ramChart = new Chart(ctxram, {
             type: 'bar',
             data: {
-                labels: ['20:00', '21:00', '22:00', '23:00', '00:00', '01:00'],
-                datasets: [{
-                    label: 'RAM',
-                    data: primeiros5RAM,
-                    backgroundColor: ['rgb(242, 183, 48)',
-                        'rgba(29, 173, 0, 1)',
-                        'rgba(255, 0, 0, 1)',
-                        'rgba(29, 173, 0, 1)',
-                        'rgba(29, 173, 0, 1)',
-                        'rgba(255, 0, 0, 1)',
-                    ],
-                    borderWidth: 1,
-                    borderRadius: 12,
-                }]
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Alertas padrão',
+                        data: primeiros5RAM,
+                        backgroundColor: '#F4B000',
+                        stack: 'alerts', borderWidth: 1,
+                        borderRadius: 10,
+                    },
+                    {
+                        label: 'Alertas críticos',
+                        data: primeiros5RAMCritico,
+                        backgroundColor: '#E53935', borderWidth: 1,
+                        borderRadius: 10,
+                    }
+                ]
             },
             options: {
                 plugins: {
                     title: {
                         display: true,
+                        text: 'Quantidade de Alertas - RAM',
                         color: 'black',
-                        text: 'Quantidade de alertas - RAM',
-                        font: {
-                            size: 28
-                        }
+                        font: { size: 28 }
                     }
                 },
+                responsive: true,
                 scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            color: 'black'
-                        }
+                    x: {
+                        stacked: true,
+                        ticks: { color: 'black' }
                     },
+                    y: {
+                        stacked: true,
+                        beginAtZero: true,
+                        ticks: { color: 'black' }
+                    }
                 }
             }
         });
@@ -2256,39 +2364,43 @@ function atualizarGraficoPorPeriodo(periodo) {
         discoChart = new Chart(ctxdisco, {
             type: 'bar',
             data: {
-                labels: ['20:00', '21:00', '22:00', '23:00', '00:00', '01:00'],
-                datasets: [{
-                    label: 'DISCO',
-                    data: primeiros5Disco,
-                    backgroundColor: ['rgb(242, 183, 48)',
-                        'rgba(29, 173, 0, 1)',
-                        'rgba(255, 0, 0, 1)',
-                        'rgba(29, 173, 0, 1)',
-                        'rgba(29, 173, 0, 1)',
-                        'rgba(255, 0, 0, 1)',
-                    ],
-                    borderWidth: 1,
-                    borderRadius: 12,
-                }]
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Alertas padrão',
+                        data: primeiros5Disco,
+                        backgroundColor: '#F4B000',
+                        stack: 'alerts', borderWidth: 1,
+                        borderRadius: 10,
+                    },
+                    {
+                        label: 'Alertas críticos',
+                        data: primeiros5DiscoCritico,
+                        backgroundColor: '#E53935', borderWidth: 1,
+                        borderRadius: 10,
+                    }
+                ]
             },
             options: {
                 plugins: {
                     title: {
                         display: true,
-                        color: 'black',
                         text: 'Quantidade de Alertas - Disco',
-                        font: {
-                            size: 28
-                        }
+                        color: 'black',
+                        font: { size: 28 }
                     }
                 },
+                responsive: true,
                 scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            color: 'black'
-                        }
+                    x: {
+                        stacked: true,
+                        ticks: { color: 'black' }
                     },
+                    y: {
+                        stacked: true,
+                        beginAtZero: true,
+                        ticks: { color: 'black' }
+                    }
                 }
             }
         });
@@ -2364,39 +2476,43 @@ function atualizarGraficoPorPeriodo(periodo) {
         redeChart = new Chart(ctxrede, {
             type: 'bar',
             data: {
-                labels: ['20:00', '21:00', '22:00', '23:00', '00:00', '01:00'],
-                datasets: [{
-                    label: 'Rede',
-                    data: primeiros5Download,
-                    backgroundColor: ['rgb(242, 183, 48)',
-                        'rgba(29, 173, 0, 1)',
-                        'rgba(255, 0, 0, 1)',
-                        'rgba(29, 173, 0, 1)',
-                        'rgba(29, 173, 0, 1)',
-                        'rgba(255, 0, 0, 1)',
-                    ],
-                    borderWidth: 1,
-                    borderRadius: 12,
-                }]
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Alertas padrão',
+                        data: primeiros5Download,
+                        backgroundColor: '#F4B000',
+                        stack: 'alerts', borderWidth: 1,
+                        borderRadius: 10,
+                    },
+                    {
+                        label: 'Alertas críticos',
+                        data: primeiros5DownloadCritico,
+                        backgroundColor: '#E53935', borderWidth: 1,
+                        borderRadius: 10,
+                    }
+                ]
             },
             options: {
                 plugins: {
                     title: {
                         display: true,
-                        color: 'black',
                         text: 'Quantidade de Alertas - Download',
-                        font: {
-                            size: 28
-                        }
+                        color: 'black',
+                        font: { size: 28 }
                     }
                 },
+                responsive: true,
                 scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            color: 'black'
-                        }
+                    x: {
+                        stacked: true,
+                        ticks: { color: 'black' }
                     },
+                    y: {
+                        stacked: true,
+                        beginAtZero: true,
+                        ticks: { color: 'black' }
+                    }
                 }
             }
         });
@@ -2470,39 +2586,43 @@ function atualizarGraficoPorPeriodo(periodo) {
         redeChart2 = new Chart(ctxrede2, {
             type: 'bar',
             data: {
-                labels: ['20:00', '21:00', '22:00', '23:00', '00:00', '01:00'],
-                datasets: [{
-                    label: 'Rede',
-                    data: primeiros5Upload,
-                    backgroundColor: ['rgba(29, 173, 0, 1)',
-                        'rgb(242, 183, 48)',
-                        'rgba(29, 173, 0, 1)',
-                        'rgba(29, 173, 0, 1)',
-                        'rgba(29, 173, 0, 1)',
-                        'rgba(233, 0, 0, 1)',
-                    ],
-                    borderWidth: 1,
-                    borderRadius: 12,
-                }]
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Alertas padrão',
+                        data: primeiros5Upload,
+                        backgroundColor: '#F4B000',
+                        stack: 'alerts', borderWidth: 1,
+                        borderRadius: 10,
+                    },
+                    {
+                        label: 'Alertas críticos',
+                        data: primeiros5UploadCritico,
+                        backgroundColor: '#E53935', borderWidth: 1,
+                        borderRadius: 10,
+                    }
+                ]
             },
             options: {
                 plugins: {
                     title: {
                         display: true,
+                        text: 'Quantidade de Alertas - Upload',
                         color: 'black',
-                        text: 'Quantidade de alertas - Upload',
-                        font: {
-                            size: 28
-                        }
+                        font: { size: 28 }
                     }
                 },
+                responsive: true,
                 scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            color: 'black'
-                        }
+                    x: {
+                        stacked: true,
+                        ticks: { color: 'black' }
                     },
+                    y: {
+                        stacked: true,
+                        beginAtZero: true,
+                        ticks: { color: 'black' }
+                    }
                 }
             }
         });
