@@ -35,205 +35,204 @@ let alertaCriticoUpload = null;
 // Variáveis globais
 let data = [];
 let jsonSeparados = {
-  total: [],
-  ultimos5: [],
-  primeiros5: [],
-  penultimos5: [],
-  posteriores5primeiros: []
+    total: [],
+    ultimos5: [],
+    primeiros5: [],
+    penultimos5: [],
+    posteriores5primeiros: []
 };
 let estatisticasAlertas = null;
 
 function carregarDados() {
-  return fetch('/s3/downloadJSON')
-    .then(response => response.json())
-    .then(response => {
-      const todosBlocos = response.data;
-      
-      // Separa períodos
-      jsonSeparados.total = todosBlocos;
-      jsonSeparados.ultimos5 = todosBlocos.slice(-5);
-      jsonSeparados.primeiros5 = todosBlocos.slice(0, 5);
-      jsonSeparados.penultimos5 = todosBlocos.slice(-10, -5);
-      jsonSeparados.posteriores5primeiros = todosBlocos.slice(5, 10);
-      
-      // BRUTO igual primeiro código ✅
-      data = todosBlocos.slice(-20).flat();
-      
-      console.log('DADOS BRUTOS CARREGADOS:', data.length, 'linhas totais');
-      calcularAlertas(data);
-    })
-    .catch(err => console.error('ERRO S3:', err));
+    return fetch('/s3/downloadJSON')
+        .then(response => response.json())
+        .then(response => {
+            const todosBlocos = response.data;
+
+            // Separar períodos
+            jsonSeparados.total = todosBlocos;
+            jsonSeparados.ultimos5 = todosBlocos.slice(-5);
+            jsonSeparados.primeiros5 = todosBlocos.slice(0, 5);
+            jsonSeparados.penultimos5 = todosBlocos.slice(-10, -5);
+            jsonSeparados.posteriores5primeiros = todosBlocos.slice(5, 10);
+
+
+            data = todosBlocos.slice(-20).flat();
+
+            console.log('DADOS BRUTOS CARREGADOS:', data.length, 'linhas totais');
+            calcularAlertas(data);
+        })
+        .catch(err => console.error('ERRO S3:', err));
 }
 
 function calcularAlertas(dataFiltro = data) {
-  console.log('CALCULANDO alertas com', dataFiltro.length, 'linhas brutas');
-  
-  if (servidor) {
-    const mac = servidor.macaddress;
-    const servidorData = dataFiltro.filter(row => row.macaddress === mac);
-    
-    console.log('SERVIDOR DATA após filtro MAC:', servidorData.length, 'linhas');
-    
-   alertaCPU = data.filter(row => row.cpu_status === "NORMAL").length;
-   alertaRAM = data.filter(row => row.ram_status === "NORMAL").length;
-   alertaDisco = data.filter(row => row.disco_status === "NORMAL").length;
-   alertaDownload = data.filter(row => row.mb_enviados_status === "NORMAL").length;
-   alertaUpload = data.filter(row => row.mb_recebidos_status === "NORMAL").length;
+    console.log('CALCULANDO alertas com', dataFiltro.length, 'linhas brutas');
 
-   alertaCriticoCPU = data.filter(row => row.cpu_status_critico === "CRITICO").length;
-   alertaCriticoRAM = data.filter(row => row.ram_status_critico === "CRITICO").length;
-   alertaCriticoDisco = data.filter(row => row.disco_status_critico === "CRITICO").length;
-   alertaCriticoDownload = data.filter(row => row.mb_enviados_status_critico === "CRITICO").length;
-   alertaCriticoUpload = data.filter(row => row.mb_recebidos_status_critico === "CRITICO").length;
-    
-    const somaAlertas = alertaCPU + alertaRAM + alertaDisco + alertaDownload + alertaUpload;
-    const somaAlertaCriticos = alertaCriticoCPU + alertaCriticoRAM + alertaCriticoDisco + alertaCriticoDownload + alertaCriticoUpload;
-    
-    estatisticasAlertas = {
-      normal: [alertaCPU, alertaRAM, alertaDisco, alertaUpload, alertaDownload],
-      critico: [alertaCriticoCPU, alertaCriticoRAM, alertaCriticoDisco, alertaCriticoUpload, alertaCriticoDownload]
-    };
-    
-    // Atualiza contadores
-    document.getElementById('alerta_numero_padrao').textContent = somaAlertas;
-    document.getElementById('alerta_numero_critico').textContent = somaAlertaCriticos;
-    document.getElementById('critico_CPU').textContent = alertaCriticoCPU;
-    document.getElementById('padrao_CPU').textContent = alertaCPU;
-    document.getElementById('critico_RAM').textContent = alertaCriticoRAM;
-    document.getElementById('padrao_RAM').textContent = alertaRAM;
-    document.getElementById('critico_Disco').textContent = alertaCriticoDisco;
-    document.getElementById('padrao_Disco').textContent = alertaDisco;
-    document.getElementById('critico_Download').textContent = alertaCriticoDownload;
-    document.getElementById('padrao_Download').textContent = alertaDownload;
-    document.getElementById('critico_Upload').textContent = alertaCriticoUpload;
-    document.getElementById('padrao_Upload').textContent = alertaUpload;
-    
-    // Info servidor
-    document.getElementById('servidorNome').textContent = servidor.nome;
-    document.getElementById('modelo_cpu').textContent = servidor.tipocpu;
-    document.getElementById('capacidade_ram').textContent = servidor.ram + 'GB';
-    document.getElementById('capacidade_disco').textContent = servidor.disco + 'TB';
-  }
+    if (servidor) {
+        const mac = servidor.macaddress;
+        const servidorData = dataFiltro.filter(row => row.macaddress === mac);
+
+        console.log('SERVIDOR DATA após filtro MAC:', servidorData.length, 'linhas');
+
+        alertaCPU = data.filter(row => row.cpu_status === "NORMAL").length;
+        alertaRAM = data.filter(row => row.ram_status === "NORMAL").length;
+        alertaDisco = data.filter(row => row.disco_status === "NORMAL").length;
+        alertaDownload = data.filter(row => row.mb_enviados_status === "NORMAL").length;
+        alertaUpload = data.filter(row => row.mb_recebidos_status === "NORMAL").length;
+
+        alertaCriticoCPU = data.filter(row => row.cpu_status_critico === "CRITICO").length;
+        alertaCriticoRAM = data.filter(row => row.ram_status_critico === "CRITICO").length;
+        alertaCriticoDisco = data.filter(row => row.disco_status_critico === "CRITICO").length;
+        alertaCriticoDownload = data.filter(row => row.mb_enviados_status_critico === "CRITICO").length;
+        alertaCriticoUpload = data.filter(row => row.mb_recebidos_status_critico === "CRITICO").length;
+
+        const somaAlertas = alertaCPU + alertaRAM + alertaDisco + alertaDownload + alertaUpload;
+        const somaAlertaCriticos = alertaCriticoCPU + alertaCriticoRAM + alertaCriticoDisco + alertaCriticoDownload + alertaCriticoUpload;
+
+        estatisticasAlertas = {
+            normal: [alertaCPU, alertaRAM, alertaDisco, alertaUpload, alertaDownload],
+            critico: [alertaCriticoCPU, alertaCriticoRAM, alertaCriticoDisco, alertaCriticoUpload, alertaCriticoDownload]
+        };
+
+        // Atualizar contadores
+        document.getElementById('alerta_numero_padrao').textContent = somaAlertas;
+        document.getElementById('alerta_numero_critico').textContent = somaAlertaCriticos;
+        document.getElementById('critico_CPU').textContent = alertaCriticoCPU;
+        document.getElementById('padrao_CPU').textContent = alertaCPU;
+        document.getElementById('critico_RAM').textContent = alertaCriticoRAM;
+        document.getElementById('padrao_RAM').textContent = alertaRAM;
+        document.getElementById('critico_Disco').textContent = alertaCriticoDisco;
+        document.getElementById('padrao_Disco').textContent = alertaDisco;
+        document.getElementById('critico_Download').textContent = alertaCriticoDownload;
+        document.getElementById('padrao_Download').textContent = alertaDownload;
+        document.getElementById('critico_Upload').textContent = alertaCriticoUpload;
+        document.getElementById('padrao_Upload').textContent = alertaUpload;
+
+        document.getElementById('servidorNome').textContent = servidor.nome;
+        document.getElementById('modelo_cpu').textContent = servidor.tipocpu;
+        document.getElementById('capacidade_ram').textContent = servidor.ram + 'GB';
+        document.getElementById('capacidade_disco').textContent = servidor.disco + 'TB';
+    }
 }
 
 function formatarDiferenca(timestamp) {
-  const agora = Date.now();
-  const diffSegundos = Math.abs(agora - timestamp) / 1000;
-  const dias = Math.floor(diffSegundos / 60 / 60 / 24);
-  const horas = Math.floor(diffSegundos / 60 / 60 % 24);
-  const minutos = Math.floor(diffSegundos / 60 % 60);
-  return `${dias.toString().padStart(2, '0')}d ${horas.toString().padStart(2, '0')}h ${minutos.toString().padStart(2, '0')}m`;
+    const agora = Date.now();
+    const diffSegundos = Math.abs(agora - timestamp) / 1000;
+    const dias = Math.floor(diffSegundos / 60 / 60 / 24);
+    const horas = Math.floor(diffSegundos / 60 / 60 % 24);
+    const minutos = Math.floor(diffSegundos / 60 % 60);
+    return `${dias.toString().padStart(2, '0')}d ${horas.toString().padStart(2, '0')}h ${minutos.toString().padStart(2, '0')}m`;
 }
 
 function buscarDados() {
-  fetch(`/metrica/obterUltimaPorMAC/${servidor.macaddress}`, { method: 'GET' })
-    .then(resultado => resultado.json())
-    .then(data => {
-      atualizarCPU(data.cpu);
-      atualizarRAM(data.ram);
-      atualizarDisco(data.disco);
-      atualizarMBEnviados(data.mbEnviados);
-      atualizarMBRecebidos(data.mbRecebidos);
-      atualizarBootTime(data.tempoBoot);
-    })
-    .catch(() => console.log('rode o python'));
-  
-  const id_servidor = JSON.parse(sessionStorage.getItem('servidorSelecionado')).id_servidor;
-  fetch("/parametro/obterParametro/" + id_servidor, { method: 'GET' })
-    .then(resultado => resultado.json())
-    .then(data => {
-      for (let i = 0; i < data.length; i++) {
-        if (data[i].nome == "CPU") {
-          document.getElementById('lim_padrao_cpu').innerHTML = data[i].alerta_normal + "%";
-          document.getElementById('lim_critico_cpu').innerHTML = data[i].alerta_critico + "%";
-        } else if (data[i].nome == "RAM") {
-          document.getElementById('lim_padrao_ram').innerHTML = data[i].alerta_normal + "%";
-          document.getElementById('lim_critico_ram').innerHTML = data[i].alerta_critico + "%";
-        } else if (data[i].nome == "Mb Enviados - REDE") {
-          document.getElementById('lim_padrao_disco').innerHTML = data[i].alerta_normal + "%";
-          document.getElementById('lim_critico_disco').innerHTML = data[i].alerta_critico + "%";
-        } else if (data[i].nome == "Mb Recebidos - REDE") {
-          document.getElementById('lim_padrao_upload').innerHTML = data[i].alerta_normal + "%";
-          document.getElementById('lim_critico_upload').innerHTML = data[i].alerta_critico + "%";
-        } else {
-          document.getElementById('lim_padrao_download').innerHTML = data[i].alerta_normal + "%";
-          document.getElementById('lim_critico_download').innerHTML = data[i].alerta_critico + "%";
-        }
-      }
-    });
+    fetch(`/metrica/obterUltimaPorMAC/${servidor.macaddress}`, { method: 'GET' })
+        .then(resultado => resultado.json())
+        .then(data => {
+            atualizarCPU(data.cpu);
+            atualizarRAM(data.ram);
+            atualizarDisco(data.disco);
+            atualizarMBEnviados(data.mbEnviados);
+            atualizarMBRecebidos(data.mbRecebidos);
+            atualizarBootTime(data.tempoBoot);
+        })
+        .catch(() => console.log('rode o python'));
+
+    const id_servidor = JSON.parse(sessionStorage.getItem('servidorSelecionado')).id_servidor;
+    fetch("/parametro/obterParametro/" + id_servidor, { method: 'GET' })
+        .then(resultado => resultado.json())
+        .then(data => {
+            for (let i = 0; i < data.length; i++) {
+                if (data[i].nome == "CPU") {
+                    document.getElementById('lim_padrao_cpu').innerHTML = data[i].alerta_normal + "%";
+                    document.getElementById('lim_critico_cpu').innerHTML = data[i].alerta_critico + "%";
+                } else if (data[i].nome == "RAM") {
+                    document.getElementById('lim_padrao_ram').innerHTML = data[i].alerta_normal + "%";
+                    document.getElementById('lim_critico_ram').innerHTML = data[i].alerta_critico + "%";
+                } else if (data[i].nome == "Mb Enviados - REDE") {
+                    document.getElementById('lim_padrao_disco').innerHTML = data[i].alerta_normal + "%";
+                    document.getElementById('lim_critico_disco').innerHTML = data[i].alerta_critico + "%";
+                } else if (data[i].nome == "Mb Recebidos - REDE") {
+                    document.getElementById('lim_padrao_upload').innerHTML = data[i].alerta_normal + "%";
+                    document.getElementById('lim_critico_upload').innerHTML = data[i].alerta_critico + "%";
+                } else {
+                    document.getElementById('lim_padrao_download').innerHTML = data[i].alerta_normal + "%";
+                    document.getElementById('lim_critico_download').innerHTML = data[i].alerta_critico + "%";
+                }
+            }
+        });
 }
 
 function atualizarCPU(valorCPU) {
-  if (chartCPU) {
-    chartCPU.data.datasets[0].data = [valorCPU, 100 - valorCPU];
-    chartCPU.update();
-  }
+    if (chartCPU) {
+        chartCPU.data.datasets[0].data = [valorCPU, 100 - valorCPU];
+        chartCPU.update();
+    }
 }
 
 function atualizarRAM(valorRAM) {
-  if (chartRAM) {
-    chartRAM.data.datasets[0].data = [valorRAM, 100 - valorRAM];
-    chartRAM.update();
-  }
+    if (chartRAM) {
+        chartRAM.data.datasets[0].data = [valorRAM, 100 - valorRAM];
+        chartRAM.update();
+    }
 }
 
 function atualizarDisco(valorDisco) {
-  if (chartDisco) {
-    chartDisco.data.datasets[0].data = [valorDisco, 100 - valorDisco];
-    chartDisco.update();
-  }
+    if (chartDisco) {
+        chartDisco.data.datasets[0].data = [valorDisco, 100 - valorDisco];
+        chartDisco.update();
+    }
 }
 
 function atualizarMBRecebidos(valorMbRecebidos) {
-  if (chartMBRecebidos) {
-    chartMBRecebidos.data.datasets[0].data = [valorMbRecebidos, 100 - valorMbRecebidos];
-    chartMBRecebidos.update();
-  }
+    if (chartMBRecebidos) {
+        chartMBRecebidos.data.datasets[0].data = [valorMbRecebidos, 100 - valorMbRecebidos];
+        chartMBRecebidos.update();
+    }
 }
 
 function atualizarMBEnviados(valorMbEnviados) {
-  if (chartMBEnviados) {
-    chartMBEnviados.data.datasets[0].data = [valorMbEnviados, 100 - valorMbEnviados];
-    chartMBEnviados.update();
-  }
+    if (chartMBEnviados) {
+        chartMBEnviados.data.datasets[0].data = [valorMbEnviados, 100 - valorMbEnviados];
+        chartMBEnviados.update();
+    }
 }
 
 function atualizarBootTime(bootTime) {
-  const boottime = document.getElementById('boottime');
-  boottime.innerHTML = formatarDiferenca(bootTime);
+    const boottime = document.getElementById('boottime');
+    boottime.innerHTML = formatarDiferenca(bootTime);
 }
 
 
 
 function contarAlertasPorPeriodo(blocoDados, metrica) {
-  if (!blocoDados || !Array.isArray(blocoDados)) return 0;
-  return blocoDados.filter(row => row[metrica] && row[metrica] !== "NORMAL").length;
+    if (!blocoDados || !Array.isArray(blocoDados)) return 0;
+    return blocoDados.filter(row => row[metrica] && row[metrica] !== "NORMAL").length;
 }
 
 function atualizarGraficoPorPeriodo(periodo) {
-  // Destroy charts
-  if (cpuChart) cpuChart.destroy();
-  if (ramChart) ramChart.destroy();
-  if (discoChart) discoChart.destroy();
-  if (redeChart) redeChart.destroy();
-  if (redeChart2) redeChart2.destroy();
-  if (reqChart) reqChart.destroy();
-  if (chartMBEnviados) chartMBEnviados.destroy();
-  if (chartMBRecebidos) chartMBRecebidos.destroy();
-  if (chartCPU) chartCPU.destroy();
-  if (chartRAM) chartRAM.destroy();
-  if (chartDisco) chartDisco.destroy();
 
-  // Dados BRUTO por período
-  let dataFiltro;
-  if (periodo === '1') dataFiltro = jsonSeparados.primeiros5.flat();
-  else if (periodo === '2') dataFiltro = jsonSeparados.posteriores5primeiros.flat();
-  else if (periodo === '3') dataFiltro = jsonSeparados.penultimos5.flat();
-  else if (periodo === '4') dataFiltro = jsonSeparados.ultimos5.flat();
-  else dataFiltro = data;
-  
-  console.log('PERÍODO', periodo, 'linhas brutas:', dataFiltro.length);
-  calcularAlertas(dataFiltro);
+    if (cpuChart) cpuChart.destroy();
+    if (ramChart) ramChart.destroy();
+    if (discoChart) discoChart.destroy();
+    if (redeChart) redeChart.destroy();
+    if (redeChart2) redeChart2.destroy();
+    if (reqChart) reqChart.destroy();
+    if (chartMBEnviados) chartMBEnviados.destroy();
+    if (chartMBRecebidos) chartMBRecebidos.destroy();
+    if (chartCPU) chartCPU.destroy();
+    if (chartRAM) chartRAM.destroy();
+    if (chartDisco) chartDisco.destroy();
+
+    // Dados por período
+    let dataFiltro;
+    if (periodo === '1') dataFiltro = jsonSeparados.primeiros5.flat();
+    else if (periodo === '2') dataFiltro = jsonSeparados.posteriores5primeiros.flat();
+    else if (periodo === '3') dataFiltro = jsonSeparados.penultimos5.flat();
+    else if (periodo === '4') dataFiltro = jsonSeparados.ultimos5.flat();
+    else dataFiltro = data;
+
+    console.log('PERÍODO', periodo, 'linhas brutas:', dataFiltro.length);
+    calcularAlertas(dataFiltro);
 
     if (periodo === "1") {
 
@@ -256,48 +255,48 @@ function atualizarGraficoPorPeriodo(periodo) {
         //     }
         //   ]
         // };
-    
-// const data = {
-//   labels: ['20:00', '21:00', '22:00', '23:00', '00:00', '01:00'],
-//   datasets: [
-//     {
-//       label: 'Alertas padrão',
-//       data: [1, 0, 2, 3, 1, 2],   // qtd padrão por hora
-//       backgroundColor: '#F4B000', // amarelo
-//       stack: 'alerts'
-//     },
-//     {
-//       label: 'Alertas críticos',
-//       data: [0, 3, 0, 0, 2, 3],   // qtd críticos por hora
-//       backgroundColor: '#E53935', // vermelho
-//       stack: 'alerts'
-//     }
-//   ]
-// };
 
-// new Chart(ctx, {
-//   type: 'bar',
-//   data,
-//   options: {
-//     scales: {
-//       x: { stacked: true },
-//       y: { stacked: true }
-//     }
-//   }
-// });
-            
-const ultimos5CPUs = jsonSeparados.ultimos5.map((bloco, idx) => {
-  if (!Array.isArray(bloco)) return 0;
-  const qtd = bloco.filter(row => row.cpustatus && row.cpustatus !== "NORMAL").length;
-  console.log(`bloco ${idx} -> CPU alertas:`, qtd);
-  return qtd;
-});
+        // const data = {
+        //   labels: ['20:00', '21:00', '22:00', '23:00', '00:00', '01:00'],
+        //   datasets: [
+        //     {
+        //       label: 'Alertas padrão',
+        //       data: [1, 0, 2, 3, 1, 2],   // qtd padrão por hora
+        //       backgroundColor: '#F4B000', // amarelo
+        //       stack: 'alerts'
+        //     },
+        //     {
+        //       label: 'Alertas críticos',
+        //       data: [0, 3, 0, 0, 2, 3],   // qtd críticos por hora
+        //       backgroundColor: '#E53935', // vermelho
+        //       stack: 'alerts'
+        //     }
+        //   ]
+        // };
 
-console.log('jsonSeparados.ultimos5:', jsonSeparados.ultimos5);
-console.log('tipo:', Array.isArray(jsonSeparados.ultimos5));
-console.log('length:', jsonSeparados.ultimos5?.length);
+        // new Chart(ctx, {
+        //   type: 'bar',
+        //   data,
+        //   options: {
+        //     scales: {
+        //       x: { stacked: true },
+        //       y: { stacked: true }
+        //     }
+        //   }
+        // });
 
-console.log('CPU ultimos5 por bloco:', ultimos5CPUs);
+        const ultimos5CPU = jsonSeparados.ultimos5.map((bloco, idx) => {
+            if (!Array.isArray(bloco)) return 0;
+            const qtd = bloco.filter(row => row.cpu_status && row.cpu_status !== "NORMAL").length;
+            console.log(`bloco ${idx} -> CPU alertas:`, qtd);
+            return qtd;
+        });
+
+        console.log('jsonSeparados.ultimos5:', jsonSeparados.ultimos5);
+        console.log('tipo:', Array.isArray(jsonSeparados.ultimos5));
+        console.log('length:', jsonSeparados.ultimos5?.length);
+
+        console.log('CPU ultimos5 por bloco:', ultimos5CPU);
 
         ctxCpu = document.getElementById('CpuChart').getContext('2d');
         cpuChart = new Chart(ctxCpu, {
@@ -306,7 +305,7 @@ console.log('CPU ultimos5 por bloco:', ultimos5CPUs);
                 labels: ['20:00', '21:00', '22:00', '23:00', '00:00', '01:00'],
                 datasets: [{
                     label: 'CPU',
-                    data: ultimos5CPUs,
+                    data: ultimos5CPU,
                     backgroundColor: ['rgba(29, 173, 0, 1)',
                         'rgb(242, 183, 48)',
                         'rgba(29, 173, 0, 1)',
@@ -391,6 +390,12 @@ console.log('CPU ultimos5 por bloco:', ultimos5CPUs);
             }]
         });
 
+        const ultimos5RAM = jsonSeparados.ultimos5.map((bloco, idx) => {
+            if (!Array.isArray(bloco)) return 0;
+            const qtd = bloco.filter(row => row.ram_status && row.ram_status !== "NORMAL").length;
+            console.log(`bloco ${idx} -> RAM alertas:`, qtd);
+            return qtd;
+        });
 
         const ctxram = document.getElementById('RamChart').getContext('2d');
 
@@ -400,7 +405,7 @@ console.log('CPU ultimos5 por bloco:', ultimos5CPUs);
                 labels: ['20:00', '21:00', '22:00', '23:00', '00:00', '01:00'],
                 datasets: [{
                     label: 'RAM',
-                    data: [30, 80, 50, 55, 45, 100],
+                    data: ultimos5RAM,
                     backgroundColor: ['rgba(29, 173, 0, 1)',
                         'rgb(242, 183, 48)',
                         'rgba(29, 173, 0, 1)',
@@ -484,6 +489,12 @@ console.log('CPU ultimos5 por bloco:', ultimos5CPUs);
             }]
         });
 
+        const ultimos5Disco = jsonSeparados.ultimos5.map((bloco, idx) => {
+            if (!Array.isArray(bloco)) return 0;
+            const qtd = bloco.filter(row => row.disco_status && row.disco_status !== "NORMAL").length;
+            console.log(`bloco ${idx} -> RAM alertas:`, qtd);
+            return qtd;
+        });
 
         const ctxdisco = document.getElementById('DiscoChart').getContext('2d');
 
@@ -493,7 +504,7 @@ console.log('CPU ultimos5 por bloco:', ultimos5CPUs);
                 labels: ['20:00', '21:00', '22:00', '23:00', '00:00', '01:00'],
                 datasets: [{
                     label: 'DISCO',
-                    data: [30, 80, 50, 55, 45, 100],
+                    data: ultimos5Disco,
                     backgroundColor: ['rgba(29, 173, 0, 1)',
                         'rgb(242, 183, 48)',
                         'rgba(29, 173, 0, 1)',
@@ -578,6 +589,13 @@ console.log('CPU ultimos5 por bloco:', ultimos5CPUs);
             }]
         });
 
+        const ultimos5Download = jsonSeparados.ultimos5.map((bloco, idx) => {
+            if (!Array.isArray(bloco)) return 0;
+            const qtd = bloco.filter(row => row.mb_recebidos_status && row.mb_recebidos_status !== "NORMAL").length;
+            console.log(`bloco ${idx} -> Donwload alertas:`, qtd);
+            return qtd;
+        });
+
         const ctxrede = document.getElementById('RedeChart').getContext('2d');
 
         redeChart = new Chart(ctxrede, {
@@ -586,7 +604,7 @@ console.log('CPU ultimos5 por bloco:', ultimos5CPUs);
                 labels: ['20:00', '21:00', '22:00', '23:00', '00:00', '01:00'],
                 datasets: [{
                     label: 'Rede',
-                    data: [30, 80, 50, 55, 45, 100],
+                    data: ultimos5Download,
                     backgroundColor: ['rgba(29, 173, 0, 1)',
                         'rgb(242, 183, 48)',
                         'rgba(29, 173, 0, 1)',
@@ -671,6 +689,13 @@ console.log('CPU ultimos5 por bloco:', ultimos5CPUs);
             }]
         });
 
+        const ultimos5Upload = jsonSeparados.ultimos5.map((bloco, idx) => {
+            if (!Array.isArray(bloco)) return 0;
+            const qtd = bloco.filter(row => row.mb_enviados_status && row.mb_enviados_status !== "NORMAL").length;
+            console.log(`bloco ${idx} -> Upload alertas:`, qtd);
+            return qtd;
+        });
+
         ctxrede2 = document.getElementById('RedeChart2').getContext('2d');
         redeChart2 = new Chart(ctxrede2, {
             type: 'bar',
@@ -678,7 +703,7 @@ console.log('CPU ultimos5 por bloco:', ultimos5CPUs);
                 labels: ['20:00', '21:00', '22:00', '23:00', '00:00', '01:00'],
                 datasets: [{
                     label: 'CPU',
-                    data: [30, 80, 50, 55, 45, 100],
+                    data: ultimos5Upload,
                     backgroundColor: ['rgba(29, 173, 0, 1)',
                         'rgb(242, 183, 48)',
                         'rgba(29, 173, 0, 1)',
@@ -807,12 +832,12 @@ console.log('CPU ultimos5 por bloco:', ultimos5CPUs);
 
     else if (periodo === "2") {
 
-const penultimos5CPU = jsonSeparados.penultimos5.map((bloco, idx) => {
-  if (!Array.isArray(bloco)) return 0;
-  const qtd = bloco.filter(row => row.cpu_status && row.cpu_status == "NORMAL").length;
-  console.log(`bloco ${idx} -> CPU alertas:`, qtd);
-  return qtd;
-});
+        const penultimos5CPU = jsonSeparados.penultimos5.map((bloco, idx) => {
+            if (!Array.isArray(bloco)) return 0;
+            const qtd = bloco.filter(row => row.cpu_status && row.cpu_status == "NORMAL").length;
+            console.log(`bloco ${idx} -> CPU alertas:`, qtd);
+            return qtd;
+        });
 
         const ctxCpu = document.getElementById('CpuChart').getContext('2d');
         cpuChart = new Chart(ctxCpu, {
@@ -906,6 +931,12 @@ const penultimos5CPU = jsonSeparados.penultimos5.map((bloco, idx) => {
             }]
         });
 
+        const penultimos5RAM = jsonSeparados.penultimos5.map((bloco, idx) => {
+            if (!Array.isArray(bloco)) return 0;
+            const qtd = bloco.filter(row => row.ram_status && row.ram_status == "NORMAL").length;
+            console.log(`bloco ${idx} -> RAM alertas:`, qtd);
+            return qtd;
+        });
 
         const ctxram = document.getElementById('RamChart').getContext('2d');
 
@@ -915,7 +946,7 @@ const penultimos5CPU = jsonSeparados.penultimos5.map((bloco, idx) => {
                 labels: ['20:00', '21:00', '22:00', '23:00', '00:00', '01:00'],
                 datasets: [{
                     label: 'RAM',
-                    data: [50, 40, 70, 65, 75, 95],
+                    data: penultimos5RAM,
                     backgroundColor: ['rgba(29, 173, 0, 1)',
                         'rgba(29, 173, 0, 1)',
                         'rgba(29, 173, 0, 1)',
@@ -998,6 +1029,12 @@ const penultimos5CPU = jsonSeparados.penultimos5.map((bloco, idx) => {
             }]
         });
 
+        const penultimos5Disco = jsonSeparados.penultimos5.map((bloco, idx) => {
+            if (!Array.isArray(bloco)) return 0;
+            const qtd = bloco.filter(row => row.disco_status && row.disco_status == "NORMAL").length;
+            console.log(`bloco ${idx} -> RAM alertas:`, qtd);
+            return qtd;
+        });
 
         const ctxdisco = document.getElementById('DiscoChart').getContext('2d');
 
@@ -1007,7 +1044,7 @@ const penultimos5CPU = jsonSeparados.penultimos5.map((bloco, idx) => {
                 labels: ['20:00', '21:00', '22:00', '23:00', '00:00', '01:00'],
                 datasets: [{
                     label: 'DISCO',
-                    data: [50, 40, 70, 65, 75, 95],
+                    data: penultimos5Disco,
                     backgroundColor: ['rgba(29, 173, 0, 1)',
                         'rgba(29, 173, 0, 1)',
                         'rgba(29, 173, 0, 1)',
@@ -1092,6 +1129,13 @@ const penultimos5CPU = jsonSeparados.penultimos5.map((bloco, idx) => {
             }]
         });
 
+        const penultimos5Upload = jsonSeparados.penultimos5.map((bloco, idx) => {
+            if (!Array.isArray(bloco)) return 0;
+            const qtd = bloco.filter(row => row.mb_enviados_status && row.mb_enviados_status == "NORMAL").length;
+            console.log(`bloco ${idx} -> RAM alertas:`, qtd);
+            return qtd;
+        });
+
         const ctxrede = document.getElementById('RedeChart').getContext('2d');
 
         redeChart = new Chart(ctxrede, {
@@ -1100,7 +1144,7 @@ const penultimos5CPU = jsonSeparados.penultimos5.map((bloco, idx) => {
                 labels: ['20:00', '21:00', '22:00', '23:00', '00:00', '01:00'],
                 datasets: [{
                     label: 'Rede',
-                    data: [50, 40, 70, 65, 75, 95],
+                    data: penultimos5Upload,
                     backgroundColor: ['rgba(29, 173, 0, 1)',
                         'rgba(29, 173, 0, 1)',
                         'rgba(29, 173, 0, 1)',
@@ -1185,6 +1229,13 @@ const penultimos5CPU = jsonSeparados.penultimos5.map((bloco, idx) => {
             }]
         });
 
+        const penultimos5Download = jsonSeparados.penultimos5.map((bloco, idx) => {
+            if (!Array.isArray(bloco)) return 0;
+            const qtd = bloco.filter(row => row.mb_recebidos_status && row.mb_recebidos_status == "NORMAL").length;
+            console.log(`bloco ${idx} -> Upload alertas:`, qtd);
+            return qtd;
+        });
+
         ctxrede2 = document.getElementById('RedeChart2').getContext('2d');
         redeChart2 = new Chart(ctxrede2, {
             type: 'bar',
@@ -1192,7 +1243,7 @@ const penultimos5CPU = jsonSeparados.penultimos5.map((bloco, idx) => {
                 labels: ['20:00', '21:00', '22:00', '23:00', '00:00', '01:00'],
                 datasets: [{
                     label: 'Rede',
-                    data: [50, 40, 70, 65, 75, 95],
+                    data: penultimos5Download,
                     backgroundColor: ['rgba(29, 173, 0, 1)',
                         'rgba(29, 173, 0, 1)',
                         'rgba(29, 173, 0, 1)',
@@ -1322,12 +1373,12 @@ const penultimos5CPU = jsonSeparados.penultimos5.map((bloco, idx) => {
 
     if (periodo === "3") {
 
-const posteriores5primeirosCPU = jsonSeparados.posteriores5primeiros.map((bloco, idx) => {
-  if (!Array.isArray(bloco)) return 0;
-  const qtd = bloco.filter(row => row.cpu_status && row.cpu_status == "NORMAL").length;
-  console.log(`bloco ${idx} -> CPU alertas:`, qtd);
-  return qtd;
-});
+        const posteriores5primeirosCPU = jsonSeparados.posteriores5primeiros.map((bloco, idx) => {
+            if (!Array.isArray(bloco)) return 0;
+            const qtd = bloco.filter(row => row.cpu_status && row.cpu_status == "NORMAL").length;
+            console.log(`bloco ${idx} -> CPU alertas:`, qtd);
+            return qtd;
+        });
 
         const ctxCpu = document.getElementById('CpuChart').getContext('2d');
         cpuChart = new Chart(ctxCpu, {
@@ -1421,6 +1472,13 @@ const posteriores5primeirosCPU = jsonSeparados.posteriores5primeiros.map((bloco,
             }]
         });
 
+        const posteriores5primeirosRAM = jsonSeparados.posteriores5primeiros.map((bloco, idx) => {
+            if (!Array.isArray(bloco)) return 0;
+            const qtd = bloco.filter(row => row.ram_status && row.ram_status == "NORMAL").length;
+            console.log(`bloco ${idx} -> CPU alertas:`, qtd);
+            return qtd;
+        });
+
 
         const ctxram = document.getElementById('RamChart').getContext('2d');
 
@@ -1430,7 +1488,7 @@ const posteriores5primeirosCPU = jsonSeparados.posteriores5primeiros.map((bloco,
                 labels: ['20:00', '21:00', '22:00', '23:00', '00:00', '01:00'],
                 datasets: [{
                     label: 'RAM',
-                    data: [85, 50, 30, 40, 65, 90],
+                    data: posteriores5primeirosRAM,
                     backgroundColor: ['rgb(242, 183, 48)',
                         'rgba(29, 173, 0, 1)',
                         'rgba(29, 173, 0, 1)',
@@ -1514,6 +1572,13 @@ const posteriores5primeirosCPU = jsonSeparados.posteriores5primeiros.map((bloco,
             }]
         });
 
+        const posteriores5primeirosDisco = jsonSeparados.posteriores5primeiros.map((bloco, idx) => {
+            if (!Array.isArray(bloco)) return 0;
+            const qtd = bloco.filter(row => row.disco_status && row.disco_status == "NORMAL").length;
+            console.log(`bloco ${idx} -> CPU alertas:`, qtd);
+            return qtd;
+        });
+
 
         const ctxdisco = document.getElementById('DiscoChart').getContext('2d');
 
@@ -1523,7 +1588,7 @@ const posteriores5primeirosCPU = jsonSeparados.posteriores5primeiros.map((bloco,
                 labels: ['20:00', '21:00', '22:00', '23:00', '00:00', '01:00'],
                 datasets: [{
                     label: 'DISCO',
-                    data: [85, 50, 30, 40, 65, 90],
+                    data: posteriores5primeirosDisco,
                     backgroundColor: ['rgb(242, 183, 48)',
                         'rgba(29, 173, 0, 1)',
                         'rgba(29, 173, 0, 1)',
@@ -1608,6 +1673,14 @@ const posteriores5primeirosCPU = jsonSeparados.posteriores5primeiros.map((bloco,
             }]
         });
 
+
+        const posteriores5primeirosDownload = jsonSeparados.posteriores5primeiros.map((bloco, idx) => {
+            if (!Array.isArray(bloco)) return 0;
+            const qtd = bloco.filter(row => row.mb_recebidos_status && row.mb_recebidos_status == "NORMAL").length;
+            console.log(`bloco ${idx} -> CPU alertas:`, qtd);
+            return qtd;
+        });
+
         const ctxrede = document.getElementById('RedeChart').getContext('2d');
 
         redeChart = new Chart(ctxrede, {
@@ -1616,7 +1689,7 @@ const posteriores5primeirosCPU = jsonSeparados.posteriores5primeiros.map((bloco,
                 labels: ['20:00', '21:00', '22:00', '23:00', '00:00', '01:00'],
                 datasets: [{
                     label: 'Rede',
-                    data: [85, 50, 30, 40, 65, 90],
+                    data: posteriores5primeirosDownload,
                     backgroundColor: ['rgb(242, 183, 48)',
                         'rgba(29, 173, 0, 1)',
                         'rgba(29, 173, 0, 1)',
@@ -1701,6 +1774,13 @@ const posteriores5primeirosCPU = jsonSeparados.posteriores5primeiros.map((bloco,
             }]
         });
 
+        const posteriores5primeirosUpload = jsonSeparados.posteriores5primeiros.map((bloco, idx) => {
+            if (!Array.isArray(bloco)) return 0;
+            const qtd = bloco.filter(row => row.mb_enviados_status && row.mb_enviados_status == "NORMAL").length;
+            console.log(`bloco ${idx} -> CPU alertas:`, qtd);
+            return qtd;
+        });
+
         ctxrede2 = document.getElementById('RedeChart2').getContext('2d');
         redeChart2 = new Chart(ctxrede2, {
             type: 'bar',
@@ -1708,7 +1788,7 @@ const posteriores5primeirosCPU = jsonSeparados.posteriores5primeiros.map((bloco,
                 labels: ['20:00', '21:00', '22:00', '23:00', '00:00', '01:00'],
                 datasets: [{
                     label: 'Rede',
-                    data: [85, 50, 30, 40, 65, 90],
+                    data: posteriores5primeirosUpload,
                     backgroundColor: ['rgb(242, 183, 48)',
                         'rgba(29, 173, 0, 1)',
                         'rgba(29, 173, 0, 1)',
@@ -1838,14 +1918,14 @@ const posteriores5primeirosCPU = jsonSeparados.posteriores5primeiros.map((bloco,
 
     if (periodo === "4") {
 
-        
-const primeiros5CPU = jsonSeparados.primeiros5.map((bloco, idx) => {
-  if (!Array.isArray(bloco)) return 0;
-  const qtd = bloco.filter(row => row.cpu_status && row.cpu_status == "NORMAL").length;
-  console.log(`bloco ${idx} -> CPU alertas:`, qtd);
-  return qtd;
-});
-console.log('cpuAlertasPorBloco:', primeiros5CPU)
+
+        const primeiros5CPU = jsonSeparados.primeiros5.map((bloco, idx) => {
+            if (!Array.isArray(bloco)) return 0;
+            const qtd = bloco.filter(row => row.cpu_status && row.cpu_status == "NORMAL").length;
+            console.log(`bloco ${idx} -> CPU alertas:`, qtd);
+            return qtd;
+        });
+        console.log('cpuAlertasPorBloco:', primeiros5CPU)
 
         const ctxCpu = document.getElementById('CpuChart').getContext('2d');
         cpuChart = new Chart(ctxCpu, {
@@ -1939,6 +2019,13 @@ console.log('cpuAlertasPorBloco:', primeiros5CPU)
         });
 
 
+        const primeiros5RAM = jsonSeparados.primeiros5.map((bloco, idx) => {
+            if (!Array.isArray(bloco)) return 0;
+            const qtd = bloco.filter(row => row.ram_status && row.ram_status == "NORMAL").length;
+            console.log(`bloco ${idx} -> CPU alertas:`, qtd);
+            return qtd;
+        });
+
         const ctxram = document.getElementById('RamChart').getContext('2d');
 
         ramChart = new Chart(ctxram, {
@@ -1947,7 +2034,7 @@ console.log('cpuAlertasPorBloco:', primeiros5CPU)
                 labels: ['20:00', '21:00', '22:00', '23:00', '00:00', '01:00'],
                 datasets: [{
                     label: 'RAM',
-                    data: [85, 45, 90, 60, 65, 97],
+                    data: primeiros5RAM,
                     backgroundColor: ['rgb(242, 183, 48)',
                         'rgba(29, 173, 0, 1)',
                         'rgba(255, 0, 0, 1)',
@@ -2030,6 +2117,12 @@ console.log('cpuAlertasPorBloco:', primeiros5CPU)
             }]
         });
 
+        const primeiros5Disco = jsonSeparados.primeiros5.map((bloco, idx) => {
+            if (!Array.isArray(bloco)) return 0;
+            const qtd = bloco.filter(row => row.disco_status && row.disco_status == "NORMAL").length;
+            console.log(`bloco ${idx} -> CPU alertas:`, qtd);
+            return qtd;
+        });
 
         const ctxdisco = document.getElementById('DiscoChart').getContext('2d');
 
@@ -2039,7 +2132,7 @@ console.log('cpuAlertasPorBloco:', primeiros5CPU)
                 labels: ['20:00', '21:00', '22:00', '23:00', '00:00', '01:00'],
                 datasets: [{
                     label: 'DISCO',
-                    data: [85, 45, 90, 60, 65, 97],
+                    data: primeiros5Disco,
                     backgroundColor: ['rgb(242, 183, 48)',
                         'rgba(29, 173, 0, 1)',
                         'rgba(255, 0, 0, 1)',
@@ -2124,6 +2217,13 @@ console.log('cpuAlertasPorBloco:', primeiros5CPU)
             }]
         });
 
+        const primeiros5Download = jsonSeparados.primeiros5.map((bloco, idx) => {
+            if (!Array.isArray(bloco)) return 0;
+            const qtd = bloco.filter(row => row.mb_recebidos_status && row.mb_recebidos_status == "NORMAL").length;
+            console.log(`bloco ${idx} -> CPU alertas:`, qtd);
+            return qtd;
+        });
+
         const ctxrede = document.getElementById('RedeChart').getContext('2d');
 
         redeChart = new Chart(ctxrede, {
@@ -2132,7 +2232,7 @@ console.log('cpuAlertasPorBloco:', primeiros5CPU)
                 labels: ['20:00', '21:00', '22:00', '23:00', '00:00', '01:00'],
                 datasets: [{
                     label: 'Rede',
-                    data: [85, 45, 90, 60, 65, 97],
+                    data: primeiros5Download,
                     backgroundColor: ['rgb(242, 183, 48)',
                         'rgba(29, 173, 0, 1)',
                         'rgba(255, 0, 0, 1)',
@@ -2217,6 +2317,13 @@ console.log('cpuAlertasPorBloco:', primeiros5CPU)
             }]
         });
 
+        const primeiros5Upload = jsonSeparados.primeiros5.map((bloco, idx) => {
+            if (!Array.isArray(bloco)) return 0;
+            const qtd = bloco.filter(row => row.mb_enviados_status && row.mb_enviados_status == "NORMAL").length;
+            console.log(`bloco ${idx} -> CPU alertas:`, qtd);
+            return qtd;
+        });
+
         ctxrede2 = document.getElementById('RedeChart2').getContext('2d');
         redeChart2 = new Chart(ctxrede2, {
             type: 'bar',
@@ -2224,7 +2331,7 @@ console.log('cpuAlertasPorBloco:', primeiros5CPU)
                 labels: ['20:00', '21:00', '22:00', '23:00', '00:00', '01:00'],
                 datasets: [{
                     label: 'Rede',
-                    data: [30, 80, 50, 55, 45, 100],
+                    data: primeiros5Upload,
                     backgroundColor: ['rgba(29, 173, 0, 1)',
                         'rgb(242, 183, 48)',
                         'rgba(29, 173, 0, 1)',
@@ -2351,12 +2458,12 @@ console.log('cpuAlertasPorBloco:', primeiros5CPU)
     }
 }
 window.onload = function () {
-  carregarDados().then(() => {
-    const Periodo = document.getElementById('periodo');
-    Periodo.addEventListener('change', () => atualizarGraficoPorPeriodo(Periodo.value));
-    atualizarGraficoPorPeriodo(Periodo.value); 
-  });
+    carregarDados().then(() => {
+        const Periodo = document.getElementById('periodo');
+        Periodo.addEventListener('change', () => atualizarGraficoPorPeriodo(Periodo.value));
+        atualizarGraficoPorPeriodo(Periodo.value);
+    });
 
-  setInterval(buscarDados, 2000);
-  buscarDados();
+    setInterval(buscarDados, 2000);
+    buscarDados();
 };
