@@ -287,7 +287,14 @@ function atualizarGraficoPorPeriodo(periodo) {
 
         const ultimos5CPU = jsonSeparados.ultimos5.map((bloco, idx) => {
             if (!Array.isArray(bloco)) return 0;
-            const qtd = bloco.filter(row => row.cpu_status && row.cpu_status !== "NORMAL").length;
+            const qtd = bloco.filter(row => row.cpu_status && row.cpu_status == "NORMAL").length;
+            console.log(`bloco ${idx} -> CPU alertas:`, qtd);
+            return qtd;
+        });
+
+        const ultimos5CPUCritico = jsonSeparados.ultimos5.map((bloco, idx) => {
+            if (!Array.isArray(bloco)) return 0;
+            const qtd = bloco.filter(row => row.cpu_status_critico && row.cpu_status_critico == "CRITICO").length;
             console.log(`bloco ${idx} -> CPU alertas:`, qtd);
             return qtd;
         });
@@ -392,7 +399,14 @@ function atualizarGraficoPorPeriodo(periodo) {
 
         const ultimos5RAM = jsonSeparados.ultimos5.map((bloco, idx) => {
             if (!Array.isArray(bloco)) return 0;
-            const qtd = bloco.filter(row => row.ram_status && row.ram_status !== "NORMAL").length;
+            const qtd = bloco.filter(row => row.ram_status && row.ram_status == "NORMAL").length;
+            console.log(`bloco ${idx} -> RAM alertas:`, qtd);
+            return qtd;
+        });
+
+        const ultimos5RAMCritico = jsonSeparados.ultimos5.map((bloco, idx) => {
+            if (!Array.isArray(bloco)) return 0;
+            const qtd = bloco.filter(row => row.ram_status_critico && row.ram_status_critico == "CRITICO").length;
             console.log(`bloco ${idx} -> RAM alertas:`, qtd);
             return qtd;
         });
@@ -491,8 +505,15 @@ function atualizarGraficoPorPeriodo(periodo) {
 
         const ultimos5Disco = jsonSeparados.ultimos5.map((bloco, idx) => {
             if (!Array.isArray(bloco)) return 0;
-            const qtd = bloco.filter(row => row.disco_status && row.disco_status !== "NORMAL").length;
+            const qtd = bloco.filter(row => row.disco_status && row.disco_status == "NORMAL").length;
             console.log(`bloco ${idx} -> RAM alertas:`, qtd);
+            return qtd;
+        });
+
+        const ultimos5DiscoCritico = jsonSeparados.ultimos5.map((bloco, idx) => {
+            if (!Array.isArray(bloco)) return 0;
+            const qtd = bloco.filter(row => row.disco_status_critico && row.disco_status_critico == "CRITICO").length;
+            console.log(`bloco ${idx} -> Disco alertas:`, qtd);
             return qtd;
         });
 
@@ -591,7 +612,15 @@ function atualizarGraficoPorPeriodo(periodo) {
 
         const ultimos5Download = jsonSeparados.ultimos5.map((bloco, idx) => {
             if (!Array.isArray(bloco)) return 0;
-            const qtd = bloco.filter(row => row.mb_recebidos_status && row.mb_recebidos_status !== "NORMAL").length;
+            const qtd = bloco.filter(row => row.mb_recebidos_status && row.mb_recebidos_status == "NORMAL").length;
+            console.log(`bloco ${idx} -> Donwload alertas:`, qtd);
+            return qtd;
+        });
+
+
+        const ultimos5DownloadCritico = jsonSeparados.ultimos5.map((bloco, idx) => {
+            if (!Array.isArray(bloco)) return 0;
+            const qtd = bloco.filter(row => row.mb_recebidos_status_critico && row.mb_recebidos_status_critico == "NORMAL").length;
             console.log(`bloco ${idx} -> Donwload alertas:`, qtd);
             return qtd;
         });
@@ -691,7 +720,13 @@ function atualizarGraficoPorPeriodo(periodo) {
 
         const ultimos5Upload = jsonSeparados.ultimos5.map((bloco, idx) => {
             if (!Array.isArray(bloco)) return 0;
-            const qtd = bloco.filter(row => row.mb_enviados_status && row.mb_enviados_status !== "NORMAL").length;
+            const qtd = bloco.filter(row => row.mb_enviados_status && row.mb_enviados_status == "NORMAL").length;
+            console.log(`bloco ${idx} -> Upload alertas:`, qtd);
+            return qtd;
+        });
+        const ultimos5UploadCritico = jsonSeparados.ultimos5.map((bloco, idx) => {
+            if (!Array.isArray(bloco)) return 0;
+            const qtd = bloco.filter(row => row.mb_enviados_status_critico && row.mb_enviados_status_critico == "CRITICO").length;
             console.log(`bloco ${idx} -> Upload alertas:`, qtd);
             return qtd;
         });
@@ -839,6 +874,13 @@ function atualizarGraficoPorPeriodo(periodo) {
             return qtd;
         });
 
+        const penultimos5CPUCritico = jsonSeparados.penultimos5.map((bloco, idx) => {
+            if (!Array.isArray(bloco)) return 0;
+            const qtd = bloco.filter(row => row.cpu_status_critico && row.cpu_status_critico == "CRITICO").length;
+            console.log(`bloco ${idx} -> CPU alertas:`, qtd);
+            return qtd;
+        });
+
         const ctxCpu = document.getElementById('CpuChart').getContext('2d');
         cpuChart = new Chart(ctxCpu, {
             type: 'bar',
@@ -937,6 +979,12 @@ function atualizarGraficoPorPeriodo(periodo) {
             console.log(`bloco ${idx} -> RAM alertas:`, qtd);
             return qtd;
         });
+        const penultimos5RAMCritico = jsonSeparados.penultimos5.map((bloco, idx) => {
+            if (!Array.isArray(bloco)) return 0;
+            const qtd = bloco.filter(row => row.ram_status_critico && row.ram_status_critico == "CRITICO").length;
+            console.log(`bloco ${idx} -> RAM alertas:`, qtd);
+            return qtd;
+        });
 
         const ctxram = document.getElementById('RamChart').getContext('2d');
 
@@ -1032,6 +1080,13 @@ function atualizarGraficoPorPeriodo(periodo) {
         const penultimos5Disco = jsonSeparados.penultimos5.map((bloco, idx) => {
             if (!Array.isArray(bloco)) return 0;
             const qtd = bloco.filter(row => row.disco_status && row.disco_status == "NORMAL").length;
+            console.log(`bloco ${idx} -> RAM alertas:`, qtd);
+            return qtd;
+        });
+
+        const penultimos5DiscoCritico = jsonSeparados.penultimos5.map((bloco, idx) => {
+            if (!Array.isArray(bloco)) return 0;
+            const qtd = bloco.filter(row => row.disco_status_critico && row.disco_status_critico == "CRITICO").length;
             console.log(`bloco ${idx} -> RAM alertas:`, qtd);
             return qtd;
         });
@@ -1136,6 +1191,12 @@ function atualizarGraficoPorPeriodo(periodo) {
             return qtd;
         });
 
+        const penultimos5UploadCritico = jsonSeparados.penultimos5.map((bloco, idx) => {
+            if (!Array.isArray(bloco)) return 0;
+            const qtd = bloco.filter(row => row.mb_enviados_status_critico && row.mb_enviados_status_critico == "CRITICO").length;
+            console.log(`bloco ${idx} -> RAM alertas:`, qtd);
+            return qtd;
+        });
         const ctxrede = document.getElementById('RedeChart').getContext('2d');
 
         redeChart = new Chart(ctxrede, {
@@ -1232,6 +1293,13 @@ function atualizarGraficoPorPeriodo(periodo) {
         const penultimos5Download = jsonSeparados.penultimos5.map((bloco, idx) => {
             if (!Array.isArray(bloco)) return 0;
             const qtd = bloco.filter(row => row.mb_recebidos_status && row.mb_recebidos_status == "NORMAL").length;
+            console.log(`bloco ${idx} -> Upload alertas:`, qtd);
+            return qtd;
+        });
+
+        const penultimos5DownloadCritico = jsonSeparados.penultimos5.map((bloco, idx) => {
+            if (!Array.isArray(bloco)) return 0;
+            const qtd = bloco.filter(row => row.mb_recebidos_status_critico && row.mb_recebidos_status_critico == "CRITICO").length;
             console.log(`bloco ${idx} -> Upload alertas:`, qtd);
             return qtd;
         });
@@ -1380,6 +1448,14 @@ function atualizarGraficoPorPeriodo(periodo) {
             return qtd;
         });
 
+
+        const posteriores5primeirosCPUCritico = jsonSeparados.posteriores5primeiros.map((bloco, idx) => {
+            if (!Array.isArray(bloco)) return 0;
+            const qtd = bloco.filter(row => row.cpu_status_critico && row.cpu_status_critico == "CRITICO").length;
+            console.log(`bloco ${idx} -> CPU alertas:`, qtd);
+            return qtd;
+        });
+
         const ctxCpu = document.getElementById('CpuChart').getContext('2d');
         cpuChart = new Chart(ctxCpu, {
             type: 'bar',
@@ -1475,6 +1551,13 @@ function atualizarGraficoPorPeriodo(periodo) {
         const posteriores5primeirosRAM = jsonSeparados.posteriores5primeiros.map((bloco, idx) => {
             if (!Array.isArray(bloco)) return 0;
             const qtd = bloco.filter(row => row.ram_status && row.ram_status == "NORMAL").length;
+            console.log(`bloco ${idx} -> CPU alertas:`, qtd);
+            return qtd;
+        });
+
+        const posteriores5primeirosRAMCritico = jsonSeparados.posteriores5primeiros.map((bloco, idx) => {
+            if (!Array.isArray(bloco)) return 0;
+            const qtd = bloco.filter(row => row.ram_status_critico && row.ram_status_critico == "CRITICO").length;
             console.log(`bloco ${idx} -> CPU alertas:`, qtd);
             return qtd;
         });
@@ -1575,6 +1658,13 @@ function atualizarGraficoPorPeriodo(periodo) {
         const posteriores5primeirosDisco = jsonSeparados.posteriores5primeiros.map((bloco, idx) => {
             if (!Array.isArray(bloco)) return 0;
             const qtd = bloco.filter(row => row.disco_status && row.disco_status == "NORMAL").length;
+            console.log(`bloco ${idx} -> CPU alertas:`, qtd);
+            return qtd;
+        });
+
+        const posteriores5primeirosDiscoCritico = jsonSeparados.posteriores5primeiros.map((bloco, idx) => {
+            if (!Array.isArray(bloco)) return 0;
+            const qtd = bloco.filter(row => row.disco_status_critico && row.disco_status_critico == "CRITICO").length;
             console.log(`bloco ${idx} -> CPU alertas:`, qtd);
             return qtd;
         });
@@ -1681,6 +1771,13 @@ function atualizarGraficoPorPeriodo(periodo) {
             return qtd;
         });
 
+        const posteriores5primeirosDownloadCritico = jsonSeparados.posteriores5primeiros.map((bloco, idx) => {
+            if (!Array.isArray(bloco)) return 0;
+            const qtd = bloco.filter(row => row.mb_recebidos_status_critico && row.mb_recebidos_status_critico == "CRITICO").length;
+            console.log(`bloco ${idx} -> CPU alertas:`, qtd);
+            return qtd;
+        });
+
         const ctxrede = document.getElementById('RedeChart').getContext('2d');
 
         redeChart = new Chart(ctxrede, {
@@ -1777,6 +1874,13 @@ function atualizarGraficoPorPeriodo(periodo) {
         const posteriores5primeirosUpload = jsonSeparados.posteriores5primeiros.map((bloco, idx) => {
             if (!Array.isArray(bloco)) return 0;
             const qtd = bloco.filter(row => row.mb_enviados_status && row.mb_enviados_status == "NORMAL").length;
+            console.log(`bloco ${idx} -> CPU alertas:`, qtd);
+            return qtd;
+        });
+
+        const posteriores5primeirosUploadCritico = jsonSeparados.posteriores5primeiros.map((bloco, idx) => {
+            if (!Array.isArray(bloco)) return 0;
+            const qtd = bloco.filter(row => row.mb_enviados_status_critico && row.mb_enviados_status_critico == "CRITICO").length;
             console.log(`bloco ${idx} -> CPU alertas:`, qtd);
             return qtd;
         });
@@ -1925,6 +2029,15 @@ function atualizarGraficoPorPeriodo(periodo) {
             console.log(`bloco ${idx} -> CPU alertas:`, qtd);
             return qtd;
         });
+
+
+        const primeiros5CPUCritico = jsonSeparados.primeiros5.map((bloco, idx) => {
+            if (!Array.isArray(bloco)) return 0;
+            const qtd = bloco.filter(row => row.cpu_status_critico && row.cpu_status_critico == "CRITICO").length;
+            console.log(`bloco ${idx} -> CPU alertas:`, qtd);
+            return qtd;
+        });
+
         console.log('cpuAlertasPorBloco:', primeiros5CPU)
 
         const ctxCpu = document.getElementById('CpuChart').getContext('2d');
@@ -2026,6 +2139,13 @@ function atualizarGraficoPorPeriodo(periodo) {
             return qtd;
         });
 
+        const primeiros5RAMCritico = jsonSeparados.primeiros5.map((bloco, idx) => {
+            if (!Array.isArray(bloco)) return 0;
+            const qtd = bloco.filter(row => row.ram_status_critico && row.ram_status_critico == "CRITICO").length;
+            console.log(`bloco ${idx} -> CPU alertas Crítico:`, qtd);
+            return qtd;
+        });
+
         const ctxram = document.getElementById('RamChart').getContext('2d');
 
         ramChart = new Chart(ctxram, {
@@ -2120,6 +2240,13 @@ function atualizarGraficoPorPeriodo(periodo) {
         const primeiros5Disco = jsonSeparados.primeiros5.map((bloco, idx) => {
             if (!Array.isArray(bloco)) return 0;
             const qtd = bloco.filter(row => row.disco_status && row.disco_status == "NORMAL").length;
+            console.log(`bloco ${idx} -> CPU alertas:`, qtd);
+            return qtd;
+        });
+
+        const primeiros5DiscoCritico = jsonSeparados.primeiros5.map((bloco, idx) => {
+            if (!Array.isArray(bloco)) return 0;
+            const qtd = bloco.filter(row => row.disco_status_critico && row.disco_status_critico == "CRITICO").length;
             console.log(`bloco ${idx} -> CPU alertas:`, qtd);
             return qtd;
         });
@@ -2224,6 +2351,14 @@ function atualizarGraficoPorPeriodo(periodo) {
             return qtd;
         });
 
+
+        const primeiros5DownloadCritico = jsonSeparados.primeiros5.map((bloco, idx) => {
+            if (!Array.isArray(bloco)) return 0;
+            const qtd = bloco.filter(row => row.mb_recebidos_status_critico && row.mb_recebidos_status_critico == "CRITICO").length;
+            console.log(`bloco ${idx} -> CPU alertas:`, qtd);
+            return qtd;
+        });
+
         const ctxrede = document.getElementById('RedeChart').getContext('2d');
 
         redeChart = new Chart(ctxrede, {
@@ -2320,6 +2455,13 @@ function atualizarGraficoPorPeriodo(periodo) {
         const primeiros5Upload = jsonSeparados.primeiros5.map((bloco, idx) => {
             if (!Array.isArray(bloco)) return 0;
             const qtd = bloco.filter(row => row.mb_enviados_status && row.mb_enviados_status == "NORMAL").length;
+            console.log(`bloco ${idx} -> CPU alertas:`, qtd);
+            return qtd;
+        });
+
+        const primeiros5UploadCritico = jsonSeparados.primeiros5.map((bloco, idx) => {
+            if (!Array.isArray(bloco)) return 0;
+            const qtd = bloco.filter(row => row.mb_enviados_status_critico && row.mb_enviados_status_critico == "CRITICO").length;
             console.log(`bloco ${idx} -> CPU alertas:`, qtd);
             return qtd;
         });
