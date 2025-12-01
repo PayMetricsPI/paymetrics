@@ -74,15 +74,7 @@ submit_button_create_alerta_critico.addEventListener('click', () => {
         alerta_normal: Number(cpuNormal)
     });
 
-    const ramCritico = document.querySelector('input[data-componente="2"][data-tipo="critico"]').value;
-    const ramNormal = document.querySelector('input[data-componente="2"][data-tipo="normal"]').value;
-    parametros.push({
-        fk_servidor,
-        fk_empresa,
-        fk_componente: 2,
-        alerta_critico: Number(ramCritico),
-        alerta_normal: Number(ramNormal)
-    });
+    
 
     const discoCritico = document.querySelector('input[data-componente="5"][data-tipo="critico"]').value;
     const discoNormal = document.querySelector('input[data-componente="5"][data-tipo="normal"]').value;
@@ -93,6 +85,28 @@ submit_button_create_alerta_critico.addEventListener('click', () => {
         alerta_critico: Number(discoCritico),
         alerta_normal: Number(discoNormal)
     });
+
+    const ramCritico = document.querySelector('input[data-componente="2"][data-tipo="critico"]').value;
+    const ramNormal = document.querySelector('input[data-componente="2"][data-tipo="normal"]').value;
+    parametros.push({
+        fk_servidor,
+        fk_empresa,
+        fk_componente: 6,
+        alerta_critico: Number(ramCritico),
+        alerta_normal: Number(ramNormal)
+    });
+
+    
+    const LatenciaCritico = document.querySelector('input[data-componente="5"][data-tipo="critico"]').value;
+    const LatenciaNormal = document.querySelector('input[data-componente="5"][data-tipo="normal"]').value;
+    parametros.push({
+        fk_servidor,
+        fk_empresa,
+        fk_componente:5,
+        alerta_critico: Number(LatenciaCritico),
+        alerta_normal: Number(LatenciaNormal)
+    });
+
 
     const enviadosCritico = document.querySelector('input[data-componente="3"][data-tipo="critico"]').value;
     const enviadosNormal = document.querySelector('input[data-componente="3"][data-tipo="normal"]').value;
