@@ -45,13 +45,39 @@
     </div>
     <div class="create_server_content edit_content">
       <div class="edit_field">
-        <label for="">Nome do Servidor</label>
+        <label for="">Nome: </label>
         <input type="text" class="nome_input">
+      </div>
+      <div class="edit_field">
+        <label for="">IP do servidor: </label>
+        <input type="text" class="ipEc2_input">
       </div>
       <div class="edit_field">
         <label for="">MAC Address</label>
         <input type="text" class="mac_input">
       </div>
+
+    <div class="edit_field_duplo">
+  
+    <div class="edit_field pequeno">
+      <label for="">País</label>
+      <select id="select_pais" class="pais_input">
+        <option value="">Selecione um país</option>
+        <option value="BR">Brasil</option>
+        <option value="US">Estados Unidos</option>
+        <option value="CA">Canadá</option>
+        <option value="FR">França</option>
+        <option value="JP">Japão</option>
+      </select>
+    </div>
+
+    <div class="edit_field pequeno">
+      <label for="">Estado</label>
+      <select id="select_estado" class="estado_input">
+        <option value="">Selecione um estado</option>
+      </select>
+    </div>
+</div>
       <div class="edit_field">
         <label for="">Modelo da cpu</label>
         <input type="text" class="tipo_cpu_input">
@@ -137,6 +163,19 @@
                 <label>Alerta normal</label>
                 <input type="number" data-componente="4" data-tipo="normal"  class="alerta_normal_input" placeholder="56%">
               </div>
+              <p>latencia</p>
+              <div class="campo">
+                <label>Alerta crítico</label>
+                <input type="number" data-componente="5" data-tipo="critico" class="alerta_critico_input" placeholder="120">
+              </div>
+              <div class="campo">
+                <label>Alerta normal</label>
+                <input type="number" data-componente="5" data-tipo="normal"  class="alerta_normal_input" placeholder="90">
+              </div>
+
+            </div>
+            <div class="latencia">
+              
             </div>
           </div>
         </div>
@@ -154,13 +193,41 @@
       <span id="close_edit_server_button">x</span>
     </div>
     <div class="edit_field">
-      <label for="">Nome do Servidor</label>
-      <input type="text" class="nome_input">
-    </div>
+       <div class="edit_field">
+        <label for="">Nome: </label>
+        <input type="text" class="nome_input">
+      </div>
+        <label for="">IP do servidor: </label>
+        <input type="text" class="ipEc2_input">
+      </div>
     <div class="edit_field">
       <label for="">MAC Address</label>
       <input type="text" class="mac_input">
     </div>
+    
+<div class="edit_field_duplo">
+    
+  <div class="edit_field pequeno">
+    <label>País</label>
+    <select id="select_pais_edit" class="pais_input">
+      <option value="">Selecione um país</option>
+      <option value="BR">Brasil</option>
+      <option value="US">Estados Unidos</option>
+      <option value="CA">Canadá</option>
+      <option value="FR">França</option>
+      <option value="JP">Japão</option>
+    </select>
+  </div>
+
+  <div class="edit_field pequeno">
+    <label>Estado</label>
+    <select id="select_estado_edit" class="estado_input">
+      <option value="">Selecione um estado</option>
+    </select>
+  </div>
+
+</div>
+
     <div class="edit_field">
       <label for="">Modelo da cpu</label>
       <input type="text" class="tipo_cpu_input">
