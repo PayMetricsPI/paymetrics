@@ -12,9 +12,10 @@ function novaMedicao(req, res){
     const mbRecebidos = req.body.mbRecebidos;
     const processos = req.body.processos;
     const tempoBoot = req.body.tempoBoot;
+    const ping_amazon = req.body.ping_amazon;
 
     const newData = {
-        datetime, codMaq, cpu, ram, disco, macAddress, mbEnviados, mbRecebidos, processos, tempoBoot
+        datetime, codMaq, cpu, ram, disco, macAddress, mbEnviados, mbRecebidos, processos, tempoBoot,ping_amazon
     }
     data.push(newData)
     res.status(200).json(data)
