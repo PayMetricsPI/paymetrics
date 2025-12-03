@@ -42,26 +42,42 @@ let jsonSeparados = {
     penultimos5: [],
     posteriores5primeiros: []
 };
+// let dadosPorPeriodo = {
+//     '1': [],  // 1 hora
+//     '2': [],  // 1 dia
+//     '3': [],  // 3 dias
+//     '4': []   // 7 dias
+// };
+
 let estatisticasAlertas = null;
+
+// Converte datetime "YYYY-MM-DD HH:mm:ss" p/ timestamp
+function paraTimestamp(dateString) {
+    return new Date(dateString.replace(" ", "T")).getTime();
+}
 
 function carregarDados() {
     return fetch('/s3/downloadJSON')
         .then(response => response.json())
         .then(response => {
-            const todosBlocos = response.data;
+
+            // Todos os registros do bucket
+            data = response.data.flat();
+
+            console.log("TOTAL CARREGADO:", data.length);
+
+            // separarPorPeriodo();
+
+            calcularAlertas(data);
+
+                        const todosBlocos = response.data;
 
             // Separar períodos
             jsonSeparados.total = todosBlocos;
             jsonSeparados.ultimos5 = todosBlocos.slice(-5);
-            jsonSeparados.primeiros5 = todosBlocos.slice(-10);
-            jsonSeparados.penultimos5 = todosBlocos.slice(-15);
-            jsonSeparados.posteriores5primeiros = todosBlocos.slice(-20);
-
-
-            data = todosBlocos.slice(-20).flat();
-
-            console.log('DADOS BRUTOS CARREGADOS:', data.length, 'linhas totais');
-            calcularAlertas(data);
+            jsonSeparados.penultimos5 = todosBlocos.slice(-10);
+            jsonSeparados.posteriores5primeiros = todosBlocos.slice(-15);
+            jsonSeparados.primeiros5 = todosBlocos.slice(-20);
         })
         .catch(err => console.error('ERRO S3:', err));
 }
@@ -87,8 +103,8 @@ function calcularAlertas(dataFiltro = data) {
         alertaCriticoDownload = data.filter(row => row.mb_enviados_status_critico === "CRITICO").length;
         alertaCriticoUpload = data.filter(row => row.mb_recebidos_status_critico === "CRITICO").length;
 
-        somaAlertas = alertaCPU + alertaRAM + alertaDisco + alertaDownload + alertaUpload;
-        somaAlertaCriticos = alertaCriticoCPU + alertaCriticoRAM + alertaCriticoDisco + alertaCriticoDownload + alertaCriticoUpload;
+        // somaAlertas = alertaCPU + alertaRAM + alertaDisco + alertaDownload + alertaUpload;
+        // somaAlertaCriticos = alertaCriticoCPU + alertaCriticoRAM + alertaCriticoDisco + alertaCriticoDownload + alertaCriticoUpload;
 
         estatisticasAlertas = {
             normal: [alertaCPU, alertaRAM, alertaDisco, alertaUpload, alertaDownload],
@@ -96,18 +112,18 @@ function calcularAlertas(dataFiltro = data) {
         };
 
         // Atualizar contadores
-        document.getElementById('alerta_numero_padrao').textContent = somaAlertas;
-        document.getElementById('alerta_numero_critico').textContent = somaAlertaCriticos;
-        document.getElementById('critico_CPU').textContent = alertaCriticoCPU;
-        document.getElementById('padrao_CPU').textContent = alertaCPU;
-        document.getElementById('critico_RAM').textContent = alertaCriticoRAM;
-        document.getElementById('padrao_RAM').textContent = alertaRAM;
-        document.getElementById('critico_Disco').textContent = alertaCriticoDisco;
-        document.getElementById('padrao_Disco').textContent = alertaDisco;
-        document.getElementById('critico_Download').textContent = alertaCriticoDownload;
-        document.getElementById('padrao_Download').textContent = alertaDownload;
-        document.getElementById('critico_Upload').textContent = alertaCriticoUpload;
-        document.getElementById('padrao_Upload').textContent = alertaUpload;
+        // document.getElementById('alerta_numero_padrao').textContent = somaAlertas;
+        // document.getElementById('alerta_numero_critico').textContent = somaAlertaCriticos;
+        // document.getElementById('critico_CPU').textContent = alertaCriticoCPU;
+        // document.getElementById('padrao_CPU').textContent = alertaCPU;
+        // document.getElementById('critico_RAM').textContent = alertaCriticoRAM;
+        // document.getElementById('padrao_RAM').textContent = alertaRAM;
+        // document.getElementById('critico_Disco').textContent = alertaCriticoDisco;
+        // document.getElementById('padrao_Disco').textContent = alertaDisco;
+        // document.getElementById('critico_Download').textContent = alertaCriticoDownload;
+        // document.getElementById('padrao_Download').textContent = alertaDownload;
+        // document.getElementById('critico_Upload').textContent = alertaCriticoUpload;
+        // document.getElementById('padrao_Upload').textContent = alertaUpload;
 
         document.getElementById('servidorNome').textContent = servidor.nome;
         document.getElementById('modelo_cpu').textContent = servidor.tipocpu;
@@ -115,6 +131,31 @@ function calcularAlertas(dataFiltro = data) {
         document.getElementById('capacidade_disco').textContent = servidor.disco + 'TB';
     }
 }
+
+// function separarPorPeriodo() {
+//     const agora = Date.now();
+
+//     dadosPorPeriodo = {
+//         '1': [], '2': [], '3': [], '4': []
+//     };
+
+    // data.forEach(row => {
+
+    //     const ts = paraTimestamp(row.datetime);
+    //     const diffHoras = (agora - ts) / 1000 / 60 / 60;
+
+    //     if (diffHoras <= 1) dadosPorPeriodo["1"].push(row);
+    //     if (diffHoras <= 24) dadosPorPeriodo["2"].push(row);
+    //     if (diffHoras <= 72) dadosPorPeriodo["3"].push(row);
+    //     if (diffHoras <= 168) dadosPorPeriodo["4"].push(row);
+    // });
+
+//     console.log("PERÍODO 1H:", dadosPorPeriodo["1"].length);
+//     console.log("PERÍODO 1D:", dadosPorPeriodo["2"].length);
+//     console.log("PERÍODO 3D:", dadosPorPeriodo["3"].length);
+//     console.log("PERÍODO 7D:", dadosPorPeriodo["4"].length);
+// }
+
 
 function formatarDiferenca(timestamp) {
     const agora = Date.now();
@@ -212,6 +253,8 @@ function contarAlertasPorPeriodo(blocoDados, metrica) {
 
 function atualizarGraficoPorPeriodo(periodo) {
 
+// const dadosFiltrados = dadosPorPeriodo[periodo];
+    
     if (cpuChart) cpuChart.destroy();
     if (ramChart) ramChart.destroy();
     if (discoChart) discoChart.destroy();
@@ -235,15 +278,15 @@ function atualizarGraficoPorPeriodo(periodo) {
     console.log('PERÍODO', periodo, 'linhas brutas:', dataFiltro.length);
     calcularAlertas(dataFiltro);
 
-        if(periodo == 1){
-            labels = ['20:00', '20:15', '20:30', '20:45', '21:00;']
-        } else if (periodo == 2){
-            labels = ['04:50', '09:40', '14:30', '19:20', '00:00']
-        } else if (periodo == 3){
-            labels = [ 'sexta','sabado','domingo'] 
-        } else if (periodo == 4){
-             labels = ['sexta','sabado','domingo','segunda','terça','quarta', 'quinta',] 
-        }
+    if (periodo == 1) {
+        labels = ['20:00', '20:15', '20:30', '20:45', '21:00;']
+    } else if (periodo == 2) {
+        labels = ['04:50', '09:40', '14:30', '19:20', '00:00']
+    } else if (periodo == 3) {
+        labels = ['sexta', 'sabado', 'domingo']
+    } else if (periodo == 4) {
+        labels = ['sexta', 'sabado', 'domingo', 'segunda', 'terça', 'quarta', 'quinta',]
+    }
 
 
     if (periodo === "1") {
@@ -318,14 +361,14 @@ function atualizarGraficoPorPeriodo(periodo) {
         const ultimos5CPU = jsonSeparados.ultimos5.map((bloco, idx) => {
             if (!Array.isArray(bloco)) return 0;
             const qtd = bloco.filter(row => row.cpu_status && row.cpu_status == "NORMAL").length;
-            console.log(`bloco ${idx} -> CPU alertas:`, qtd);
+            console.log(`bloco ${idx} -> RAM alertas:`, qtd);
             return qtd;
         });
 
         const ultimos5CPUCritico = jsonSeparados.ultimos5.map((bloco, idx) => {
             if (!Array.isArray(bloco)) return 0;
             const qtd = bloco.filter(row => row.cpu_status_critico && row.cpu_status_critico == "CRITICO").length;
-            console.log(`bloco ${idx} -> CPU alertas:`, qtd);
+            console.log(`bloco ${idx} -> RAM alertas:`, qtd);
             return qtd;
         });
 
@@ -352,7 +395,7 @@ function atualizarGraficoPorPeriodo(periodo) {
                         label: 'Alertas críticos',
                         data: ultimos5CPUCritico,
                         backgroundColor: '#E53935',
-                         borderWidth: 1,
+                        borderWidth: 1,
                         borderRadius: 10,
                     }
                 ],
@@ -919,10 +962,69 @@ function atualizarGraficoPorPeriodo(periodo) {
             }
         });
 
-        // somaAlertas = ultimos5CPU + ultimos5RAM + ultimos5Disco + ultimos5Download + ultimos5Upload
+        function somarArray(arr) {
+            return arr.reduce((total, n) => total + Number(n), 0);
+        }
 
-        // document.getElementById('alerta_numero_padrao').textContent = somaAlertas;
-        // document.getElementById('alerta_numero_critico').textContent = somaAlertaCriticos;
+        let totalCPU5 = somarArray(ultimos5CPU);
+        let totalRAM5 = somarArray(ultimos5RAM);
+        let totalDisco5 = somarArray(ultimos5Disco);
+        let totalDownload5 = somarArray(ultimos5Download);
+        let totalUpload5 = somarArray(ultimos5Upload);
+
+        somaAlertas = (totalCPU5 + totalRAM5 + totalDisco5 + totalDownload5 + totalUpload5)
+
+        let totalCPU5Critico = somarArray(ultimos5CPUCritico)
+        let totalRAM5Critico = somarArray(ultimos5RAMCritico)
+        let totalDisco5Critico = somarArray(ultimos5DiscoCritico)
+        let totalDownload5Critico = somarArray(ultimos5DownloadCritico)
+        let totalUpload5Critico = somarArray(ultimos5UploadCritico);
+
+        somaAlertaCriticos = (totalCPU5Critico + totalRAM5Critico + totalDisco5Critico + totalDownload5Critico + totalUpload5Critico)
+
+        var contador = 0;
+        for (i = 0; i <= ultimos5CPU.length; i++) {
+            if (i != null || i != 0) {
+                contador += 1
+            }
+        }
+
+        for (i = 0; i <= ultimos5RAM.length; i++) {
+            if (i != null || i != 0) {
+                contador += 1
+            }
+        }
+
+        for (i = 0; i <= ultimos5Disco.length; i++) {
+            if (i != null || i != 0) {
+                contador += 1
+            }
+        }
+
+        for (i = 0; i <= ultimos5Download.length; i++) {
+            if (i != null || i != 0) {
+                contador += 1
+            }
+        }
+        for (i = 0; i <= ultimos5Upload.length; i++) {
+            if (i != null || i != 0) {
+                contador += 1
+            }
+        }
+
+        document.getElementById('critico_CPU').textContent = totalCPU5Critico;
+        document.getElementById('padrao_CPU').textContent = totalCPU5;
+        document.getElementById('critico_RAM').textContent = totalRAM5Critico;
+        document.getElementById('padrao_RAM').textContent = totalRAM5;
+        document.getElementById('critico_Disco').textContent = totalDisco5Critico;
+        document.getElementById('padrao_Disco').textContent = totalDisco5;
+        document.getElementById('critico_Download').textContent = totalDownload5Critico;
+        document.getElementById('padrao_Download').textContent = totalDownload5;
+        document.getElementById('critico_Upload').textContent = totalUpload5Critico;
+        document.getElementById('padrao_Upload').textContent = totalUpload5;
+
+        document.getElementById('alerta_numero_padrao').textContent = somaAlertas;
+        document.getElementById('alerta_numero_critico').textContent = somaAlertaCriticos;
     }
 
     else if (periodo === "2") {
@@ -1516,6 +1618,70 @@ function atualizarGraficoPorPeriodo(periodo) {
             }
         });
 
+
+         function somarArray(arr) {
+            return arr.reduce((total, n) => total + Number(n), 0);
+        }
+
+        let totalCPU5 = somarArray(penultimos5CPU);
+        let totalRAM5 = somarArray(penultimos5RAM);
+        let totalDisco5 = somarArray(penultimos5Disco);
+        let totalDownload5 = somarArray(penultimos5Download);
+        let totalUpload5 = somarArray(penultimos5Upload);
+
+        somaAlertas = (totalCPU5 + totalRAM5 + totalDisco5 + totalDownload5 + totalUpload5)
+
+        let totalCPU5Critico = somarArray(penultimos5CPUCritico)
+        let totalRAM5Critico = somarArray(penultimos5RAMCritico)
+        let totalDisco5Critico = somarArray(penultimos5DiscoCritico)
+        let totalDownload5Critico = somarArray(penultimos5DownloadCritico)
+        let totalUpload5Critico = somarArray(penultimos5UploadCritico);
+
+        somaAlertaCriticos = (totalCPU5Critico + totalRAM5Critico + totalDisco5Critico + totalDownload5Critico + totalUpload5Critico)
+
+        var contador = 0;
+        for (i = 0; i <= penultimos5CPU.length; i++) {
+            if (i != null || i != 0) {
+                contador += 1
+            }
+        }
+
+        for (i = 0; i <= penultimos5RAM.length; i++) {
+            if (i != null || i != 0) {
+                contador += 1
+            }
+        }
+
+        for (i = 0; i <= penultimos5Disco.length; i++) {
+            if (i != null || i != 0) {
+                contador += 1
+            }
+        }
+
+        for (i = 0; i <= penultimos5Download.length; i++) {
+            if (i != null || i != 0) {
+                contador += 1
+            }
+        }
+        for (i = 0; i <= penultimos5Upload.length; i++) {
+            if (i != null || i != 0) {
+                contador += 1
+            }
+        }
+
+        document.getElementById('critico_CPU').textContent = totalCPU5Critico;
+        document.getElementById('padrao_CPU').textContent = totalCPU5;
+        document.getElementById('critico_RAM').textContent = totalRAM5Critico;
+        document.getElementById('padrao_RAM').textContent = totalRAM5;
+        document.getElementById('critico_Disco').textContent = totalDisco5Critico;
+        document.getElementById('padrao_Disco').textContent = totalDisco5;
+        document.getElementById('critico_Download').textContent = totalDownload5Critico;
+        document.getElementById('padrao_Download').textContent = totalDownload5;
+        document.getElementById('critico_Upload').textContent = totalUpload5Critico;
+        document.getElementById('padrao_Upload').textContent = totalUpload5;
+
+        document.getElementById('alerta_numero_padrao').textContent = somaAlertas;
+        document.getElementById('alerta_numero_critico').textContent = somaAlertaCriticos;
 
     }
 
@@ -2117,6 +2283,69 @@ function atualizarGraficoPorPeriodo(periodo) {
             }
         });
 
+         function somarArray(arr) {
+            return arr.reduce((total, n) => total + Number(n), 0);
+        }
+
+        let totalCPU5 = somarArray(posteriores5primeirosCPU);
+        let totalRAM5 = somarArray(posteriores5primeirosRAM);
+        let totalDisco5 = somarArray(posteriores5primeirosDisco);
+        let totalDownload5 = somarArray(posteriores5primeirosDownload);
+        let totalUpload5 = somarArray(posteriores5primeirosUpload);
+
+        somaAlertas = (totalCPU5 + totalRAM5 + totalDisco5 + totalDownload5 + totalUpload5)
+
+        let totalCPU5Critico = somarArray(posteriores5primeirosCPUCritico)
+        let totalRAM5Critico = somarArray(posteriores5primeirosRAMCritico)
+        let totalDisco5Critico = somarArray(posteriores5primeirosDiscoCritico)
+        let totalDownload5Critico = somarArray(posteriores5primeirosDownloadCritico)
+        let totalUpload5Critico = somarArray(posteriores5primeirosUploadCritico);
+
+        somaAlertaCriticos = (totalCPU5Critico + totalRAM5Critico + totalDisco5Critico + totalDownload5Critico + totalUpload5Critico)
+
+        var contador = 0;
+        for (i = 0; i <= posteriores5primeirosCPU.length; i++) {
+            if (i != null || i != 0) {
+                contador += 1
+            }
+        }
+
+        for (i = 0; i <= posteriores5primeirosRAM.length; i++) {
+            if (i != null || i != 0) {
+                contador += 1
+            }
+        }
+
+        for (i = 0; i <= posteriores5primeirosDisco.length; i++) {
+            if (i != null || i != 0) {
+                contador += 1
+            }
+        }
+
+        for (i = 0; i <= posteriores5primeirosDownload.length; i++) {
+            if (i != null || i != 0) {
+                contador += 1
+            }
+        }
+        for (i = 0; i <= posteriores5primeirosUpload.length; i++) {
+            if (i != null || i != 0) {
+                contador += 1
+            }
+        }
+
+        document.getElementById('critico_CPU').textContent = totalCPU5Critico;
+        document.getElementById('padrao_CPU').textContent = totalCPU5;
+        document.getElementById('critico_RAM').textContent = totalRAM5Critico;
+        document.getElementById('padrao_RAM').textContent = totalRAM5;
+        document.getElementById('critico_Disco').textContent = totalDisco5Critico;
+        document.getElementById('padrao_Disco').textContent = totalDisco5;
+        document.getElementById('critico_Download').textContent = totalDownload5Critico;
+        document.getElementById('padrao_Download').textContent = totalDownload5;
+        document.getElementById('critico_Upload').textContent = totalUpload5Critico;
+        document.getElementById('padrao_Upload').textContent = totalUpload5;
+
+        document.getElementById('alerta_numero_padrao').textContent = somaAlertas;
+        document.getElementById('alerta_numero_critico').textContent = somaAlertaCriticos;
 
     }
 
@@ -2717,8 +2946,73 @@ function atualizarGraficoPorPeriodo(periodo) {
             }
         });
 
+         function somarArray(arr) {
+            return arr.reduce((total, n) => total + Number(n), 0);
+        }
+
+        let totalCPU5 = somarArray(primeiros5CPU);
+        let totalRAM5 = somarArray(primeiros5RAM);
+        let totalDisco5 = somarArray(primeiros5Disco);
+        let totalDownload5 = somarArray(primeiros5Download);
+        let totalUpload5 = somarArray(primeiros5Upload);
+
+        somaAlertas = (totalCPU5 + totalRAM5 + totalDisco5 + totalDownload5 + totalUpload5)
+
+        let totalCPU5Critico = somarArray(primeiros5CPUCritico)
+        let totalRAM5Critico = somarArray(primeiros5RAMCritico)
+        let totalDisco5Critico = somarArray(primeiros5DiscoCritico)
+        let totalDownload5Critico = somarArray(primeiros5DownloadCritico)
+        let totalUpload5Critico = somarArray(primeiros5UploadCritico);
+
+        somaAlertaCriticos = (totalCPU5Critico + totalRAM5Critico + totalDisco5Critico + totalDownload5Critico + totalUpload5Critico)
+
+        var contador = 0;
+        for (i = 0; i <= primeiros5CPU.length; i++) {
+            if (i != null || i != 0) {
+                contador += 1
+            }
+        }
+
+        for (i = 0; i <= primeiros5RAM.length; i++) {
+            if (i != null || i != 0) {
+                contador += 1
+            }
+        }
+
+        for (i = 0; i <= primeiros5Disco.length; i++) {
+            if (i != null || i != 0) {
+                contador += 1
+            }
+        }
+
+        for (i = 0; i <= primeiros5Download.length; i++) {
+            if (i != null || i != 0) {
+                contador += 1
+            }
+        }
+        for (i = 0; i <= primeiros5Upload.length; i++) {
+            if (i != null || i != 0) {
+                contador += 1
+            }
+        }
+
+        document.getElementById('critico_CPU').textContent = totalCPU5Critico;
+        document.getElementById('padrao_CPU').textContent = totalCPU5;
+        document.getElementById('critico_RAM').textContent = totalRAM5Critico;
+        document.getElementById('padrao_RAM').textContent = totalRAM5;
+        document.getElementById('critico_Disco').textContent = totalDisco5Critico;
+        document.getElementById('padrao_Disco').textContent = totalDisco5;
+        document.getElementById('critico_Download').textContent = totalDownload5Critico;
+        document.getElementById('padrao_Download').textContent = totalDownload5;
+        document.getElementById('critico_Upload').textContent = totalUpload5Critico;
+        document.getElementById('padrao_Upload').textContent = totalUpload5;
+
+        document.getElementById('alerta_numero_padrao').textContent = somaAlertas;
+        document.getElementById('alerta_numero_critico').textContent = somaAlertaCriticos;
+
     }
-}
+
+    }
 window.onload = function () {
     carregarDados().then(() => {
         const Periodo = document.getElementById('periodo');
