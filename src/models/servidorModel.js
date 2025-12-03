@@ -5,9 +5,9 @@ function criarServidores(servidores) {
 
         let sqlServidor = `
             INSERT INTO servidor 
-                (fk_empresa, ipEC2, pais, estado, mac_address, tipo_cpu, ram, disco)
+                (nome, fk_empresa, ipEC2, pais, estado, mac_address, tipo_cpu, ram, disco)
             VALUES 
-                (${s.fk_empresa}, '${s.ipEc2}', '${s.pais}', '${s.estado}', '${s.mac_address}',
+                (${s.nome}, ${s.fk_empresa}, '${s.ipEc2}', '${s.pais}', '${s.estado}', '${s.mac_address}',
                  '${s.tipo_cpu}', ${s.ram}, ${s.disco});
         `;
 
