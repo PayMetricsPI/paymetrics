@@ -285,19 +285,18 @@
     margin-bottom: 10px;
 }
 
-/* container dos dois selects */
 .edit_field_duplo {
   display: flex;
   gap: 20px;
   width: 100%;
 }
 
-/* cada campo ocupa metade */
+
 .edit_field_duplo .pequeno {
   flex: 1;
 }
 
-/* estilização igual aos inputs */
+
 .edit_field_duplo select {
   width: 100%;
   padding: 10px;
@@ -340,6 +339,37 @@
     margin-bottom: 20px;
     margin-top: 20px;
 }
+.line2 {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 40px;
+}
+.mini-card.ok {
+    border-left: 5px solid #4CAF50;
+}
+
+.mini-card.warning {
+    border-left: 5px solid #FFC107;
+}
+
+.mini-card.critical {
+    border-left: 5px solid #D32F2F;
+}
+
+.rede_esp {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 40px;    
+    align-items: flex-start;
+}
+
+.rede_esp > div {
+    flex: 1 1 250px;
+    min-width: 240px;
+}
+
 
 .create_alerta_critico_content .rede_esp {
     display: grid;
@@ -382,9 +412,6 @@
     background-color: #FFD700;
 
 }
-
-
-
 
 .user_controls .edit_user_button {
     background-color: #00A335;

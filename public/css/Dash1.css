@@ -352,12 +352,21 @@ canvas {
     color: #e6a500;
     background: #fff8e1;
 }
-
-/* Outros elementos não utilizados na revisão, mas importantes */
 .bf-alert, .btn-voltar {
-    /* Manter estilos originais ou remover se não forem mais necessários */
+  
 }
-
+.voltarGlobal{
+    margin-left: 440px;
+    border-radius: 8px;
+    margin-top: 0px;
+    background-color: white;
+    padding: 8px 16px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+    border: none;
+}
 #selectPais {
     width: 160px;
     padding: 8px 12px;
