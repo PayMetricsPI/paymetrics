@@ -13,32 +13,33 @@
   <script src="https://cdn.anychart.com/releases/8.11.0/js/anychart-map.min.js"></script>
   <script src="https://cdn.anychart.com/releases/8.11.0/geodata/custom/world/world.js"></script>
   
+  
 
   <link rel="stylesheet" href="./css/navbar.css" />
   <link rel="stylesheet" href="./css/Dash1.css" />
 </head>
 
-<body>
+<body onload="carregarPingRealtime()">
   <div id="sidebar"></div>
 
   <div class="main-content">
     <div class="dashboard-container">
-      <h1 class="titulo">Vizualização Geral de Servidores </h1>
+      <h1 class="titulo">Panorama Geral de Servidores por Rede</h1>
 
       <div class="cards-row">
         <div class="mini-card">
     <p class="mini-title">Servidores Globais</p>
-    <h2 class="mini-value">0</h2>
+    <h2 class="mini-value"></h2>
 </div>
 
         <div class="mini-card">
           <p class="mini-title">TPS Total (Transações por Segundo)</p>
-          <h2 class="mini-value">500</h2>
+          <h2 class="mini-value"></h2>
         </div>
 
         <div class="mini-card">
           <p class="mini-title">Latência Global</p>
-          <h2 class="mini-value">85ms</h2>
+          <h2 class="mini-value"></h2>
         
         </div>
 
@@ -64,7 +65,10 @@
         <div>
           <h2 class="titulo-mapa">Distribuição Global de Latência</h2>
           <div class="mapa-container">
-            <div id="miniMapa"></div>
+            <div id="miniMapa">
+            </div>
+            
+            
           </div>
         </div>
       </div>
@@ -73,7 +77,6 @@
     <div class="tabelas">
     <div class="latency-table">
       <h3>Principais Regiões com Alta Latência & Impacto</h3>
-
       <table>
         <thead>
           <tr>
@@ -84,28 +87,8 @@
           </tr>
         </thead>
 
-        <tbody>
-          <tr>
-            <td>AP-Northeast-1 (JP)</td>
-            <td>138ms</td>
-            <td><span class="status critical">Crítico</span></td>
-            <td>Alto risco de Drop-off</td>
-          </tr>
-
-          <tr>
-            <td>SA-East-1 (CA)</td>
-            <td>123ms</td>
-            <td><span class="status warning">Atenção</span></td>
-            <td>Médio risco de Drop-off</td>
-          </tr>
-
-          <tr>
-            <td>US-West-2 (US)</td>
-            <td>110ms</td>
-            <td><span class="status warning">Atenção</span></td>
-            <td>Baixo impacto</td>
-          </tr>
-        </tbody>
+        <tbody id="tabelaLatenciaCorpo">
+        
       </table>
     </div>
      
