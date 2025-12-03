@@ -22,6 +22,8 @@ var deletarusuarioRouter = require("./src/routes/usuario");
 var listarRouter = require("./src/routes/usuario");
 var metricaRouter = require("./src/routes/metrica");
 var s3Router = require("./src/routes/s3");
+
+
 var usuariosRouter = require("./src/routes/usuario");
 var parametrosRouter = require("./src/routes/parametro");
 
@@ -37,9 +39,9 @@ app.use("/redefinirSenha", redefinirSenhaRouter);
 app.use("/deletar", deletarusuarioRouter);
 app.use("/listar", listarRouter);
 app.use("/metrica", metricaRouter);
-app.use("/s3", s3Router);
 app.use("/parametro", parametrosRouter);
 app.use('/bootstrap', express.static(__dirname + '/node_modules/bootstrap/dist'));
+app.use("/s3", s3Router);
 
 
 app.listen(PORTA_APP, function () {

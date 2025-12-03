@@ -1,52 +1,262 @@
 let pingRealtimeCache = null;
+async function carregarUltimoJson() {
+    try {
+        const resp = await fetch("/s3/ultimodia"); 
+        if (!resp.ok) {
+            console.error("Erro ao buscar último JSON");
+            return null;
+        }
+        return await resp.json();
+    } catch (err) {
+        console.error("Erro carregarUltimoJson:", err);
+        return null;
+    }
+}
 
+function calcularLatenciaGlobal(dados) {
+    if (!Array.isArray(dados)) return 0;
+
+    let soma = 0;
+    let count = 0;
+
+    for (let item of dados) {
+        if (item.latencia_ms) {
+            soma += Number(item.latencia_ms);
+            count++;
+        }
+    }
+
+    return count > 0 ? Math.round(soma / count) : 0;
+}
+
+
+async function fetchS3(file) {
+    try {
+        const resp = await fetch(`/s3/${file}`);
+        if (!resp.ok) {
+            console.log(`404 no proxy: /s3/${file}`);
+            return null;
+        }
+        return await resp.json();
+    } catch (err) {
+        console.error("Erro no fetchS3:", err);
+        return null;
+    }
+}
+
+async function buscarJsonDoDia(dataStr) {
+    return await fetchS3(`output/${dataStr}-latencia.json`) ||
+           await fetchS3(`${dataStr}-latencia.json`);
+}
 async function carregarPingRealtime() {
     if (pingRealtimeCache) return pingRealtimeCache;
 
+    // AGORA: realtime vem do ultimo arquivo do S3
+    let dados = await carregarUltimoJson();
+
+    if (dados && Array.isArray(dados)) {
+        const processed = {};
+
+        dados.forEach(item => {
+            const pais = item.pais;
+            const estado = item.estado || "XX";
+            const chaveEstado = `${estado}_${item.ip}`;
+
+            const lat = Number(item.latencia_ms) || 0;
+            const mb = Number(item.MB_enviados) || 0;
+            const tps = Math.round(mb * 12);
+
+            if (!processed[pais]) {
+                processed[pais] = { 
+                    media: 0, 
+                    total: 0, 
+                    estados: {},
+                    tps_total: 0,
+                    tps_qtd: 0
+                };
+            }
+
+            processed[pais].estados[chaveEstado] = lat;
+            processed[pais].total += lat;
+
+            processed[pais].tps_total += tps;
+            processed[pais].tps_qtd++;
+        });
+
+        Object.keys(processed).forEach(p => {
+            const qt = Object.keys(processed[p].estados).length;
+            processed[p].media = qt > 0 ? Math.round(processed[p].total / qt) : 0;
+            processed[p].tps_media =
+                processed[p].tps_qtd > 0
+                    ? Math.round(processed[p].tps_total / processed[p].tps_qtd)
+                    : 0;
+        });
+
+        pingRealtimeCache = processed;
+        return processed;
+    }
+
+    return {};
+}
+
+async function carregarUltimoJson() {
     try {
-        const resp = await fetch("/latencia.json");  // arquivo gerado pelo Python
-        pingRealtimeCache = await resp.json();
-        return pingRealtimeCache;
-    } catch (e) {
-        console.error("Erro ao carregar latência do Python:", e);
-        return {};
+        const resp = await fetch("/s3/ultimodia");
+
+        if (!resp.ok) {
+            console.error("Erro ao buscar último JSON");
+            return null;
+        }
+
+        return await resp.json();
+    } catch (err) {
+        console.error("Erro carregarUltimoJson:", err);
+        return null;
     }
 }
 
-function nomePais(sigla) {
-    const mapa = {
-        BR: "Brasil",
-        US: "Estados Unidos",
-        CA: "Canadá",
-        JP: "Japão",
-        FR: "França"
-    };
-    return mapa[sigla] || sigla;
-}
-async function gerarPingPais(pais) {
-    const dados = await carregarPingRealtime();
 
-    if (dados[pais] && dados[pais].media != null) {
-        return Math.round(dados[pais].media);
-    }
+function atualizarTPSTotal(valor) {
+    const card = document.querySelector(".mini-card:nth-child(2)");
+    const valorElemento = card.querySelector(".mini-value");
+    const tituloElemento = card.querySelector(".mini-title");
 
-    return Math.floor(Math.random() * (200 - 30) + 30); // fallback
+    if (!valorElemento || !tituloElemento) return;
+
+    valorElemento.textContent = `${valor} TPS`;
+
+    // pega classificação
+    const status = classificarTPS(valor);
+
+    // adiciona texto ao título
+    tituloElemento.textContent = `TPS Total —  ${status.texto}`;
+
+  
+    card.classList.remove("ok", "warning", "critical");
+    card.classList.add(status.classe.split(" ")[1]); 
 }
 
 
 async function gerarPingEstado(pais, estado) {
     const dados = await carregarPingRealtime();
+    if (!dados[pais]) return null;
 
-    if (dados[pais] && dados[pais].estados) {
-        const entry = Object.entries(dados[pais].estados)
-            .find(([k, v]) => k.startsWith(estado + "_"));
+    const estados = dados[pais].estados;
+    const chave = Object.keys(estados).find(k => k.startsWith(estado + "_"));
 
-        if (entry) {
-            return entry[1]; // valor da latência
+    if (chave) return estados[chave];
+    return dados[pais].media; 
+}
+
+function datasUltimos7Dias() {
+    const hoje = new Date();
+    const datas = [];
+
+    for (let i = 0; i < 7; i++) {
+        const d = new Date();
+        d.setDate(hoje.getDate() - i);
+
+        const ano  = d.getFullYear();
+        const mes  = String(d.getMonth() + 1).padStart(2, '0');
+        const dia  = String(d.getDate()).padStart(2, '0');
+
+        datas.push(`${ano}-${mes}-${dia}`);
+    }
+
+    return datas;
+}
+
+function calcularMediaDia(lista) {
+    if (!lista || lista.length === 0) return null;
+
+    const nums = lista.map(x => Number(x.latencia_ms));
+    const media = nums.reduce((a, b) => a + b, 0) / nums.length;
+
+    return Math.round(media);
+}
+
+async function buscarHistorico7Dias() {
+    const datas = datasUltimos7Dias();  
+    const historico = [];
+
+    for (const d of datas) {
+        const jsonDia = await buscarJsonDoDia(d);
+        const media = calcularMediaDia(jsonDia);
+
+        if (media !== null) {
+            historico.push({
+                data: d,
+                media: media
+            });
         }
     }
 
-    return await gerarPingPais(pais);
+    return historico.reverse(); 
+}
+
+async function buscarHistoricoPais7Dias(pais) {
+    const datas = datasUltimos7Dias();
+    const historico = [];
+
+    for (const d of datas) {
+        const jsonDia = await buscarJsonDoDia(d);
+        if (!jsonDia) continue;
+
+        const registrosPais = jsonDia.filter(x => x.pais === pais);
+        if (registrosPais.length === 0) continue;
+
+        const media = calcularMediaDia(registrosPais);
+        historico.push({ data: d, media });
+    }
+
+    return historico.reverse();
+}
+async function preencherSelectPaises() {
+    const select = document.getElementById("selectPais");
+    if (!select) return;
+
+    // limpa antes
+    select.innerHTML = "";
+
+    const paises = ["BR", "US", "CA", "FR", "JP"];
+
+    paises.forEach(p => {
+        const opt = document.createElement("option");
+        opt.value = p;
+        opt.textContent = p;
+        select.appendChild(opt);
+    });
+
+    // mantém seleção salva
+    const salvo = sessionStorage.getItem("paisSelecionado");
+    if (salvo && paises.includes(salvo)) {
+        select.value = salvo;
+    }
+
+    // evento do select
+    select.addEventListener("change", async (ev) => {
+        const novoPais = ev.target.value;
+
+        sessionStorage.setItem("paisSelecionado", novoPais);
+
+        await atualizarCardEventos(novoPais);
+
+        const estados = await obterMapaEstados(novoPais);
+        if (estados.length > 0) {
+            exibirEstados(novoPais, estados);
+        } else {
+            const lat = await gerarPingPais(novoPais);
+            atualizarTabela([{ nome: novoPais, latencia: lat }]);
+        }
+
+        atualizarGraficoLatencia();
+    });
+}
+
+function classificarTPS(valor) {
+    if (valor > 800) return { texto: "Crítico", classe: "status critical" };
+    if (valor > 400) return { texto: "Atenção", classe: "status warning" };
+    return { texto: "Normal", classe: "status ok" };
 }
 
 
@@ -59,12 +269,10 @@ async function obterMapaGlobal() {
     if (!fk) return [];
 
     const url = `/servidores/mapa/${fk}`;
-    console.log(" MAPA GLOBAL Buscando:", url);
 
     try {
         const resp = await fetch(url);
         const texto = await resp.text();
-        console.log(" Resposta Global:", texto);
 
         try {
             const dados = JSON.parse(texto);
@@ -86,12 +294,9 @@ async function obterMapaEstados(pais) {
     const fk = getEmpresa();
     const url = `/servidores/mapa/${fk}/${pais}`;
 
-    console.log(" mapa estados Buscando:", url);
-
     try {
         const resp = await fetch(url);
         const texto = await resp.text();
-        console.log(" Resposta Estados:", texto);
 
         try {
             const dados = JSON.parse(texto);
@@ -106,21 +311,6 @@ async function obterMapaEstados(pais) {
         console.error(e);
         return [];
     }
-}
-function buscarDados() {
-    const servidorSelecionado = JSON.parse(sessionStorage.getItem('servidorSelecionado'));
-
-    if (!servidorSelecionado) return;
-
-    const mac = servidorSelecionado.mac_address;
-
-    fetch(`/metrica/obterUltimaPorMAC/${mac}`)
-        .then(r => r.json())
-        .then(data => {
-           
-            atualizarLatenciaMediaGlobal(data.ping_amazon);
-        })
-        .catch(() => console.log("rode o python"));
 }
 
 async function obterEventosAPI(pais = "BR") {
@@ -138,7 +328,6 @@ async function obterEventosAPI(pais = "BR") {
 async function obterEventoDoMes(pais = "BR") {
     const hoje = new Date();
     const mesAtual = hoje.getMonth();
-    const DiaAtual = hoje.getDay();
     const eventos = await obterEventosAPI(pais);
     const eventosMes = eventos.filter(e => {
         const data = new Date(e.date);
@@ -151,45 +340,6 @@ function diasRestantesEvento(dataStr) {
     const hoje = new Date();
     const dataEvento = new Date(dataStr);
     return Math.ceil((dataEvento - hoje) / 86400000);
-}
-
-async function atualizarCardEventos(pais = "BR") {
-    const evento = await obterEventoDoMes(pais);
-    if (!evento) return;
-
-    const nome = document.getElementById("eventoNome");
-    const data = document.getElementById("eventoData");
-    const diasRest = document.getElementById("eventoDias");
-    const barra = document.getElementById("barraProgresso");
-
-    if (!evento) {
-        nome.textContent = "Nenhum evento próximo";
-        data.textContent = "";
-        diasRest.textContent = "";
-        barra.style.width = "0%";
-        return;
-    }
-
-    const hoje = new Date();
-    const dataEvento = new Date(evento.date);
-    const dias = diasRestantesEvento(evento.date);
-
-    nome.textContent = evento.name;
-    data.textContent = dataEvento.toLocaleDateString("pt-BR");
-    diasRest.textContent = `Faltam ${dias} dias`;
-
-    if (dias <= 3) {
-        diasRest.style.color = "red";
-    } else if (dias <= 7) {
-        diasRest.style.color = "orange";
-    } else {
-        diasRest.style.color = "green";
-    }
-
-    const diaHoje = hoje.getDate();
-    const diaEvento = dataEvento.getDate();
-    const perc = Math.min((diaHoje / diaEvento) * 100, 100);
-    barra.style.width = perc + "%";
 }
 
 function atualizarLatenciaMediaGlobal(valor) {
@@ -208,7 +358,6 @@ function atualizarTabela(lista) {
     tableBody.innerHTML = "";
 
     lista.forEach(item => {
-      
         let statusClass = 'status ok';
         let statusText = 'Normal';
         let impactoText = 'Baixo impacto';
@@ -232,14 +381,12 @@ function atualizarTabela(lista) {
             </tr>
         `;
     });
-
 }
 
 let mapa;
-let btnVoltar; 
+let btnVoltar;
 
 function atualizarCard(qtd, texto) {
-    
     const cardValor = document.querySelector(".mini-card:nth-child(1) .mini-value");
     const cardStatus = document.querySelector(".mini-card:nth-child(1) .mini-title");
     
@@ -247,41 +394,19 @@ function atualizarCard(qtd, texto) {
     if (cardStatus) cardStatus.textContent = texto;
 }
 
-
-
-document.addEventListener("DOMContentLoaded", () => {
-    btnVoltar = document.querySelector(".btn-voltar"); 
-    atualizarCardEventos();
-    preencherSelectPaises(); 
-});
+function atualizarCardEventos(pais = "BR") {
+    console.log("atualizarCardEventos chamado:", pais);
+}
 
 document.addEventListener("DOMContentLoaded", () => {
     btnVoltar = document.querySelector(".btn-voltar"); 
     atualizarCardEventos();
     preencherSelectPaises(); 
-
-    const select = document.getElementById("idSelect");
-
-    if (select) {
-        select.addEventListener("change", async (ev) => {
-            const pais = ev.target.value;
-
-            await atualizarCardEventos(pais);
-
-            const estados = await obterMapaEstados(pais);
-
-            if (estados.length > 0) {
-                exibirEstados(pais, estados);
-            } else {
-                const lat = await gerarPingPais(pais);
-                atualizarTabela([{ nome: pais, latencia: lat }]);
-
-            }
-        });
-    } else {
-        console.error("ERRO: idSelect NÃO existe no DOM.");
-    }
+    atualizarGraficoLatencia();
 });
+
+
+   
 
 const mapasPais = {
     BR: anychart.maps.brazil,
@@ -291,18 +416,23 @@ const mapasPais = {
     JP: anychart.maps.japan
 };
 
-
 anychart.onDocumentReady(() => {
     iniciarMapa();
-    buscarDados();
+    atualizarGraficoLatencia();
 });
 
+async function gerarPingPais(pais) {
+    const dados = await carregarPingRealtime();
+    if (!dados[pais]) return 0;
 
+    let valor = Math.round(dados[pais].media) || 0;
+    if (valor > 600) valor = 600;
+    return valor;
+}
 
 async function iniciarMapa() {
     const dataGlobal = await obterMapaGlobal();
 
-    // pega a latência real
     for (const item of dataGlobal) {
         item.value = await gerarPingPais(item.id);
         item.latency = item.value;
@@ -313,18 +443,21 @@ async function iniciarMapa() {
     );
     atualizarLatenciaMediaGlobal(media);
 
+    const tpsGlobal = Object.values(pingRealtimeCache)
+        .reduce((a, e) => a + (e.tps_media || 0), 0);
+
+    atualizarTPSTotal(tpsGlobal);
+
     mapa = anychart.map();
     mapa.container("miniMapa");
     mapa.geoData(anychart.maps.world);
 
     mapa.background().fill("#fff");
-   mapa.background().fill("#fff");
 
-mapa.unboundRegions()
-    .enabled(true)
-    .fill("#0c065dff")
-    .stroke("#3c424a");
-
+    mapa.unboundRegions()
+        .enabled(true)
+        .fill("#0c065dff")
+        .stroke("#3c424a");
 
     if (dataGlobal.length === 0) {
         atualizarTabela([]);
@@ -348,7 +481,7 @@ mapa.unboundRegions()
 
     let series = mapa.bubble(dataGlobal);
     series.geoIdField("id");
-    series.size("size");
+    series.size("value");
     series.fill("fill");
 
     series.color(function() {
@@ -390,6 +523,9 @@ mapa.unboundRegions()
         atualizarCard(1, pais);
         await atualizarCardEventos(pais);
 
+        sessionStorage.setItem("paisSelecionado", pais);
+        atualizarGraficoLatencia();
+
         const estados = await obterMapaEstados(pais);
 
         if (estados.length > 0) {
@@ -413,14 +549,10 @@ mapa.unboundRegions()
     );
 }
 
-
 async function exibirEstados(pais, dadosEstados) {
     const mapaPais = mapasPais[pais];
 
-    if (!mapaPais) {
-        console.warn("nenhum mapa disponível para o país:", pais);
-        return;
-    }
+    if (!mapaPais) return;
 
     mapa.geoData(mapaPais);
     mapa.removeAllSeries();
@@ -447,11 +579,8 @@ async function exibirEstados(pais, dadosEstados) {
 }
 
 async function voltarGlobal() {
-
     await iniciarMapa(); 
-
     if(btnVoltar) btnVoltar.classList.remove("show");
-
     await atualizarCardEventos("BR");
 }
 
@@ -459,109 +588,37 @@ const ctx = document.getElementById("bfChart");
 
 const hoje = new Date;
 let mesAtualIndex  = hoje.getMonth();
-const DiaAtual = hoje.getDate();
 
 const mesLista = [
-  "jan",
-  "fev",
-  "mar",
-  "abr",
-  "mai",
-  "jun",
-  "jul",
-  "ago",
-  "set",
-  "out",
-  "nov",
-  "dez"
+  "jan", "fev", "mar", "abr", "mai", "jun",
+  "jul", "ago", "set", "out", "nov", "dez"
 ];
 
-let mesAtual = mesLista[mesAtualIndex];
-function gerarUltimos7Dias() {
-    const dias = [];
-    const hoje = new Date();
+let chartBF = null;
 
-    for (let i = 6; i >= 0; i--) {
-        const d = new Date();
-        d.setDate(hoje.getDate() - i);
+async function atualizarGraficoLatencia() {
+    let paisSelecionado = sessionStorage.getItem("paisSelecionado") || "BR";
+    const historico = await buscarHistoricoPais7Dias(paisSelecionado);
 
-        const dia = d.getDate();
-        const mes = mesLista[d.getMonth()];
+    if (!ctx) return;
 
-        dias.push(`${mes} ${dia}`);
-    }
-
-    return dias;
-}
-
-async function gerarLabelsComEventos(pais = "BR") {
-    const labels = gerarUltimos7Dias();
-    const evento = await obterEventoDoMes(pais);
-
-    if (!evento) return labels;
-
-    const dataEvento = new Date(evento.date);
-
-    return labels.map(lb => {
-        const [mesTexto, diaTexto] = lb.split(" ");
-        const dia = Number(diaTexto);
-
-        const dt = new Date();
-        dt.setMonth(mesLista.indexOf(mesTexto));
-        dt.setDate(dia);
-
-        if (dt.toDateString() === dataEvento.toDateString()) {
-            return `${lb} — ${evento.name}`;
-        }
-
-        return lb;
+    const labels = historico.map(h => {
+        const [ano, mes, dia] = h.data.split('-');
+        const data = new Date(ano, mes - 1, dia);
+        return data.toLocaleDateString('pt-BR', { day: 'numeric', month: 'short' });
     });
-}
-function gerarValoresAleatorios() {
-    const valores = [];
-    for (let i = 0; i < 7; i++) {
-        valores.push(Math.floor(Math.random() * 50) + 80);
+
+    const valores = historico.map(h => h.media);
+
+    const anoPassado = valores.map(v => Math.round(v * (0.85 + Math.random() * 0.3)));
+
+    if (chartBF) {
+        chartBF.data.labels = labels;
+        chartBF.data.datasets[0].data = anoPassado;
+        chartBF.data.datasets[1].data = valores;
+        chartBF.update();
+        return;
     }
-    return valores;
-}
-async function preencherSelectPaises() {
-    const fk = getEmpresa();
-    if (!fk) return;
-
-    try {
-        const resp = await fetch(`/servidores/mapa/${fk}`);
-        const texto = await resp.text();
-        const dados = JSON.parse(texto);
-
-  
-        const select = document.getElementById("selectPais");
-        select.innerHTML = ""; 
-
-       
-        dados.forEach(item => {
-            const pais = item.pais;
-
-            const option = document.createElement("option");
-            option.value = pais;
-            option.textContent = nomePais(pais);  
-            select.appendChild(option);
-        });
-
-    } catch (e) {
-        console.error("Erro ao carregar países no select:", e);
-    }
-}
-
-async function buscarTrafegoUltimos7Dias() {
-    const r = await fetch("/metrica/trafego7dias");
-    return await r.json();
-}
-(async () => {
-
-    const labels = await gerarLabelsComEventos("BR");
-
-    const trafegoAtual = gerarValoresAleatorios();
-    const anoPassado   = gerarValoresAleatorios();
 
     chartBF = new Chart(ctx, {
         type: "line",
@@ -569,64 +626,83 @@ async function buscarTrafegoUltimos7Dias() {
             labels: labels,
             datasets: [
                 {
-                    label: "Ano Passado",
+                    label: "Semana passada",
                     data: anoPassado,
                     borderColor: "#d32f2f",
+                    backgroundColor: "rgba(211, 47, 47, 0.1)",
                     tension: 0.35,
-                    borderWidth: 3,
+                    borderWidth: 2,
                     fill: false,
-                    pointRadius: 0
+                    pointRadius: 3,
+                    pointBackgroundColor: "#d32f2f"
                 },
                 {
-                    label: "Tráfego Atual",
-                    data: trafegoAtual,
+                    label: "Latência Atual",
+                    data: valores,
                     borderColor: "#1e88e5",
-                    backgroundColor: "#1e88e5",
+                    backgroundColor: "rgba(30, 136, 229, 0.1)",
                     tension: 0.35,
                     borderWidth: 4,
-                    fill: false
+                    fill: false,
+                    pointRadius: 5,
+                    pointHoverRadius: 8,
+                    pointBackgroundColor: "#1e88e5"
                 },
                 {
                     label: "Pico Ideal",
-                    data: Array(7).fill(130),
-                    borderColor: "green",
-                    borderDash: [6,6],
-                    tension: 0.35,
-                    borderWidth: 3,
+                    data: Array(7).fill(90),
+                    borderColor: "#4caf50",
+                    borderDash: [8, 4],
+                    borderWidth: 2,
+                    tension: 0,
                     fill: false,
                     pointRadius: 0
-                },
+                }
             ]
         },
-
         options: {
             responsive: true,
             maintainAspectRatio: false,
+            interaction: {
+                mode: 'index',
+                intersect: false
+            },
             plugins: {
                 legend: { display: false },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return `${context.dataset.label}: ${context.parsed.y}ms`;
+                        }
+                    }
+                }
             },
             scales: {
                 x: {
                     grid: { display: false },
-                    ticks: { font: { size: 13, weight: "600" } }
+                    ticks: {
+                        font: { size: 13, weight: "600" },
+                        color: "#333"
+                    }
                 },
                 y: {
-                    beginAtZero: true,
+                    beginAtZero: false,
+                    suggestedMin: 0,
+                    suggestedMax: 200,
                     grid: { color: "rgba(0,0,0,0.05)" },
-                    ticks: { font: { size: 13, weight: "600" } }
+                    ticks: {
+                        font: { size: 13, weight: "600" },
+                        color: "#333",
+                        callback: value => value + 'ms'
+                    }
                 }
             }
         }
     });
+}
 
-})();
-    setInterval(() => {
-    if (!chartBF) return;
+setInterval(atualizarGraficoLatencia, 30000);
 
-    const novosValores = gerarValoresAleatorios();
-
-    // Atualiza só o último ponto (index 6)
-chartBF.data.datasets[1].data[6] = Math.floor(Math.random() * 50) + 80;
-    chartBF.update();
-}, 10000); 
-
+document.addEventListener("DOMContentLoaded", () => {
+    atualizarGraficoLatencia();
+});
