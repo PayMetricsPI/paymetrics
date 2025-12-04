@@ -3,7 +3,6 @@
     margin: 0;
     box-sizing: border-box;
     font-family: "Poppins", sans-serif;
-    background-color: #f3f2f2;
 }
 
 html,
@@ -13,6 +12,7 @@ body {
 
 .dash_jira {
     margin-top: 50px;
+        background-color: #f3f2f2;
 }
 
 .titulo_jira h1 {
