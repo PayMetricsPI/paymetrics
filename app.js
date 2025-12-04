@@ -26,6 +26,7 @@ var s3Router = require("./src/routes/s3");
 
 var usuariosRouter = require("./src/routes/usuario");
 var parametrosRouter = require("./src/routes/parametro");
+var jiraRouter = require("./src/routes/jira");
 
 app.use(cors());
 app.use(express.json());
@@ -40,7 +41,7 @@ app.use("/deletar", deletarusuarioRouter);
 app.use("/listar", listarRouter);
 app.use("/metrica", metricaRouter);
 app.use("/parametro", parametrosRouter);
-
+app.use("/jira", jiraRouter);
 
 app.use('/bootstrap', express.static(__dirname + '/node_modules/bootstrap/dist'));
 app.use("/s3", s3Router);

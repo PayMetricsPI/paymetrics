@@ -1,0 +1,133 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
+html,
+body {
+    overflow-x: hidden;
+}
+
+.dash_jira {
+    margin-top: 50px;
+        background-color: #f3f2f2;
+}
+
+.titulo_jira h1 {
+    font-size: 22px;
+    margin-left: 200px;
+}
+
+.alertas_container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+}
+
+.info {
+    display: flex;
+    gap: 30px;
+    margin-top: 20px;
+    margin-left: 250px;
+}
+
+.kpi_critico,
+.kpi_atencao {
+    width: 400px;
+    height: 130px;
+    background-color: white;
+    border-radius: 20px;
+    padding: 20px 10px;
+    text-align: center;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    border: 1px solid #dcdcdc;
+}
+
+.kpi_critico b,
+.kpi_atencao b{
+    background-color: white;
+}
+
+.kpi_critico h1,
+.kpi_atencao h1 {
+    font-size: 35px;
+    background-color: white;
+}
+
+.kpi_critico p,
+.kpi_atencao p {
+    font-size: 15px;
+    margin-top: 10px;
+    background-color: white;
+}
+
+.kpi_atencao span,
+.kpi_critico span{
+    background-color: white;
+}
+
+.servidores_alertas {
+    background-color: white;
+    border-radius: 20px;
+    padding: 25px;
+    width: 840px;
+    border: 1px solid #dcdcdc;
+    margin-top: 20px;
+    margin-left: 250px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.titulo_ser h2 {
+    background-color: white;
+    font-weight: 600;
+}
+
+.titulo_ser {
+    margin-bottom: 15px;
+    border-bottom: 4px solid #f7b116;
+}
+
+.servidor_card {
+    background-color: #f4f4f4;
+    border-radius: 40px;
+    padding: 15px 25px;
+    display: flex;
+    align-items: center;
+    margin-top: 25px;
+    border: 1px solid #dcdcdc;
+}
+
+.servidor_card b{
+    background-color: #f4f4f4;
+}
+
+.info_servidor {
+    background-color: #f4f4f4;
+    display: flex;
+    flex-direction: column;
+    margin-left: 20px;
+}
+
+.info_servidor .nome {
+    background-color: #f4f4f4;
+    font-size: 16px;
+    margin: 0;
+}
+
+.info_servidor .mac {
+    background-color: #f4f4f4;
+}
+
+.servidor_card .status {
+    background-color: #f4f4f4;
+    margin-left: auto;
+    font-size: 18px;
+}
+
+.servidor_card img {
+    background-color: #f4f4f4;
+    width: 55px;
+}
