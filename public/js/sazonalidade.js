@@ -21,11 +21,6 @@ async function getDataForCalendar() {
             className: day.alert ? 'pico' : ''
         }));
 
-        const allEvents = [
-            ...events,
-            ...eventosSazonais.map(e => ({ ...e }))
-        ];
-
         const calendarEl = document.getElementById('calendar');
 
         const calendar = new FullCalendar.Calendar(calendarEl, {
@@ -50,7 +45,7 @@ async function getDataForCalendar() {
             },
 
             showNonCurrentDates: true,
-            events: allEvents,
+            events: events,
 
             dayHeaderContent: (arg) => arg.text.substring(0, 3).toUpperCase(),
 
