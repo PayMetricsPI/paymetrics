@@ -346,17 +346,6 @@
     align-items: flex-start;
     gap: 40px;
 }
-.mini-card.ok {
-    border-left: 5px solid #4CAF50;
-}
-
-.mini-card.warning {
-    border-left: 5px solid #FFC107;
-}
-
-.mini-card.critical {
-    border-left: 5px solid #D32F2F;
-}
 
 .rede_esp {
     display: flex;
@@ -419,6 +408,11 @@
     width: 80px;
 }
 
+.edit_param_button{
+    background-color: yellow;
+    border-radius: 100px;
+    width: 170px;
+}
 
 
 .user_controls .edit_user_button:hover {
