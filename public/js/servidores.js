@@ -88,7 +88,6 @@
       .then((data) => {
         close_modal_create_server();
         carregarServidores();
-        console.log("RETORNO DO BACKEND AO CRIAR SERVIDOR:", data);
         sessionStorage.setItem("fk_servidor", data.id_servidor);
 
         open_modal_create_alerta_critico(data.id_servidor);
@@ -276,25 +275,24 @@
   }
 
   async function buscarParametrosServidor(idServidor) {
-    try {
-      
-      const resp = await fetch(`/parametro/${idServidor}`); 
-      
-      if (!resp.ok) {
-     
-        console.error(`Erro HTTP ao buscar parâmetros: ${resp.status}`);
-        return [];
-      }
-      
-      return await resp.json();
-    } catch (e) {
-      console.error("Erro ao buscar parâmetros:", e);
-      return [];
-    }
+   try {
+ 
+   const resp = await fetch(`/parametro/${idServidor}`);  
+   if (!resp.ok) {
+
+   console.error(`Erro HTTP ao buscar parâmetros: ${resp.status}`);
+  return [];
+  }
+  
+  return await resp.json();
+   } catch (e) {
+    console.error("Erro ao buscar parâmetros:", e);
+    return [];
+   }
   }
 
 
-  // --- Elementos do Modal de Edição de Parâmetros ---
+
   const out_edit_alerta_critico = document.getElementById('out_edit_alerta_critico');
   const edit_alerta_critico_modal = document.getElementById('edit_alerta_critico_modal');
   const close_edit_alerta_critico_button = document.getElementById('close_edit_alerta_critico_button');
@@ -302,69 +300,66 @@
   const submit_button_edit_alerta_critico = document.getElementById('submit_button_edit_alerta_critico');
 
 
-  // Sua função de fechar
+ 
   function fecharModalEditarParametros() {
-    const modal = document.getElementById("edit_alerta_critico_modal");
-    const fundo = document.getElementById("out_edit_alerta_critico");
+   const modal = document.getElementById("edit_alerta_critico_modal");
+   const fundo = document.getElementById("out_edit_alerta_critico");
 
-    fundo.classList.remove("show");
-    modal.classList.remove("show");
-    // Limpar os valores dos inputs ao fechar
-    modal.querySelectorAll('input').forEach(i => i.value = '');
-    modal.removeAttribute('data-id-servidor'); // Remover o ID do servidor
+   fundo.classList.remove("show");
+   modal.classList.remove("show");
+   
+   modal.querySelectorAll('input').forEach(i => i.value = '');
+   modal.removeAttribute('data-id-servidor'); 
   }
 
-  // 1. Função para salvar os parâmetros editados
+
   function salvarParametrosEditados() {
-    const idServidor = edit_alerta_critico_modal.getAttribute('data-id-servidor');
-    if (!idServidor) return alert("ID do servidor não encontrado para salvar os parâmetros.");
+   const idServidor = edit_alerta_critico_modal.getAttribute('data-id-servidor');
+   if (!idServidor) return alert("ID do servidor não encontrado para salvar os parâmetros.");
 
-    const inputs = edit_alerta_critico_modal.querySelectorAll('input.alerta_critico_input, input.alerta_normal_input');
-    const novosParametros = [];
+   const inputs = edit_alerta_critico_modal.querySelectorAll('input.alerta_critico_input, input.alerta_normal_input');
+   const novosParametros = [];
 
-    inputs.forEach(input => {
-      const valor = input.value.trim();
-      if (valor !== "") {
-        novosParametros.push({
-          fk_componente: Number(input.getAttribute('data-componente')),
-          tipo: input.getAttribute('data-tipo'),
-          valor: Number(valor)
-        });
-      }
-    });
-    
-    if (novosParametros.length === 0) return alert("Preencha pelo menos um campo para salvar!");
+  inputs.forEach(input => {
+    const valor = input.value.trim();
+    if (valor !== "") {
+     novosParametros.push({
+    fk_componente: Number(input.getAttribute('data-componente')),
+   tipo: input.getAttribute('data-tipo'),
+   valor: Number(valor)
+   });
+}
+   });
+
+   if (novosParametros.length === 0) return alert("Preencha pelo menos um campo para salvar!");
 
 
-    fetch(`/parametro/atualizarParametros/${idServidor}`, {
-      method: 'PUT', // Supondo que você use PUT para atualizar
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ parametros: novosParametros })
-    })
-    .then(resp => {
-      if (resp.ok) {
-        alert("Parâmetros salvos com sucesso!");
-        fecharModalEditarParametros();
-        // Opcional: recarregar a lista de servidores se a mudança precisar ser refletida imediatamente na listagem
-        // carregarServidores(); 
-      } else {
-        alert("Erro ao salvar os parâmetros. Verifique o servidor.");
-      }
-    })
-    .catch(e => {
-      console.error("Erro na requisição de atualização de parâmetros:", e);
-      alert("Ocorreu um erro de rede ou servidor ao salvar os parâmetros.");
-    });
+   fetch(`/parametro/atualizarParametros/${idServidor}`, {
+   method: 'PUT', 
+ headers: { "Content-Type": "application/json" },
+ body: JSON.stringify({ parametros: novosParametros })
+   })
+   .then(resp => {
+    if (resp.ok) {
+     alert("Parâmetros salvos com sucesso!"); 
+      fecharModalEditarParametros();
+ 
+    } else {
+     alert("Erro ao salvar os parâmetros. Verifique o servidor.");
+    }
+   })
+   .catch(e => {
+    console.error("Erro na requisição de atualização de parâmetros:", e);
+    alert("Ocorreu um erro de rede ou servidor ao salvar os parâmetros.");
+   });
   }
 
-  // 2. Vincular a função de salvar ao botão "Salvar"
   submit_button_edit_alerta_critico?.addEventListener('click', salvarParametrosEditados);
 
-  // 3. Vincular a função de fechar aos botões "Cancelar" e "x"
+  
   close_edit_alerta_critico_button?.addEventListener('click', fecharModalEditarParametros);
   cancel_button_edit_alerta_critico?.addEventListener('click', fecharModalEditarParametros);
 
-  // 4. Corrigir a sua função `abrirModalEditarParametros` para usar o 'data-id-servidor' correto
   function abrirModalEditarParametros(parametros, idServidor) {
    const modal = document.getElementById("edit_alerta_critico_modal");
    const fundo = document.getElementById("out_edit_alerta_critico");
@@ -372,16 +367,16 @@
    fundo.classList.add("show");
    modal.classList.add("show");
 
-   // 🚨 Corrigindo: Define o atributo 'data-id-servidor' para ser usado na função salvarParametrosEditados
+ 
    modal.setAttribute('data-id-servidor', idServidor);
 
-   // Limpa os campos antes de preencher
+
    modal.querySelectorAll('input').forEach(i => i.value = '');
 
-   // Preenche os campos com os valores atuais
+ 
    parametros.forEach(p => {
     const input = modal.querySelector(`input[data-componente="${p.fk_componente}"][data-tipo="${p.tipo}"]`);
-    // O valor pode ser um placeholder (no HTML) ou o valor real (vindo do banco)
+  
     if (input) input.value = p.valor; 
    });
   }

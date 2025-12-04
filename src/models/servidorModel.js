@@ -16,7 +16,7 @@ function criarServidores(servidores) {
 
             let sqlParametro = `
                 INSERT INTO parametro (fk_servidor, fk_empresa, fk_componente, alerta_critico, alerta_normal)
-                VALUES (${fk_servidor}, ${s.fk_empresa}, 5, 0, 0);
+                VALUES (${fk_servidor}, ${s.fk_empresa}, ${s.fk_componente}, ${s.alerta_critico}, ${s.alerta_normal});
             `;
 
             return database.executar(sqlParametro).then(() => {
