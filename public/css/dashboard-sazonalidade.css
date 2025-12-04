@@ -1,4 +1,3 @@
-/* Importa a fonte Roboto */
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700;800;900&display=swap');
 
 * {
@@ -38,7 +37,7 @@ body {
 }
 
 .presentation p {
-    font-size: 1rem;
+    font-size: 1.2rem;
 }
 
 #welcome {
@@ -72,9 +71,17 @@ body {
 }
 
 @keyframes float {
-    0% { transform: translateY(0) scale(0.2); }
-    50% { transform: translateY(-12px) scale(0.2); }
-    100% { transform: translateY(0) scale(0.2); }
+    0% {
+        transform: translateY(0) scale(0.2);
+    }
+
+    50% {
+        transform: translateY(-12px) scale(0.2);
+    }
+
+    100% {
+        transform: translateY(0) scale(0.2);
+    }
 }
 
 .calendar-header {
@@ -93,7 +100,12 @@ body {
     display: flex;
     flex-direction: column;
     max-width: 80%;
-    gap: 4rem;
+    gap: 5rem;
+}
+
+.fc .fc-toolbar-title {
+    font-size: 2rem;
+    padding-bottom: 30px;
 }
 
 .calendar-header .calendar-title h1 {
@@ -102,7 +114,7 @@ body {
 }
 
 .calendar-header .calendar-title .calendar-description {
-    font-size: 0.9rem;
+    font-size: 1.3rem;
 }
 
 .title-paragraph {
@@ -127,7 +139,7 @@ body {
     width: 100%;
     height: 100%;
     font-weight: 600;
-    font-size: 14px;
+    font-size: 22px;
     color: black !important;
     text-decoration: none !important;
 }
@@ -139,7 +151,7 @@ body {
 .fc-col-header-cell-cushion {
     text-decoration: none !important;
     color: black !important;
-    font-size: 12px;
+    font-size: 18px;
     letter-spacing: 0.5px;
 }
 
@@ -206,7 +218,7 @@ body {
 
 .fc .fc-daygrid-day {
     background-color: #ffffff !important;
-    color: black !important;            
+    color: black !important;
     opacity: 1 !important;
 }
 
@@ -226,9 +238,8 @@ body {
 }
 
 .fc-col-header-cell-cushion {
-    padding-bottom: 10px;/
+    padding-bottom: 10px;
 }
-
 
 .insights-section {
     background-color: #FAFAFA;
@@ -248,7 +259,7 @@ body {
 }
 
 .insight-card {
-    width: 1000px;
+    width: 800px;
     height: 300px;
     background-color: white;
     display: flex;
@@ -256,9 +267,7 @@ body {
     justify-content: center;
     align-items: center;
     gap: 20px;
-    border-radius: 12px;    
-    margin: 0 auto;
-
+    border-radius: 12px;
 }
 
 .impacto-recomendacao {
@@ -269,16 +278,26 @@ body {
 }
 
 #insightsCarousel .carousel-control-prev {
-    left: -50px;
+    left: 25rem;
 }
 
 #insightsCarousel .carousel-control-next {
-    right: -50px;
+    right: 26.5rem;
 }
 
 .carousel-control-prev-icon,
 .carousel-control-next-icon {
     filter: invert(1);
+}
+
+.carousel-item {
+    transition: none !important;
+}
+
+.carousel-item.active,
+.carousel-item-next,
+.carousel-item-prev {
+    transform: none !important;
 }
 
 .icone-gemini {
@@ -287,13 +306,46 @@ body {
 
 .gemini-gradient {
     background: linear-gradient(90deg,
-        #5C8AFF,
-        #8A6FFF,
-        #C37AFF,    
-        #E17D8F
-    );
+            #5C8AFF,
+            #8A6FFF,
+            #C37AFF,
+            #E17D8F);
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     font-weight: 600;
+}
+
+.carousel-item {
+    transition: none !important;
+}
+
+.carousel-item-next,
+.carousel-item-prev,
+.carousel-item-start,
+.carousel-item-end {
+    transform: none !important;
+}
+
+.carousel-item-next.carousel-item-start,
+.carousel-item-prev.carousel-item-end {
+    transform: none !important;
+}
+
+.carousel-inner {
+    transform: none !important;
+    transition: none !important;
+}
+
+.carousel,
+.carousel-inner,
+.carousel-item {
+    width: 100% !important;
+    height: auto !important;
+}
+
+.col-12, .col-md-12, .col-lg-10, .d-flex {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
