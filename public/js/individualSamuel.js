@@ -1,7 +1,8 @@
 let pingRealtimeCache = null;
+
 async function carregarUltimoJson() {
     try {
-        const resp = await fetch("/s3/ultimodia"); 
+        const resp = await fetch("/s3/ultimodia");
         if (!resp.ok) {
             console.error("Erro ao buscar último JSON");
             return null;
@@ -20,15 +21,15 @@ function calcularLatenciaGlobal(dados) {
     let count = 0;
 
     for (let item of dados) {
-        if (item.latencia_ms) {
-            soma += Number(item.latencia_ms);
+        const v = Number(item.latencia_ms);
+        if (!isNaN(v)) {
+            soma += v;
             count++;
         }
     }
 
     return count > 0 ? Math.round(soma / count) : 0;
 }
-
 
 async function fetchS3(file) {
     try {
@@ -48,10 +49,10 @@ async function buscarJsonDoDia(dataStr) {
     return await fetchS3(`output/${dataStr}-latencia.json`) ||
            await fetchS3(`${dataStr}-latencia.json`);
 }
-async function carregarPingRealtime() {
-    if (pingRealtimeCache) return pingRealtimeCache;
 
-    // AGORA: realtime vem do ultimo arquivo do S3
+async function carregarPingRealtime(force = false) {
+    if (!force && pingRealtimeCache) return pingRealtimeCache;
+
     let dados = await carregarUltimoJson();
 
     if (dados && Array.isArray(dados)) {
@@ -60,16 +61,17 @@ async function carregarPingRealtime() {
         dados.forEach(item => {
             const pais = item.pais;
             const estado = item.estado || "XX";
-            const chaveEstado = `${estado}_${item.ip}`;
+            const chaveEstado = estado;
 
-            const lat = Number(item.latencia_ms) || 0;
             const mb = Number(item.MB_enviados) || 0;
-            const tps = Math.round(mb * 12);
+            const lat = Number(item.latencia_ms) || 0;
+            const tps = lat > 0 ? Math.round(1000 / lat) : 0;
 
             if (!processed[pais]) {
-                processed[pais] = { 
-                    media: 0, 
-                    total: 0, 
+                processed[pais] = {
+                    media: 0,
+                    total_lat: 0,
+                    count_lat: 0,
                     estados: {},
                     tps_total: 0,
                     tps_qtd: 0
@@ -77,15 +79,16 @@ async function carregarPingRealtime() {
             }
 
             processed[pais].estados[chaveEstado] = lat;
-            processed[pais].total += lat;
+            processed[pais].total_lat += lat;
+            processed[pais].count_lat++;
 
             processed[pais].tps_total += tps;
             processed[pais].tps_qtd++;
         });
 
         Object.keys(processed).forEach(p => {
-            const qt = Object.keys(processed[p].estados).length;
-            processed[p].media = qt > 0 ? Math.round(processed[p].total / qt) : 0;
+            const c = processed[p].count_lat;
+            processed[p].media = c > 0 ? Math.round(processed[p].total_lat / c) : 0;
             processed[p].tps_media =
                 processed[p].tps_qtd > 0
                     ? Math.round(processed[p].tps_total / processed[p].tps_qtd)
@@ -96,56 +99,35 @@ async function carregarPingRealtime() {
         return processed;
     }
 
+    pingRealtimeCache = {};
     return {};
 }
 
-async function carregarUltimoJson() {
-    try {
-        const resp = await fetch("/s3/ultimodia");
-
-        if (!resp.ok) {
-            console.error("Erro ao buscar último JSON");
-            return null;
-        }
-
-        return await resp.json();
-    } catch (err) {
-        console.error("Erro carregarUltimoJson:", err);
-        return null;
-    }
-}
-
-
 function atualizarTPSTotal(valor) {
     const card = document.querySelector(".mini-card:nth-child(2)");
-    const valorElemento = card.querySelector(".mini-value");
-    const tituloElemento = card.querySelector(".mini-title");
+    const valorElemento = card?.querySelector(".mini-value");
+    const tituloElemento = card?.querySelector(".mini-title");
 
     if (!valorElemento || !tituloElemento) return;
 
     valorElemento.textContent = `${valor} TPS`;
 
-    // pega classificação
     const status = classificarTPS(valor);
 
-    // adiciona texto ao título
     tituloElemento.textContent = `TPS Total —  ${status.texto}`;
 
-  
     card.classList.remove("ok", "warning", "critical");
-    card.classList.add(status.classe.split(" ")[1]); 
+    card.classList.add(status.classe.split(" ")[1]);
 }
-
 
 async function gerarPingEstado(pais, estado) {
     const dados = await carregarPingRealtime();
     if (!dados[pais]) return null;
 
-    const estados = dados[pais].estados;
-    const chave = Object.keys(estados).find(k => k.startsWith(estado + "_"));
+    const estados = dados[pais].estados || {};
 
-    if (chave) return estados[chave];
-    return dados[pais].media; 
+    if (estado in estados) return estados[estado];
+    return dados[pais].media;
 }
 
 function datasUltimos7Dias() {
@@ -156,9 +138,9 @@ function datasUltimos7Dias() {
         const d = new Date();
         d.setDate(hoje.getDate() - i);
 
-        const ano  = d.getFullYear();
-        const mes  = String(d.getMonth() + 1).padStart(2, '0');
-        const dia  = String(d.getDate()).padStart(2, '0');
+        const ano = d.getFullYear();
+        const mes = String(d.getMonth() + 1).padStart(2, '0');
+        const dia = String(d.getDate()).padStart(2, '0');
 
         datas.push(`${ano}-${mes}-${dia}`);
     }
@@ -169,14 +151,19 @@ function datasUltimos7Dias() {
 function calcularMediaDia(lista) {
     if (!lista || lista.length === 0) return null;
 
-    const nums = lista.map(x => Number(x.latencia_ms));
+    const nums = lista
+        .map(x => Number(x.latencia_ms))
+        .filter(v => !isNaN(v));
+
+    if (nums.length === 0) return null;
+
     const media = nums.reduce((a, b) => a + b, 0) / nums.length;
 
     return Math.round(media);
 }
 
 async function buscarHistorico7Dias() {
-    const datas = datasUltimos7Dias();  
+    const datas = datasUltimos7Dias();
     const historico = [];
 
     for (const d of datas) {
@@ -191,7 +178,7 @@ async function buscarHistorico7Dias() {
         }
     }
 
-    return historico.reverse(); 
+    return historico.reverse();
 }
 
 async function buscarHistoricoPais7Dias(pais) {
@@ -206,16 +193,18 @@ async function buscarHistoricoPais7Dias(pais) {
         if (registrosPais.length === 0) continue;
 
         const media = calcularMediaDia(registrosPais);
+        if (media === null) continue;
+
         historico.push({ data: d, media });
     }
 
     return historico.reverse();
 }
+
 async function preencherSelectPaises() {
     const select = document.getElementById("selectPais");
     if (!select) return;
 
-    // limpa antes
     select.innerHTML = "";
 
     const paises = ["BR", "US", "CA", "FR", "JP"];
@@ -227,13 +216,11 @@ async function preencherSelectPaises() {
         select.appendChild(opt);
     });
 
-    // mantém seleção salva
     const salvo = sessionStorage.getItem("paisSelecionado");
     if (salvo && paises.includes(salvo)) {
         select.value = salvo;
     }
 
-    // evento do select
     select.addEventListener("change", async (ev) => {
         const novoPais = ev.target.value;
 
@@ -258,7 +245,6 @@ function classificarTPS(valor) {
     if (valor > 400) return { texto: "Atenção", classe: "status warning" };
     return { texto: "Normal", classe: "status ok" };
 }
-
 
 function getEmpresa() {
     return sessionStorage.getItem("id");
@@ -348,10 +334,10 @@ function atualizarLatenciaMediaGlobal(valor) {
 }
 
 function atualizarTabela(lista) {
-    const tableBody = document.querySelector(".latency-table tbody"); 
+    const tableBody = document.querySelector(".latency-table tbody");
 
     if (!tableBody || !lista || lista.length === 0) {
-        if(tableBody) tableBody.innerHTML = `<tr><td colspan="4">Nenhum servidor encontrado</td></tr>`;
+        if (tableBody) tableBody.innerHTML = `<tr><td colspan="4">Nenhum servidor encontrado</td></tr>`;
         return;
     }
 
@@ -389,7 +375,7 @@ let btnVoltar;
 function atualizarCard(qtd, texto) {
     const cardValor = document.querySelector(".mini-card:nth-child(1) .mini-value");
     const cardStatus = document.querySelector(".mini-card:nth-child(1) .mini-title");
-    
+
     if (cardValor) cardValor.textContent = qtd;
     if (cardStatus) cardStatus.textContent = texto;
 }
@@ -399,14 +385,12 @@ function atualizarCardEventos(pais = "BR") {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    btnVoltar = document.querySelector(".btn-voltar"); 
+    btnVoltar = document.querySelector(".btn-voltar");
+    iniciarMapa();
     atualizarCardEventos();
-    preencherSelectPaises(); 
+    preencherSelectPaises();
     atualizarGraficoLatencia();
 });
-
-
-   
 
 const mapasPais = {
     BR: anychart.maps.brazil,
@@ -415,11 +399,6 @@ const mapasPais = {
     FR: anychart.maps.france,
     JP: anychart.maps.japan
 };
-
-anychart.onDocumentReady(() => {
-    iniciarMapa();
-    atualizarGraficoLatencia();
-});
 
 async function gerarPingPais(pais) {
     const dados = await carregarPingRealtime();
@@ -432,18 +411,20 @@ async function gerarPingPais(pais) {
 
 async function iniciarMapa() {
     const dataGlobal = await obterMapaGlobal();
+    await carregarPingRealtime();
 
     for (const item of dataGlobal) {
-        item.value = await gerarPingPais(item.id);
-        item.latency = item.value;
+        const latMedia = await gerarPingPais(item.id);
+        item.value = latMedia;
     }
 
     const media = Math.round(
-        dataGlobal.reduce((acc, e) => acc + (e.latency || 0), 0) / (dataGlobal.length || 1)
+        dataGlobal.reduce((acc, e) => acc + (e.value || 0), 0) / (dataGlobal.length || 1)
     );
+
     atualizarLatenciaMediaGlobal(media);
 
-    const tpsGlobal = Object.values(pingRealtimeCache)
+    const tpsGlobal = Object.values(pingRealtimeCache || {})
         .reduce((a, e) => a + (e.tps_media || 0), 0);
 
     atualizarTPSTotal(tpsGlobal);
@@ -469,6 +450,7 @@ async function iniciarMapa() {
     let scale = anychart.scales.linearColor();
     scale.minimum(40);
     scale.maximum(250);
+    scale.colors(["#4CAF50", "#FFC107", "#D32F2F"]);
 
     for (const e of dataGlobal) {
         e.fill =
@@ -477,29 +459,27 @@ async function iniciarMapa() {
                             "#D32F2F";
     }
 
-    scale.colors(["#4CAF50", "#FFC107", "#D32F2F"]);
-
     let series = mapa.bubble(dataGlobal);
     series.geoIdField("id");
-    series.size("value");
-    series.fill("fill");
+    series.size("size");
+    series.color("value");
 
-    series.color(function() {
-        const v = this.get("value");
+    series.color(function () {
+        const v = this.get ? this.get("value") : this.value || this.latency || 0;
         if (v < 90) return "#4CAF50";
         if (v < 120) return "#FFC107";
         return "#D32F2F";
     });
 
-    series.hovered().fill(function() {
-        const v = this.get("value");
+    series.hovered().fill(function () {
+        const v = this.get ? this.get("value") : this.value || this.latency || 0;
         if (v < 90) return "#66BB6A";
         if (v < 120) return "#FFCA28";
         return "#E57373";
     });
 
-    series.selected().fill(function() {
-        const v = this.get("value");
+    series.selected().fill(function () {
+        const v = this.get ? this.get("value") : this.value || this.latency || 0;
         if (v < 90) return "#2E7D32";
         if (v < 120) return "#FFB300";
         return "#C62828";
@@ -515,8 +495,6 @@ async function iniciarMapa() {
     mapa.zoom(0.85);
     mapa.draw();
     mapa.fitAll();
-
-    let chartBF = null;
 
     series.listen("pointClick", async e => {
         const pais = e.point.get("id");
@@ -539,14 +517,15 @@ async function iniciarMapa() {
     atualizarTabela(
         dataGlobal.map(e => ({
             nome: e.id,
-            latencia: e.latency
+            latencia: e.value
         }))
     );
 
-    atualizarCard(
-        dataGlobal.reduce((a, b) => a + b.size, 0),
-        "Servidores Globais"
-    );
+    const qtdServidores = dataGlobal
+        .map(e => e.size || 0)
+        .reduce((a, b) => a + b, 0);
+
+    atualizarCard(qtdServidores, "Servidores Globais");
 }
 
 async function exibirEstados(pais, dadosEstados) {
@@ -579,19 +558,19 @@ async function exibirEstados(pais, dadosEstados) {
 }
 
 async function voltarGlobal() {
-    await iniciarMapa(); 
-    if(btnVoltar) btnVoltar.classList.remove("show");
+    await iniciarMapa();
+    if (btnVoltar) btnVoltar.classList.remove("show");
     await atualizarCardEventos("BR");
 }
 
 const ctx = document.getElementById("bfChart");
 
-const hoje = new Date;
-let mesAtualIndex  = hoje.getMonth();
+const hoje = new Date();
+let mesAtualIndex = hoje.getMonth();
 
 const mesLista = [
-  "jan", "fev", "mar", "abr", "mai", "jun",
-  "jul", "ago", "set", "out", "nov", "dez"
+    "jan", "fev", "mar", "abr", "mai", "jun",
+    "jul", "ago", "set", "out", "nov", "dez"
 ];
 
 let chartBF = null;
@@ -600,7 +579,20 @@ async function atualizarGraficoLatencia() {
     let paisSelecionado = sessionStorage.getItem("paisSelecionado") || "BR";
     const historico = await buscarHistoricoPais7Dias(paisSelecionado);
 
+    const ctx = document.getElementById("bfChart");
     if (!ctx) return;
+
+    if (!historico || historico.length === 0) {
+        if (chartBF) chartBF.destroy();
+
+        const noDataCtx = ctx.getContext("2d");
+        noDataCtx.clearRect(0, 0, ctx.width, ctx.height);
+        noDataCtx.font = "18px Poppins";
+        noDataCtx.fillStyle = "#444";
+        noDataCtx.textAlign = "center";
+        noDataCtx.fillText("Nenhum servidor encontrado", ctx.width / 2, ctx.height / 2);
+        return;
+    }
 
     const labels = historico.map(h => {
         const [ano, mes, dia] = h.data.split('-');
@@ -671,7 +663,7 @@ async function atualizarGraficoLatencia() {
                 legend: { display: false },
                 tooltip: {
                     callbacks: {
-                        label: function(context) {
+                        label: function (context) {
                             return `${context.dataset.label}: ${context.parsed.y}ms`;
                         }
                     }
@@ -700,9 +692,3 @@ async function atualizarGraficoLatencia() {
         }
     });
 }
-
-setInterval(atualizarGraficoLatencia, 30000);
-
-document.addEventListener("DOMContentLoaded", () => {
-    atualizarGraficoLatencia();
-});
