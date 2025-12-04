@@ -42,13 +42,6 @@ let somaAlertas = null;
 
 // Variáveis globais
 let data = [];
-let jsonSeparados = {
-    total: [],
-    ultimos5: [],
-    primeiros5: [],
-    penultimos5: [],
-    posteriores5primeiros: []
-};
 // let dadosPorPeriodo = {
 //     '1': [],  // 1 hora
 //     '2': [],  // 1 dia
@@ -483,19 +476,12 @@ function atualizarGraficoPorPeriodo(periodo) {
             }]
         });
 
-        const ultimos5RAM = jsonSeparados.ultimos5.map((bloco, idx) => {
-            if (!Array.isArray(bloco)) return 0;
-            const qtd = bloco.filter(row => row.ram_status && row.ram_status == "NORMAL").length;
-            console.log(`bloco ${idx} -> RAM alertas:`, qtd);
-            return qtd;
-        });
+        const qtdAlertasRAM = contarAlertasPorPeriodo(dataFiltro, "ram_status");
+        const qtdAlertasRAMcritico = contarAlertasPorPeriodo(dataFiltro, "ram_status_critico");
 
-        const ultimos5RAMCritico = jsonSeparados.ultimos5.map((bloco, idx) => {
-            if (!Array.isArray(bloco)) return 0;
-            const qtd = bloco.filter(row => row.ram_status_critico && row.ram_status_critico == "CRITICO").length;
-            console.log(`bloco ${idx} -> RAM alertas:`, qtd);
-            return qtd;
-        });
+        const ultimos5RAM = qtdAlertasRAM;
+
+        const ultimos5RAMCritico = qtdAlertasRAMcritico
 
         const ctxram = document.getElementById('RamChart').getContext('2d');
 
@@ -595,19 +581,12 @@ function atualizarGraficoPorPeriodo(periodo) {
             }]
         });
 
-        const ultimos5Disco = jsonSeparados.ultimos5.map((bloco, idx) => {
-            if (!Array.isArray(bloco)) return 0;
-            const qtd = bloco.filter(row => row.disco_status && row.disco_status == "NORMAL").length;
-            console.log(`bloco ${idx} -> RAM alertas:`, qtd);
-            return qtd;
-        });
+        const qtdAlertasDisco = contarAlertasPorPeriodo(dataFiltro, "disco_status");
+        const qtdAlertasDiscocritico = contarAlertasPorPeriodo(dataFiltro, "disco_status_critico");
 
-        const ultimos5DiscoCritico = jsonSeparados.ultimos5.map((bloco, idx) => {
-            if (!Array.isArray(bloco)) return 0;
-            const qtd = bloco.filter(row => row.disco_status_critico && row.disco_status_critico == "CRITICO").length;
-            console.log(`bloco ${idx} -> Disco alertas:`, qtd);
-            return qtd;
-        });
+        const ultimos5Disco = qtdAlertasDisco;
+
+        const ultimos5DiscoCritico = qtdAlertasDiscocritico
 
         const ctxdisco = document.getElementById('DiscoChart').getContext('2d');
 
@@ -706,20 +685,12 @@ function atualizarGraficoPorPeriodo(periodo) {
             }]
         });
 
-        const ultimos5Download = jsonSeparados.ultimos5.map((bloco, idx) => {
-            if (!Array.isArray(bloco)) return 0;
-            const qtd = bloco.filter(row => row.mb_recebidos_status && row.mb_recebidos_status == "NORMAL").length;
-            console.log(`bloco ${idx} -> Donwload alertas:`, qtd);
-            return qtd;
-        });
+        const qtdAlertasDownload = contarAlertasPorPeriodo(dataFiltro, "mb_recebidos_status");
+        const qtdAlertasDownloadcritico = contarAlertasPorPeriodo(dataFiltro, "mb_recebidos_status_critico");
 
+        const ultimos5Download = qtdAlertasDownload;
 
-        const ultimos5DownloadCritico = jsonSeparados.ultimos5.map((bloco, idx) => {
-            if (!Array.isArray(bloco)) return 0;
-            const qtd = bloco.filter(row => row.mb_recebidos_status_critico && row.mb_recebidos_status_critico == "NORMAL").length;
-            console.log(`bloco ${idx} -> Donwload alertas:`, qtd);
-            return qtd;
-        });
+        const ultimos5DownloadCritico = qtdAlertasDownloadcritico
 
         const ctxrede = document.getElementById('RedeChart').getContext('2d');
 
@@ -818,18 +789,12 @@ function atualizarGraficoPorPeriodo(periodo) {
             }]
         });
 
-        const ultimos5Upload = jsonSeparados.ultimos5.map((bloco, idx) => {
-            if (!Array.isArray(bloco)) return 0;
-            const qtd = bloco.filter(row => row.mb_enviados_status && row.mb_enviados_status == "NORMAL").length;
-            console.log(`bloco ${idx} -> Upload alertas:`, qtd);
-            return qtd;
-        });
-        const ultimos5UploadCritico = jsonSeparados.ultimos5.map((bloco, idx) => {
-            if (!Array.isArray(bloco)) return 0;
-            const qtd = bloco.filter(row => row.mb_enviados_status_critico && row.mb_enviados_status_critico == "CRITICO").length;
-            console.log(`bloco ${idx} -> Upload alertas:`, qtd);
-            return qtd;
-        });
+        const qtdAlertasUpload = contarAlertasPorPeriodo(dataFiltro, "mb_enviados_status");
+        const qtdAlertasUploadcritico = contarAlertasPorPeriodo(dataFiltro, "mb_enviados_status_critico");
+
+        const ultimos5Upload = qtdAlertasUpload;
+
+        const ultimos5UploadCritico = qtdAlertasUploadcritico
 
         ctxrede2 = document.getElementById('RedeChart2').getContext('2d');
         redeChart2 = new Chart(ctxrede2, {
@@ -968,25 +933,6 @@ function atualizarGraficoPorPeriodo(periodo) {
             }
         });
 
-        function somarArray(arr) {
-            return arr.reduce((total, n) => total + Number(n), 0);
-        }
-
-        // let totalCPU5 = somarArray(ultimos5CPU);
-        // let totalRAM5 = somarArray(ultimos5RAM);
-        // let totalDisco5 = somarArray(ultimos5Disco);
-        // let totalDownload5 = somarArray(ultimos5Download);
-        // let totalUpload5 = somarArray(ultimos5Upload);
-
-        // somaAlertas = (totalCPU5 + totalRAM5 + totalDisco5 + totalDownload5 + totalUpload5)
-
-        // let totalCPU5Critico = somarArray(ultimos5CPUCritico)
-        // let totalRAM5Critico = somarArray(ultimos5RAMCritico)
-        // let totalDisco5Critico = somarArray(ultimos5DiscoCritico)
-        // let totalDownload5Critico = somarArray(ultimos5DownloadCritico)
-        // let totalUpload5Critico = somarArray(ultimos5UploadCritico);
-
-        // somaAlertaCriticos = (totalCPU5Critico + totalRAM5Critico + totalDisco5Critico + totalDownload5Critico + totalUpload5Critico)
 
         var contador = 0;
         for (i = 0; i <= ultimos5CPU.length; i++) {
@@ -1019,20 +965,6 @@ function atualizarGraficoPorPeriodo(periodo) {
         }
 
 
-
-        // document.getElementById('critico_CPU').textContent = totalCPU5Critico;
-        // document.getElementById('padrao_CPU').textContent = totalCPU5;
-        // document.getElementById('critico_RAM').textContent = totalRAM5Critico;
-        // document.getElementById('padrao_RAM').textContent = totalRAM5;
-        // document.getElementById('critico_Disco').textContent = totalDisco5Critico;
-        // document.getElementById('padrao_Disco').textContent = totalDisco5;
-        // document.getElementById('critico_Download').textContent = totalDownload5Critico;
-        // document.getElementById('padrao_Download').textContent = totalDownload5;
-        // document.getElementById('critico_Upload').textContent = totalUpload5Critico;
-        // document.getElementById('padrao_Upload').textContent = totalUpload5;
-
-        // document.getElementById('alerta_numero_padrao').textContent = somaAlertas;
-        // document.getElementById('alerta_numero_critico').textContent = somaAlertaCriticos;
     }
 
     else if (periodo === "2") {
@@ -1611,27 +1543,6 @@ function atualizarGraficoPorPeriodo(periodo) {
         });
 
 
-        // function somarArray(arr) {
-        //     return arr.reduce((total, n) => total + Number(n), 0);
-        // }
-
-        // somaAlertas = alertaCPU + alertaRAM + alertaDisco + alertaDownload + alertaUpload;
-        // somaAlertaCriticos = alertaCriticoCPU + alertaCriticoRAM + alertaCriticoDisco + alertaCriticoDownload + alertaCriticoUpload;
-
-        // document.getElementById('alerta_numero_padrao').textContent = somaAlertas || 0;
-        // document.getElementById('alerta_numero_critico').textContent = somaAlertaCriticos || 0;
-
-        // document.getElementById('critico_CPU').textContent = alertaCriticoCPU || 0;
-        // document.getElementById('padrao_CPU').textContent = alertaCPU || 0;
-        // document.getElementById('critico_RAM').textContent = alertaCriticoRAM || 0;
-        // document.getElementById('padrao_RAM').textContent = alertaRAM || 0;
-        // document.getElementById('critico_Disco').textContent = alertaCriticoDisco || 0;
-        // document.getElementById('padrao_Disco').textContent = alertaDisco || 0;
-        // document.getElementById('critico_Download').textContent = alertaCriticoDownload || 0;
-        // document.getElementById('padrao_Download').textContent = alertaDownload || 0;
-        // document.getElementById('critico_Upload').textContent = alertaCriticoUpload || 0;
-        // document.getElementById('padrao_Upload').textContent = alertaUpload || 0;
-
         var contador = 0;
         for (i = 0; i <= penultimos5CPU.length; i++) {
             if (i != null || i != 0) {
@@ -1664,19 +1575,6 @@ function atualizarGraficoPorPeriodo(periodo) {
 
 
 
-        // document.getElementById('critico_CPU').textContent = alertaCriticoCPU;
-        // document.getElementById('padrao_CPU').textContent = alertaCPU;
-        // document.getElementById('critico_RAM').textContent = totalRAM5Critico;
-        // document.getElementById('padrao_RAM').textContent = totalRAM5;
-        // document.getElementById('critico_Disco').textContent = totalDisco5Critico;
-        // document.getElementById('padrao_Disco').textContent = totalDisco5;
-        // document.getElementById('critico_Download').textContent = totalDownload5Critico;
-        // document.getElementById('padrao_Download').textContent = totalDownload5;
-        // document.getElementById('critico_Upload').textContent = totalUpload5Critico;
-        // document.getElementById('padrao_Upload').textContent = totalUpload5;
-
-        // document.getElementById('alerta_numero_padrao').textContent = somaAlertas;
-        // document.getElementById('alerta_numero_critico').textContent = somaAlertaCriticos;
 
     }
 
@@ -2259,25 +2157,6 @@ function atualizarGraficoPorPeriodo(periodo) {
             }
         });
 
-        // function somarArray(arr) {
-        //     return arr.reduce((total, n) => total + Number(n), 0);
-        // }
-
-        // let totalCPU5 = somarArray(posteriores5primeirosCPU);
-        // let totalRAM5 = somarArray(posteriores5primeirosRAM);
-        // let totalDisco5 = somarArray(posteriores5primeirosDisco);
-        // let totalDownload5 = somarArray(posteriores5primeirosDownload);
-        // let totalUpload5 = somarArray(posteriores5primeirosUpload);
-
-        // somaAlertas = (totalCPU5 + totalRAM5 + totalDisco5 + totalDownload5 + totalUpload5)
-
-        // let totalCPU5Critico = somarArray(posteriores5primeirosCPUCritico)
-        // let totalRAM5Critico = somarArray(posteriores5primeirosRAMCritico)
-        // let totalDisco5Critico = somarArray(posteriores5primeirosDiscoCritico)
-        // let totalDownload5Critico = somarArray(posteriores5primeirosDownloadCritico)
-        // let totalUpload5Critico = somarArray(posteriores5primeirosUploadCritico);
-
-        // somaAlertaCriticos = (totalCPU5Critico + totalRAM5Critico + totalDisco5Critico + totalDownload5Critico + totalUpload5Critico)
 
         var contador = 0;
         for (i = 0; i <= posteriores5primeirosCPU.length; i++) {
@@ -2308,20 +2187,6 @@ function atualizarGraficoPorPeriodo(periodo) {
                 contador += 1
             }
         }
-
-        // document.getElementById('critico_CPU').textContent = totalCPU5Critico;
-        // document.getElementById('padrao_CPU').textContent = totalCPU5;
-        // document.getElementById('critico_RAM').textContent = totalRAM5Critico;
-        // document.getElementById('padrao_RAM').textContent = totalRAM5;
-        // document.getElementById('critico_Disco').textContent = totalDisco5Critico;
-        // document.getElementById('padrao_Disco').textContent = totalDisco5;
-        // document.getElementById('critico_Download').textContent = totalDownload5Critico;
-        // document.getElementById('padrao_Download').textContent = totalDownload5;
-        // document.getElementById('critico_Upload').textContent = totalUpload5Critico;
-        // document.getElementById('padrao_Upload').textContent = totalUpload5;
-
-        // document.getElementById('alerta_numero_padrao').textContent = somaAlertas;
-        // document.getElementById('alerta_numero_critico').textContent = somaAlertaCriticos;
 
     }
 
@@ -2916,25 +2781,6 @@ function atualizarGraficoPorPeriodo(periodo) {
             }
         });
 
-        // function somarArray(arr) {
-        //     return arr.reduce((total, n) => total + Number(n), 0);
-        // }
-
-        // let totalCPU5 = somarArray(primeiros5CPU);
-        // let totalRAM5 = somarArray(primeiros5RAM);
-        // let totalDisco5 = somarArray(primeiros5Disco);
-        // let totalDownload5 = somarArray(primeiros5Download);
-        // let totalUpload5 = somarArray(primeiros5Upload);
-
-        // somaAlertas = (totalCPU5 + totalRAM5 + totalDisco5 + totalDownload5 + totalUpload5)
-
-        // let totalCPU5Critico = somarArray(primeiros5CPUCritico)
-        // let totalRAM5Critico = somarArray(primeiros5RAMCritico)
-        // let totalDisco5Critico = somarArray(primeiros5DiscoCritico)
-        // let totalDownload5Critico = somarArray(primeiros5DownloadCritico)
-        // let totalUpload5Critico = somarArray(primeiros5UploadCritico);
-
-        // somaAlertaCriticos = (totalCPU5Critico + totalRAM5Critico + totalDisco5Critico + totalDownload5Critico + totalUpload5Critico)
 
         var contador = 0;
         for (i = 0; i <= primeiros5CPU.length; i++) {
@@ -2966,19 +2812,6 @@ function atualizarGraficoPorPeriodo(periodo) {
             }
         }
 
-        // document.getElementById('critico_CPU').textContent = totalCPU5Critico;
-        // document.getElementById('padrao_CPU').textContent = totalCPU5;
-        // document.getElementById('critico_RAM').textContent = totalRAM5Critico;
-        // document.getElementById('padrao_RAM').textContent = totalRAM5;
-        // document.getElementById('critico_Disco').textContent = totalDisco5Critico;
-        // document.getElementById('padrao_Disco').textContent = totalDisco5;
-        // document.getElementById('critico_Download').textContent = totalDownload5Critico;
-        // document.getElementById('padrao_Download').textContent = totalDownload5;
-        // document.getElementById('critico_Upload').textContent = totalUpload5Critico;
-        // document.getElementById('padrao_Upload').textContent = totalUpload5;
-
-        // document.getElementById('alerta_numero_padrao').textContent = somaAlertas;
-        // document.getElementById('alerta_numero_critico').textContent = somaAlertaCriticos;
 
     }
 
