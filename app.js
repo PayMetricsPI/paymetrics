@@ -26,6 +26,7 @@ var s3Router = require("./src/routes/s3");
 
 var usuariosRouter = require("./src/routes/usuario");
 var parametrosRouter = require("./src/routes/parametro");
+var newsRouter = require("./src/routes/news_bruno");
 var jiraRouter = require("./src/routes/jira");
 
 app.use(cors());
@@ -40,6 +41,8 @@ app.use("/redefinirSenha", redefinirSenhaRouter);
 app.use("/deletar", deletarusuarioRouter);
 app.use("/listar", listarRouter);
 app.use("/metrica", metricaRouter);
+app.use("/s3", s3Router);
+app.use("/news", newsRouter);
 app.use("/parametro", parametrosRouter);
 app.use("/jira", jiraRouter);
 
