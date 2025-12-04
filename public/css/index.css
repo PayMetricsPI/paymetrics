@@ -221,12 +221,10 @@
 .circle {
     position: relative;
     top: 20vh;
-    background-color: hsla(51, 100%, 87%, 0.50);
+    background-color: white;
     border-radius: 50%;
     height: 60vh;
 }
-
-/* ponto */
 
 .pontos {
     display: flex;
@@ -253,7 +251,7 @@
     color: #FFE760;
     font-weight: 800;
     font-size: 40px;
-    display: flex;
+        display: flex;
     flex-direction: row;
     justify-content: space-around;
     text-decoration: none;

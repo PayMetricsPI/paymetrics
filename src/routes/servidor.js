@@ -22,4 +22,7 @@ router.post("/deletarServidor/:id_servidor", function(req, res) {
     servidorController.deletarServidor(req, res);
 });
 
+router.get("/mapa/:fk_empresa/:pais", servidorController.mapaEstados);
+router.get("/mapa/:fk_empresa", servidorController.mapaGlobal);
+
 module.exports = router;

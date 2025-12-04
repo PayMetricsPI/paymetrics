@@ -176,6 +176,45 @@
     pointer-events: auto;
 }
 
+
+.modal_edit,
+.create_server_modal {
+    width: 320px !important;
+    padding: 12px !important;
+    border-radius: 15px !important;
+}
+#create_server_modal,
+#edit_server_modal {
+    width: 320px !important;
+    max-width: 90% !important;
+    padding: 15px !important;
+    border-radius: 15px !important;
+}
+
+.create_server_content input,
+.edit_field_duplo select {
+    height: 38px !important;
+    font-size: 14px !important;
+    padding: 10px 15px !important;
+}
+
+
+.modal_edit h3,
+.create_server_modal h3 {
+    font-size: 20px !important;
+}
+
+
+.edit_buttons_create button,
+.confirm_button,
+.cancel_button {
+    height: 32px !important;
+    min-width: 80px !important;
+    font-size: 13px !important;
+    padding: 5px 15px !important;
+}
+
+
 .modal_edit_alert {
     position: fixed;
     top: 50%;
@@ -245,12 +284,80 @@
     margin-bottom: 10px;
 }
 
+.edit_field_duplo {
+  display: flex;
+  gap: 20px;
+  width: 100%;
+}
+
+
+.edit_field_duplo .pequeno {
+  flex: 1;
+}
+
+
+.edit_field_duplo select {
+  width: 100%;
+  padding: 10px;
+  border-radius: 18px;
+  border: 2px solid yellow;
+  background-color: #f0f0f0;
+  font-size: 15px;
+}
+
+
+.edit_field_duplo {
+    display: flex;
+    gap: 15px;
+    width: 100%;
+    margin-top: -5px;
+}
+
+.edit_field_duplo .pequeno {
+    flex: 1;
+}
+
+.edit_field_duplo select {
+    width: 100%;
+    height: 45px;
+    padding: 10px 15px;
+    border-radius: 100px;
+    border: 2px solid yellow;
+    background-color: #f4f4f4;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+.edit_field_duplo label {
+    margin-left: 20px;
+}
+
 .create_alerta_critico_content .line1 {
     display: grid;
     grid-template-columns: 300px 300px 300px;
     margin-bottom: 20px;
     margin-top: 20px;
 }
+.line2 {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 40px;
+}
+
+.rede_esp {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 40px;    
+    align-items: flex-start;
+}
+
+.rede_esp > div {
+    flex: 1 1 250px;
+    min-width: 240px;
+}
+
 
 .create_alerta_critico_content .rede_esp {
     display: grid;
@@ -294,15 +401,17 @@
 
 }
 
-
-
-
 .user_controls .edit_user_button {
     background-color: #00A335;
     border-radius: 100px;
     width: 80px;
 }
 
+.edit_param_button{
+    background-color: yellow;
+    border-radius: 100px;
+    width: 170px;
+}
 
 
 .user_controls .edit_user_button:hover {
@@ -550,4 +659,93 @@
         bottom: 3vh;
         padding: 10px 20px;
     }
+}
+
+#create_server_modal input,
+#edit_server_modal input {
+    padding: 8px 15px !important;
+    height: 35px !important;
+    border-radius: 8px !important;
+}
+
+
+#create_server_modal select,
+#edit_server_modal select {
+    padding: 8px 12px !important;
+    height: 35px !important;
+    border-radius: 8px !important;
+}
+
+.edit_field_duplo select {
+    height: 35px !important;
+    padding: 8px 12px !important;
+    border-radius: 8px !important;
+}
+
+
+#create_server_modal h3,
+#edit_server_modal h3 {
+    font-size: 18px !important;
+}
+
+
+.edit_field,
+.create_server_content .edit_field {
+    margin-bottom: 10px !important;
+}
+
+
+#create_server_modal,
+#edit_server_modal {
+    width: 300px !important;
+    padding: 15px !important;
+}
+
+#create_server_modal,
+#edit_server_modal {
+    width: 280px !important;
+    padding: 10px !important;
+    border-radius: 12px !important;
+}
+
+
+#create_server_modal input,
+#edit_server_modal input {
+    width: 90% !important;    
+    height: 32px !important;
+    padding: 6px 10px !important;
+    border-radius: 6px !important;
+    font-size: 13px !important;
+    margin: 0 auto !important;
+}
+
+
+#create_server_modal select,
+#edit_server_modal select {
+    width: 90% !important;
+    height: 32px !important;
+    padding: 4px 10px !important;
+    border-radius: 6px !important;
+    font-size: 13px !important;
+}
+
+.edit_field_duplo {
+    gap: 8px !important;
+}
+
+.edit_field_duplo select {
+    width: 100% !important;
+    height: 32px !important;
+    padding: 4px 8px !important;
+    border-radius: 6px !important;
+}
+
+#create_server_modal label,
+#edit_server_modal label {
+    font-size: 13px !important;
+}
+
+#create_server_modal h3,
+#edit_server_modal h3 {
+    font-size: 18px !important;
 }
