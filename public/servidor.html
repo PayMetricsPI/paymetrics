@@ -25,15 +25,13 @@
           <button class="register_new" id="create_server_button_empresa">Adicionar Servidor</button>
         </div>
       </div>
-      <div class="users" id="users_container">
-      </div>
+      <div class="users" id="users_container"></div>
     </div>
   </div>
 
   <div class="out_edit" id="out_create_server"></div>
   <div class="out_edit" id="out_edit_server"></div>
   <div class="out_edit" id="out_delete_server"></div>
-
 
   <div class="out_edit" id="out_create_alerta_critico"></div>
   <div class="out_edit" id="out_edit_alerta_critico"></div>
@@ -43,53 +41,59 @@
       <h3>Criar Servidor</h3>
       <span class="material-symbols-outlined" id="close_create_server_button">close</span>
     </div>
+
     <div class="create_server_content edit_content">
       <div class="edit_field">
-        <label for="">Nome: </label>
+        <label>Nome:</label>
         <input type="text" class="nome_input">
       </div>
+
       <div class="edit_field">
-        <label for="">IP do servidor: </label>
+        <label>IP do servidor:</label>
         <input type="text" class="ipEc2_input">
       </div>
+
       <div class="edit_field">
-        <label for="">MAC Address</label>
+        <label>MAC Address</label>
         <input type="text" class="mac_input">
       </div>
 
-    <div class="edit_field_duplo">
-  
-    <div class="edit_field pequeno">
-      <label for="">País</label>
-      <select id="select_pais" class="pais_input">
-        <option value="">Selecione um país</option>
-        <option value="BR">Brasil</option>
-        <option value="US">Estados Unidos</option>
-        <option value="CA">Canadá</option>
-        <option value="FR">França</option>
-        <option value="JP">Japão</option>
-      </select>
-    </div>
+      <div class="edit_field_duplo">
+        <div class="edit_field pequeno">
+          <label>País</label>
+          <select id="select_pais" class="pais_input">
+            <option value="">Selecione um país</option>
+            <option value="BR">Brasil</option>
+            <option value="US">Estados Unidos</option>
+            <option value="CA">Canadá</option>
+            <option value="FR">França</option>
+            <option value="JP">Japão</option>
+          </select>
+        </div>
 
-    <div class="edit_field pequeno">
-      <label for="">Estado</label>
-      <select id="select_estado" class="estado_input">
-        <option value="">Selecione um estado</option>
-      </select>
-    </div>
-</div>
+        <div class="edit_field pequeno">
+          <label>Estado</label>
+          <select id="select_estado" class="estado_input">
+            <option value="">Selecione um estado</option>
+          </select>
+        </div>
+      </div>
+
       <div class="edit_field">
-        <label for="">Modelo da cpu</label>
+        <label>Modelo da cpu</label>
         <input type="text" class="tipo_cpu_input">
       </div>
+
       <div class="edit_field">
-        <label for="">Ram Gb</label>
+        <label>Ram Gb</label>
         <input type="text" class="ram_input">
       </div>
+
       <div class="edit_field">
-        <label for="">Disco Tb</label>
+        <label>Disco Tb</label>
         <input type="text" class="disco_input">
       </div>
+
       <div class="edit_buttons_create">
         <button class="cancel_button" id="cancel_button_create_server">Cancelar</button>
         <button class="confirm_button" id="submit_button_create_server">Confirmar</button>
@@ -102,8 +106,10 @@
       <h3>Adicionar parâmetros</h3>
       <span class="material-symbols-outlined" id="close_create_alerta_critico_button">x</span>
     </div>
+
     <div class="create_alerta_critico_content">
       <div class="line1">
+
         <div class="cpu">
           <h3>CPU</h3>
           <div class="campo">
@@ -112,9 +118,10 @@
           </div>
           <div class="campo">
             <label>Alerta normal</label>
-            <input type="number" data-componente="1" data-tipo="normal"  class="alerta_normal_input"placeholder="79%">
+            <input type="number" data-componente="1" data-tipo="normal" class="alerta_normal_input" placeholder="79%">
           </div>
         </div>
+
         <div class="ram">
           <h3>RAM</h3>
           <div class="campo">
@@ -123,157 +130,263 @@
           </div>
           <div class="campo">
             <label>Alerta normal</label>
-            <input type="number" data-componente="2" data-tipo="normal"  class="alerta_normal_input" placeholder="87%">
+            <input type="number" data-componente="2" data-tipo="normal" class="alerta_normal_input" placeholder="87%">
           </div>
         </div>
+
         <div class="disco">
           <h3>Disco</h3>
           <div class="campo">
             <label>Alerta crítico</label>
-            <input type="number" data-componente="5" data-tipo="critico" class="alerta_critico_input" placeholder="73%" >
+            <input type="number" data-componente="5" data-tipo="critico" class="alerta_critico_input" placeholder="73%">
           </div>
           <div class="campo">
             <label>Alerta normal</label>
-            <input type="number" data-componente="5" data-tipo="normal"  class="alerta_normal_input" placeholder="69%">
+            <input type="number" data-componente="5" data-tipo="normal" class="alerta_normal_input" placeholder="69%">
           </div>
         </div>
+
       </div>
 
-  <div class="line2">
-    <div class="rede">
-    <h3>Rede</h3>
-    <div class="rede_esp">
+      <div class="line2">
+        <div class="rede">
+          <h3>Rede</h3>
 
-      <div class="enviados">
-        <p>Mb enviados</p>
-        <div class="campo">
-          <label>Alerta crítico</label>
-          <input type="number" data-componente="3" data-tipo="critico"
-                 class="alerta_critico_input" placeholder="63%">
-        </div>
-        <div class="campo">
-          <label>Alerta normal</label>
-          <input type="number" data-componente="3" data-tipo="normal"
-                 class="alerta_normal_input" placeholder="50%">
-        </div>
-      </div>
+          <div class="rede_esp">
+            <div class="enviados">
+              <p>Mb enviados</p>
+              <div class="campo">
+                <label>Alerta crítico</label>
+                <input type="number" data-componente="3" data-tipo="critico" class="alerta_critico_input" placeholder="63%">
+              </div>
+              <div class="campo">
+                <label>Alerta normal</label>
+                <input type="number" data-componente="3" data-tipo="normal" class="alerta_normal_input" placeholder="50%">
+              </div>
+            </div>
 
-      <div class="recebidos">
-        <p>Mb recebidos</p>
-        <div class="campo">
-          <label>Alerta crítico</label>
-          <input type="number" data-componente="4" data-tipo="critico"
-                 class="alerta_critico_input" placeholder="83%">
+            <div class="recebidos">
+              <p>Mb recebidos</p>
+              <div class="campo">
+                <label>Alerta crítico</label>
+                <input type="number" data-componente="4" data-tipo="critico" class="alerta_critico_input" placeholder="83%">
+              </div>
+              <div class="campo">
+                <label>Alerta normal</label>
+                <input type="number" data-componente="4" data-tipo="normal" class="alerta_normal_input" placeholder="56%">
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="campo">
-          <label>Alerta normal</label>
-          <input type="number" data-componente="4" data-tipo="normal"
-                 class="alerta_normal_input" placeholder="56%">
-        </div>
-      </div>
-   </div>
-        </div>
-      <div class="latencia">
-        <p>Latência</p>
-        <div class="campo">
-          <label>Alerta crítico</label>
-          <input type="number" data-componente="6" data-tipo="critico"
-                 class="alerta_critico_input" placeholder="120">
-        </div>
-        <div class="campo">
-          <label>Alerta normal</label>
-          <input type="number" data-componente="6" data-tipo="normal"
-                 class="alerta_normal_input" placeholder="90">
-        </div>
-      </div>
 
- 
-  
-
+        <div class="latencia">
+          <p>Latência</p>
+          <div class="campo">
+            <label>Alerta crítico</label>
+            <input type="number" data-componente="6" data-tipo="critico" class="alerta_critico_input" placeholder="120">
+          </div>
+          <div class="campo">
+            <label>Alerta normal</label>
+            <input type="number" data-componente="6" data-tipo="normal" class="alerta_normal_input" placeholder="90">
+          </div>
+        </div>
 
         <div class="div_botao">
           <button class="cancel_alert_button" id="cancel_button_create_alerta_critico">Cancelar</button>
           <button class="confirm_alert_button" id="submit_button_create_alerta_critico">Confirmar</button>
         </div>
+
       </div>
     </div>
   </div>
 
-  <div class="edit_server_modal modal_edit" id="edit_server_modal">
-    <div class="edit_headers">
-      <h3>Editar Servidor</h3>
-      <span id="close_edit_server_button">x</span>
+  <div class="edit_alerta_critico_modal modal_edit_alert" id="edit_alerta_critico_modal">
+    <div class="create_alerta_critico_headers">
+      <h3>Editar parâmetros</h3>
+      <span class="material-symbols-outlined" id="close_edit_alerta_critico_button">x</span>
     </div>
-    <div class="edit_field">
-       <div class="edit_field">
-        <label for="">Nome: </label>
-        <input type="text" class="nome_input">
+
+    <div class="create_alerta_critico_content">
+      <div class="line1">
+
+        <div class="cpu">
+          <h3>CPU</h3>
+          <div class="campo">
+            <label>Alerta crítico</label>
+            <input type="number" data-componente="1" data-tipo="critico" class="alerta_critico_input" placeholder="84%">
+          </div>
+          <div class="campo">
+            <label>Alerta normal</label>
+            <input type="number" data-componente="1" data-tipo="normal" class="alerta_normal_input" placeholder="79%">
+          </div>
+        </div>
+
+        <div class="ram">
+          <h3>RAM</h3>
+          <div class="campo">
+            <label>Alerta crítico</label>
+            <input type="number" data-componente="2" data-tipo="critico" class="alerta_critico_input" placeholder="90%">
+          </div>
+          <div class="campo">
+            <label>Alerta normal</label>
+            <input type="number" data-componente="2" data-tipo="normal" class="alerta_normal_input" placeholder="87%">
+          </div>
+        </div>
+
+        <div class="disco">
+          <h3>Disco</h3>
+          <div class="campo">
+            <label>Alerta crítico</label>
+            <input type="number" data-componente="5" data-tipo="critico" class="alerta_critico_input" placeholder="73%">
+          </div>
+          <div class="campo">
+            <label>Alerta normal</label>
+            <input type="number" data-componente="5" data-tipo="normal" class="alerta_normal_input" placeholder="69%">
+          </div>
+        </div>
+
       </div>
-        <label for="">IP do servidor: </label>
-        <input type="text" class="ipEc2_input">
+
+      <div class="line2">
+        <div class="rede">
+          <h3>Rede</h3>
+
+          <div class="rede_esp">
+            <div class="enviados">
+              <p>Mb enviados</p>
+              <div class="campo">
+                <label>Alerta crítico</label>
+                <input type="number" data-componente="3" data-tipo="critico" class="alerta_critico_input" placeholder="63%">
+              </div>
+              <div class="campo">
+                <label>Alerta normal</label>
+                <input type="number" data-componente="3" data-tipo="normal" class="alerta_normal_input" placeholder="50%">
+              </div>
+            </div>
+
+            <div class="recebidos">
+              <p>Mb recebidos</p>
+              <div class="campo">
+                <label>Alerta crítico</label>
+                <input type="number" data-componente="4" data-tipo="critico" class="alerta_critico_input" placeholder="83%">
+              </div>
+              <div class="campo">
+                <label>Alerta normal</label>
+                <input type="number" data-componente="4" data-tipo="normal" class="alerta_normal_input" placeholder="56%">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="latencia">
+          <p>Latência</p>
+          <div class="campo">
+            <label>Alerta crítico</label>
+            <input type="number" data-componente="6" data-tipo="critico" class="alerta_critico_input" placeholder="120">
+          </div>
+          <div class="campo">
+            <label>Alerta normal</label>
+            <input type="number" data-componente="6" data-tipo="normal" class="alerta_normal_input" placeholder="90">
+          </div>
+        </div>
+
+        <div class="div_botao">
+          <button class="cancel_alert_button" id="cancel_button_edit_alerta_critico">Cancelar</button>
+          <button class="confirm_alert_button" id="submit_button_edit_alerta_critico">Salvar</button>
+        </div>
+
       </div>
-    <div class="edit_field">
-      <label for="">MAC Address</label>
-      <input type="text" class="mac_input">
     </div>
-    
-<div class="edit_field_duplo">
-    
-  <div class="edit_field pequeno">
-    <label>País</label>
-    <select id="select_pais_edit" class="pais_input">
-      <option value="">Selecione um país</option>
-      <option value="BR">Brasil</option>
-      <option value="US">Estados Unidos</option>
-      <option value="CA">Canadá</option>
-      <option value="FR">França</option>
-      <option value="JP">Japão</option>
-    </select>
+  </div>
+  <div class="delete_user_account_modal modal_edit" id="delete_user_account_modal">
+  <div class="delete_user_account_headers">
+    <h3>Excluir Servidor</h3>
+    <span class="material-symbols-outlined" id="close_delete_user_account_button">close</span>
   </div>
 
-  <div class="edit_field pequeno">
-    <label>Estado</label>
-    <select id="select_estado_edit" class="estado_input">
-      <option value="">Selecione um estado</option>
-    </select>
-  </div>
+  <div class="delete_user_account_content">
+    <p>Tem certeza que deseja excluir este servidor?</p>
 
+    <div class="edit_buttons_create">
+      <button class="cancel_button" id="cancel_button_delete_user_account">Cancelar</button>
+      <button class="confirm_button" id="confirm_button_delete_user">Excluir</button>
+    </div>
+  </div>
 </div>
 
+<div class="create_server_modal modal_edit" id="edit_server_modal">
+  <div class="create_server_headers edit_headers">
+    <h3>Editar Servidor</h3>
+    <span class="material-symbols-outlined" id="close_edit_server_button">close</span>
+  </div>
+
+  <div class="create_server_content edit_content">
     <div class="edit_field">
-      <label for="">Modelo da cpu</label>
+      <label>Nome:</label>
+      <input type="text" class="nome_input">
+    </div>
+
+    <div class="edit_field">
+      <label>IP do servidor:</label>
+      <input type="text" class="ipEc2_input">
+    </div>
+
+    <div class="edit_field">
+      <label>MAC Address</label>
+      <input type="text" class="mac_input">
+    </div>
+
+    <div class="edit_field_duplo">
+      <div class="edit_field pequeno">
+        <label>País</label>
+        <select id="select_pais_edit" class="pais_input">
+          <option value="">Selecione um país</option>
+          <option value="BR">Brasil</option>
+          <option value="US">Estados Unidos</option>
+          <option value="CA">Canadá</option>
+          <option value="FR">França</option>
+          <option value="JP">Japão</option>
+        </select>
+      </div>
+
+      <div class="edit_field pequeno">
+        <label>Estado</label>
+        <select id="select_estado_edit" class="estado_input">
+          <option value="">Selecione um estado</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="edit_field">
+      <label>Modelo da cpu</label>
       <input type="text" class="tipo_cpu_input">
     </div>
+
     <div class="edit_field">
-      <label for="">Ram Gb</label>
+      <label>Ram Gb</label>
       <input type="text" class="ram_input">
     </div>
+
     <div class="edit_field">
-      <label for="">Disco Tb</label>
+      <label>Disco Tb</label>
       <input type="text" class="disco_input">
     </div>
-    <div class="edit_buttons">
+
+    <div class="edit_buttons_create">
       <button class="cancel_button" id="cancel_button_edit_server">Cancelar</button>
       <button class="confirm_button" id="submit_button_edit_server">Salvar</button>
     </div>
   </div>
+</div>
 
-  <div class="delete_user_account_modal modal_edit" id="delete_user_account_modal">
-    <div class="edit_headers">
-      <h3>Excluir Servidor</h3>
-      <span id="close_delete_user_account_button">x</span>
-    </div>
-    <p>Tem certeza que deseja excluir este servidor?</p>
-    <div class="edit_buttons">
-      <button class="cancel_button" id="cancel_button_delete_user_account">Cancelar</button>
-      <button class="confirm_button_delete_user" id="confirm_button_delete_user">Confirmar</button>
-    </div>
-  </div>
+
 
   <script src="js/sessao.js"></script>
   <script src="js/header.js"></script>
   <script src="js/servidores.js" type="module"></script>
   <script src="js/parametros.js"></script>
-</body>
 
+  
+
+</body>
 </html>
