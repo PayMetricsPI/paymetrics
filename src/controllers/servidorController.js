@@ -22,12 +22,12 @@ function criarServidores(req, res) {
 
     servidorModel.criarServidores(servidores)
         .then(resultado => {
-            const insertId = resultado && resultado.insertId ? resultado.insertId : null;
+           const insertId = resultado && resultado.insertId ? resultado.insertId : null; 
             return res.status(201).json({
                 message: "Servidores criados com sucesso",
                 insertedCount: resultado.affectedRows,
-                insertId 
-            });
+                id_servidor: insertId 
+            }); 
         })
         .catch(erro => {
             console.error("Erro ao criar servidores:", erro.sqlMessage || erro);

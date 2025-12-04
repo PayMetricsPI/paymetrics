@@ -7,8 +7,8 @@ function criarServidores(servidores) {
             INSERT INTO servidor 
                 (nome, fk_empresa, ipEC2, pais, estado, mac_address, tipo_cpu, ram, disco)
             VALUES 
-                (${s.nome}, ${s.fk_empresa}, '${s.ipEc2}', '${s.pais}', '${s.estado}', '${s.mac_address}',
-                 '${s.tipo_cpu}', ${s.ram}, ${s.disco});
+                ('${s.nome}', ${s.fk_empresa}, '${s.ipEc2}', '${s.pais}', '${s.estado}', '${s.mac_address}',
+                 '${s.tipo_cpu}',${s.ram}, ${s.disco});
         `;
 
         return database.executar(sqlServidor).then(resultado => {
@@ -19,12 +19,17 @@ function criarServidores(servidores) {
                 VALUES (${fk_servidor}, ${s.fk_empresa}, 5, 0, 0);
             `;
 
-            return database.executar(sqlParametro);
+            return database.executar(sqlParametro).then(() => {
+                
+                return { fk_servidor };
+            });
         });
     });
 
-    return Promise.all(promises);
+
+    return Promise.all(promises).then(lista => lista[0]);
 }
+
 
 
     function deletarServidor(id_servidor, fk_empresa) {

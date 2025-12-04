@@ -40,6 +40,8 @@ app.use("/deletar", deletarusuarioRouter);
 app.use("/listar", listarRouter);
 app.use("/metrica", metricaRouter);
 app.use("/parametro", parametrosRouter);
+
+
 app.use('/bootstrap', express.static(__dirname + '/node_modules/bootstrap/dist'));
 app.use("/s3", s3Router);
 
