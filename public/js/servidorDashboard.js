@@ -18,7 +18,6 @@ let ramChart = null;
 let discoChart = null;
 let redeChart = null;
 let redeChart2 = null;
-let reqChart = null;
 let chartCPU = null;
 let chartRAM = null;
 let chartDisco = null;
@@ -270,7 +269,6 @@ function atualizarGraficoPorPeriodo(periodo) {
     if (discoChart) discoChart.destroy();
     if (redeChart) redeChart.destroy();
     if (redeChart2) redeChart2.destroy();
-    if (reqChart) reqChart.destroy();
     if (chartMBEnviados) chartMBEnviados.destroy();
     if (chartMBRecebidos) chartMBRecebidos.destroy();
     if (chartCPU) chartCPU.destroy();
@@ -370,10 +368,6 @@ function atualizarGraficoPorPeriodo(periodo) {
         const ultimos5CPU = qtdAlertasCPU;
 
         const ultimos5CPUCritico = qtdAlertasCPUcritico
-
-        console.log('jsonSeparados.ultimos5:', jsonSeparados.ultimos5);
-        console.log('tipo:', Array.isArray(jsonSeparados.ultimos5));
-        console.log('length:', jsonSeparados.ultimos5?.length);
 
         console.log('CPU ultimos5 por bloco:', ultimos5CPU);
 
@@ -889,48 +883,6 @@ function atualizarGraficoPorPeriodo(periodo) {
                     ctx.restore();
                 }
             }]
-        });
-
-
-        ctxReq = document.getElementById('reqChart').getContext('2d');
-        reqChart = new Chart(ctxReq, {
-            type: 'bar',
-            data: {
-                labels: ['20:00', '21:00', '22:00', '23:00', '00:00', '01:00'],
-                datasets: [{
-                    label: 'CPU',
-                    data: [30, 80, 50, 55, 45, 100],
-                    backgroundColor: ['rgba(29, 173, 0, 1)',
-                        'rgb(242, 183, 48)',
-                        'rgba(29, 173, 0, 1)',
-                        'rgba(29, 173, 0, 1)',
-                        'rgba(29, 173, 0, 1)',
-                        'rgba(233, 0, 0, 1)',
-                    ],
-                    borderWidth: 1,
-                    borderRadius: 12,
-                }]
-            },
-            options: {
-                plugins: {
-                    title: {
-                        display: true,
-                        color: 'black',
-                        text: 'Quantidade de requisições',
-                        font: {
-                            size: 28
-                        }
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            color: 'black'
-                        }
-                    },
-                }
-            }
         });
 
 
@@ -1499,47 +1451,6 @@ function atualizarGraficoPorPeriodo(periodo) {
                     ctx.restore();
                 }
             }]
-        });
-
-        ctxReq = document.getElementById('reqChart').getContext('2d');
-        reqChart = new Chart(ctxReq, {
-            type: 'bar',
-            data: {
-                labels: ['20:00', '21:00', '22:00', '23:00', '00:00', '01:00'],
-                datasets: [{
-                    label: 'Requisições',
-                    data: [50, 40, 70, 65, 75, 95],
-                    backgroundColor: ['rgba(29, 173, 0, 1)',
-                        'rgba(29, 173, 0, 1)',
-                        'rgba(29, 173, 0, 1)',
-                        'rgba(29, 173, 0, 1)',
-                        'rgba(29, 173, 0, 1)',
-                        'rgba(233, 0, 0, 1)',
-                    ],
-                    borderWidth: 1,
-                    borderRadius: 12,
-                }]
-            },
-            options: {
-                plugins: {
-                    title: {
-                        display: true,
-                        color: 'black',
-                        text: 'Quantidade de requisições',
-                        font: {
-                            size: 28
-                        }
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            color: 'black'
-                        }
-                    },
-                }
-            }
         });
 
 
@@ -2114,47 +2025,6 @@ function atualizarGraficoPorPeriodo(periodo) {
                     ctx.restore();
                 }
             }]
-        });
-
-        ctxReq = document.getElementById('reqChart').getContext('2d');
-        reqChart = new Chart(ctxReq, {
-            type: 'bar',
-            data: {
-                labels: ['20:00', '21:00', '22:00', '23:00', '00:00', '01:00'],
-                datasets: [{
-                    label: 'Requisições',
-                    data: [85, 50, 30, 40, 65, 90],
-                    backgroundColor: ['rgb(242, 183, 48)',
-                        'rgba(29, 173, 0, 1)',
-                        'rgba(29, 173, 0, 1)',
-                        'rgba(29, 173, 0, 1)',
-                        'rgba(29, 173, 0, 1)',
-                        'rgba(233, 0, 0, 1)',
-                    ],
-                    borderWidth: 1,
-                    borderRadius: 12,
-                }]
-            },
-            options: {
-                plugins: {
-                    title: {
-                        display: true,
-                        color: 'black',
-                        text: 'Quantidade de requisições',
-                        font: {
-                            size: 28
-                        }
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            color: 'black'
-                        }
-                    },
-                }
-            }
         });
 
 
@@ -2738,47 +2608,6 @@ function atualizarGraficoPorPeriodo(periodo) {
                     ctx.restore();
                 }
             }]
-        });
-
-        ctxReq = document.getElementById('reqChart').getContext('2d');
-        reqChart = new Chart(ctxReq, {
-            type: 'bar',
-            data: {
-                labels: ['20:00', '21:00', '22:00', '23:00', '00:00', '01:00'],
-                datasets: [{
-                    label: 'Requisições',
-                    data: [30, 80, 50, 55, 45, 100],
-                    backgroundColor: ['rgba(29, 173, 0, 1)',
-                        'rgb(242, 183, 48)',
-                        'rgba(29, 173, 0, 1)',
-                        'rgba(29, 173, 0, 1)',
-                        'rgba(29, 173, 0, 1)',
-                        'rgba(233, 0, 0, 1)',
-                    ],
-                    borderWidth: 1,
-                    borderRadius: 12,
-                }]
-            },
-            options: {
-                plugins: {
-                    title: {
-                        display: true,
-                        color: 'black',
-                        text: 'Quantidade de requisições',
-                        font: {
-                            size: 28
-                        }
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            color: 'black'
-                        }
-                    },
-                }
-            }
         });
 
 
