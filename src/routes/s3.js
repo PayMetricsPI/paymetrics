@@ -12,7 +12,6 @@ AWS.config.update({
 const s3 = new AWS.S3();
 const bucket = "paymetricsclientteste";
 
-// rotas antigas
 router.post("/uploadCSV", (req, res) => {
     s3Controller.novoCSVBucket(req, res);
 });
@@ -21,9 +20,7 @@ router.get("/downloadJSON", (req, res) => {
     s3Controller.clientJSONBucket(req, res);
 });
 
-/**
- * 🔥 ROTA NOVA — pega SEMPRE o arquivo mais recente do dia
- */
+
 router.get("/ultimodia", async (req, res) => {
     try {
         const dados = await s3.listObjectsV2({
@@ -51,10 +48,7 @@ router.get("/ultimodia", async (req, res) => {
     }
 });
 
-/**
- * ⚠️ ESTA ROTA TEM QUE SER A ÚLTIMA!
- * Porque ela captura TUDO.
- */
+
 router.get("/*", async (req, res) => {
     const key = req.params[0];
 
