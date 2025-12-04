@@ -21,9 +21,8 @@ var redefinirSenhaRouter = require("./src/routes/usuario");
 var deletarusuarioRouter = require("./src/routes/usuario");
 var listarRouter = require("./src/routes/usuario");
 var metricaRouter = require("./src/routes/metrica");
+
 var s3Router = require("./src/routes/s3");
-
-
 var usuariosRouter = require("./src/routes/usuario");
 var parametrosRouter = require("./src/routes/parametro");
 var newsRouter = require("./src/routes/news_bruno");
@@ -67,3 +66,4 @@ app.listen(PORTA_APP, function () {
     \tSe .:producao:. você está se conectando ao banco remoto. \n\n
     \t\tPara alterar o ambiente, comente ou descomente as linhas 1 ou 2 no arquivo 'app.js'\n\n`);
 });
+
