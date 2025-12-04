@@ -20,6 +20,7 @@ function atualizarParametro(fk_servidor, fk_componente, id_parametro, alerta_cri
         set alerta_critico = ${alerta_critico}, alerta_normal = ${alerta_normal}
         where id_parametro = ${id_parametro} and fk_servidor = '${fk_servidor}' and fk_componente = '${fk_componente}'
         `;
+          return database.executar(instrucaoSql);
 }
 
 function listarParametro(fk_servidor) {
