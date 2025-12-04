@@ -26,7 +26,7 @@ function criarServidores(req, res) {
             return res.status(201).json({
                 message: "Servidores criados com sucesso",
                 insertedCount: resultado.affectedRows,
-                id_servidor: insertId 
+                    insertId 
             }); 
         })
         .catch(erro => {

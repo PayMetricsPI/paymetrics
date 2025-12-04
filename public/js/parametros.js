@@ -54,13 +54,16 @@ function close_modal_edit_alerta_critico() {
     edit_alerta_critico_modal.removeAttribute('id_parametro');
 }
 
+// function carregarParametro() {
+//     return Promise.resolve();
+// }
 
 // document.getElementById('create_alerta_critico_button_empresa').addEventListener('click', open_modal_create_alerta_critico);
 
 close_create_alerta_critico_button.addEventListener('click', close_modal_create_alerta_critico);
 cancel_button_create_alerta_critico.addEventListener('click', close_modal_create_alerta_critico);
 submit_button_create_alerta_critico.addEventListener('click', () => {
-    const fk_servidor = create_alerta_critico_modal.getAttribute('fk_servidor');
+  const fk_servidor = create_alerta_critico_modal.getAttribute('fk_servidor');
   console.log("fk_servidor no submit:", fk_servidor);
   const fk_empresa = Number(sessionStorage.getItem('EMPRESA'));
 
@@ -69,7 +72,7 @@ submit_button_create_alerta_critico.addEventListener('click', () => {
  
     parametros.push({
         fk_servidor,
-        fk_empresa,
+        fk_empresa: fk_empresa,
         fk_componente: 1,
         alerta_critico: Number(document.querySelector('input[data-componente="1"][data-tipo="critico"]').value),
         alerta_normal: Number(document.querySelector('input[data-componente="1"][data-tipo="normal"]').value)

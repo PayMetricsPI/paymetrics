@@ -86,8 +86,10 @@
     })
       .then(resp => resp.json())
       .then((data) => {
+        console.log("Resposta ao criar servidor:", data);
         close_modal_create_server();
         carregarServidores();
+        console.log("criar servidor:", data.id_servidor);
         sessionStorage.setItem("fk_servidor", data.id_servidor);
 
         open_modal_create_alerta_critico(data.id_servidor);

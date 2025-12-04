@@ -19,6 +19,7 @@ async function criarParametro(req, res) {
         message: "Parâmetros criados com sucesso"
     });
 }
+
 function atualizarParametro(req, res) {
     const parametros = req.body;
 
