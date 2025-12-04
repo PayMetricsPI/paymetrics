@@ -19,27 +19,21 @@ async function criarParametro(req, res) {
         message: "Parâmetros criados com sucesso"
     });
 }
-
 function atualizarParametro(req, res) {
-    const id_parametro = req.params.id_parametro;
-    const {alerta_critico, alerta_normal} = req.body;
+    const parametros = req.body;
 
-    if (!id_parametro || !alerta_critico || !alerta_normal) {
-        return res.status(400).json({ error: "Dados incompletos para atualizar parametro" });
-    }
-
-    parametroModel.atualizarParametro(id_parametro, alerta_critico, alerta_normal,)
-        .then(resultado => res.status(200).json({ message: "Servidor atualizado com sucesso", resultado }))
+    parametroModel.atualizarParametroLista(parametros)
+        .then(() => res.status(200).json({ message: "Parâmetros atualizados com sucesso" }))
         .catch(erro => {
-            console.error("Erro ao atualizar o servidor:", erro.sqlMessage || erro);
-            res.status(500).json({ error: "Houve um erro ao atualizar o servidor", details: erro.sqlMessage });
+            console.error("Erro ao atualizar parâmetros:", erro);
+            res.status(500).json({ error: erro });
         });
 }
+
 
 
 module.exports = {
     atualizarParametro,
     listarParametro,
     criarParametro,
-    atualizarParametro
 };
