@@ -82,7 +82,7 @@
 
 
     
-    // Converte datetime para timestamp
+    // Converte data_alerta para timestamp
     function paraTimestamp(dateString) {
         return new Date(dateString.replace(" ", "T")).getTime();
     }
@@ -167,12 +167,12 @@
     dadosPorPeriodo = { 1: [], 2: [], 3: [], 4: [] };
 
     todasLinhas.forEach((row, i) => {
-        if (!row.datetime) return;
-        const ts = new Date(row.datetime.replace(' ', 'T')).getTime();
+        if (!row.data_alerta) return;
+        const ts = new Date(row.data_alerta.replace(' ', 'T')).getTime();
         const diffHoras = (agora - ts) / (1000 * 60 * 60);
 
         if (i < 10) {
-            console.log('AMOSTRA', i, row.datetime, '→ diffHoras =', diffHoras.toFixed(1));
+            console.log('AMOSTRA', i, row.data_alerta, '→ diffHoras =', diffHoras.toFixed(1));
         }
 
         // 1 hora
@@ -371,8 +371,8 @@
         }
 
         dataFiltro.forEach(row => {
-            if (!row.datetime) return;
-            const ts = new Date(row.datetime.replace(' ', 'T'));
+            if (!row.data_alerta) return;
+            const ts = new Date(row.data_alerta.replace(' ', 'T'));
 
             let index = -1;
 
@@ -423,9 +423,9 @@
     //     const agora = Date.now();
 
     //     dataFiltro.forEach(row => {
-    //         if (!row.datetime) return;
+    //         if (!row.data_alerta) return;
 
-    //         const ts = new Date(row.datetime.replace(" ", "T")).getTime();
+    //         const ts = new Date(row.data_alerta.replace(" ", "T")).getTime();
 
     //         let index = -1;
 
@@ -578,10 +578,13 @@
             // },
 
 
+
+
+
             const qtdAlertasCPU = contarAlertasPorPeriodo(dataFiltro, "cpu_status");
             const qtdAlertasCPUcritico = contarAlertasPorPeriodo(dataFiltro, "cpu_status_critico");
 
-            const {
+                       const {
                 contCPU,
                 contCPUCritico
             } = distribuirAlertasNasLabels(dataFiltro, labels, Number(periodo));
@@ -1145,6 +1148,9 @@
             const qtdAlertasCPU = contarAlertasPorPeriodo(dataFiltro, "cpu_status");
             const qtdAlertasCPUcritico = contarAlertasPorPeriodo(dataFiltro, "cpu_status_critico");
 
+
+
+            
             const {
                 contCPU,
                 contCPUCritico
