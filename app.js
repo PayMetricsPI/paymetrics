@@ -21,9 +21,12 @@ var redefinirSenhaRouter = require("./src/routes/usuario");
 var deletarusuarioRouter = require("./src/routes/usuario");
 var listarRouter = require("./src/routes/usuario");
 var metricaRouter = require("./src/routes/metrica");
+
 var s3Router = require("./src/routes/s3");
 var usuariosRouter = require("./src/routes/usuario");
 var parametrosRouter = require("./src/routes/parametro");
+var newsRouter = require("./src/routes/news_bruno");
+var jiraRouter = require("./src/routes/jira");
 
 app.use(cors());
 app.use(express.json());
@@ -38,8 +41,12 @@ app.use("/deletar", deletarusuarioRouter);
 app.use("/listar", listarRouter);
 app.use("/metrica", metricaRouter);
 app.use("/s3", s3Router);
+app.use("/news", newsRouter);
 app.use("/parametro", parametrosRouter);
+app.use("/jira", jiraRouter);
+
 app.use('/bootstrap', express.static(__dirname + '/node_modules/bootstrap/dist'));
+app.use("/s3", s3Router);
 
 
 app.listen(PORTA_APP, function () {
@@ -59,3 +66,4 @@ app.listen(PORTA_APP, function () {
     \tSe .:producao:. você está se conectando ao banco remoto. \n\n
     \t\tPara alterar o ambiente, comente ou descomente as linhas 1 ou 2 no arquivo 'app.js'\n\n`);
 });
+
