@@ -102,7 +102,9 @@ async function clientJSONBucket(req, res) {
 
         const keys = objetos
             .map(o => o.Key)
+
             .filter(k => k !== 'output/');
+
 
         const streamToString = (stream) =>
             new Promise((resolve, reject) => {

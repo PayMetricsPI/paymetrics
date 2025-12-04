@@ -45,7 +45,7 @@ function login(event) {
                 }else if(usuario.cargo == "RH"){
                     window.location.href = "deletarUsuario.html"
                 }else {
-                    window.location.href = "embreve.html"
+                    window.location.href = "servidor.html"
                 }
             });
 

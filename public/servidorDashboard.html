@@ -21,7 +21,7 @@
 
     <div class="container header">
         <div class="main_content header_title">
-            <div class="icone"> <img src="./assets/imgs/Icone_Servidor.png" alt=""></div>
+            <div class="icone"> <img src="./assets/imgs/servidor_ernesto.png" alt=""></div>
             <div class="servidor_nome">
                 <p id="servidorNome"></p>
             </div>
@@ -30,10 +30,10 @@
                 <label class="label" for="periodo">Últimos</label>
                 <div class="select_personalizar">
                     <select id="periodo">
-                        <option value="1">1 Dia</option>
-                        <option value="2">7 Dias</option>
-                        <option value="3">30 Dias</option>
-                        <option value="4">90 Dias</option>
+                        <option value="1">1 hora</option>
+                        <option value="2">1 Dia</option>
+                        <option value="3">3 Dias</option>
+                        <option value="4">7 Dias</option>
                     </select>
                     <span class="select_cursor"></span>
                 </div>
@@ -41,6 +41,80 @@
 
         </div>
     </div>
+
+    <div class="alerta_container">
+        <div class="sessao_critico">
+            <div class="alerta_titulo">ALERTAS CRÍTICOS</div>
+            <div id="alerta_numero_critico" class="alerta_numero critico"></div>
+        </div>
+        <div class="sessao">
+            <div class="alerta_titulo">ALERTAS</div>
+            <div id="alerta_numero_padrao" class="alerta_numero padrao"></div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="container_componente">
+            <div class="alerta_componente">
+                <div class="cpu">
+                    <span class="alerta_titulo">CPU</span>
+                    <span class="alerta_titulo">Alertas</span>
+                    <div class="numeros">
+                        <span id="critico_CPU" class="critico"></span>
+                        <span id="padrao_CPU" class="padrao"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="alerta_componente">
+                <div class="ram">
+                    <span class="alerta_titulo">RAM</span>
+                    <span class="alerta_titulo">Alertas</span>
+
+                    <div class="numeros">
+                        <span id="critico_RAM" class="critico"></span>
+                        <span id="padrao_RAM" class="padrao"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="alerta_componente">
+                <div class="disco">
+                    <span class="alerta_titulo">DISCO</span>
+                    <span class="alerta_titulo">Alertas</span>
+                    <div class="numeros">
+                        <span id="critico_Disco" class="critico"></span>
+                        <span id="padrao_Disco" class="padrao"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="alerta_componente">
+                <div class="download">
+                    <span class="alerta_titulo">DOWNLOAD</span>
+                    <span class="alerta_titulo">Alertas</span>
+                    <div class="numeros">
+                        <span id="critico_Download" class="critico"></span>
+                        <span id="padrao_Download" class="padrao"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="alerta_componente">
+                <div class="upload">
+                    <span class="alerta_titulo">UPLOAD</span>
+                    <span class="alerta_titulo">Alertas</span>
+                    <div class="numeros">
+                        <span id="critico_Upload" class="critico"></span>
+                        <span id="padrao_Upload" class="padrao"></span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="container"></div>
 
     <div class="container_percentages">
         <div class="">
@@ -74,12 +148,10 @@
             <div class="dashboard_informacao">
                 <span class="info_title">Modelo</span>
                 <span class="Texto3" id="modelo_cpu">-</span>
-                <span class="info_title">Tempo de Atividade</span>
-                <span class="Texto3" id="boot_time">-</span>
             </div>
             <div class="container_limite">
                 <div class="limite">
-                    <h2 class="limite_header">Limite padrão:</h2> 
+                    <h2 class="limite_header">Limite padrão:</h2>
                     <span class="limite_medida mid" id="lim_padrao_cpu">-%</span>
                 </div>
                 <div class="limite">
@@ -101,7 +173,7 @@
             </div>
             <div class="container_limite">
                 <div class="limite">
-                    <h2 class="limite_header">Limite padrão:</h2> 
+                    <h2 class="limite_header">Limite padrão:</h2>
                     <span class="limite_medida mid" id="lim_padrao_ram">-%</span>
                 </div>
                 <div class="limite">
@@ -123,7 +195,7 @@
             </div>
             <div class="container_limite">
                 <div class="limite">
-                    <h2 class="limite_header">Limite padrão:</h2> 
+                    <h2 class="limite_header">Limite padrão:</h2>
                     <span class="limite_medida mid" id="lim_padrao_disco">-%</span>
                 </div>
                 <div class="limite">
@@ -133,7 +205,8 @@
             </div>
         </div>
     </div>
-    <div class="container last">
+
+    <div class="container">
         <h2 class="Texto">Rede</h2>
         <div class="main_content">
             <div class="canvas">
@@ -141,8 +214,35 @@
             </div>
             <div class="limites_container_wrapper">
                 <div class="container_limite rede">
+
+                    <div class="container_limite rede">
+                        <div>
+                            <div class="limites_container_2">
+                                <div class="limite">
+                                    <h2 class="limite_header">Limite padrão:</h2>
+                                    <span class="limite_medida mid" id="lim_padrao_download">-%</span>
+                                </div>
+                                <div class="limite">
+                                    <h2 class="limite_header">Limite crítico:</h2>
+                                    <span class="limite_medida hig" id="lim_critico_download">-%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container last">
+        <h2 class="Texto"></h2>
+        <div class="main_content">
+            <div class="canvas">
+                <canvas id="RedeChart2" width="564" height="282"></canvas>
+            </div>
+            <div class="limites_container_wrapper">
+                <div class="container_limite rede">
                     <div>
-                        <h3>Upload</h3>
                         <div class="limites_container_2">
                             <div class="limite">
                                 <h2 class="limite_header">Limite padrão:</h2>
@@ -155,21 +255,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="container_limite rede">
-                    <div>
-                        <h3>Download</h3>
-                        <div class="limites_container_2">
-                            <div class="limite">
-                                <h2 class="limite_header">Limite padrão:</h2>
-                                <span class="limite_medida mid" id="lim_padrao_download">-%</span>
-                            </div>
-                            <div class="limite">
-                                <h2 class="limite_header">Limite crítico:</h2>
-                                <span class="limite_medida hig" id="lim_critico_download">-%</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+
             </div>
         </div>
     </div>

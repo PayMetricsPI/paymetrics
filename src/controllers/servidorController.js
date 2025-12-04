@@ -28,6 +28,7 @@ function criarServidores(req, res) {
                 insertedCount: resultado.affectedRows,
                     insertId 
             }); 
+
         })
         .catch(erro => {
             console.error("Erro ao criar servidores:", erro.sqlMessage || erro);

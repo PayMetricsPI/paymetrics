@@ -88,6 +88,4 @@ insert into componente(nome, unidade_medida, peso)values
 ('Mb Recebidos - REDE', 'Bytes',3),
 ('DISCO', 'Porcentagem',1);
 
-select *from componente
-
 

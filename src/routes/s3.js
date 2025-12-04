@@ -9,12 +9,14 @@ AWS.config.update({
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
 });
 
+
 const s3 = new AWS.S3();
 const bucket = "paymetricsclientteste";
 
 router.post("/uploadCSV", (req, res) => {
     s3Controller.novoCSVBucket(req, res);
 });
+
 
 router.get("/downloadJSON", (req, res) => {
     s3Controller.clientJSONBucket(req, res);
