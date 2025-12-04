@@ -13,35 +13,6 @@
         critico_Disco: document.getElementById('critico_Disco')
     });
 
-//     function inicializarClickNosAlertas() {
-//     const mapaAlertasParaGraficos = {
-//         'cpu': 'CpuChart',
-//         'ram': 'RamChart',
-//         'disco': 'DiscoChart',
-//         'upload': 'RedeChart2',
-//         'download': 'RedeChart'
-//     };
-
-//     Object.keys(mapaAlertasParaGraficos).forEach(tipo => {
-//         const card = document.querySelector(`.${tipo}`);
-//         const graficoId = mapaAlertasParaGraficos[tipo];
-
-//         if (card) {
-//             card.style.cursor = 'pointer'; // muda o cursor para indicar clique
-//             card.addEventListener('click', () => {
-//                 const grafico = document.getElementById(graficoId);
-//                 if (grafico) {
-//                     grafico.scrollIntoView({ behavior: 'smooth', block: 'start' });
-//                 }
-//             });
-//         }
-//     });
-// }
-
-// // chama essa função após o DOM estar carregado
-// window.addEventListener('DOMContentLoaded', () => {
-//     inicializarClickNosAlertas();
-// });
 
     let cpuChart = null;
     let ramChart = null;
@@ -71,12 +42,6 @@
 
     // Variáveis globais
     let data = [];
-    // let dadosPorPeriodo = {
-    //     '1': [],  // 1 hora
-    //     '2': [],  // 1 dia
-    //     '3': [],  // 3 dias
-    //     '4': []   // 7 dias
-    // };
 
     let estatisticasAlertas = null;
 
@@ -402,81 +367,6 @@
 
         return { contCPU, contCPUCritico, contRAM, contRAMCritico, contDisco, contDiscoCritico, contDownload, contDownloadCritico, contUpload, contUploadCritico };
     }
-
-    // function distribuirAlertasNasLabels(dataFiltro, labels, periodo) {
-
-    //     let contCPU = Array(labels.length).fill(0);
-    //     let contCPUCritico = Array(labels.length).fill(0);
-
-    //     let contRAM = Array(labels.length).fill(0);
-    //     let contRAMCritico = Array(labels.length).fill(0);
-
-    //     let contDisco = Array(labels.length).fill(0);
-    //     let contDiscoCritico = Array(labels.length).fill(0);
-
-    //     let contDownload = Array(labels.length).fill(0);
-    //     let contDownloadCritico = Array(labels.length).fill(0);
-
-    //     let contUpload = Array(labels.length).fill(0);
-    //     let contUploadCritico = Array(labels.length).fill(0);
-
-    //     const agora = Date.now();
-
-    //     dataFiltro.forEach(row => {
-    //         if (!row.data_alerta) return;
-
-    //         const ts = new Date(row.data_alerta.replace(" ", "T")).getTime();
-
-    //         let index = -1;
-
-    //         if (periodo == 1) {
-    //             let diffMin = Math.floor((agora - ts) / 60000);
-    //             index = Math.floor((60 - diffMin) / 15);
-    //         }
-    //         else if (periodo == 2) {
-    //             let diffH = Math.floor((agora - ts) / 3600000);
-    //             index = Math.floor((24 - diffH) / 6);
-    //         }
-    //         else if (periodo == 3) {
-    //             let diffD = Math.floor((agora - ts) / 86400000);
-    //             index = 2 - diffD;
-    //         }
-    //         else if (periodo == 4) {
-    //             let diffD = Math.floor((agora - ts) / 86400000);
-    //             index = 6 - diffD;
-    //         }
-
-    //         if (index < 0 || index >= labels.length) return;
-
-    //         if (row.cpu_status === "NORMAL") contCPU[index]++;
-    //         if (row.cpu_status_critico === "CRITICO") contCPUCritico[index]++;
-
-    //         if (row.ram_status === "NORMAL") contRAM[index]++;
-    //         if (row.ram_status_critico === "CRITICO") contRAMCritico[index]++;
-
-    //         if (row.disco_status === "NORMAL") contDisco[index]++;
-    //         if (row.disco_status_critico === "CRITICO") contDiscoCritico[index]++;
-
-    //         if (row.mb_recebidos_status === "NORMAL") contDownload[index]++;
-    //         if (row.mb_recebidos_status_critico === "CRITICO") contDownloadCritico[index]++;
-
-    //         if (row.mb_enviados_status === "NORMAL") contUpload[index]++;
-    //         if (row.mb_enviados_status_critico === "CRITICO") contUploadCritico[index]++;
-    //     });
-
-    //     return {
-    //         contCPU,
-    //         contCPUCritico,
-    //         contRAM,
-    //         contRAMCritico,
-    //         contDisco,
-    //         contDiscoCritico,
-    //         contDownload,
-    //         contDownloadCritico,
-    //         contUpload,
-    //         contUploadCritico
-    //     };
-    // }
 
     function atualizarGraficoPorPeriodo(periodo) {
 
@@ -1147,21 +1037,12 @@
 
             const qtdAlertasCPU = contarAlertasPorPeriodo(dataFiltro, "cpu_status");
             const qtdAlertasCPUcritico = contarAlertasPorPeriodo(dataFiltro, "cpu_status_critico");
-
-
-
             
             const {
                 contCPU,
                 contCPUCritico
             } = distribuirAlertasNasLabels(dataFiltro, labels, Number(periodo));
 
-            // alertaCPU = qtdAlertasCPU
-            // alertaCriticoCPU = qtdAlertasCPUcritico
-
-
-            // penqtdAlertasCPU = qtdAlertasCPUcritico
-            // penqtdAlertasCPUCritico = qtdAlertasCPUcritico
 
             const ctxCpu = document.getElementById('CpuChart').getContext('2d');
             cpuChart = new Chart(ctxCpu, {

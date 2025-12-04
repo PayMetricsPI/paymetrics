@@ -328,7 +328,7 @@
   flex-direction: column;
     display: flex;
   flex-direction: column;
-  background-color: #E3F2FD;
+  background-color: #FFF3E0;
   border-radius: 10px;
   padding: 30px;
 }
@@ -338,7 +338,7 @@
   flex-direction: column;
     display: flex;
   flex-direction: column;
-  background-color: #E8F5E9;
+  background-color: #FFF3E0;
   border-radius: 10px;
   padding: 30px;
 }
@@ -348,7 +348,7 @@
   flex-direction: column;
     display: flex;
   flex-direction: column;
-  background-color: #F3E5F5; 
+  background-color: #FFF3E0; 
   border-radius: 10px;
   padding: 30px;
 }
@@ -358,7 +358,7 @@
   flex-direction: column;
     display: flex;
   flex-direction: column;
-  background-color: #fae0e4;
+  background-color: #FFF3E0;
   border-radius: 10px;
   padding: 30px;
   box-shadow: black;
