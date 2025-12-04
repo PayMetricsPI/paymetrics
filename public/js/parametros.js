@@ -1,7 +1,7 @@
 const usersDiv = document.querySelector('.users');
 const fk_servidor = Number(sessionStorage.getItem('fk_servidor'));
 const fk_empresa = Number(sessionStorage.getItem('fk_empresa'));
-
+const fk_componente = Number(sessionStorage.getItem('fk_componente'));
 
 
 const out_create_alerta_critico = document.getElementById('out_create_alerta_critico');
@@ -15,11 +15,6 @@ const edit_alerta_critico_modal = document.getElementById('edit_alerta_critico_m
 const close_edit_alerta_critico_button = document.getElementById('close_edit_alerta_critico_button');
 const cancel_button_edit_alerta_critico = document.getElementById('cancel_button_edit_alerta_critico');
 const submit_button_edit_alerta_critico = document.getElementById('submit_button_edit_alerta_critico');
-
-console.log("submit_button_create_alerta_critico:", submit_button_create_alerta_critico);
-console.log("submit_button_edit_alerta_critico:", submit_button_edit_alerta_critico);
-console.log("close_edit_alerta_critico_button:", close_edit_alerta_critico_button);
-console.log("cancel_button_edit_alerta_critico:", cancel_button_edit_alerta_critico);
 
 let deleteParametroID = null; 
 
@@ -60,11 +55,14 @@ function close_modal_edit_alerta_critico() {
 }
 
 
+// document.getElementById('create_alerta_critico_button_empresa').addEventListener('click', open_modal_create_alerta_critico);
 
-
+close_create_alerta_critico_button.addEventListener('click', close_modal_create_alerta_critico);
+cancel_button_create_alerta_critico.addEventListener('click', close_modal_create_alerta_critico);
 submit_button_create_alerta_critico.addEventListener('click', () => {
     const fk_servidor = create_alerta_critico_modal.getAttribute('fk_servidor');
-    const fk_empresa = Number(sessionStorage.getItem('fk_empresa'));
+  console.log("fk_servidor no submit:", fk_servidor);
+  const fk_empresa = Number(sessionStorage.getItem('EMPRESA'));
 
     const parametros = [];
 
@@ -121,12 +119,6 @@ submit_button_create_alerta_critico.addEventListener('click', () => {
         alerta_normal: Number(document.querySelector('input[data-componente="6"][data-tipo="normal"]').value)
     });
 
-
-    for (const p of parametros) {
-        if (isNaN(p.alerta_critico) || isNaN(p.alerta_normal)) {
-            return alert("Preencha todos os campos antes de salvar!");
-        }
-    }
 
     fetch('/parametro/criarParametro', {
         method: 'POST',
