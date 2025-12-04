@@ -16,50 +16,23 @@
     <div id="sidebar"></div>
     <section class="dash_servidor">
         <div class="servidor_info">
-            <img src="./assets/icons/servidor_jira.png" alt="Servidor">
+            <img src="./assets/imgs/servidor.png" alt="Servidor">
             <div class="info_servidor">
                 <p class="nome">Nome do servidor</p>
                 <p class="mac">Mac</p>
             </div>
             <div class="kpi">
                 <div class="kpi_aberto">
-                    <h1 style="color: #f7b116;">3</h1>
+                    <h1 style="color: red;">3</h1>
                     <p>Chamados abertos</p>
+                </div>
+                <div class="kpi_andamento">
+                    <h1 style="color:#f7b116;">2</h1>
+                    <p>Chamados andamento</p>
                 </div>
                 <div class="kpi_fechado">
                     <h1 style="color:#54ab27;">2</h1>
                     <p>Chamados fechados</p>
-                </div>
-            </div>
-        </div>
-        <div class="componentes_jira">
-            <div class="titulo_jira">
-                <p>Alerta de componentes</p>
-            </div>
-            <div class="componente-line">
-                <div class="componente red">
-                    <span class="label">RAM</span>
-                    <div class="circulo">90%</div>
-                </div>
-
-                <div class="componente red">
-                    <span class="label">Env</span>
-                    <div class="circulo">87%</div>
-                </div>
-
-                <div class="componente yellow">
-                    <span class="label">Rec</span>
-                    <div class="circulo">77%</div>
-                </div>
-
-                <div class="componente green">
-                    <span class="label">CPU</span>
-                    <div class="circulo">54%</div>
-                </div>
-
-                <div class="componente green">
-                    <span class="label">Disco</span>
-                    <div class="circulo">50%</div>
                 </div>
             </div>
         </div>
@@ -75,7 +48,6 @@
             <div class="tickets">
                 <div class="card_ticket">
                     <div class="lado_esq">
-                        <input type="checkbox" id="ticket-225">
                         <div class="info_text">
                             <div class="status">Crítico !</div>
                             <p><strong>Ticket:</strong> #225 <br>
@@ -83,13 +55,57 @@
                             </p>
                         </div>
                         <div class="lado_dir">
+                            <select class="filter_card">
+                                <option value="aberto" selected>Aberto</option>
+                                <option value="andamento">Em andamento</option>
+                                <option value="fechado">Fechado</option>
+                            </select>
                             <p><strong>Status:</strong> Aberto</p>
+                            <p><strong>Horário:</strong> 22h:10m</p>
+                        </div>
+                    </div>
+                </div>
+                 <div class="card_ticket">
+                    <div class="lado_esq">
+                        <div class="info_text">
+                            <div class="status">Crítico !</div>
+                            <p><strong>Ticket:</strong> #225 <br>
+                                <strong>Componente:</strong> RAM <span class="percent">90%</span>
+                            </p>
+                        </div>
+                        <div class="lado_dir">
+                            <select class="filter_card">
+                                <option value="aberto" selected>Aberto</option>
+                                <option value="andamento">Em andamento</option>
+                                <option value="fechado">Fechado</option>
+                            </select>
+                            <p><strong>Status:</strong> Em andamento</p>
+                            <p><strong>Horário:</strong> 22h:10m</p>
+                        </div>
+                    </div>
+                </div>
+                 <div class="card_ticket">
+                    <div class="lado_esq">
+                        <div class="info_text">
+                            <div class="status">Crítico !</div>
+                            <p><strong>Ticket:</strong> #225 <br>
+                                <strong>Componente:</strong> RAM <span class="percent">90%</span>
+                            </p>
+                        </div>
+                        <div class="lado_dir">
+                            <select class="filter_card">
+                                <option value="aberto" selected>Aberto</option>
+                                <option value="andamento">Em andamento</option>
+                                <option value="fechado">Fechado</option>
+                            </select>
+                            <p><strong>Status:</strong> Fechado</p>
                             <p><strong>Horário:</strong> 22h:10m</p>
                         </div>
                     </div>
                 </div>
     </section>
     <script src="./js/header.js"></script>
+    <script src=".js/servidor_jira.js"></script>
 </body>
 
 </html>

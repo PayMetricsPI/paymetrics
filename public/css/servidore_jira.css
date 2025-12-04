@@ -21,6 +21,7 @@ html {
     align-items: center;
     padding: 20px 0;
     gap: 20px;
+    margin-right: 90px;
 }
 
 .info_servidor {
@@ -37,12 +38,15 @@ html {
     margin-left: 300px;
 }
 
+
 .nome,
 .mac {
     font-size: 15px;
+    width: 100px;
 }
 
 .kpi_aberto,
+.kpi_andamento,
 .kpi_fechado {
     text-align: center;
     padding: 12px 20px;
@@ -55,8 +59,15 @@ html {
 }
 
 .kpi_aberto p,
+.kpi_andamento,
 .kpi_fechado p {
     font-size: 12px;
+}
+
+.kpi_aberto h1,
+.kpi_andamento h1,
+.kpi_fechado h1{
+    font-size: 30px;
 }
 
 .componentes_jira {
@@ -198,6 +209,7 @@ html {
     gap: 18px;
     flex: 1 1 auto;
     min-width: 0;
+    margin-left: 30px;
 }
 
 .lado_esq .resol {
@@ -251,7 +263,7 @@ html {
     flex: 1 1 auto;
     min-width: 0;
     flex-direction: column;
-    margin-right: 100px;
+    margin-right: 60px;
 }
 
 .lado_dir p {

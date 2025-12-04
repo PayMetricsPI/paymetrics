@@ -46,14 +46,11 @@ async function carregarServidoresComAlertas() {
     const container = document.querySelector('.servidores_alertas');
     if (!container) return;
 
-    // limpa cards antigos
     container.querySelectorAll('.servidor_card').forEach(c => c.remove());
     if (idsUnicos.length === 0) {
-        // opcional: exibir mensagem "nenhum alerta"
         return;
     }
 
-    // buscar dados dos servidores em paralelo, com fallback para dados do alerta
     const servidores = await Promise.all(idsUnicos.map(async id => {
         try {
             const r = await fetch(`/servidores/${id}/${fk_empresa}`);
@@ -67,12 +64,10 @@ async function carregarServidoresComAlertas() {
         };
     }));
 
-    // renderizar cards
     servidores.filter(Boolean).forEach(s => {
         const servidorId = s.id_servidor || s.id;
         const alertsDoServidor = alertas.filter(a => a.fk_servidor === servidorId);
 
-        // escolher prioridade mais severa presente
         const ordem = ['highest', 'medium'];
         let prioridadeEscolhida = null;
         for (const o of ordem) {
