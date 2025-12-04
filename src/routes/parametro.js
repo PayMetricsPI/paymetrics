@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const parametroController = require("../controllers/parametroController");
 
-router.post("/criarParametro", function(req, res) {
+router.post("/criarParametro/", function(req, res) {
     parametroController.criarParametro(req, res);
 });
 
