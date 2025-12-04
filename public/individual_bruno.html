@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Análise de mercado</title>
+
+    <link rel="stylesheet" href="./css/navbar.css" />
+    <link rel="stylesheet" href="./css/Dash1.css" />
+    <link rel="stylesheet" href="./css/embreve.css" />
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" />
+    <link rel="shortcut icon" type="image/png" href="assets/icons/logo Paymetrics.png" />
+    <link rel="stylesheet" href="./css/individual_bruno.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+</head>
+
+<body onload="obterNoticias();obterLimites();mostrarProxMes();obterMetricasRandomForest()">
+    <div id="sidebar"></div>
+    <h1>Comportamento de mercado</h1>
+    <div class="previsao_por_setor">
+        <h2>
+            <span>Previsão por setor de vendas <span class="mini">varejo</span></span>
+            <span id="prox_mes_show">-</span>
+        </h2>
+        <div class="setores">
+            <div class="setor">
+                <h3>
+                    <span class="material-symbols-outlined">
+                        checkroom
+                    </span>
+                    Tecidos, vestuário e calçados
+                </h3>
+                <div class="metricas">
+                    <div class="indice_vendas_reais">
+                        <h4 id="indice_roupas">
+                            -
+                        </h4>
+                        Índice de Vendas Reais
+                    </div>
+                    <div class="variacao_mes_atual">
+                        <h4>
+                            <span class="material-symbols-outlined" id="variacao_roupas_icon">
+                            </span><span id="variacao_roupas">-</span>%
+                        </h4>
+                        Em relação ao mês atual
+                    </div>
+                </div>
+            </div>
+            <div class="bar"></div>
+            <div class="setor">
+                <h3>
+                    <span class="material-symbols-outlined">
+                        fork_spoon
+                    </span>
+                    Hipermercados, produtos alimentícios, bebidas e fumo
+                </h3>
+                <div class="metricas">
+                    <div class="indice_vendas_reais">
+                        <h4 id="indice_alimentos">
+                            -
+                        </h4>
+                        Índice de Vendas Reais
+                    </div>
+                    <div class="variacao_mes_atual">
+                        <h4>
+                            <span class="material-symbols-outlined" id="variacao_alimentos_icon">
+                            </span><span id="variacao_alimentos">-</span>%
+                        </h4>
+                        Em relação ao mês atual
+                    </div>
+                </div>
+            </div>
+            <div class="bar"></div>
+            <div class="setor">
+                <h3>
+                    <span class="material-symbols-outlined">
+                        pill
+                    </span>
+                    Farmacêuticos, ortopédicos, de perfumaria e cosméticos
+                </h3>
+                <div class="metricas">
+                    <div class="indice_vendas_reais">
+                        <h4 id="indice_farmacia">
+                            -
+                        </h4>
+                        Índice de Vendas Reais
+                    </div>
+                    <div class="variacao_mes_atual">
+                        <h4>
+                            <span class="material-symbols-outlined" id="variacao_farmacia_icon">
+                            </span><span id="variacao_farmacia">-</span>%
+                        </h4>
+                        Em relação ao mês atual
+                    </div>
+                </div>
+            </div>
+            <div class="bar"></div>
+            <div class="setor">
+                <h3>
+                    <span class="material-symbols-outlined">
+                        chair
+                    </span>
+                    Móveis e eletrodomésticos
+                </h3>
+                <div class="metricas">
+                    <div class="indice_vendas_reais">
+                        <h4 id="indice_moveis">
+                            -
+                        </h4>
+                        Índice de Vendas Reais
+                    </div>
+                    <div class="variacao_mes_atual">
+                        <h4>
+                            <span class="material-symbols-outlined" id="variacao_moveis_icon">
+                            </span><span id="variacao_moveis">-</span>%
+                        </h4>
+                        Em relação ao mês atual
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <h1 class="center_title"><span class="destaque">Previsão</span> e <span class="destaque">Simulação</span> por
+        segmentos <span class="mini">usando Random Forest 🌲</span></h1>
+    <div class="prev_sim_title_container">
+        <div class="prev_sim_container">
+            <div class="prev">
+                <div class="pred_hist">
+                    <div class="title">
+                        <h2>Histórico</h2>
+                        <span class="bar_divisor">/</span>
+                        <h2>Predição</h2>
+                        <span class="material-symbols-outlined info_metricas" onclick="modalToggle()">
+                            info
+                        </span>
+                    </div>
+                    <div class="month_selector">
+                        <div class="select">
+                            <p>Tempo de previsão</p>
+                            <select name="" id="slc_tempo_previsao" class="meses_select">
+                                <option value="4">4 meses</option>
+                                <option value="5">5 meses</option>
+                                <option value="6">6 meses</option>
+                                <option value="12" disabled>12 meses</option>
+                            </select>
+                        </div>
+                        <div class="select">
+                            <p>Tempo de visualização</p>
+                            <select name="" id="slc_tempo_visualizacao">
+                                <option value="1">1 ano</option>
+                                <option value="2">2 anos</option>
+                                <option value="3">3 anos</option>
+                                <option value="6">6 anos</option>
+                                <option value="10">10 anos</option>
+                                <option value="-">Todo o período</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <h3>Índice de Vendas Reais (média 2022 = 100)</h3>
+                <canvas id="geral_chart"></canvas>
+                <h4>Selecione os segmentos</h4>
+                <div class="segmentos">
+                    <div class="seg_roupas seg_select" onclick="selectSegmento(this)" data-type="roupas">
+                        <span class="material-symbols-outlined">
+                            checkroom
+                        </span>
+                        Tecidos, vestuário e calçados
+                    </div>
+                    <div class="seg_alimentos" onclick="selectSegmento(this)" data-type="alimentos">
+                        <span class="material-symbols-outlined">
+                            fork_spoon
+                        </span>
+                        Hipermercados, alimentos, bebidas e fumo
+                    </div>
+                    <div class="seg_farmacia" onclick="selectSegmento(this)" data-type="farmacia">
+                        <span class="material-symbols-outlined">
+                            pill
+                        </span>
+                        Farmacêuticos, ortopédicos, de perfumaria e cosméticos
+                    </div>
+                    <div class="seg_moveis" onclick="selectSegmento(this)" data-type="moveis">
+                        <span class="material-symbols-outlined">
+                            chair
+                        </span>
+                        Móveis e eletrodomésticos
+                    </div>
+                </div>
+            </div>
+            <div class="sim_res">
+                <div class="sim">
+                    <h2>Área de simulação</h2>
+                    <div class="selects">
+                        <div class="row">
+                            <select name="" id="mes_sim">
+                                <option value="1">Janeiro</option>
+                                <option value="2">Fevereiro</option>
+                                <option value="3">Março</option>
+                                <option value="4">Abril</option>
+                                <option value="5">Maio</option>
+                                <option value="6">Junho</option>
+                                <option value="7">Julho</option>
+                                <option value="8">Agosto</option>
+                                <option value="9">Setembro</option>
+                                <option value="10">Outubro</option>
+                                <option value="11">Novembro</option>
+                                <option value="12">Dezembro</option>
+                            </select>
+                            <select name="" id="ano_sim">
+                                <option value="2025">2025</option>
+                                <option value="2026">2026</option>
+                            </select>
+                        </div>
+                        <select name="" id="segmento_select">
+                            <option value="roupas">Tecidos, vestuário...</option>
+                            <option value="alimentos">Hipermercados, alimentos...</option>
+                            <option value="farmacia">Farmacêuticos, ortopédicos...</option>
+                            <option value="moveis">Móveis e eletrodomésticos</option>
+                        </select>
+                    </div>
+                    <div class="button_container">
+                        <button onclick="simular()">Simular</button>
+                    </div>
+                </div>
+                <div class="res_container">
+                    <h2>Resultados das simulações</h2>
+                    <div class="res" id="res">
+    
+                                
+    
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <h1 class="fatores center_title">Fatores externos que <span class="destaque">podem</span> interferir</h1>
+    <div class="carrossel-container">
+        <button class="btn-prev" id="prev">
+            <span class="material-symbols-outlined">
+                chevron_backward
+            </span>
+        </button>
+        <button class="btn-next" id="next">
+            <span class="material-symbols-outlined">
+                chevron_forward
+            </span>
+        </button>
+
+        <div class="carrossel" id="carrossel">
+        </div>
+    </div>
+
+    <div class="out_modal_metricas" onclick="modalToggle()">
+        <div class="modal_metricas" onclick="event.stopPropagation()">
+            <div class="top_options_modal">
+                <h2>Métricas estatísticas da previsão por segmento</h2>
+
+                <div class="close_modal" onclick="modalToggle()">
+                    <span class="material-symbols-outlined">close</span>
+                </div>
+            </div>
+
+            <div class="content_modal">
+                <div class="segmento_modal">
+                    <div class="segmento_title_modal">
+                        <span class="material-symbols-outlined">checkroom</span>
+                        Tecidos, vestuário e calçados
+                    </div>
+                    <div class="values_modal_metricas">
+                        <p>R²: -</p>
+                        <p>MAE: -</p>
+                    </div>
+                </div>
+                <div class="segmento_modal">
+                    <div class="segmento_title_modal">
+                        <span class="material-symbols-outlined">fork_spoon</span>
+                        Hipermercados, alimentos, bebidas e fumo
+                    </div>
+                    <div class="values_modal_metricas">
+                        <p>R²: -</p>
+                        <p>MAE: -</p>
+                    </div>
+                </div>
+                <div class="segmento_modal">
+                    <div class="segmento_title_modal">
+                        <span class="material-symbols-outlined">pill</span>
+                        Farmacêuticos, ortopédicos, de perfumaria e cosméticos
+                    </div>
+                    <div class="values_modal_metricas">
+                        <p>R²: -</p>
+                        <p>MAE: -</p>
+                    </div>
+                </div>
+                <div class="segmento_modal">
+                    <div class="segmento_title_modal">
+                        <span class="material-symbols-outlined">chair</span>
+                        Móveis e eletrodomésticos
+                    </div>
+                    <div class="values_modal_metricas">
+                        <p>R²: -</p>
+                        <p>MAE: -</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
+<script src="js/header.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="js/carrossel.js"></script>
+<script src="js/predicao_historico_bruno.js"></script>
+<script src="js/noticias_bruno.js"></script>

@@ -25,7 +25,9 @@ unique (email)
 create table servidor (
 id_servidor int not null auto_increment,
 fk_empresa int not null,
-nome varchar(200),
+ip varchar(200),
+pais varchar(200),
+estado varchar(200),
 mac_address varchar(50) not null,
 tipo_cpu varchar(100) not null,
 ram int not null,
@@ -33,6 +35,8 @@ disco int not null,
 primary key (id_servidor, fk_empresa),
 foreign key (fk_empresa) references empresa(id_empresa)
 );
+
+
 
 create table componente(
 id_componente int not null auto_increment,
@@ -85,3 +89,5 @@ insert into componente(nome, unidade_medida, peso)values
 ('DISCO', 'Porcentagem',1);
 
 select *from componente
+
+
