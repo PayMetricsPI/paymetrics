@@ -8,7 +8,7 @@ html, body {
     overflow-x: hidden;
 }
 
-/* 🧭 SIDEBAR (Apenas o estilo necessário para o layout) */
+
 .sidebar {
     position: fixed;
     top: 0;
@@ -24,7 +24,7 @@ html, body {
 
 .sidebar:hover { width: 18rem; }
 
-/* Placeholder para o texto da Sidebar, invisível por padrão */
+
 .alertas, .dash, .config, .user {
     color: white;
     opacity: 0;
@@ -43,7 +43,7 @@ html, body {
     max-width: 120px;
 }
 
-/* 🖼️ MAIN CONTENT */
+
 .main-content {
     margin-left: 5rem;
     width: calc(100% - 5rem);
@@ -59,13 +59,13 @@ html, body {
     width: calc(100% - 18rem);
 }
 
-/* CONTAINER GERAL DO DASHBOARD */
+
 .dashboard-container {
-    padding: 40px 60px 0; /* Ajuste o padding para cima */
+    padding: 40px 60px 0; 
 }
 
 .titulo {
-    font-size: 36px; /* Aumenta ligeiramente para destaque */
+    font-size: 36px; 
     font-weight: 700;
     color: #1a1a1a;
     margin-bottom: 30px; 
@@ -98,14 +98,14 @@ html, body {
 }
 
 .mini-title {
-    font-size: 13px; /* Reduz ligeiramente */
+    font-size: 13px; 
     font-weight: 600;
-    color: #666; /* Cor mais suave */
+    color: #666; 
     margin-bottom: 4px;
 }
 
 .mini-value {
-    font-size: 38px; /* Aumenta para destaque */
+    font-size: 38px; 
     font-weight: 700;
     color: #111;
     line-height: 1;
@@ -117,22 +117,19 @@ html, body {
     margin-top: 8px;
 }
 
-/* Cores específicas para as variações */
-.mini-card:nth-child(1) .mini-diff { color: #15b300; } /* Sucesso Global (Verde) */
-.mini-card:nth-child(3) .mini-diff { color: #e6a500; } /* Latência Global (Amarelo/Alerta) */
 
-/* 📊 GRID DE DISTRIBUIÇÃO (Gráfico e Mapa) */
-/* ... (Seu CSS anterior permanece igual até aqui) ... */
+.mini-card:nth-child(1) .mini-diff { color: #15b300; } 
+.mini-card:nth-child(3) .mini-diff { color: #e6a500; } 
 
-/* 📊 GRID DE DISTRIBUIÇÃO (Gráfico e Mapa) */
+
 .distribuicao-grid {
     display: grid;
-    /* Ajusta as colunas para dar mais espaço ao gráfico e tornar o mapa mais retangular */
-    grid-template-columns: 1.5fr 1fr; /* Gráfico um pouco mais largo, mapa mais estreito */
+ 
+    grid-template-columns: 1.5fr 1fr; 
     gap: 40px;
     align-items: start;
     margin-top: 40px;
-    padding: 0 60px; /* Alinha com o dashboard-container */
+    padding: 0 60px; 
 }
 
 .bloco-esquerda {
@@ -194,7 +191,6 @@ canvas {
     border-radius: 50%;
 }
 
-/* 🗺️ MAPA (AnyChart) */
 .titulo-mapa {
     font-size: 20px;
     font-weight: 700;
@@ -203,8 +199,8 @@ canvas {
     text-align: center;
 }
 .status.ok {
-    background-color: #C8E6C9; /* verde claro */
-    color: #2E7D32; /* verde escuro */
+    background-color: #C8E6C9;
+    color: #2E7D32; 
     padding: 4px 10px;
     border-radius: 8px;
     font-weight: 600;
@@ -212,7 +208,7 @@ canvas {
 
 
 .mapa-container {
-    width: 100%; /* Permite que o mapa ocupe a largura da sua coluna */
+    width: 100%; 
 }
 
 #miniMapa {
