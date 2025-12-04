@@ -104,7 +104,7 @@ if (header) {
                         <img class="bi" height="50" style="margin-left: -10px" src="assets/icons/logo-paymetrics-sem-fundo.png"/>
                     </a>
                 <li class="nav-item">
-                      <a class="nav-link py-3 d-flex mx-1 align-items-center" data-bs-placemnet="right" href="./DashPessoaEstrategia.html">
+                      <a class="nav-link py-3 d-flex mx-1 align-items-center" data-bs-placemnet="right" href="./ServidoresRede-Samuel.html">
                         <img src="assets/icons/chart-icon.png" class="bi mask2" width="32" height="32" alt="">
                         <span class="dash">Dashboard</span>
                       </a>                    
