@@ -2727,4 +2727,30 @@ window.onload = function () {
     });
     setInterval(buscarDados, 2000)
     buscarDados();
+    configurarRedirecionamentoDosCards();
 };
+
+function configurarRedirecionamentoDosCards() {
+    const mapa = {
+        cardCPU: "CpuChart",
+        cardRAM: "RamChart",
+        cardDisco: "DiscoChart",
+        cardDownload: "RedeChart",
+        cardUpload: "RedeChart2"
+    };
+
+    Object.keys(mapa).forEach(cardID => {
+        const card = document.getElementById(cardID);
+        const graficoID = mapa[cardID];
+
+        if (card) {
+            card.style.cursor = "pointer"; // adiciona cursor clicável
+            card.addEventListener("click", () => {
+                const destino = document.getElementById(graficoID);
+                if (destino) {
+                    destino.scrollIntoView({ behavior: "smooth", block: "center" });
+                }
+            });
+        }
+    });
+}
