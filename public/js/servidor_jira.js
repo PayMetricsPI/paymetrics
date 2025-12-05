@@ -41,11 +41,9 @@
         const filtro = normalizeStatus(filtroRaw) || 'aberto';
         const closedList = readClosedList();
 
-        // suporte a "áreas" no HTML: procura elementos que têm data-area="aberto|andamento|fechado"
         const areaContainer = document.querySelector(`[data-area="${filtro}"]`);
         const allAreaContainers = Array.from(document.querySelectorAll('[data-area]'));
 
-        // se existem áreas, mostra só a área correspondente e esconde as outras
         if (allAreaContainers.length > 0) {
             allAreaContainers.forEach(a => {
                 a.style.display = (a.getAttribute('data-area') === filtro) ? '' : 'none';
@@ -63,17 +61,14 @@
             const cardId = card.dataset.id || card.getAttribute('data-id') || null;
             if (cardId && closedList.indexOf(String(cardId)) !== -1) status = 'fechado';
 
-            // Se existe área alvo, mova/mostre só os cards que baterem com o filtro dentro dessa área
             if (areaContainer) {
                 if (status === filtro) {
-                    // mover para a área (evita duplicar: appendChild remove do pai atual)
                     areaContainer.appendChild(card);
                     card.style.display = '';
                 } else {
                     card.style.display = 'none';
                 }
             } else {
-                // fallback: mostrar/ocultar no container padrão
                 card.style.display = (filtro === status) ? '' : 'none';
             }
 
