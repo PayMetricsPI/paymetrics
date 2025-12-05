@@ -14,6 +14,7 @@ console.log({
 });
 
 
+// Variáveis dos gráficos
 let cpuChart = null;
 let ramChart = null;
 let discoChart = null;
@@ -25,6 +26,7 @@ let chartDisco = null;
 let chartMBEnviados = null;
 let chartMBRecebidos = null;
 
+// Váriaveis dos alertas
 let alertaCPU = null;
 let alertaRAM = null;
 let alertaDisco = null;
@@ -40,6 +42,7 @@ let alertaCriticoUpload = null;
 let somaAlertaCriticos = null;
 let somaAlertas = null;
 
+//Variáveis dos limites/parâmetros
 let limites = {
     cpu: { normal: 60, critico: 80 },
     ram: { normal: 60, critico: 80 },
@@ -148,19 +151,19 @@ function separarPorPeriodo(todasLinhas) {
             console.log('AMOSTRA', i, row.data_alerta, '→ diffHoras =', diffHoras.toFixed(1));
         }
 
-        // 1 hora
+
         if (diffHoras <= 1) dadosPorPeriodo[1].push(row);
 
-        // 1 dia
+
         if (diffHoras <= 24) dadosPorPeriodo[2].push(row);
 
-        // 3 dias — pega apenas linhas com ts >= início de 3 dias atrás
+
         const inicio3Dias = new Date();
         inicio3Dias.setHours(0, 0, 0, 0);
-        inicio3Dias.setDate(inicio3Dias.getDate() - 2); // início exato de terça
+        inicio3Dias.setDate(inicio3Dias.getDate() - 2);
         if (ts >= inicio3Dias.getTime()) dadosPorPeriodo[3].push(row);
 
-        // 7 dias
+
         const inicio7Dias = new Date();
         inicio7Dias.setHours(0, 0, 0, 0);
         inicio7Dias.setDate(inicio7Dias.getDate() - 6);
@@ -224,7 +227,8 @@ function formatarDiferenca(timestamp) {
 }
 
 function buscarDados() {
-    // === BUSCAR MÉTRICAS ===
+
+    //Buscar métricas para atualizar os dunets
     fetch(`/metrica/obterUltimaPorMAC/${servidor.mac_address}`)
         .then(r => r.json())
         .then(data => {
@@ -238,7 +242,7 @@ function buscarDados() {
         .catch(() => console.log("rode o python :)"));
 
 
-    // === BUSCAR LIMITES DO SERVIDOR ===
+    // Buscar parâmetros
     const id_servidor = JSON.parse(sessionStorage.getItem('servidorSelecionado')).id_servidor;
 
     fetch("/parametro/obterParametro/" + id_servidor)
@@ -282,11 +286,12 @@ function buscarDados() {
             console.log("LIMITES ATUALIZADOS:", limites);
         });
 
-    // SE QUER ATUALIZAÇÃO CONSTANTE, USE:
+    // definição do tempo para atualizar os dunets
     setTimeout(buscarDados, 5000); // atualiza a cada 5s
 }
 
 
+// Funções para atualizar cada gráfico de dunets
 function atualizarCPU(valorCPU) {
     if (!chartCPU) return;
 
@@ -347,13 +352,7 @@ function atualizarMBEnviados(valorMbEnviados) {
     chartMBEnviados.update();
 }
 
-
-function atualizarBootTime(bootTime) {
-    const boottime = document.getElementById('boottime');
-    boottime.innerHTML = formatarDiferenca(bootTime);
-}
-
-
+// Função para contar os alertas por período
 
 function contarAlertasPorPeriodo(blocoDados, metrica) {
     if (!blocoDados || !Array.isArray(blocoDados)) return 0;
@@ -367,6 +366,7 @@ console.log({
     critico_Disco: document.getElementById('critico_Disco')
 });
 
+// Função para colocar os alertas padrões e críticos nos gráficos
 function distribuirAlertasNasLabels(dataFiltro, labels, periodo) {
     const contCPU = Array(labels.length).fill(0);
     const contCPUCritico = Array(labels.length).fill(0);
@@ -381,19 +381,22 @@ function distribuirAlertasNasLabels(dataFiltro, labels, periodo) {
 
     let inicioPeriodo;
 
-    if (periodo == 1) { // últimos 60 min
+    // Definição do período com base na multiplicação dos segundos pelos minutos/horas
+    if (periodo == 1) {
         inicioPeriodo = new Date(Date.now() - 60 * 60000);
-    } else if (periodo == 2) { // últimas 24h
+    } else if (periodo == 2) {
         inicioPeriodo = new Date(Date.now() - 24 * 3600000);
-    } else if (periodo == 3) { // últimos 3 dias
+    } else if (periodo == 3) {
         inicioPeriodo = new Date();
         inicioPeriodo.setHours(0, 0, 0, 0);
         inicioPeriodo.setDate(inicioPeriodo.getDate() - 2);
-    } else if (periodo == 4) { // últimos 7 dias
+    } else if (periodo == 4) {
         inicioPeriodo = new Date();
         inicioPeriodo.setHours(0, 0, 0, 0);
         inicioPeriodo.setDate(inicioPeriodo.getDate() - 6);
     }
+
+
 
     dataFiltro.forEach(row => {
         if (!row.data_alerta) return;
@@ -428,9 +431,9 @@ function distribuirAlertasNasLabels(dataFiltro, labels, periodo) {
     return { contCPU, contCPUCritico, contRAM, contRAMCritico, contDisco, contDiscoCritico, contDownload, contDownloadCritico, contUpload, contUploadCritico };
 }
 
+// Função para atualizar os gráficos destruindo e reconstruindo eles
 function atualizarGraficoPorPeriodo(periodo) {
 
-    // const dadosFiltrados = dadosPorPeriodo[periodo];
 
     if (cpuChart) cpuChart.destroy();
     if (ramChart) ramChart.destroy();
@@ -458,6 +461,7 @@ function atualizarGraficoPorPeriodo(periodo) {
     );
 
 
+    // Diferenciação dos períodos
     if (periodo === "1") {
 
         const qtdAlertasCPU = contarAlertasPorPeriodo(dataFiltro, "cpu_status");
