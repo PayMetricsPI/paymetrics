@@ -115,6 +115,13 @@ if (header) {
                         <span class="dash">Mercado</span>
                       </a>                    
                 </li>
+                </li>
+                    <li class="nav-item">
+                      <a class="nav-link py-3 d-flex mx-1 align-items-center" data-bs-placemnet="right" href="./dashboard-sazonalidade.html">
+                        <img src="assets/icons/analise_mercado.png" class="bi mask2" width="32" height="32" alt="">
+                        <span class="dash">Sazonalidade</span>
+                      </a>                    
+                </li>
                 
                  <li class="nav-item">
                       <a class="nav-link py-3 d-flex mx-1 align-items-center" data-bs-placemnet="right" href="./servidor.html ">

@@ -201,14 +201,20 @@ async function buscarHistoricoPais7Dias(pais) {
     return historico.reverse();
 }
 
+
 async function preencherSelectPaises() {
     const select = document.getElementById("selectPais");
     if (!select) return;
 
     select.innerHTML = "";
 
-    const paises = ["BR", "US", "CA", "FR", "JP"];
+    const optGlobal = document.createElement("option");
+    optGlobal.value = "GLOBAL";
+    optGlobal.textContent = "Todos os países";
+    select.appendChild(optGlobal);
 
+    const paises = ["BR", "US", "CA", "FR", "JP"];
+    
     paises.forEach(p => {
         const opt = document.createElement("option");
         opt.value = p;
@@ -217,23 +223,34 @@ async function preencherSelectPaises() {
     });
 
     const salvo = sessionStorage.getItem("paisSelecionado");
-    if (salvo && paises.includes(salvo)) {
+    if (salvo === "GLOBAL" || (salvo && paises.includes(salvo))) {
         select.value = salvo;
     }
 
     select.addEventListener("change", async (ev) => {
-        const novoPais = ev.target.value;
+        const valor = ev.target.value;
+        sessionStorage.setItem("paisSelecionado", valor);
 
-        sessionStorage.setItem("paisSelecionado", novoPais);
+        if (valor === "GLOBAL") {
+            await iniciarMapa();
+            if (btnVoltar) btnVoltar.classList.remove("show");
+            const historicoGlobal = await buscarHistorico7Dias();
+            atualizarGraficoLatenciaComDados(historicoGlobal);
+            return;
+        }
 
-        await atualizarCardEventos(novoPais);
+       
+        await iniciarMapa();
+        if (btnVoltar) btnVoltar.classList.remove("show");
 
-        const estados = await obterMapaEstados(novoPais);
+        await atualizarCardEventos(valor);
+
+        const estados = await obterMapaEstados(valor);
         if (estados.length > 0) {
-            exibirEstados(novoPais, estados);
+            exibirEstados(valor, estados);
         } else {
-            const lat = await gerarPingPais(novoPais);
-            atualizarTabela([{ nome: novoPais, latencia: lat }]);
+            const lat = await gerarPingPais(valor);
+            atualizarTabela([{ nome: valor, latencia: lat }]);
         }
 
         atualizarGraficoLatencia();
@@ -577,37 +594,157 @@ let chartBF = null;
 
 async function atualizarGraficoLatencia() {
     let paisSelecionado = sessionStorage.getItem("paisSelecionado") || "BR";
-    const historico = await buscarHistoricoPais7Dias(paisSelecionado);
+
+    let historico;
+    let tituloDataset;
+
+    if (paisSelecionado === "GLOBAL") {
+        historico = await buscarHistorico7Dias();
+        tituloDataset = "Latência Global";
+    } else {
+        historico = await buscarHistoricoPais7Dias(paisSelecionado);
+        tituloDataset = `Latência ${paisSelecionado}`;
+    }
 
     const ctx = document.getElementById("bfChart");
     if (!ctx) return;
 
-    if (!historico || historico.length === 0) {
+    if (!historico || historico.length == 0) {
         if (chartBF) chartBF.destroy();
-
-        const noDataCtx = ctx.getContext("2d");
-        noDataCtx.clearRect(0, 0, ctx.width, ctx.height);
-        noDataCtx.font = "18px Poppins";
-        noDataCtx.fillStyle = "#444";
-        noDataCtx.textAlign = "center";
-        noDataCtx.fillText("Nenhum servidor encontrado", ctx.width / 2, ctx.height / 2);
+        const c = ctx.getContext("2d");
+        c.clearRect(0, 0, ctx.width, ctx.height);
+        c.font = "18px Poppins";
+        c.fillStyle = "#999";
+        c.textAlign = "center";
+        c.fillText("Sem dados", ctx.width / 2, ctx.height / 2);
         return;
     }
 
     const labels = historico.map(h => {
         const [ano, mes, dia] = h.data.split('-');
-        const data = new Date(ano, mes - 1, dia);
-        return data.toLocaleDateString('pt-BR', { day: 'numeric', month: 'short' });
+        return new Date(ano, mes - 1, dia).toLocaleDateString('pt-BR', {
+            day: 'numeric',
+            month: 'short'
+        });
     });
 
     const valores = historico.map(h => h.media);
+    const PICO_IDEAL = 85;
 
+    if (chartBF) chartBF.destroy();
+
+    chartBF = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [
+                {
+                    label: tituloDataset,
+                    data: valores,
+                    borderColor: "#000000",
+                    backgroundColor: "#fff",
+                    tension: 0.4,
+                    borderWidth: 5,
+                    pointRadius: 10,
+                    pointHoverRadius: 14,
+                    pointBackgroundColor: "#0000ff",
+                    pointBorderColor: "#fff",
+                    pointBorderWidth: 4,
+                    pointHoverBorderWidth: 5,
+                    fill: true
+                },
+                {
+                    label: "Pico Ideal",
+                    data: Array(7).fill(PICO_IDEAL),
+                    borderColor: "#4caf50",
+                    borderDash: [10, 6],
+                    borderWidth: 3,
+                    pointRadius: 0,
+                    fill: false,
+                    tension: 0
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: { mode: 'index', intersect: false },
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'top',
+                    labels: {
+                        font: { size: 15, weight: "600", family: "Poppins" },
+                        color: "#333",
+                        usePointStyle: true,
+                        padding: 25,
+                        filter: (item) => item.text.includes("Latência") || item.text === "Pico Ideal"
+                    }
+                },
+                title: { display: false },
+                tooltip: {
+                    backgroundColor: "rgba(0,0,0,0.85)",
+                    titleFont: { size: 14 },
+                    bodyFont: { size: 16, weight: "600" },
+                    padding: 12,
+                    cornerRadius: 10,
+                    displayColors: false,
+                    callbacks: {
+                        label: (ctx) => ctx.parsed.y + " ms"
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    grid: { display: false },
+                    ticks: { font: { size: 14 }, color: "#555" }
+                },
+                y: {
+                    grid: { color: "rgba(0,0,0,0.04)", drawBorder: false },
+                    ticks: {
+                        font: { size: 14 },
+                        color: "#555",
+                        padding: 10,
+                        callback: v => v + "ms"
+                    }
+                }
+            }
+        }
+    });
+}
+
+function atualizarGraficoLatenciaComDados(historico) {
+    sessionStorage.setItem("paisSelecionado", "GLOBAL");
+    atualizarGraficoLatencia();
+}
+function atualizarGraficoLatenciaComDados(historico) {
+    const ctx = document.getElementById("bfChart");
+    if (!ctx) return;
+
+    if (!historico || historico.length === 0) {
+        if (chartBF) chartBF.destroy();
+        const c = ctx.getContext("2d");
+        c.clearRect(0, 0, ctx.width, ctx.height);
+        c.font = "18px Poppins";
+        c.fillStyle = "#444";
+        c.textAlign = "center";
+        c.fillText("Sem dados", ctx.width / 2, ctx.height / 2);
+        return;
+    }
+
+    const labels = historico.map(h => {
+        const [a, m, d] = h.data.split('-');
+        return new Date(a, m-1, d).toLocaleDateString('pt-BR', {day:'numeric', month:'short'});
+    });
+
+    const valores = historico.map(h => h.media);
     const anoPassado = valores.map(v => Math.round(v * (0.85 + Math.random() * 0.3)));
 
     if (chartBF) {
         chartBF.data.labels = labels;
         chartBF.data.datasets[0].data = anoPassado;
         chartBF.data.datasets[1].data = valores;
+        chartBF.options.plugins.title = {display:true, text:"Latência Média Global"};
         chartBF.update();
         return;
     }
@@ -617,78 +754,16 @@ async function atualizarGraficoLatencia() {
         data: {
             labels: labels,
             datasets: [
-                {
-                    label: "Semana passada",
-                    data: anoPassado,
-                    borderColor: "#d32f2f",
-                    backgroundColor: "rgba(211, 47, 47, 0.1)",
-                    tension: 0.35,
-                    borderWidth: 2,
-                    fill: false,
-                    pointRadius: 3,
-                    pointBackgroundColor: "#d32f2f"
-                },
-                {
-                    label: "Latência Atual",
-                    data: valores,
-                    borderColor: "#1e88e5",
-                    backgroundColor: "rgba(30, 136, 229, 0.1)",
-                    tension: 0.35,
-                    borderWidth: 4,
-                    fill: false,
-                    pointRadius: 5,
-                    pointHoverRadius: 8,
-                    pointBackgroundColor: "#1e88e5"
-                },
-                {
-                    label: "Pico Ideal",
-                    data: Array(7).fill(90),
-                    borderColor: "#4caf50",
-                    borderDash: [8, 4],
-                    borderWidth: 2,
-                    tension: 0,
-                    fill: false,
-                    pointRadius: 0
-                }
+                {label:"Semana passada",data:anoPassado,borderColor:"#d32f2f",tension:0.35,borderWidth:2,fill:false},
+                {label:"Latência Global",data:valores,borderColor:"#1e88e5",tension:0.35,borderWidth:4,fill:false,pointRadius:5},
+                {label:"Pico Ideal",data:Array(7).fill(90),borderColor:"#4caf50",borderDash:[8,4],borderWidth:2,pointRadius:0}
             ]
         },
         options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            interaction: {
-                mode: 'index',
-                intersect: false
-            },
-            plugins: {
-                legend: { display: false },
-                tooltip: {
-                    callbacks: {
-                        label: function (context) {
-                            return `${context.dataset.label}: ${context.parsed.y}ms`;
-                        }
-                    }
-                }
-            },
-            scales: {
-                x: {
-                    grid: { display: false },
-                    ticks: {
-                        font: { size: 13, weight: "600" },
-                        color: "#333"
-                    }
-                },
-                y: {
-                    beginAtZero: false,
-                    suggestedMin: 0,
-                    suggestedMax: 200,
-                    grid: { color: "rgba(0,0,0,0.05)" },
-                    ticks: {
-                        font: { size: 13, weight: "600" },
-                        color: "#333",
-                        callback: value => value + 'ms'
-                    }
-                }
-            }
+            responsive:true,
+            maintainAspectRatio:false,
+            plugins:{legend:{display:false},title:{display:true,text:"Latência Média Global"}},
+            scales:{y:{suggestedMax:200,ticks:{callback:v=>v+'ms'}}}
         }
     });
 }
