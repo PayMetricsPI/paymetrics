@@ -1,133 +1,141 @@
-    const usersDiv = document.querySelector('.users');
-    const fkempresa = Number(sessionStorage.getItem('id'));
-    const servidor = JSON.parse(sessionStorage.getItem('servidorSelecionado'));
+const usersDiv = document.querySelector('.users');
+const fkempresa = Number(sessionStorage.getItem('id'));
+const servidor = JSON.parse(sessionStorage.getItem('servidorSelecionado'));
 
-    console.log('SERVIDOR COMPLETO:', servidor);
-    console.log('MAC:', servidor?.mac);
-    console.log('TODOS OS CAMPOS:', Object.keys(servidor || {}));
+console.log('SERVIDOR COMPLETO:', servidor);
+console.log('MAC:', servidor?.mac);
+console.log('TODOS OS CAMPOS:', Object.keys(servidor || {}));
 
-    console.log({
-        alerta_numero_critico: document.getElementById('alerta_numero_critico'),
-        critico_CPU: document.getElementById('critico_CPU'),
-        critico_RAM: document.getElementById('critico_RAM'),
-        critico_Disco: document.getElementById('critico_Disco')
-    });
-
-
-    let cpuChart = null;
-    let ramChart = null;
-    let discoChart = null;
-    let redeChart = null;
-    let redeChart2 = null;
-    let chartCPU = null;
-    let chartRAM = null;
-    let chartDisco = null;
-    let chartMBEnviados = null;
-    let chartMBRecebidos = null;
-
-    let alertaCPU = null;
-    let alertaRAM = null;
-    let alertaDisco = null;
-    let alertaDownload = null;
-    let alertaUpload = null;
-
-    let alertaCriticoCPU = null;
-    let alertaCriticoRAM = null;
-    let alertaCriticoDisco = null;
-    let alertaCriticoDownload = null;
-    let alertaCriticoUpload = null;
-
-    let somaAlertaCriticos = null;
-    let somaAlertas = null;
-
-    // Variáveis globais
-    let data = [];
-
-    let estatisticasAlertas = null;
+console.log({
+    alerta_numero_critico: document.getElementById('alerta_numero_critico'),
+    critico_CPU: document.getElementById('critico_CPU'),
+    critico_RAM: document.getElementById('critico_RAM'),
+    critico_Disco: document.getElementById('critico_Disco')
+});
 
 
-    
-    // Converte data_alerta para timestamp
-    function paraTimestamp(dateString) {
-        return new Date(dateString.replace(" ", "T")).getTime();
+let cpuChart = null;
+let ramChart = null;
+let discoChart = null;
+let redeChart = null;
+let redeChart2 = null;
+let chartCPU = null;
+let chartRAM = null;
+let chartDisco = null;
+let chartMBEnviados = null;
+let chartMBRecebidos = null;
+
+let alertaCPU = null;
+let alertaRAM = null;
+let alertaDisco = null;
+let alertaDownload = null;
+let alertaUpload = null;
+
+let alertaCriticoCPU = null;
+let alertaCriticoRAM = null;
+let alertaCriticoDisco = null;
+let alertaCriticoDownload = null;
+let alertaCriticoUpload = null;
+
+let somaAlertaCriticos = null;
+let somaAlertas = null;
+
+let limites = {
+    cpu: { normal: 60, critico: 80 },
+    ram: { normal: 60, critico: 80 },
+    disco: { normal: 60, critico: 80 },
+    mbEnviados: { normal: 60, critico: 80 },
+    mbRecebidos: { normal: 60, critico: 80 }
+};
+
+// Variáveis globais
+let data = [];
+
+let estatisticasAlertas = null;
+
+
+
+// Converte data_alerta para timestamp
+function paraTimestamp(dateString) {
+    return new Date(dateString.replace(" ", "T")).getTime();
+}
+
+function carregarDados() {
+    return fetch('/s3/downloadJSON')
+        .then(response => response.json())
+        .then(response => {
+
+            data = response.data.flat();
+            console.log("TOTAL CARREGADO:", data.length);
+
+            separarPorPeriodo(data);
+
+            calcularAlertas(data);
+        })
+        .catch(err => console.error('ERRO S3:', err));
+}
+
+function calcularAlertas(dataFiltro = data) {
+    console.log('CALCULANDO alertas com', dataFiltro.length, 'linhas brutas');
+
+    if (servidor) {
+        const mac = servidor.macaddress;
+        const servidorData = dataFiltro.filter(row => row.macaddress === mac);
+
+        console.log('RAM críticos no período:',
+            servidorData.filter(r => r.ram_status_critico === 'CRITICO').length
+        );
+        console.log('DISCO críticos no período:',
+            servidorData.filter(r => r.disco_status_critico === 'CRITICO').length
+        );
+        console.log('CPU críticos no período:',
+            servidorData.filter(r => r.cpu_status_critico === 'CRITICO').length
+        );
+
+        console.log('SERVIDOR DATA após filtro MAC:', servidorData.length, 'linhas');
+
+        alertaCPU = servidorData.filter(row => row.cpu_status === "NORMAL").length;
+        alertaRAM = servidorData.filter(row => row.ram_status === "NORMAL").length;
+        alertaDisco = servidorData.filter(row => row.disco_status === "NORMAL").length;
+        alertaDownload = servidorData.filter(row => row.mb_recebidos_status === "NORMAL").length;
+        alertaUpload = servidorData.filter(row => row.mb_enviados_status === "NORMAL").length;
+
+        alertaCriticoCPU = servidorData.filter(row => row.cpu_status_critico === "CRITICO").length;
+        alertaCriticoRAM = servidorData.filter(row => row.ram_status_critico === "CRITICO").length;
+        alertaCriticoDisco = servidorData.filter(row => row.disco_status_critico === "CRITICO").length;
+        alertaCriticoDownload = servidorData.filter(row => row.mb_recebidos_status_critico === "CRITICO").length;
+        alertaCriticoUpload = servidorData.filter(row => row.mb_enviados_status_critico === "CRITICO").length;
+
+        somaAlertas = alertaCPU + alertaRAM + alertaDisco + alertaDownload + alertaUpload;
+        somaAlertaCriticos = alertaCriticoCPU + alertaCriticoRAM + alertaCriticoDisco + alertaCriticoDownload + alertaCriticoUpload;
+
+        estatisticasAlertas = {
+            normal: [alertaCPU, alertaRAM, alertaDisco, alertaUpload, alertaDownload],
+            critico: [alertaCriticoCPU, alertaCriticoRAM, alertaCriticoDisco, alertaCriticoUpload, alertaCriticoDownload]
+        };
+
+        // Atualizar contadores
+        document.getElementById('alerta_numero_padrao').textContent = somaAlertas;
+        document.getElementById('alerta_numero_critico').textContent = somaAlertaCriticos;
+        document.getElementById('critico_CPU').textContent = alertaCriticoCPU;
+        document.getElementById('padrao_CPU').textContent = alertaCPU;
+        document.getElementById('critico_RAM').textContent = alertaCriticoRAM;
+        document.getElementById('padrao_RAM').textContent = alertaRAM;
+        document.getElementById('critico_Disco').textContent = alertaCriticoDisco;
+        document.getElementById('padrao_Disco').textContent = alertaDisco;
+        document.getElementById('critico_Download').textContent = alertaCriticoDownload;
+        document.getElementById('padrao_Download').textContent = alertaDownload;
+        document.getElementById('critico_Upload').textContent = alertaCriticoUpload;
+        document.getElementById('padrao_Upload').textContent = alertaUpload;
+
+        document.getElementById('servidorNome').textContent = servidor.nome;
+        document.getElementById('modelo_cpu').textContent = servidor.tipocpu;
+        document.getElementById('capacidade_ram').textContent = servidor.ram + 'GB';
+        document.getElementById('capacidade_disco').textContent = servidor.disco + 'TB';
     }
+}
 
-    function carregarDados() {
-        return fetch('/s3/downloadJSON')
-            .then(response => response.json())
-            .then(response => {
-
-                data = response.data.flat();
-                console.log("TOTAL CARREGADO:", data.length);
-
-                separarPorPeriodo(data);
-
-                calcularAlertas(data);
-            })
-            .catch(err => console.error('ERRO S3:', err));
-    }
-
-    function calcularAlertas(dataFiltro = data) {
-        console.log('CALCULANDO alertas com', dataFiltro.length, 'linhas brutas');
-
-        if (servidor) {
-            const mac = servidor.macaddress;
-            const servidorData = dataFiltro.filter(row => row.macaddress === mac);
-
-            console.log('RAM críticos no período:',
-                servidorData.filter(r => r.ram_status_critico === 'CRITICO').length
-            );
-            console.log('DISCO críticos no período:',
-                servidorData.filter(r => r.disco_status_critico === 'CRITICO').length
-            );
-            console.log('CPU críticos no período:',
-                servidorData.filter(r => r.cpu_status_critico === 'CRITICO').length
-            );
-
-            console.log('SERVIDOR DATA após filtro MAC:', servidorData.length, 'linhas');
-
-            alertaCPU = servidorData.filter(row => row.cpu_status === "NORMAL").length;
-            alertaRAM = servidorData.filter(row => row.ram_status === "NORMAL").length;
-            alertaDisco = servidorData.filter(row => row.disco_status === "NORMAL").length;
-            alertaDownload = servidorData.filter(row => row.mb_recebidos_status === "NORMAL").length;
-            alertaUpload = servidorData.filter(row => row.mb_enviados_status === "NORMAL").length;
-
-            alertaCriticoCPU = servidorData.filter(row => row.cpu_status_critico === "CRITICO").length;
-            alertaCriticoRAM = servidorData.filter(row => row.ram_status_critico === "CRITICO").length;
-            alertaCriticoDisco = servidorData.filter(row => row.disco_status_critico === "CRITICO").length;
-            alertaCriticoDownload = servidorData.filter(row => row.mb_recebidos_status_critico === "CRITICO").length;
-            alertaCriticoUpload = servidorData.filter(row => row.mb_enviados_status_critico === "CRITICO").length;
-
-            somaAlertas = alertaCPU + alertaRAM + alertaDisco + alertaDownload + alertaUpload;
-            somaAlertaCriticos = alertaCriticoCPU + alertaCriticoRAM + alertaCriticoDisco + alertaCriticoDownload + alertaCriticoUpload;
-
-            estatisticasAlertas = {
-                normal: [alertaCPU, alertaRAM, alertaDisco, alertaUpload, alertaDownload],
-                critico: [alertaCriticoCPU, alertaCriticoRAM, alertaCriticoDisco, alertaCriticoUpload, alertaCriticoDownload]
-            };
-
-            // Atualizar contadores
-            document.getElementById('alerta_numero_padrao').textContent = somaAlertas;
-            document.getElementById('alerta_numero_critico').textContent = somaAlertaCriticos;
-            document.getElementById('critico_CPU').textContent = alertaCriticoCPU;
-            document.getElementById('padrao_CPU').textContent = alertaCPU;
-            document.getElementById('critico_RAM').textContent = alertaCriticoRAM;
-            document.getElementById('padrao_RAM').textContent = alertaRAM;
-            document.getElementById('critico_Disco').textContent = alertaCriticoDisco;
-            document.getElementById('padrao_Disco').textContent = alertaDisco;
-            document.getElementById('critico_Download').textContent = alertaCriticoDownload;
-            document.getElementById('padrao_Download').textContent = alertaDownload;
-            document.getElementById('critico_Upload').textContent = alertaCriticoUpload;
-            document.getElementById('padrao_Upload').textContent = alertaUpload;
-
-            document.getElementById('servidorNome').textContent = servidor.nome;
-            document.getElementById('modelo_cpu').textContent = servidor.tipocpu;
-            document.getElementById('capacidade_ram').textContent = servidor.ram + 'GB';
-            document.getElementById('capacidade_disco').textContent = servidor.disco + 'TB';
-        }
-    }
-
-   function separarPorPeriodo(todasLinhas) {
+function separarPorPeriodo(todasLinhas) {
     const agora = Date.now();
     dadosPorPeriodo = { 1: [], 2: [], 3: [], 4: [] };
 
@@ -167,1034 +175,1015 @@
     });
 }
 
-    function gerarLabelsDinamicas(periodo) {
-        const agora = new Date();
-        let labels = [];
+function gerarLabelsDinamicas(periodo) {
+    const agora = new Date();
+    let labels = [];
 
-        if (periodo == 1) { // últimos 60 min, blocos de 15 min
-            for (let i = 60; i >= 0; i -= 15) {
-                const t = new Date(agora.getTime() - i * 60000);
-                labels.push(t.toTimeString().slice(0, 5)); // "HH:MM"
-            }
-        } else if (periodo == 2) { // últimas 24h, blocos de 6h
-            for (let i = 24; i >= 0; i -= 6) {
-                const t = new Date(agora.getTime() - i * 3600000);
-                labels.push(t.toTimeString().slice(0, 5));
-            }
-        } else if (periodo == 3) { // últimos 3 dias, label por dia
-            const inicioPeriodo = new Date();
-            inicioPeriodo.setHours(0, 0, 0, 0); // início de hoje
-            inicioPeriodo.setDate(inicioPeriodo.getDate() - 2); // 3 dias
-
-            for (let i = 0; i < 3; i++) {
-                const t = new Date(inicioPeriodo);
-                t.setDate(t.getDate() + i);
-                labels.push(t.toLocaleDateString("pt-BR", { weekday: "short" }));
-            }
-        } else if (periodo == 4) { // últimos 7 dias, label por dia
-            const inicioPeriodo = new Date();
-            inicioPeriodo.setHours(0, 0, 0, 0); // início de hoje
-            inicioPeriodo.setDate(inicioPeriodo.getDate() - 6); // 7 dias
-
-            for (let i = 0; i < 7; i++) {
-                const t = new Date(inicioPeriodo);
-                t.setDate(t.getDate() + i);
-                labels.push(t.toLocaleDateString("pt-BR", { weekday: "short" }));
-            }
+    if (periodo == 1) { // últimos 60 min, blocos de 15 min
+        for (let i = 60; i >= 0; i -= 15) {
+            const t = new Date(agora.getTime() - i * 60000);
+            labels.push(t.toTimeString().slice(0, 5)); // "HH:MM"
         }
+    } else if (periodo == 2) { // últimas 24h, blocos de 6h
+        for (let i = 24; i >= 0; i -= 6) {
+            const t = new Date(agora.getTime() - i * 3600000);
+            labels.push(t.toTimeString().slice(0, 5));
+        }
+    } else if (periodo == 3) { // últimos 3 dias, label por dia
+        const inicioPeriodo = new Date();
+        inicioPeriodo.setHours(0, 0, 0, 0); // início de hoje
+        inicioPeriodo.setDate(inicioPeriodo.getDate() - 2); // 3 dias
 
-        return labels;
+        for (let i = 0; i < 3; i++) {
+            const t = new Date(inicioPeriodo);
+            t.setDate(t.getDate() + i);
+            labels.push(t.toLocaleDateString("pt-BR", { weekday: "short" }));
+        }
+    } else if (periodo == 4) { // últimos 7 dias, label por dia
+        const inicioPeriodo = new Date();
+        inicioPeriodo.setHours(0, 0, 0, 0); // início de hoje
+        inicioPeriodo.setDate(inicioPeriodo.getDate() - 6); // 7 dias
+
+        for (let i = 0; i < 7; i++) {
+            const t = new Date(inicioPeriodo);
+            t.setDate(t.getDate() + i);
+            labels.push(t.toLocaleDateString("pt-BR", { weekday: "short" }));
+        }
     }
 
-    function formatarDiferenca(timestamp) {
-        const agora = Date.now();
-        const diffSegundos = Math.abs(agora - timestamp) / 1000;
-        const dias = Math.floor(diffSegundos / 60 / 60 / 24);
-        const horas = Math.floor(diffSegundos / 60 / 60 % 24);
-        const minutos = Math.floor(diffSegundos / 60 % 60);
-        return `${dias.toString().padStart(2, '0')}d ${horas.toString().padStart(2, '0')}h ${minutos.toString().padStart(2, '0')}m`;
-    }
+    return labels;
+}
 
-    function buscarDados() {
-        fetch(`/metrica/obterUltimaPorMAC/${servidor.macaddress}`, { method: 'GET' })
-            .then(resultado => resultado.json())
-            .then(data => {
-                atualizarCPU(data.cpu);
-                atualizarRAM(data.ram);
-                atualizarDisco(data.disco);
-                atualizarMBEnviados(data.mbEnviados);
-                atualizarMBRecebidos(data.mbRecebidos);
-                atualizarBootTime(data.tempoBoot);
-            })
-            .catch(() => console.log('rode o python'));
+function formatarDiferenca(timestamp) {
+    const agora = Date.now();
+    const diffSegundos = Math.abs(agora - timestamp) / 1000;
+    const dias = Math.floor(diffSegundos / 60 / 60 / 24);
+    const horas = Math.floor(diffSegundos / 60 / 60 % 24);
+    const minutos = Math.floor(diffSegundos / 60 % 60);
+    return `${dias.toString().padStart(2, '0')}d ${horas.toString().padStart(2, '0')}h ${minutos.toString().padStart(2, '0')}m`;
+}
 
-        const id_servidor = JSON.parse(sessionStorage.getItem('servidorSelecionado')).id_servidor;
-        fetch("/parametro/obterParametro/" + id_servidor, { method: 'GET' })
-            .then(resultado => resultado.json())
-            .then(data => {
-                for (let i = 0; i < data.length; i++) {
-                    if (data[i].nome == "CPU") {
-                        document.getElementById('lim_padrao_cpu').innerHTML = data[i].alerta_normal + "%";
-                        document.getElementById('lim_critico_cpu').innerHTML = data[i].alerta_critico + "%";
-                    } else if (data[i].nome == "RAM") {
-                        document.getElementById('lim_padrao_ram').innerHTML = data[i].alerta_normal + "%";
-                        document.getElementById('lim_critico_ram').innerHTML = data[i].alerta_critico + "%";
-                    } else if (data[i].nome == "Mb Enviados - REDE") {
-                        document.getElementById('lim_padrao_disco').innerHTML = data[i].alerta_normal + "%";
-                        document.getElementById('lim_critico_disco').innerHTML = data[i].alerta_critico + "%";
-                    } else if (data[i].nome == "Mb Recebidos - REDE") {
-                        document.getElementById('lim_padrao_upload').innerHTML = data[i].alerta_normal + "%";
-                        document.getElementById('lim_critico_upload').innerHTML = data[i].alerta_critico + "%";
-                    } else {
-                        document.getElementById('lim_padrao_download').innerHTML = data[i].alerta_normal + "%";
-                        document.getElementById('lim_critico_download').innerHTML = data[i].alerta_critico + "%";
-                    }
+function buscarDados() {
+    // === BUSCAR MÉTRICAS ===
+    fetch(`/metrica/obterUltimaPorMAC/${servidor.mac_address}`)
+        .then(r => r.json())
+        .then(data => {
+            atualizarCPU(data.cpu);
+            atualizarRAM(data.ram);
+            atualizarDisco(data.disco);
+            atualizarMBEnviados(data.mbEnviados);
+            atualizarMBRecebidos(data.mbRecebidos);
+            atualizarBootTime(data.tempoBoot);
+        })
+        .catch(() => console.log("rode o python :)"));
+
+
+    // === BUSCAR LIMITES DO SERVIDOR ===
+    const id_servidor = JSON.parse(sessionStorage.getItem('servidorSelecionado')).id_servidor;
+
+    fetch("/parametro/obterParametro/" + id_servidor)
+        .then(r => r.json())
+        .then(data => {
+
+            for (let i = 0; i < data.length; i++) {
+
+                if (data[i].nome === "CPU") {
+                    document.getElementById('lim_padrao_cpu').innerHTML = data[i].alerta_normal + "%";
+                    document.getElementById('lim_critico_cpu').innerHTML = data[i].alerta_critico + "%";
+                    limites.cpu.normal = Number(data[i].alerta_normal);
+                    limites.cpu.critico = Number(data[i].alerta_critico);
+
+                } else if (data[i].nome === "RAM") {
+                    document.getElementById('lim_padrao_ram').innerHTML = data[i].alerta_normal + "%";
+                    document.getElementById('lim_critico_ram').innerHTML = data[i].alerta_critico + "%";
+                    limites.ram.normal = Number(data[i].alerta_normal);
+                    limites.ram.critico = Number(data[i].alerta_critico);
+
+                } else if (data[i].nome === "DISCO") {
+                    document.getElementById('lim_padrao_disco').innerHTML = data[i].alerta_normal + "%";
+                    document.getElementById('lim_critico_disco').innerHTML = data[i].alerta_critico + "%";
+                    limites.disco.normal = Number(data[i].alerta_normal);
+                    limites.disco.critico = Number(data[i].alerta_critico);
+
+                } else if (data[i].nome === "Mb Enviados - REDE") {
+                    document.getElementById('lim_padrao_upload').innerHTML = data[i].alerta_normal + "%";
+                    document.getElementById('lim_critico_upload').innerHTML = data[i].alerta_critico + "%";
+                    limites.mbEnviados.normal = Number(data[i].alerta_normal);
+                    limites.mbEnviados.critico = Number(data[i].alerta_critico);
+
+                } else if (data[i].nome === "Mb Recebidos - REDE") {
+                    document.getElementById('lim_padrao_download').innerHTML = data[i].alerta_normal + "%";
+                    document.getElementById('lim_critico_download').innerHTML = data[i].alerta_critico + "%";
+                    limites.mbRecebidos.normal = Number(data[i].alerta_normal);
+                    limites.mbRecebidos.critico = Number(data[i].alerta_critico);
                 }
-            });
-    }
-
-    function atualizarCPU(valorCPU) {
-        if (chartCPU) {
-            chartCPU.data.datasets[0].data = [valorCPU, 100 - valorCPU];
-            chartCPU.update();
-        }
-    }
-
-    function atualizarRAM(valorRAM) {
-        if (chartRAM) {
-            chartRAM.data.datasets[0].data = [valorRAM, 100 - valorRAM];
-            chartRAM.update();
-        }
-    }
-
-    function atualizarDisco(valorDisco) {
-        if (chartDisco) {
-            chartDisco.data.datasets[0].data = [valorDisco, 100 - valorDisco];
-            chartDisco.update();
-        }
-    }
-
-    function atualizarMBRecebidos(valorMbRecebidos) {
-        if (chartMBRecebidos) {
-            chartMBRecebidos.data.datasets[0].data = [valorMbRecebidos, 100 - valorMbRecebidos];
-            chartMBRecebidos.update();
-        }
-    }
-
-    function atualizarMBEnviados(valorMbEnviados) {
-        if (chartMBEnviados) {
-            chartMBEnviados.data.datasets[0].data = [valorMbEnviados, 100 - valorMbEnviados];
-            chartMBEnviados.update();
-        }
-    }
-
-    function atualizarBootTime(bootTime) {
-        const boottime = document.getElementById('boottime');
-        boottime.innerHTML = formatarDiferenca(bootTime);
-    }
-
-
-
-    function contarAlertasPorPeriodo(blocoDados, metrica) {
-        if (!blocoDados || !Array.isArray(blocoDados)) return 0;
-        return blocoDados.filter(row => row[metrica] && row[metrica] == "NORMAL").length;
-    }
-
-    console.log({
-        alerta_numero_critico: document.getElementById('alerta_numero_critico'),
-        critico_CPU: document.getElementById('critico_CPU'),
-        critico_RAM: document.getElementById('critico_RAM'),
-        critico_Disco: document.getElementById('critico_Disco')
-    });
-
-    function distribuirAlertasNasLabels(dataFiltro, labels, periodo) {
-        const contCPU = Array(labels.length).fill(0);
-        const contCPUCritico = Array(labels.length).fill(0);
-        const contRAM = Array(labels.length).fill(0);
-        const contRAMCritico = Array(labels.length).fill(0);
-        const contDisco = Array(labels.length).fill(0);
-        const contDiscoCritico = Array(labels.length).fill(0);
-        const contDownload = Array(labels.length).fill(0);
-        const contDownloadCritico = Array(labels.length).fill(0);
-        const contUpload = Array(labels.length).fill(0);
-        const contUploadCritico = Array(labels.length).fill(0);
-
-        let inicioPeriodo;
-
-        if (periodo == 1) { // últimos 60 min
-            inicioPeriodo = new Date(Date.now() - 60 * 60000);
-        } else if (periodo == 2) { // últimas 24h
-            inicioPeriodo = new Date(Date.now() - 24 * 3600000);
-        } else if (periodo == 3) { // últimos 3 dias
-            inicioPeriodo = new Date();
-            inicioPeriodo.setHours(0, 0, 0, 0);
-            inicioPeriodo.setDate(inicioPeriodo.getDate() - 2);
-        } else if (periodo == 4) { // últimos 7 dias
-            inicioPeriodo = new Date();
-            inicioPeriodo.setHours(0, 0, 0, 0);
-            inicioPeriodo.setDate(inicioPeriodo.getDate() - 6);
-        }
-
-        dataFiltro.forEach(row => {
-            if (!row.data_alerta) return;
-            const ts = new Date(row.data_alerta.replace(' ', 'T'));
-
-            let index = -1;
-
-            if (periodo == 1) {
-                index = Math.floor((ts - inicioPeriodo) / (15 * 60000));
-            } else if (periodo == 2) {
-                index = Math.floor((ts - inicioPeriodo) / (6 * 3600000));
-            } else if (periodo == 3) {
-                index = Math.floor((ts - inicioPeriodo) / 86400000);
-            } else if (periodo == 4) {
-                index = Math.floor((ts - inicioPeriodo) / 86400000);
             }
 
-            if (index < 0 || index >= labels.length) return;
-
-            if (row.cpu_status === "NORMAL") contCPU[index]++;
-            if (row.cpu_status_critico === "CRITICO") contCPUCritico[index]++;
-            if (row.ram_status === "NORMAL") contRAM[index]++;
-            if (row.ram_status_critico === "CRITICO") contRAMCritico[index]++;
-            if (row.disco_status === "NORMAL") contDisco[index]++;
-            if (row.disco_status_critico === "CRITICO") contDiscoCritico[index]++;
-            if (row.mb_recebidos_status === "NORMAL") contDownload[index]++;
-            if (row.mb_recebidos_status_critico === "CRITICO") contDownloadCritico[index]++;
-            if (row.mb_enviados_status === "NORMAL") contUpload[index]++;
-            if (row.mb_enviados_status_critico === "CRITICO") contUploadCritico[index]++;
+            console.log("LIMITES ATUALIZADOS:", limites);
         });
 
-        return { contCPU, contCPUCritico, contRAM, contRAMCritico, contDisco, contDiscoCritico, contDownload, contDownloadCritico, contUpload, contUploadCritico };
+    // SE QUER ATUALIZAÇÃO CONSTANTE, USE:
+    setTimeout(buscarDados, 5000); // atualiza a cada 5s
+}
+
+
+function atualizarCPU(valorCPU) {
+    if (!chartCPU) return;
+
+    let cor = "green";
+    if (valorCPU >= limites.cpu.critico) cor = "red";
+    else if (valorCPU >= limites.cpu.normal) cor = "yellow";
+
+    chartCPU.data.datasets[0].backgroundColor = [cor, "#ccc"];
+    chartCPU.data.datasets[0].data = [valorCPU, 100 - valorCPU];
+    chartCPU.update();
+}
+
+function atualizarRAM(valorRAM) {
+    if (!chartRAM) return;
+
+    let cor = "green";
+    if (valorRAM >= limites.ram.critico) cor = "red";
+    else if (valorRAM >= limites.ram.normal) cor = "yellow";
+
+    chartRAM.data.datasets[0].backgroundColor = [cor, "#ccc"];
+    chartRAM.data.datasets[0].data = [valorRAM, 100 - valorRAM];
+    chartRAM.update();
+}
+
+function atualizarDisco(valorDisco) {
+    if (!chartDisco) return;
+
+    let cor = "green";
+    if (valorDisco >= limites.disco.critico) cor = "red";
+    else if (valorDisco >= limites.disco.normal) cor = "yellow";
+
+    chartDisco.data.datasets[0].backgroundColor = [cor, "#ccc"];
+    chartDisco.data.datasets[0].data = [valorDisco, 100 - valorDisco];
+    chartDisco.update();
+}
+
+function atualizarMBRecebidos(valorMbRecebidos) {
+    if (!chartMBRecebidos) return;
+
+    let cor = "green";
+    if (valorMbRecebidos >= limites.mbRecebidos.critico) cor = "red";
+    else if (valorMbRecebidos >= limites.mbRecebidos.normal) cor = "yellow";
+
+    chartMBRecebidos.data.datasets[0].backgroundColor = [cor, "#ccc"];
+    chartMBRecebidos.data.datasets[0].data = [valorMbRecebidos, 100 - valorMbRecebidos];
+    chartMBRecebidos.update();
+}
+
+function atualizarMBEnviados(valorMbEnviados) {
+    if (!chartMBEnviados) return;
+
+    let cor = "green";
+    if (valorMbEnviados >= limites.mbEnviados.critico) cor = "red";
+    else if (valorMbEnviados >= limites.mbEnviados.normal) cor = "yellow";
+
+    chartMBEnviados.data.datasets[0].backgroundColor = [cor, "#ccc"];
+    chartMBEnviados.data.datasets[0].data = [valorMbEnviados, 100 - valorMbEnviados];
+    chartMBEnviados.update();
+}
+
+
+function atualizarBootTime(bootTime) {
+    const boottime = document.getElementById('boottime');
+    boottime.innerHTML = formatarDiferenca(bootTime);
+}
+
+
+
+function contarAlertasPorPeriodo(blocoDados, metrica) {
+    if (!blocoDados || !Array.isArray(blocoDados)) return 0;
+    return blocoDados.filter(row => row[metrica] && row[metrica] == "NORMAL").length;
+}
+
+console.log({
+    alerta_numero_critico: document.getElementById('alerta_numero_critico'),
+    critico_CPU: document.getElementById('critico_CPU'),
+    critico_RAM: document.getElementById('critico_RAM'),
+    critico_Disco: document.getElementById('critico_Disco')
+});
+
+function distribuirAlertasNasLabels(dataFiltro, labels, periodo) {
+    const contCPU = Array(labels.length).fill(0);
+    const contCPUCritico = Array(labels.length).fill(0);
+    const contRAM = Array(labels.length).fill(0);
+    const contRAMCritico = Array(labels.length).fill(0);
+    const contDisco = Array(labels.length).fill(0);
+    const contDiscoCritico = Array(labels.length).fill(0);
+    const contDownload = Array(labels.length).fill(0);
+    const contDownloadCritico = Array(labels.length).fill(0);
+    const contUpload = Array(labels.length).fill(0);
+    const contUploadCritico = Array(labels.length).fill(0);
+
+    let inicioPeriodo;
+
+    if (periodo == 1) { // últimos 60 min
+        inicioPeriodo = new Date(Date.now() - 60 * 60000);
+    } else if (periodo == 2) { // últimas 24h
+        inicioPeriodo = new Date(Date.now() - 24 * 3600000);
+    } else if (periodo == 3) { // últimos 3 dias
+        inicioPeriodo = new Date();
+        inicioPeriodo.setHours(0, 0, 0, 0);
+        inicioPeriodo.setDate(inicioPeriodo.getDate() - 2);
+    } else if (periodo == 4) { // últimos 7 dias
+        inicioPeriodo = new Date();
+        inicioPeriodo.setHours(0, 0, 0, 0);
+        inicioPeriodo.setDate(inicioPeriodo.getDate() - 6);
     }
 
-    function atualizarGraficoPorPeriodo(periodo) {
-
-        // const dadosFiltrados = dadosPorPeriodo[periodo];
-
-        if (cpuChart) cpuChart.destroy();
-        if (ramChart) ramChart.destroy();
-        if (discoChart) discoChart.destroy();
-        if (redeChart) redeChart.destroy();
-        if (redeChart2) redeChart2.destroy();
-        if (chartMBEnviados) chartMBEnviados.destroy();
-        if (chartMBRecebidos) chartMBRecebidos.destroy();
-        if (chartCPU) chartCPU.destroy();
-        if (chartRAM) chartRAM.destroy();
-        if (chartDisco) chartDisco.destroy();
-
-        // Dados por período
-        let dataFiltro = dadosPorPeriodo[periodo] ?? data;
-
-        console.log(`PERÍODO ${periodo} → ${dataFiltro.length} linhas`);
-        calcularAlertas(dataFiltro);
-
-        let labels = gerarLabelsDinamicas(Number(periodo));
-
-        const { contNormal, contCritico } = distribuirAlertasNasLabels(
-            dataFiltro,
-            labels,
-            Number(periodo)
-        );
-
-
-        if (periodo === "1") {
-
-
-            //         const data = {
-            //   labels: ['20:00', '21:00', '22:00', '23:00', '00:00', '01:00'],
-            //   datasets: [
-            //     {
-            //       label: 'Quantidade Alertas',
-            //       data: alertaCPU,                     
-            //       backgroundColor: 'rgba(255, 206, 86, 0.8)',
-            //       borderColor: 'rgba(255, 206, 86, 1)',
-            //       borderWidth: 1,
-            //     },
-            //     {
-            //       label: 'Quantidade Críticos',
-            //       data: alertaCriticoCPU,                     
-            //       backgroundColor: 'rgba(255, 99, 132, 0.8)', 
-            //       borderColor: 'rgba(255, 99, 132, 1)',
-            //       borderWidth: 1,
-            //     }
-            //   ]
-            // };
-
-            // const data = {
-            //   labels: ['20:00', '21:00', '22:00', '23:00', '00:00', '01:00'],
-            //   datasets: [
-            //     {
-            //       label: 'Alertas padrão',
-            //       data: [1, 0, 2, 3, 1, 2],   // qtd padrão por hora
-            //       backgroundColor: '#F4B000', // amarelo
-            //       stack: 'alerts'
-            //     },
-            //     {
-            //       label: 'Alertas críticos',
-            //       data: [0, 3, 0, 0, 2, 3],   // qtd críticos por hora
-            //       backgroundColor: '#E53935', // vermelho
-            //       stack: 'alerts'
-            //     }
-            //   ]
-            // };
-
-            // new Chart(ctx, {
-            //   type: 'bar',
-            //   data,
-            //   options: {
-            //     scales: {
-            //       x: { stacked: true },
-            //       y: { stacked: true }
-            //     }
-            //   }
-            // });
-
-            //         data: {
-            //     labels: ['20:00', '21:00', '22:00', '23:00', '00:00', '01:00'],
-            //     datasets: [{
-            //         label: 'CPU',
-            //         data: qtdAlertasCPU,
-            //         backgroundColor: ['rgba(29, 173, 0, 1)',
-            //             'rgb(242, 183, 48)',
-            //             'rgba(29, 173, 0, 1)',
-            //             'rgba(29, 173, 0, 1)',
-            //             'rgba(29, 173, 0, 1)',
-            //             'rgba(233, 0, 0, 1)',
-            //         ],
-            //         borderWidth: 1,
-            //         borderRadius: 12,
-            //     }]
-            // },
-
-
-
-
-
-            const qtdAlertasCPU = contarAlertasPorPeriodo(dataFiltro, "cpu_status");
-            const qtdAlertasCPUcritico = contarAlertasPorPeriodo(dataFiltro, "cpu_status_critico");
-
-                       const {
-                contCPU,
-                contCPUCritico
-            } = distribuirAlertasNasLabels(dataFiltro, labels, Number(periodo));
-
-            console.log('CPU ultimos5 por bloco:', qtdAlertasCPU);
-
-            ctxCpu = document.getElementById('CpuChart').getContext('2d');
-            cpuChart = new Chart(ctxCpu, {
-                type: 'bar',
-                data: {
-                    labels: labels,
-                    datasets: [
-                        {
-                            label: 'Alertas padrão',
-                            data: contCPU,
-                            backgroundColor: '#F4B000',
-                            stack: 'alerts', borderWidth: 1,
-                            borderRadius: 10,
-                        },
-                        {
-                            label: 'Alertas críticos',
-                            data: contCPUCritico,
-                            backgroundColor: '#E53935',
-                            borderWidth: 1,
-                            borderRadius: 10,
-                        }
-                    ],
-                    borderWidth: 1,
-                    borderRadius: 12,
-                },
-                options: {
-                    plugins: {
-                        title: {
-                            display: true,
-                            text: 'Quantidade de Alertas - CPU',
-                            color: 'black',
-                            font: { size: 28 }
-                        }
-                    },
-                    responsive: true,
-                    scales: {
-                        x: {
-                            stacked: true,
-                            ticks: { color: 'black' }
-                        },
-                        y: {
-                            stacked: true,
-                            beginAtZero: true,
-                            ticks: { color: 'black' }
-                        }
-                    }
-                }
-            });
-
-
-            const canvasStatus = document.getElementById('statusChart');
-            const existingStatus = Chart.getChart(canvasStatus);
-            if (existingStatus) {
-                existingStatus.destroy();
-            }
-
-            chartCPU = new Chart(canvasStatus, {
-                type: 'doughnut',
-                data: {
-                    labels: [],
-                    datasets: [{
-                        label: 'CPU',
-                        data: [0, 100],
-                        backgroundColor: ['rgb(255,44,44)', "#e1e1e1ff"],
-                        hoverOffset: 4,
-                        borderWidth: 0,
-                    }]
-                },
-                options: {
-                    maintainAspectRatio: false,
-                    circumference: 180,
-                    cutout: '80%',
-                    rotation: 270,
-                    plugins: {
-                        tooltip: { enabled: false },
-                        legend: { display: false }
-                    }
-                },
-                plugins: [{
-                    id: 'center-text',
-                    beforeDraw: function (chart) {
-                        const { ctx, chartArea: { width, height } } = chart;
-                        const valor = Number(chart.data.datasets[0].data[0]).toFixed(0);
-                        ctx.save();
-
-                        ctx.font = 'bold 30px Arial';
-                        ctx.fillStyle = '#333';
-                        ctx.textAlign = 'center';
-                        ctx.textBaseline = 'top';
-                        ctx.fillText(`${valor}%`, width / 2, height / 2 + 10);
-
-                        ctx.font = 'bold 22px Arial';
-                        ctx.fillStyle = '#000';
-                        ctx.fillText('Em uso', width / 2, height / 2 + 60);
-
-                        ctx.restore();
-                    }
-                }]
-            });
-
-            const qtdAlertasRAM = contarAlertasPorPeriodo(dataFiltro, "ram_status");
-            const qtdAlertasRAMcritico = contarAlertasPorPeriodo(dataFiltro, "ram_status_critico");
-
-            const {
-                contRAM,
-                contRAMCritico
-            } = distribuirAlertasNasLabels(dataFiltro, labels, Number(periodo));
-
-            const ctxram = document.getElementById('RamChart').getContext('2d');
-
-            ramChart = new Chart(ctxram, {
-                type: 'bar',
-                data: {
-                    labels: labels,
-                    datasets: [
-                        {
-                            label: 'Alertas padrão',
-                            data: contRAM,
-                            backgroundColor: '#F4B000',
-                            stack: 'alerts',
-                            borderWidth: 1,
-                            borderRadius: 10,
-                        },
-                        {
-                            label: 'Alertas críticos',
-                            data: contRAMCritico,
-                            backgroundColor: '#E53935',
-                            borderWidth: 1,
-                            borderRadius: 10,
-                        }
-                    ],
-                },
-                options: {
-                    plugins: {
-                        title: {
-                            display: true,
-                            text: 'Quantidade de Alertas - RAM',
-                            color: 'black',
-                            font: { size: 28 }
-                        }
-                    },
-                    responsive: true,
-                    scales: {
-                        x: {
-                            stacked: true,
-                            ticks: { color: 'black' }
-                        },
-                        y: {
-                            stacked: true,
-                            beginAtZero: true,
-                            ticks: { color: 'black' }
-                        }
-                    }
-                }
-            });
-
-            const canvasStatusram = document.getElementById('statusRamChart');
-            const existingStatusram = Chart.getChart(canvasStatusram);
-            if (existingStatusram) {
-                existingStatusram.destroy();
-            }
-
-            chartRAM = new Chart(canvasStatusram, {
-                type: 'doughnut',
-                data: {
-                    labels: [],
-                    datasets: [{
-                        label: 'Ram',
-                        data: [0, 100],
-                        backgroundColor: ['rgb(255,44,44)', "#e1e1e1ff"],
-                        hoverOffset: 4,
-                        borderWidth: 0,
-                    }]
-                },
-                options: {
-                    maintainAspectRatio: false,
-                    circumference: 180,
-                    cutout: '80%',
-                    rotation: 270,
-                    plugins: {
-                        tooltip: { enabled: false },
-                        legend: { display: false }
-                    }
-                },
-                plugins: [{
-                    id: 'center-text',
-                    beforeDraw: function (chart) {
-                        const { ctx, chartArea: { width, height } } = chart;
-                        const valor = Number(chart.data.datasets[0].data[0]).toFixed(0);
-                        ctx.save();
-
-                        ctx.font = 'bold 30px Arial';
-                        ctx.fillStyle = '#333';
-                        ctx.textAlign = 'center';
-                        ctx.textBaseline = 'top';
-                        ctx.fillText(`${valor}%`, width / 2, height / 2 + 10);
-
-                        ctx.font = 'bold 22px Arial';
-                        ctx.fillStyle = '#000';
-                        ctx.fillText('Em uso', width / 2, height / 2 + 60);
-
-                        ctx.restore();
-                    }
-                }]
-            });
-
-            const qtdAlertasDisco = contarAlertasPorPeriodo(dataFiltro, "disco_status");
-            const qtdAlertasDiscocritico = contarAlertasPorPeriodo(dataFiltro, "disco_status_critico");
-
-            const {
-                contDisco,
-                contDiscoCritico
-            } = distribuirAlertasNasLabels(dataFiltro, labels, Number(periodo));
-
-            const ctxdisco = document.getElementById('DiscoChart').getContext('2d');
-
-            discoChart = new Chart(ctxdisco, {
-                type: 'bar',
-                data: {
-                    labels: labels,
-                    datasets: [
-                        {
-                            label: 'Alertas padrão',
-                            data: contDisco,
-                            backgroundColor: '#F4B000',
-                            stack: 'alerts', borderWidth: 1,
-                            borderRadius: 10,
-                        },
-                        {
-                            label: 'Alertas críticos',
-                            data: contDiscoCritico,
-                            backgroundColor: '#E53935', borderWidth: 1,
-                            borderRadius: 10,
-                        }
-                    ]
-                },
-                options: {
-                    plugins: {
-                        title: {
-                            display: true,
-                            text: 'Quantidade de Alertas - Disco',
-                            color: 'black',
-                            font: { size: 28 }
-                        }
-                    },
-                    responsive: true,
-                    scales: {
-                        x: {
-                            stacked: true,
-                            ticks: { color: 'black' }
-                        },
-                        y: {
-                            stacked: true,
-                            beginAtZero: true,
-                            ticks: { color: 'black' }
-                        }
-                    }
-                }
-            });
-
-
-            const canvasStatusdisco = document.getElementById('statusDiscoChart');
-            const existingStatusdisco = Chart.getChart(canvasStatusdisco);
-            if (existingStatusdisco) {
-                existingStatusdisco.destroy();
-            }
-
-            chartDisco = new Chart(canvasStatusdisco, {
-                type: 'doughnut',
-                data: {
-                    labels: [],
-                    datasets: [{
-                        label: 'Disco',
-                        data: [0, 100],
-                        backgroundColor: ['rgb(255,44,44)', "#e1e1e1ff"],
-                        hoverOffset: 4,
-                        borderWidth: 0,
-                    }]
-                },
-                options: {
-                    maintainAspectRatio: false,
-                    circumference: 180,
-                    cutout: '80%',
-                    rotation: 270,
-                    plugins: {
-                        tooltip: { enabled: false },
-                        legend: { display: false }
-                    }
-                },
-                plugins: [{
-                    id: 'center-text',
-                    beforeDraw: function (chart) {
-                        const { ctx, chartArea: { width, height } } = chart;
-                        const valor = Number(chart.data.datasets[0].data[0]).toFixed(0);
-                        ctx.save();
-
-                        ctx.font = 'bold 30px Arial';
-                        ctx.fillStyle = '#333';
-                        ctx.textAlign = 'center';
-                        ctx.textBaseline = 'top';
-                        ctx.fillText(`${valor}%`, width / 2, height / 2 + 10);
-
-                        ctx.font = 'bold 22px Arial';
-                        ctx.fillStyle = '#000';
-                        ctx.fillText('Em uso', width / 2, height / 2 + 60);
-
-                        ctx.restore();
-                    }
-                }]
-            });
-
-            const qtdAlertasDownload = contarAlertasPorPeriodo(dataFiltro, "mb_recebidos_status");
-            const qtdAlertasDownloadcritico = contarAlertasPorPeriodo(dataFiltro, "mb_recebidos_status_critico");
-
-            const {
-                contDonwload,
-                contDownloadCritico
-            } = distribuirAlertasNasLabels(dataFiltro, labels, Number(periodo));
-
-            const ctxrede = document.getElementById('RedeChart').getContext('2d');
-
-            redeChart = new Chart(ctxrede, {
-                type: 'bar',
-                data: {
-                    labels: labels,
-                    datasets: [
-                        {
-                            label: 'Alertas padrão',
-                            data: contDonwload,
-                            backgroundColor: '#F4B000',
-                            stack: 'alerts', borderWidth: 1,
-                            borderRadius: 10,
-                        },
-                        {
-                            label: 'Alertas críticos',
-                            data: contDownloadCritico,
-                            backgroundColor: '#E53935', borderWidth: 1,
-                            borderRadius: 10,
-                        }
-                    ]
-                },
-                options: {
-                    plugins: {
-                        title: {
-                            display: true,
-                            text: 'Quantidade de Alertas - Download',
-                            color: 'black',
-                            font: { size: 28 }
-                        }
-                    },
-                    responsive: true,
-                    scales: {
-                        x: {
-                            stacked: true,
-                            ticks: { color: 'black' }
-                        },
-                        y: {
-                            stacked: true,
-                            beginAtZero: true,
-                            ticks: { color: 'black' }
-                        }
-                    }
-                }
-            });
-
-
-            const canvasStatusrede1 = document.getElementById('statusRedeChart');
-            const existingStatusrede1 = Chart.getChart(canvasStatusrede1);
-            if (existingStatusrede1) {
-                existingStatusrede1.destroy();
-            }
-
-            chartMBEnviados = new Chart(canvasStatusrede1, {
-                type: 'doughnut',
-                data: {
-                    labels: [],
-                    datasets: [{
-                        label: 'Rede',
-                        data: [0, 100],
-                        backgroundColor: ['rgb(255,44,44)', "#e1e1e1ff"],
-                        hoverOffset: 4,
-                        borderWidth: 0,
-                    }]
-                },
-                options: {
-                    maintainAspectRatio: false,
-                    circumference: 180,
-                    cutout: '80%',
-                    rotation: 270,
-                    plugins: {
-                        tooltip: { enabled: false },
-                        legend: { display: false }
-                    }
-                },
-                plugins: [{
-                    id: 'center-text',
-                    beforeDraw: function (chart) {
-                        const { ctx, chartArea: { width, height } } = chart;
-                        const valor = Number(chart.data.datasets[0].data[0]).toFixed(0);
-                        ctx.save();
-
-                        ctx.font = 'bold 30px Arial';
-                        ctx.fillStyle = '#333';
-                        ctx.textAlign = 'center';
-                        ctx.textBaseline = 'top';
-                        ctx.fillText(`${valor}%`, width / 2, height / 2 + 10);
-
-                        ctx.font = 'bold 22px Arial';
-                        ctx.fillStyle = '#000';
-                        ctx.fillText('Em uso', width / 2, height / 2 + 60);
-
-                        ctx.restore();
-                    }
-                }]
-            });
-
-            const qtdAlertasUpload = contarAlertasPorPeriodo(dataFiltro, "mb_enviados_status");
-            const qtdAlertasUploadcritico = contarAlertasPorPeriodo(dataFiltro, "mb_enviados_status_critico");
-
-            const {
-                contUpload,
-                contUploadCritico
-            } = distribuirAlertasNasLabels(dataFiltro, labels, Number(periodo));
-
-            ctxrede2 = document.getElementById('RedeChart2').getContext('2d');
-            redeChart2 = new Chart(ctxrede2, {
-                type: 'bar',
-                data: {
-                    labels: labels,
-                    datasets: [
-                        {
-                            label: 'Alertas padrão',
-                            data: contUpload,
-                            backgroundColor: '#F4B000',
-                            stack: 'alerts', borderWidth: 1,
-                            borderRadius: 10,
-                        },
-                        {
-                            label: 'Alertas críticos',
-                            data: contUploadCritico,
-                            backgroundColor: '#E53935', borderWidth: 1,
-                            borderRadius: 10,
-                        }
-                    ]
-                },
-                options: {
-                    plugins: {
-                        title: {
-                            display: true,
-                            text: 'Quantidade de Alertas - Upload',
-                            color: 'black',
-                            font: { size: 28 }
-                        }
-                    },
-                    responsive: true,
-                    scales: {
-                        x: {
-                            stacked: true,
-                            ticks: { color: 'black' }
-                        },
-                        y: {
-                            stacked: true,
-                            beginAtZero: true,
-                            ticks: { color: 'black' }
-                        }
-                    }
-                }
-            });
-
-            const canvasStatusrede2 = document.getElementById('statusRedeChart2');
-            const existingStatusrede2 = Chart.getChart(canvasStatusrede2);
-            if (existingStatusrede2) {
-                existingStatusrede2.destroy();
-            }
-
-            chartMBRecebidos = new Chart(canvasStatusrede2, {
-                type: 'doughnut',
-                data: {
-                    labels: [],
-                    datasets: [{
-                        label: 'Rede',
-                        data: [0, 100],
-                        backgroundColor: ['rgb(255,44,44)', "#e1e1e1ff"],
-                        hoverOffset: 4,
-                        borderWidth: 0,
-                    }]
-                },
-                options: {
-                    maintainAspectRatio: false,
-                    circumference: 180,
-                    cutout: '80%',
-                    rotation: 270,
-                    plugins: {
-                        tooltip: { enabled: false },
-                        legend: { display: false }
-                    }
-                },
-                plugins: [{
-                    id: 'center-text',
-                    beforeDraw: function (chart) {
-                        const { ctx, chartArea: { width, height } } = chart;
-                        const valor = Number(chart.data.datasets[0].data[0]).toFixed(0);
-                        ctx.save();
-
-                        ctx.font = 'bold 30px Arial';
-                        ctx.fillStyle = '#333';
-                        ctx.textAlign = 'center';
-                        ctx.textBaseline = 'top';
-                        ctx.fillText(`${valor}%`, width / 2, height / 2 + 10);
-
-                        ctx.font = 'bold 22px Arial';
-                        ctx.fillStyle = '#000';
-                        ctx.fillText('Em uso', width / 2, height / 2 + 60);
-
-                        ctx.restore();
-                    }
-                }]
-            });
-
-
-            var contador = 0;
-            for (i = 0; i <= qtdAlertasCPU.length; i++) {
-                if (i != null || i != 0) {
-                    contador += 1
-                }
-            }
-
-            for (i = 0; i <= qtdAlertasRAM.length; i++) {
-                if (i != null || i != 0) {
-                    contador += 1
-                }
-            }
-
-            for (i = 0; i <= qtdAlertasDisco.length; i++) {
-                if (i != null || i != 0) {
-                    contador += 1
-                }
-            }
-
-            for (i = 0; i <= qtdAlertasDownload.length; i++) {
-                if (i != null || i != 0) {
-                    contador += 1
-                }
-            }
-            for (i = 0; i <= qtdAlertasUpload.length; i++) {
-                if (i != null || i != 0) {
-                    contador += 1
-                }
-            }
-
-
+    dataFiltro.forEach(row => {
+        if (!row.data_alerta) return;
+        const ts = new Date(row.data_alerta.replace(' ', 'T'));
+
+        let index = -1;
+
+        if (periodo == 1) {
+            index = Math.floor((ts - inicioPeriodo) / (15 * 60000));
+        } else if (periodo == 2) {
+            index = Math.floor((ts - inicioPeriodo) / (6 * 3600000));
+        } else if (periodo == 3) {
+            index = Math.floor((ts - inicioPeriodo) / 86400000);
+        } else if (periodo == 4) {
+            index = Math.floor((ts - inicioPeriodo) / 86400000);
         }
 
-        else if (periodo === "2") {
+        if (index < 0 || index >= labels.length) return;
 
-            const qtdAlertasCPU = contarAlertasPorPeriodo(dataFiltro, "cpu_status");
-            const qtdAlertasCPUcritico = contarAlertasPorPeriodo(dataFiltro, "cpu_status_critico");
-            
-            const {
-                contCPU,
-                contCPUCritico
-            } = distribuirAlertasNasLabels(dataFiltro, labels, Number(periodo));
+        if (row.cpu_status === "NORMAL") contCPU[index]++;
+        if (row.cpu_status_critico === "CRITICO") contCPUCritico[index]++;
+        if (row.ram_status === "NORMAL") contRAM[index]++;
+        if (row.ram_status_critico === "CRITICO") contRAMCritico[index]++;
+        if (row.disco_status === "NORMAL") contDisco[index]++;
+        if (row.disco_status_critico === "CRITICO") contDiscoCritico[index]++;
+        if (row.mb_recebidos_status === "NORMAL") contDownload[index]++;
+        if (row.mb_recebidos_status_critico === "CRITICO") contDownloadCritico[index]++;
+        if (row.mb_enviados_status === "NORMAL") contUpload[index]++;
+        if (row.mb_enviados_status_critico === "CRITICO") contUploadCritico[index]++;
+    });
+
+    return { contCPU, contCPUCritico, contRAM, contRAMCritico, contDisco, contDiscoCritico, contDownload, contDownloadCritico, contUpload, contUploadCritico };
+}
+
+function atualizarGraficoPorPeriodo(periodo) {
+
+    // const dadosFiltrados = dadosPorPeriodo[periodo];
+
+    if (cpuChart) cpuChart.destroy();
+    if (ramChart) ramChart.destroy();
+    if (discoChart) discoChart.destroy();
+    if (redeChart) redeChart.destroy();
+    if (redeChart2) redeChart2.destroy();
+    if (chartMBEnviados) chartMBEnviados.destroy();
+    if (chartMBRecebidos) chartMBRecebidos.destroy();
+    if (chartCPU) chartCPU.destroy();
+    if (chartRAM) chartRAM.destroy();
+    if (chartDisco) chartDisco.destroy();
+
+    // Dados por período
+    let dataFiltro = dadosPorPeriodo[periodo] ?? data;
+
+    console.log(`PERÍODO ${periodo} → ${dataFiltro.length} linhas`);
+    calcularAlertas(dataFiltro);
+
+    let labels = gerarLabelsDinamicas(Number(periodo));
+
+    const { contNormal, contCritico } = distribuirAlertasNasLabels(
+        dataFiltro,
+        labels,
+        Number(periodo)
+    );
 
 
-            const ctxCpu = document.getElementById('CpuChart').getContext('2d');
-            cpuChart = new Chart(ctxCpu, {
-                type: 'bar',
-                data: {
-                    labels: labels,
-                    datasets: [
-                        {
-                            label: 'Alertas padrão',
-                            data: contCPU,
-                            backgroundColor: '#F4B000',
-                            stack: 'alerts', borderWidth: 1,
-                            borderRadius: 10,
-                        },
-                        {
-                            label: 'Alertas críticos',
-                            data: contCPUCritico,
-                            backgroundColor: '#E53935', borderWidth: 1,
-                            borderRadius: 10,
-                        }
-                    ]
-                },
-                options: {
-                    plugins: {
-                        title: {
-                            display: true,
-                            text: 'Quantidade de Alertas - CPU',
-                            color: 'black',
-                            font: { size: 28 }
-                        }
+    if (periodo === "1") {
+
+        const qtdAlertasCPU = contarAlertasPorPeriodo(dataFiltro, "cpu_status");
+        const qtdAlertasCPUcritico = contarAlertasPorPeriodo(dataFiltro, "cpu_status_critico");
+
+        const {
+            contCPU,
+            contCPUCritico
+        } = distribuirAlertasNasLabels(dataFiltro, labels, Number(periodo));
+
+        console.log('CPU ultimos5 por bloco:', qtdAlertasCPU);
+
+        ctxCpu = document.getElementById('CpuChart').getContext('2d');
+        cpuChart = new Chart(ctxCpu, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Alertas padrão',
+                        data: contCPU,
+                        backgroundColor: '#F4B000',
+                        stack: 'alerts', borderWidth: 1,
+                        borderRadius: 10,
                     },
-                    responsive: true,
-                    scales: {
-                        x: {
-                            stacked: true,
-                            ticks: { color: 'black' }
-                        },
-                        y: {
-                            stacked: true,
-                            beginAtZero: true,
-                            ticks: { color: 'black' }
-                        }
+                    {
+                        label: 'Alertas críticos',
+                        data: contCPUCritico,
+                        backgroundColor: '#E53935',
+                        borderWidth: 1,
+                        borderRadius: 10,
+                    }
+                ],
+                borderWidth: 1,
+                borderRadius: 12,
+            },
+            options: {
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Quantidade de Alertas - CPU',
+                        color: 'black',
+                        font: { size: 28 }
+                    }
+                },
+                responsive: true,
+                scales: {
+                    x: {
+                        stacked: true,
+                        ticks: { color: 'black' }
+                    },
+                    y: {
+                        stacked: true,
+                        beginAtZero: true,
+                        ticks: { color: 'black' }
                     }
                 }
-            });
-
-
-            const canvasStatus = document.getElementById('statusChart');
-            const existingStatus = Chart.getChart(canvasStatus);
-            if (existingStatus) {
-                existingStatus.destroy();
             }
+        });
 
-            chartCPU = new Chart(canvasStatus, {
-                type: 'doughnut',
-                data: {
-                    labels: [],
-                    datasets: [{
-                        label: 'CPU',
-                        data: [0, 100],
-                        backgroundColor: ['rgb(255,44,44)', "#e1e1e1ff"],
-                        hoverOffset: 4,
-                        borderWidth: 0,
-                    }]
-                },
-                options: {
-                    maintainAspectRatio: false,
-                    circumference: 180,
-                    cutout: '80%',
-                    rotation: 270,
-                    plugins: {
-                        tooltip: { enabled: false },
-                        legend: { display: false }
-                    }
-                },
-                plugins: [{
-                    id: 'center-text',
-                    beforeDraw: function (chart) {
-                        const { ctx, chartArea: { width, height } } = chart;
-                        const valor = Number(chart.data.datasets[0].data[0]).toFixed(0);
-                        ctx.save();
 
-                        ctx.font = 'bold 30px Arial';
-                        ctx.fillStyle = '#333';
-                        ctx.textAlign = 'center';
-                        ctx.textBaseline = 'top';
-                        ctx.fillText(`${valor}%`, width / 2, height / 2 + 10);
+        const canvasStatus = document.getElementById('statusChart');
+        const existingStatus = Chart.getChart(canvasStatus);
+        if (existingStatus) {
+            existingStatus.destroy();
+        }
 
-                        ctx.font = 'bold 22px Arial';
-                        ctx.fillStyle = '#000';
-                        ctx.fillText('Em uso', width / 2, height / 2 + 60);
-
-                        ctx.restore();
-                    }
+        chartCPU = new Chart(canvasStatus, {
+            type: 'doughnut',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'CPU',
+                    data: [0, 100],
+                    backgroundColor: ['rgb(255,44,44)', "#e1e1e1ff"],
+                    hoverOffset: 4,
+                    borderWidth: 0,
                 }]
-            });
+            },
+            options: {
+                maintainAspectRatio: false,
+                circumference: 180,
+                cutout: '80%',
+                rotation: 270,
+                plugins: {
+                    tooltip: { enabled: false },
+                    legend: { display: false }
+                }
+            },
+            plugins: [{
+                id: 'center-text',
+                beforeDraw: function (chart) {
+                    const { ctx, chartArea: { width, height } } = chart;
+                    const valor = Number(chart.data.datasets[0].data[0]).toFixed(0);
+                    ctx.save();
 
-            const qtdAlertasRAM = contarAlertasPorPeriodo(dataFiltro, "ram_status");
-            const qtdAlertasRAMcritico = contarAlertasPorPeriodo(dataFiltro, "ram_status_critico");
+                    ctx.font = 'bold 30px Arial';
+                    ctx.fillStyle = '#333';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'top';
+                    ctx.fillText(`${valor}%`, width / 2, height / 2 + 10);
 
-            const {
-                contRAM,
-                contRAMCritico
-            } = distribuirAlertasNasLabels(dataFiltro, labels, Number(periodo));
+                    ctx.font = 'bold 22px Arial';
+                    ctx.fillStyle = '#000';
+                    ctx.fillText('Em uso', width / 2, height / 2 + 60);
 
-            const ctxram = document.getElementById('RamChart').getContext('2d');
+                    ctx.restore();
+                }
+            }]
+        });
 
-            ramChart = new Chart(ctxram, {
-                type: 'bar',
-                data: {
-                    labels: labels,
-                    datasets: [
-                        {
-                            label: 'Alertas padrão',
-                            data: contRAM,
-                            backgroundColor: '#F4B000',
-                            stack: 'alerts', borderWidth: 1,
-                            borderRadius: 10,
-                        },
-                        {
-                            label: 'Alertas críticos',
-                            data: contRAMCritico,
-                            backgroundColor: '#E53935', borderWidth: 1,
-                            borderRadius: 10,
-                        }
-                    ]
-                },
-                options: {
-                    plugins: {
-                        title: {
-                            display: true,
-                            text: 'Quantidade de Alertas - RAM',
-                            color: 'black',
-                            font: { size: 28 }
-                        }
+        const qtdAlertasRAM = contarAlertasPorPeriodo(dataFiltro, "ram_status");
+        const qtdAlertasRAMcritico = contarAlertasPorPeriodo(dataFiltro, "ram_status_critico");
+
+        const {
+            contRAM,
+            contRAMCritico
+        } = distribuirAlertasNasLabels(dataFiltro, labels, Number(periodo));
+
+        const ctxram = document.getElementById('RamChart').getContext('2d');
+
+        ramChart = new Chart(ctxram, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Alertas padrão',
+                        data: contRAM,
+                        backgroundColor: '#F4B000',
+                        stack: 'alerts',
+                        borderWidth: 1,
+                        borderRadius: 10,
                     },
-                    responsive: true,
-                    scales: {
-                        x: {
-                            stacked: true,
-                            ticks: { color: 'black' }
-                        },
-                        y: {
-                            stacked: true,
-                            beginAtZero: true,
-                            ticks: { color: 'black' }
-                        }
+                    {
+                        label: 'Alertas críticos',
+                        data: contRAMCritico,
+                        backgroundColor: '#E53935',
+                        borderWidth: 1,
+                        borderRadius: 10,
+                    }
+                ],
+            },
+            options: {
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Quantidade de Alertas - RAM',
+                        color: 'black',
+                        font: { size: 28 }
+                    }
+                },
+                responsive: true,
+                scales: {
+                    x: {
+                        stacked: true,
+                        ticks: { color: 'black' }
+                    },
+                    y: {
+                        stacked: true,
+                        beginAtZero: true,
+                        ticks: { color: 'black' }
                     }
                 }
-            });
+            }
+        });
 
-            const canvasStatusram = document.getElementById('statusRamChart');
+        const canvasStatusram = document.getElementById('statusRamChart');
+        const existingStatusram = Chart.getChart(canvasStatusram);
+        if (existingStatusram) {
+            existingStatusram.destroy();
+        }
+
+        chartRAM = new Chart(canvasStatusram, {
+            type: 'doughnut',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Ram',
+                    data: [0, 100],
+                    backgroundColor: ['rgb(255,44,44)', "#e1e1e1ff"],
+                    hoverOffset: 4,
+                    borderWidth: 0,
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                circumference: 180,
+                cutout: '80%',
+                rotation: 270,
+                plugins: {
+                    tooltip: { enabled: false },
+                    legend: { display: false }
+                }
+            },
+            plugins: [{
+                id: 'center-text',
+                beforeDraw: function (chart) {
+                    const { ctx, chartArea: { width, height } } = chart;
+                    const valor = Number(chart.data.datasets[0].data[0]).toFixed(0);
+                    ctx.save();
+
+                    ctx.font = 'bold 30px Arial';
+                    ctx.fillStyle = '#333';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'top';
+                    ctx.fillText(`${valor}%`, width / 2, height / 2 + 10);
+
+                    ctx.font = 'bold 22px Arial';
+                    ctx.fillStyle = '#000';
+                    ctx.fillText('Em uso', width / 2, height / 2 + 60);
+
+                    ctx.restore();
+                }
+            }]
+        });
+
+        const qtdAlertasDisco = contarAlertasPorPeriodo(dataFiltro, "disco_status");
+        const qtdAlertasDiscocritico = contarAlertasPorPeriodo(dataFiltro, "disco_status_critico");
+
+        const {
+            contDisco,
+            contDiscoCritico
+        } = distribuirAlertasNasLabels(dataFiltro, labels, Number(periodo));
+
+        const ctxdisco = document.getElementById('DiscoChart').getContext('2d');
+
+        discoChart = new Chart(ctxdisco, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Alertas padrão',
+                        data: contDisco,
+                        backgroundColor: '#F4B000',
+                        stack: 'alerts', borderWidth: 1,
+                        borderRadius: 10,
+                    },
+                    {
+                        label: 'Alertas críticos',
+                        data: contDiscoCritico,
+                        backgroundColor: '#E53935', borderWidth: 1,
+                        borderRadius: 10,
+                    }
+                ]
+            },
+            options: {
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Quantidade de Alertas - Disco',
+                        color: 'black',
+                        font: { size: 28 }
+                    }
+                },
+                responsive: true,
+                scales: {
+                    x: {
+                        stacked: true,
+                        ticks: { color: 'black' }
+                    },
+                    y: {
+                        stacked: true,
+                        beginAtZero: true,
+                        ticks: { color: 'black' }
+                    }
+                }
+            }
+        });
+
+
+        const canvasStatusdisco = document.getElementById('statusDiscoChart');
+        const existingStatusdisco = Chart.getChart(canvasStatusdisco);
+        if (existingStatusdisco) {
+            existingStatusdisco.destroy();
+        }
+
+        chartDisco = new Chart(canvasStatusdisco, {
+            type: 'doughnut',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Disco',
+                    data: [0, 100],
+                    backgroundColor: ['rgb(255,44,44)', "#e1e1e1ff"],
+                    hoverOffset: 4,
+                    borderWidth: 0,
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                circumference: 180,
+                cutout: '80%',
+                rotation: 270,
+                plugins: {
+                    tooltip: { enabled: false },
+                    legend: { display: false }
+                }
+            },
+            plugins: [{
+                id: 'center-text',
+                beforeDraw: function (chart) {
+                    const { ctx, chartArea: { width, height } } = chart;
+                    const valor = Number(chart.data.datasets[0].data[0]).toFixed(0);
+                    ctx.save();
+
+                    ctx.font = 'bold 30px Arial';
+                    ctx.fillStyle = '#333';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'top';
+                    ctx.fillText(`${valor}%`, width / 2, height / 2 + 10);
+
+                    ctx.font = 'bold 22px Arial';
+                    ctx.fillStyle = '#000';
+                    ctx.fillText('Em uso', width / 2, height / 2 + 60);
+
+                    ctx.restore();
+                }
+            }]
+        });
+
+        const qtdAlertasDownload = contarAlertasPorPeriodo(dataFiltro, "mb_recebidos_status");
+        const qtdAlertasDownloadcritico = contarAlertasPorPeriodo(dataFiltro, "mb_recebidos_status_critico");
+
+        const {
+            contDonwload,
+            contDownloadCritico
+        } = distribuirAlertasNasLabels(dataFiltro, labels, Number(periodo));
+
+        const ctxrede = document.getElementById('RedeChart').getContext('2d');
+
+        redeChart = new Chart(ctxrede, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Alertas padrão',
+                        data: contDonwload,
+                        backgroundColor: '#F4B000',
+                        stack: 'alerts', borderWidth: 1,
+                        borderRadius: 10,
+                    },
+                    {
+                        label: 'Alertas críticos',
+                        data: contDownloadCritico,
+                        backgroundColor: '#E53935', borderWidth: 1,
+                        borderRadius: 10,
+                    }
+                ]
+            },
+            options: {
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Quantidade de Alertas - Download',
+                        color: 'black',
+                        font: { size: 28 }
+                    }
+                },
+                responsive: true,
+                scales: {
+                    x: {
+                        stacked: true,
+                        ticks: { color: 'black' }
+                    },
+                    y: {
+                        stacked: true,
+                        beginAtZero: true,
+                        ticks: { color: 'black' }
+                    }
+                }
+            }
+        });
+
+
+        const canvasStatusrede1 = document.getElementById('statusRedeChart');
+        const existingStatusrede1 = Chart.getChart(canvasStatusrede1);
+        if (existingStatusrede1) {
+            existingStatusrede1.destroy();
+        }
+
+        chartMBEnviados = new Chart(canvasStatusrede1, {
+            type: 'doughnut',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Rede',
+                    data: [0, 100],
+                    backgroundColor: ['rgb(255,44,44)', "#e1e1e1ff"],
+                    hoverOffset: 4,
+                    borderWidth: 0,
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                circumference: 180,
+                cutout: '80%',
+                rotation: 270,
+                plugins: {
+                    tooltip: { enabled: false },
+                    legend: { display: false }
+                }
+            },
+            plugins: [{
+                id: 'center-text',
+                beforeDraw: function (chart) {
+                    const { ctx, chartArea: { width, height } } = chart;
+                    const valor = Number(chart.data.datasets[0].data[0]).toFixed(0);
+                    ctx.save();
+
+                    ctx.font = 'bold 30px Arial';
+                    ctx.fillStyle = '#333';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'top';
+                    ctx.fillText(`${valor}%`, width / 2, height / 2 + 10);
+
+                    ctx.font = 'bold 22px Arial';
+                    ctx.fillStyle = '#000';
+                    ctx.fillText('Em uso', width / 2, height / 2 + 60);
+
+                    ctx.restore();
+                }
+            }]
+        });
+
+        const qtdAlertasUpload = contarAlertasPorPeriodo(dataFiltro, "mb_enviados_status");
+        const qtdAlertasUploadcritico = contarAlertasPorPeriodo(dataFiltro, "mb_enviados_status_critico");
+
+        const {
+            contUpload,
+            contUploadCritico
+        } = distribuirAlertasNasLabels(dataFiltro, labels, Number(periodo));
+
+        ctxrede2 = document.getElementById('RedeChart2').getContext('2d');
+        redeChart2 = new Chart(ctxrede2, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Alertas padrão',
+                        data: contUpload,
+                        backgroundColor: '#F4B000',
+                        stack: 'alerts', borderWidth: 1,
+                        borderRadius: 10,
+                    },
+                    {
+                        label: 'Alertas críticos',
+                        data: contUploadCritico,
+                        backgroundColor: '#E53935', borderWidth: 1,
+                        borderRadius: 10,
+                    }
+                ]
+            },
+            options: {
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Quantidade de Alertas - Upload',
+                        color: 'black',
+                        font: { size: 28 }
+                    }
+                },
+                responsive: true,
+                scales: {
+                    x: {
+                        stacked: true,
+                        ticks: { color: 'black' }
+                    },
+                    y: {
+                        stacked: true,
+                        beginAtZero: true,
+                        ticks: { color: 'black' }
+                    }
+                }
+            }
+        });
+
+        const canvasStatusrede2 = document.getElementById('statusRedeChart2');
+        const existingStatusrede2 = Chart.getChart(canvasStatusrede2);
+        if (existingStatusrede2) {
+            existingStatusrede2.destroy();
+        }
+
+        chartMBRecebidos = new Chart(canvasStatusrede2, {
+            type: 'doughnut',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Rede',
+                    data: [0, 100],
+                    backgroundColor: ['rgb(255,44,44)', "#e1e1e1ff"],
+                    hoverOffset: 4,
+                    borderWidth: 0,
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                circumference: 180,
+                cutout: '80%',
+                rotation: 270,
+                plugins: {
+                    tooltip: { enabled: false },
+                    legend: { display: false }
+                }
+            },
+            plugins: [{
+                id: 'center-text',
+                beforeDraw: function (chart) {
+                    const { ctx, chartArea: { width, height } } = chart;
+                    const valor = Number(chart.data.datasets[0].data[0]).toFixed(0);
+                    ctx.save();
+
+                    ctx.font = 'bold 30px Arial';
+                    ctx.fillStyle = '#333';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'top';
+                    ctx.fillText(`${valor}%`, width / 2, height / 2 + 10);
+
+                    ctx.font = 'bold 22px Arial';
+                    ctx.fillStyle = '#000';
+                    ctx.fillText('Em uso', width / 2, height / 2 + 60);
+
+                    ctx.restore();
+                }
+            }]
+        });
+
+
+        var contador = 0;
+        for (i = 0; i <= qtdAlertasCPU.length; i++) {
+            if (i != null || i != 0) {
+                contador += 1
+            }
+        }
+
+        for (i = 0; i <= qtdAlertasRAM.length; i++) {
+            if (i != null || i != 0) {
+                contador += 1
+            }
+        }
+
+        for (i = 0; i <= qtdAlertasDisco.length; i++) {
+            if (i != null || i != 0) {
+                contador += 1
+            }
+        }
+
+        for (i = 0; i <= qtdAlertasDownload.length; i++) {
+            if (i != null || i != 0) {
+                contador += 1
+            }
+        }
+        for (i = 0; i <= qtdAlertasUpload.length; i++) {
+            if (i != null || i != 0) {
+                contador += 1
+            }
+        }
+
+
+    }
+
+    else if (periodo === "2") {
+
+        const qtdAlertasCPU = contarAlertasPorPeriodo(dataFiltro, "cpu_status");
+        const qtdAlertasCPUcritico = contarAlertasPorPeriodo(dataFiltro, "cpu_status_critico");
+
+        const {
+            contCPU,
+            contCPUCritico
+        } = distribuirAlertasNasLabels(dataFiltro, labels, Number(periodo));
+
+
+        const ctxCpu = document.getElementById('CpuChart').getContext('2d');
+        cpuChart = new Chart(ctxCpu, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Alertas padrão',
+                        data: contCPU,
+                        backgroundColor: '#F4B000',
+                        stack: 'alerts', borderWidth: 1,
+                        borderRadius: 10,
+                    },
+                    {
+                        label: 'Alertas críticos',
+                        data: contCPUCritico,
+                        backgroundColor: '#E53935', borderWidth: 1,
+                        borderRadius: 10,
+                    }
+                ]
+            },
+            options: {
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Quantidade de Alertas - CPU',
+                        color: 'black',
+                        font: { size: 28 }
+                    }
+                },
+                responsive: true,
+                scales: {
+                    x: {
+                        stacked: true,
+                        ticks: { color: 'black' }
+                    },
+                    y: {
+                        stacked: true,
+                        beginAtZero: true,
+                        ticks: { color: 'black' }
+                    }
+                }
+            }
+        });
+
+
+        const canvasStatus = document.getElementById('statusChart');
+        const existingStatus = Chart.getChart(canvasStatus);
+        if (existingStatus) {
+            existingStatus.destroy();
+        }
+
+        chartCPU = new Chart(canvasStatus, {
+            type: 'doughnut',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'CPU',
+                    data: [0, 100],
+                    backgroundColor: ['rgb(255,44,44)', "#e1e1e1ff"],
+                    hoverOffset: 4,
+                    borderWidth: 0,
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                circumference: 180,
+                cutout: '80%',
+                rotation: 270,
+                plugins: {
+                    tooltip: { enabled: false },
+                    legend: { display: false }
+                }
+            },
+            plugins: [{
+                id: 'center-text',
+                beforeDraw: function (chart) {
+                    const { ctx, chartArea: { width, height } } = chart;
+                    const valor = Number(chart.data.datasets[0].data[0]).toFixed(0);
+                    ctx.save();
+
+                    ctx.font = 'bold 30px Arial';
+                    ctx.fillStyle = '#333';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'top';
+                    ctx.fillText(`${valor}%`, width / 2, height / 2 + 10);
+
+                    ctx.font = 'bold 22px Arial';
+                    ctx.fillStyle = '#000';
+                    ctx.fillText('Em uso', width / 2, height / 2 + 60);
+
+                    ctx.restore();
+                }
+            }]
+        });
+
+        const qtdAlertasRAM = contarAlertasPorPeriodo(dataFiltro, "ram_status");
+        const qtdAlertasRAMcritico = contarAlertasPorPeriodo(dataFiltro, "ram_status_critico");
+
+        const {
+            contRAM,
+            contRAMCritico
+        } = distribuirAlertasNasLabels(dataFiltro, labels, Number(periodo));
+
+        const ctxram = document.getElementById('RamChart').getContext('2d');
+
+        ramChart = new Chart(ctxram, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Alertas padrão',
+                        data: contRAM,
+                        backgroundColor: '#F4B000',
+                        stack: 'alerts', borderWidth: 1,
+                        borderRadius: 10,
+                    },
+                    {
+                        label: 'Alertas críticos',
+                        data: contRAMCritico,
+                        backgroundColor: '#E53935', borderWidth: 1,
+                        borderRadius: 10,
+                    }
+                ]
+            },
+            options: {
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Quantidade de Alertas - RAM',
+                        color: 'black',
+                        font: { size: 28 }
+                    }
+                },
+                responsive: true,
+                scales: {
+                    x: {
+                        stacked: true,
+                        ticks: { color: 'black' }
+                    },
+                    y: {
+                        stacked: true,
+                        beginAtZero: true,
+                        ticks: { color: 'black' }
+                    }
+                }
+            }
+        });
+
+        const canvasStatusram = document.getElementById('statusRamChart');
         const existingStatusram = Chart.getChart(canvasStatusram);
         if (existingStatusram) {
             existingStatusram.destroy();
@@ -2736,7 +2725,6 @@ window.onload = function () {
         Periodo.addEventListener('change', () => atualizarGraficoPorPeriodo(Periodo.value));
         atualizarGraficoPorPeriodo(Periodo.value);
     });
-
-    setInterval(buscarDados, 2000);
+    setInterval(buscarDados, 2000)
     buscarDados();
 };
