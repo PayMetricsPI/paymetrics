@@ -2,9 +2,12 @@ const usersDiv = document.querySelector('.users');
 const fkempresa = Number(sessionStorage.getItem('id'));
 const servidor = JSON.parse(sessionStorage.getItem('servidorSelecionado'));
 
-console.log('SERVIDOR COMPLETO:', servidor);
-console.log('MAC:', servidor?.mac);
+console.log('=== DEBUG SERVIDOR ===');
+console.log('SERVIDOR BRUTO:', servidor);
 console.log('TODOS OS CAMPOS:', Object.keys(servidor || {}));
+console.log('MAC POSSÍVEIS:', servidor?.mac_adress, servidor?.mac_address, servidor?.macadress, servidor?.mac);
+console.log('CODIGO MAQUINA:', servidor?.codigo_maquina);
+console.log('====================');
 
 console.log({
     alerta_numero_critico: document.getElementById('alerta_numero_critico'),
@@ -42,6 +45,8 @@ let alertaCriticoUpload = null;
 let somaAlertaCriticos = null;
 let somaAlertas = null;
 
+let dadosPorPeriodo = { 1: [], 2: [], 3: [], 4: [] };
+
 //Variáveis dos limites/parâmetros
 let limites = {
     cpu: { normal: 60, critico: 80 },
@@ -56,6 +61,12 @@ let data = [];
 
 let estatisticasAlertas = null;
 
+function parseLocalDateTime(dt) {
+    const [date, time] = dt.split(' ');
+    const [y, m, d] = date.split('-');
+    const [hh, mm, ss] = time.split(':');
+    return new Date(y, m - 1, d, hh, mm, ss);
+}
 
 
 // Converte data_alerta para timestamp
@@ -73,7 +84,6 @@ function carregarDados() {
 
             separarPorPeriodo(data);
 
-            calcularAlertas(data);
         })
         .catch(err => console.error('ERRO S3:', err));
 }
@@ -82,8 +92,11 @@ function calcularAlertas(dataFiltro = data) {
     console.log('CALCULANDO alertas com', dataFiltro.length, 'linhas brutas');
 
     if (servidor) {
-        const mac = servidor.macaddress;
-        const servidorData = dataFiltro.filter(row => row.macaddress === mac);
+        const mac = servidor.mac_address
+        console.log('MAC CORRIGIDO:', mac)
+
+        const servidorData = dataFiltro.filter(row => row.mac_address === mac);
+        console.log('SERVIDOR DATA após filtro MAC:', servidorData.length, 'linhas')
 
         console.log('RAM críticos no período:',
             servidorData.filter(r => r.ram_status_critico === 'CRITICO').length
@@ -144,7 +157,7 @@ function separarPorPeriodo(todasLinhas) {
 
     todasLinhas.forEach((row, i) => {
         if (!row.data_alerta) return;
-        const ts = new Date(row.data_alerta.replace(' ', 'T')).getTime();
+        const ts = parseLocalDateTime(row.data_alerta);
         const diffHoras = (agora - ts) / (1000 * 60 * 60);
 
         if (i < 10) {
@@ -366,8 +379,11 @@ console.log({
     critico_Disco: document.getElementById('critico_Disco')
 });
 
+
+
 // Função para colocar os alertas padrões e críticos nos gráficos
 function distribuirAlertasNasLabels(dataFiltro, labels, periodo) {
+
     const contCPU = Array(labels.length).fill(0);
     const contCPUCritico = Array(labels.length).fill(0);
     const contRAM = Array(labels.length).fill(0);
@@ -431,9 +447,25 @@ function distribuirAlertasNasLabels(dataFiltro, labels, periodo) {
     return { contCPU, contCPUCritico, contRAM, contRAMCritico, contDisco, contDiscoCritico, contDownload, contDownloadCritico, contUpload, contUploadCritico };
 }
 
+function getMAC(servidor) {
+    return servidor.mac_address
+        || servidor.mac_adress
+        || servidor.macAdress
+        || servidor.mac
+        || null;
+}
+
 // Função para atualizar os gráficos destruindo e reconstruindo eles
 function atualizarGraficoPorPeriodo(periodo) {
 
+    const mac = getMAC(servidor);
+
+    const dataPeriodo = dadosPorPeriodo[periodo] || [];
+
+    if (!Array.isArray(dataPeriodo)) {
+        console.error("dadosPorPeriodo[periodo] NÃO É UM ARRAY!", dadosPorPeriodo);
+        return;
+    }
 
     if (cpuChart) cpuChart.destroy();
     if (ramChart) ramChart.destroy();
@@ -446,19 +478,16 @@ function atualizarGraficoPorPeriodo(periodo) {
     if (chartRAM) chartRAM.destroy();
     if (chartDisco) chartDisco.destroy();
 
-    // Dados por período
-    let dataFiltro = dadosPorPeriodo[periodo] ?? data;
 
-    console.log(`PERÍODO ${periodo} → ${dataFiltro.length} linhas`);
+
+    // Dados por período
+    const dataFiltro = dadosPorPeriodo[periodo].filter(row => row.mac_address === mac);
+
     calcularAlertas(dataFiltro);
 
-    let labels = gerarLabelsDinamicas(Number(periodo));
+    const labels = gerarLabelsDinamicas(periodo);
 
-    const { contNormal, contCritico } = distribuirAlertasNasLabels(
-        dataFiltro,
-        labels,
-        Number(periodo)
-    );
+    const distribuicao = distribuirAlertasNasLabels(dataFiltro, labels, periodo);
 
 
     // Diferenciação dos períodos
@@ -788,7 +817,7 @@ function atualizarGraficoPorPeriodo(periodo) {
         const qtdAlertasDownloadcritico = contarAlertasPorPeriodo(dataFiltro, "mb_recebidos_status_critico");
 
         const {
-            contDonwload,
+            contDownload,
             contDownloadCritico
         } = distribuirAlertasNasLabels(dataFiltro, labels, Number(periodo));
 
@@ -801,7 +830,7 @@ function atualizarGraficoPorPeriodo(periodo) {
                 datasets: [
                     {
                         label: 'Alertas padrão',
-                        data: contDonwload,
+                        data: contDownload,
                         backgroundColor: '#F4B000',
                         stack: 'alerts', borderWidth: 1,
                         borderRadius: 10,
@@ -991,38 +1020,6 @@ function atualizarGraficoPorPeriodo(periodo) {
                 }
             }]
         });
-
-
-        var contador = 0;
-        for (i = 0; i <= qtdAlertasCPU.length; i++) {
-            if (i != null || i != 0) {
-                contador += 1
-            }
-        }
-
-        for (i = 0; i <= qtdAlertasRAM.length; i++) {
-            if (i != null || i != 0) {
-                contador += 1
-            }
-        }
-
-        for (i = 0; i <= qtdAlertasDisco.length; i++) {
-            if (i != null || i != 0) {
-                contador += 1
-            }
-        }
-
-        for (i = 0; i <= qtdAlertasDownload.length; i++) {
-            if (i != null || i != 0) {
-                contador += 1
-            }
-        }
-        for (i = 0; i <= qtdAlertasUpload.length; i++) {
-            if (i != null || i != 0) {
-                contador += 1
-            }
-        }
-
 
     }
 
@@ -1345,7 +1342,7 @@ function atualizarGraficoPorPeriodo(periodo) {
         const qtdAlertasDownloadcritico = contarAlertasPorPeriodo(dataFiltro, "mb_recebidos_status_critico");
 
         const {
-            contDonwload,
+            contDownload,
             contDownloadCritico
         } = distribuirAlertasNasLabels(dataFiltro, labels, Number(periodo));
 
@@ -1359,7 +1356,7 @@ function atualizarGraficoPorPeriodo(periodo) {
                 datasets: [
                     {
                         label: 'Alertas padrão',
-                        data: contDonwload,
+                        data: contDownload,
                         backgroundColor: '#F4B000',
                         stack: 'alerts', borderWidth: 1,
                         borderRadius: 10,
@@ -1549,40 +1546,6 @@ function atualizarGraficoPorPeriodo(periodo) {
                 }
             }]
         });
-
-
-        var contador = 0;
-        for (i = 0; i <= qtdAlertasCPU.length; i++) {
-            if (i != null || i != 0) {
-                contador += 1
-            }
-        }
-
-        for (i = 0; i <= qtdAlertasRAM.length; i++) {
-            if (i != null || i != 0) {
-                contador += 1
-            }
-        }
-
-        for (i = 0; i <= qtdAlertasDisco.length; i++) {
-            if (i != null || i != 0) {
-                contador += 1
-            }
-        }
-
-        for (i = 0; i <= qtdAlertasDownload.length; i++) {
-            if (i != null || i != 0) {
-                contador += 1
-            }
-        }
-        for (i = 0; i <= qtdAlertasUpload.length; i++) {
-            if (i != null || i != 0) {
-                contador += 1
-            }
-        }
-
-
-
 
     }
 
@@ -2114,38 +2077,6 @@ function atualizarGraficoPorPeriodo(periodo) {
                 }
             }]
         });
-
-
-        var contador = 0;
-        for (i = 0; i <= qtdAlertasCPUcritico.length; i++) {
-            if (i != null || i != 0) {
-                contador += 1
-            }
-        }
-
-        for (i = 0; i <= qtdAlertasRAM.length; i++) {
-            if (i != null || i != 0) {
-                contador += 1
-            }
-        }
-
-        for (i = 0; i <= qtdAlertasDisco.length; i++) {
-            if (i != null || i != 0) {
-                contador += 1
-            }
-        }
-
-        for (i = 0; i <= qtdAlertasDiscocritico.length; i++) {
-            if (i != null || i != 0) {
-                contador += 1
-            }
-        }
-        for (i = 0; i <= qtdAlertasUpload.length; i++) {
-            if (i != null || i != 0) {
-                contador += 1
-            }
-        }
-
     }
 
     if (periodo === "4") {
@@ -2686,40 +2617,7 @@ function atualizarGraficoPorPeriodo(periodo) {
                     ctx.restore();
                 }
             }]
-        });
-
-
-        var contador = 0;
-        for (i = 0; i <= qtdAlertasCPU.length; i++) {
-            if (i != null || i != 0) {
-                contador += 1
-            }
-        }
-
-        for (i = 0; i <= qtdAlertasRAM.length; i++) {
-            if (i != null || i != 0) {
-                contador += 1
-            }
-        }
-
-        for (i = 0; i <= qtdAlertasDisco.length; i++) {
-            if (i != null || i != 0) {
-                contador += 1
-            }
-        }
-
-        for (i = 0; i <= qtdAlertasDownload.length; i++) {
-            if (i != null || i != 0) {
-                contador += 1
-            }
-        }
-        for (i = 0; i <= qtdAlertasUpload.length; i++) {
-            if (i != null || i != 0) {
-                contador += 1
-            }
-        }
-
-
+        })
     }
 
 }
