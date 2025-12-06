@@ -309,8 +309,8 @@ function atualizarCPU(valorCPU) {
     if (!chartCPU) return;
 
     let cor = "green";
-    if (valorCPU >= limites.cpu.critico) cor = "red";
-    else if (valorCPU >= limites.cpu.normal) cor = "yellow";
+    if (valorCPU >= limites.cpu.critico) cor = "#E53935";
+    else if (valorCPU >= limites.cpu.normal) cor = "#F4B000";
 
     chartCPU.data.datasets[0].backgroundColor = [cor, "#ccc"];
     chartCPU.data.datasets[0].data = [valorCPU, 100 - valorCPU];
@@ -321,8 +321,8 @@ function atualizarRAM(valorRAM) {
     if (!chartRAM) return;
 
     let cor = "green";
-    if (valorRAM >= limites.ram.critico) cor = "red";
-    else if (valorRAM >= limites.ram.normal) cor = "yellow";
+    if (valorRAM >= limites.ram.critico) cor = "#E53935";
+    else if (valorRAM >= limites.ram.normal) cor = "#F4B000";
 
     chartRAM.data.datasets[0].backgroundColor = [cor, "#ccc"];
     chartRAM.data.datasets[0].data = [valorRAM, 100 - valorRAM];
@@ -333,8 +333,8 @@ function atualizarDisco(valorDisco) {
     if (!chartDisco) return;
 
     let cor = "green";
-    if (valorDisco >= limites.disco.critico) cor = "red";
-    else if (valorDisco >= limites.disco.normal) cor = "yellow";
+    if (valorDisco >= limites.disco.critico) cor = "#E53935";
+    else if (valorDisco >= limites.disco.normal) cor = "#F4B000";
 
     chartDisco.data.datasets[0].backgroundColor = [cor, "#ccc"];
     chartDisco.data.datasets[0].data = [valorDisco, 100 - valorDisco];
@@ -345,8 +345,8 @@ function atualizarMBRecebidos(valorMbRecebidos) {
     if (!chartMBRecebidos) return;
 
     let cor = "green";
-    if (valorMbRecebidos >= limites.mbRecebidos.critico) cor = "red";
-    else if (valorMbRecebidos >= limites.mbRecebidos.normal) cor = "yellow";
+    if (valorMbRecebidos >= limites.mbRecebidos.critico) cor = "#E53935";
+    else if (valorMbRecebidos >= limites.mbRecebidos.normal) cor = "#F4B000";
 
     chartMBRecebidos.data.datasets[0].backgroundColor = [cor, "#ccc"];
     chartMBRecebidos.data.datasets[0].data = [valorMbRecebidos, 100 - valorMbRecebidos];
@@ -357,8 +357,8 @@ function atualizarMBEnviados(valorMbEnviados) {
     if (!chartMBEnviados) return;
 
     let cor = "green";
-    if (valorMbEnviados >= limites.mbEnviados.critico) cor = "red";
-    else if (valorMbEnviados >= limites.mbEnviados.normal) cor = "yellow";
+    if (valorMbEnviados >= limites.mbEnviados.critico) cor = "#E53935";
+    else if (valorMbEnviados >= limites.mbEnviados.normal) cor = "#F4B000";
 
     chartMBEnviados.data.datasets[0].backgroundColor = [cor, "#ccc"];
     chartMBEnviados.data.datasets[0].data = [valorMbEnviados, 100 - valorMbEnviados];
@@ -493,15 +493,10 @@ function atualizarGraficoPorPeriodo(periodo) {
     // Diferenciação dos períodos
     if (periodo === "1") {
 
-        const qtdAlertasCPU = contarAlertasPorPeriodo(dataFiltro, "cpu_status");
-        const qtdAlertasCPUcritico = contarAlertasPorPeriodo(dataFiltro, "cpu_status_critico");
-
         const {
             contCPU,
             contCPUCritico
         } = distribuirAlertasNasLabels(dataFiltro, labels, Number(periodo));
-
-        console.log('CPU ultimos5 por bloco:', qtdAlertasCPU);
 
         ctxCpu = document.getElementById('CpuChart').getContext('2d');
         cpuChart = new Chart(ctxCpu, {
@@ -601,9 +596,6 @@ function atualizarGraficoPorPeriodo(periodo) {
                 }
             }]
         });
-
-        const qtdAlertasRAM = contarAlertasPorPeriodo(dataFiltro, "ram_status");
-        const qtdAlertasRAMcritico = contarAlertasPorPeriodo(dataFiltro, "ram_status_critico");
 
         const {
             contRAM,
@@ -708,9 +700,6 @@ function atualizarGraficoPorPeriodo(periodo) {
             }]
         });
 
-        const qtdAlertasDisco = contarAlertasPorPeriodo(dataFiltro, "disco_status");
-        const qtdAlertasDiscocritico = contarAlertasPorPeriodo(dataFiltro, "disco_status_critico");
-
         const {
             contDisco,
             contDiscoCritico
@@ -813,9 +802,6 @@ function atualizarGraficoPorPeriodo(periodo) {
             }]
         });
 
-        const qtdAlertasDownload = contarAlertasPorPeriodo(dataFiltro, "mb_recebidos_status");
-        const qtdAlertasDownloadcritico = contarAlertasPorPeriodo(dataFiltro, "mb_recebidos_status_critico");
-
         const {
             contDownload,
             contDownloadCritico
@@ -917,9 +903,6 @@ function atualizarGraficoPorPeriodo(periodo) {
                 }
             }]
         });
-
-        const qtdAlertasUpload = contarAlertasPorPeriodo(dataFiltro, "mb_enviados_status");
-        const qtdAlertasUploadcritico = contarAlertasPorPeriodo(dataFiltro, "mb_enviados_status_critico");
 
         const {
             contUpload,
@@ -1025,9 +1008,6 @@ function atualizarGraficoPorPeriodo(periodo) {
 
     else if (periodo === "2") {
 
-        const qtdAlertasCPU = contarAlertasPorPeriodo(dataFiltro, "cpu_status");
-        const qtdAlertasCPUcritico = contarAlertasPorPeriodo(dataFiltro, "cpu_status_critico");
-
         const {
             contCPU,
             contCPUCritico
@@ -1130,9 +1110,6 @@ function atualizarGraficoPorPeriodo(periodo) {
             }]
         });
 
-        const qtdAlertasRAM = contarAlertasPorPeriodo(dataFiltro, "ram_status");
-        const qtdAlertasRAMcritico = contarAlertasPorPeriodo(dataFiltro, "ram_status_critico");
-
         const {
             contRAM,
             contRAMCritico
@@ -1232,9 +1209,6 @@ function atualizarGraficoPorPeriodo(periodo) {
                 }
             }]
         });
-
-        const qtdAlertasDisco = contarAlertasPorPeriodo(dataFiltro, "disco_status");
-        const qtdAlertasDiscocritico = contarAlertasPorPeriodo(dataFiltro, "disco_status_critico");
 
         const {
             contDisco,
@@ -1338,9 +1312,6 @@ function atualizarGraficoPorPeriodo(periodo) {
             }]
         });
 
-        const qtdAlertasDownload = contarAlertasPorPeriodo(dataFiltro, "mb_recebidos_status");
-        const qtdAlertasDownloadcritico = contarAlertasPorPeriodo(dataFiltro, "mb_recebidos_status_critico");
-
         const {
             contDownload,
             contDownloadCritico
@@ -1443,9 +1414,6 @@ function atualizarGraficoPorPeriodo(periodo) {
                 }
             }]
         });
-
-        const qtdAlertasUpload = contarAlertasPorPeriodo(dataFiltro, "mb_enviados_status");
-        const qtdAlertasUploadcritico = contarAlertasPorPeriodo(dataFiltro, "mb_enviados_status_critico");
 
         const {
             contUpload,
@@ -1551,13 +1519,6 @@ function atualizarGraficoPorPeriodo(periodo) {
 
     if (periodo === "3") {
 
-        const qtdAlertasCPU = contarAlertasPorPeriodo(dataFiltro, "cpu_status");
-        const qtdAlertasCPUcritico = contarAlertasPorPeriodo(dataFiltro, "cpu_status_critico");
-
-
-        alertaCPU = qtdAlertasCPU
-        alertaCriticoCPU = qtdAlertasCPUcritico
-
         const {
             contCPU,
             contCPUCritico
@@ -1659,9 +1620,6 @@ function atualizarGraficoPorPeriodo(periodo) {
             }]
         });
 
-        const qtdAlertasRAM = contarAlertasPorPeriodo(dataFiltro, "ram_status");
-        const qtdAlertasRAMcritico = contarAlertasPorPeriodo(dataFiltro, "ram_status_critico");
-
         const {
             contRAM,
             contRAMCritico
@@ -1762,10 +1720,6 @@ function atualizarGraficoPorPeriodo(periodo) {
                 }
             }]
         });
-
-        const qtdAlertasDisco = contarAlertasPorPeriodo(dataFiltro, "disco_status");
-        const qtdAlertasDiscocritico = contarAlertasPorPeriodo(dataFiltro, "disco_status_critico");
-
 
         const {
             contDisco,
@@ -1869,10 +1823,6 @@ function atualizarGraficoPorPeriodo(periodo) {
             }]
         });
 
-
-        const qtdAlertasDownload = contarAlertasPorPeriodo(dataFiltro, "mb_recebidos_status");
-        const qtdAlertasDownloadcritico = contarAlertasPorPeriodo(dataFiltro, "mb_recebidos_status_critico");
-
         const {
             contDownload,
             contDownloadCritico
@@ -1974,9 +1924,6 @@ function atualizarGraficoPorPeriodo(periodo) {
                 }
             }]
         });
-
-        const qtdAlertasUpload = contarAlertasPorPeriodo(dataFiltro, "mb_enviados_status");
-        const qtdAlertasUploadcritico = contarAlertasPorPeriodo(dataFiltro, "mb_enviados_status_critico");
 
         const {
             contUpload,
@@ -2081,19 +2028,10 @@ function atualizarGraficoPorPeriodo(periodo) {
 
     if (periodo === "4") {
 
-
-        const qtdAlertasCPU = contarAlertasPorPeriodo(dataFiltro, "cpu_status");
-        const qtdAlertasCPUcritico = contarAlertasPorPeriodo(dataFiltro, "cpu_status_critico");
-
-        alertaCPU = qtdAlertasCPU
-        alertaCriticoCPU = qtdAlertasCPUcritico
-
         const {
             contCPU,
             contCPUCritico
         } = distribuirAlertasNasLabels(dataFiltro, labels, Number(periodo));
-
-        console.log('cpuAlertasPorBloco:', qtdAlertasCPU)
 
         const ctxCpu = document.getElementById('CpuChart').getContext('2d');
         cpuChart = new Chart(ctxCpu, {
@@ -2189,14 +2127,6 @@ function atualizarGraficoPorPeriodo(periodo) {
                 }
             }]
         });
-
-
-        const qtdAlertasRAM = contarAlertasPorPeriodo(dataFiltro, "ram_status");
-        const qtdAlertasRAMcritico = contarAlertasPorPeriodo(dataFiltro, "ram_status_critico");
-
-        alertaRAM = qtdAlertasRAM
-        alertaCriticoRAM = qtdAlertasRAMcritico
-
 
         const {
             contRAM,
@@ -2297,12 +2227,6 @@ function atualizarGraficoPorPeriodo(periodo) {
                 }
             }]
         });
-
-        const qtdAlertasDisco = contarAlertasPorPeriodo(dataFiltro, "disco_status");
-        const qtdAlertasDiscocritico = contarAlertasPorPeriodo(dataFiltro, "disco_status_critico");
-
-        alertaDisco = qtdAlertasDisco
-        alertaCriticoDisco = qtdAlertasDiscocritico
 
         const {
             contDisco,
@@ -2406,12 +2330,6 @@ function atualizarGraficoPorPeriodo(periodo) {
             }]
         });
 
-        const qtdAlertasDownload = contarAlertasPorPeriodo(dataFiltro, "mb_recebidos_status");
-        const qtdAlertasDownloadcritico = contarAlertasPorPeriodo(dataFiltro, "mb_recebidos_status_critico");
-
-        alertaDownload = qtdAlertasDownload
-        alertaCriticoDownload = qtdAlertasDownloadcritico
-
         const {
             contDownload,
             contDownloadCritico
@@ -2513,12 +2431,6 @@ function atualizarGraficoPorPeriodo(periodo) {
                 }
             }]
         });
-
-        const qtdAlertasUpload = contarAlertasPorPeriodo(dataFiltro, "mb_enviados_status");
-        const qtdAlertasUploadcritico = contarAlertasPorPeriodo(dataFiltro, "mb_enviados_status_critico");
-
-        alertaUpload = qtdAlertasUpload
-        alertaCriticoUpload = qtdAlertasUploadcritico
 
         const {
             contUpload,
@@ -2655,4 +2567,4 @@ function configurarRedirecionamentoDosCards() {
             });
         }
     });
-}
+}   
