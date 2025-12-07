@@ -265,8 +265,9 @@
             btnParam.addEventListener('click', async (e) => {
               e.stopPropagation();
                 sessionStorage.setItem("fk_servidor", s.id_servidor);
-              // const parametros = await buscarParametrosServidor(s.id_servidor);
-              abrirModalEditarParametros([], s.id_servidor);
+              const parametros = await buscarParametrosServidor(s.id_servidor);
+              console.log(parametros)
+              abrirModalEditarParametros(parametros, s.id_servidor);
             });
           }
         });
@@ -274,22 +275,22 @@
       .catch(console.error);
   }
 
-  // async function buscarParametrosServidor(idServidor) {
-  //  try {
+  async function buscarParametrosServidor(idServidor) {
+   try {
  
-  //  const resp = await fetch(`/parametro/${idServidor}`);  
-  //  if (!resp.ok) {
+   const resp = await fetch(`/parametro/${idServidor}`);
+   if (!resp.ok) {
 
-  //  console.error(`Erro HTTP ao buscar parâmetros: ${resp.status}`);
-  // return [];
-  // }
+   console.error(`Erro HTTP ao buscar parâmetros: ${resp.status}`);
+  return [];
+  }
   
-  // return await resp.json();
-  //  } catch (e) {
-  //   console.error("Erro ao buscar parâmetros:", e);
-  //   return [];
-  //  }
-  // }
+  return await resp.json();
+   } catch (e) {
+    console.error("Erro ao buscar parâmetros:", e);
+    return [];
+   }
+  }
 
 
 
@@ -375,9 +376,11 @@
 
  
    parametros.forEach(p => {
-    const input = modal.querySelector(`input[data-componente="${p.fk_componente}"][data-tipo="${p.tipo}"]`);
+    const inputNormal = modal.querySelector(`input[data-componente="${p.fk_componente}"][data-tipo="normal"]`);
+    const inputCritico = modal.querySelector(`input[data-componente="${p.fk_componente}"][data-tipo="critico"]`);
   
-    if (input) input.value = p.valor; 
+    if (inputNormal) inputNormal.value = p.alerta_normal; 
+    if (inputCritico) inputCritico.value = p.alerta_critico; 
    });
   }
   window.onload = carregarServidores;
