@@ -28,6 +28,8 @@ var parametrosRouter = require("./src/routes/parametro");
 var newsRouter = require("./src/routes/news_bruno");
 var jiraRouter = require("./src/routes/jira");
 
+var BucketRouter = require("./src/routes/BucketRoute")
+
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -44,6 +46,7 @@ app.use("/s3", s3Router);
 app.use("/news", newsRouter);
 app.use("/parametro", parametrosRouter);
 app.use("/jira", jiraRouter);
+app.use("/BucketRoute", BucketRouter);
 
 app.use('/bootstrap', express.static(__dirname + '/node_modules/bootstrap/dist'));
 app.use("/s3", s3Router);
