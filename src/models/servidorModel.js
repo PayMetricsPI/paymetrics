@@ -1,38 +1,21 @@
 var database = require("../database/config");
 
-function criarServidores(servidores) {
-    let promises = servidores.map(s => {
+function criarServidor(nome, fk_empresa, pais, estado, mac_address, ipEc2, tipo_cpu, ram, disco) {
 
-        let sqlServidor = `
-            INSERT INTO servidor 
-                (nome, fk_empresa, ipEC2, pais, estado, mac_address, tipo_cpu, ram, disco)
-            VALUES 
-                ('${s.nome}', ${s.fk_empresa}, '${s.ipEc2}', '${s.pais}', '${s.estado}', '${s.mac_address}',
-                 '${s.tipo_cpu}',${s.ram}, ${s.disco});
-        `;
+    let sqlServidor = `
+        INSERT INTO servidor 
+            (nome, fk_empresa, ip, pais, estado, mac_address, tipo_cpu, ram, disco)
+        VALUES 
+            ('${nome}', ${fk_empresa}, '${ipEc2}', '${pais}', '${estado}', '${mac_address}',
+                '${tipo_cpu}',${ram}, ${disco});
+    `;
 
-        return database.executar(sqlServidor).then(resultado => {
-            const fk_servidor = resultado.insertId;
-
-            let sqlParametro = `
-                INSERT INTO parametro (fk_servidor, fk_empresa, fk_componente, alerta_critico, alerta_normal)
-                VALUES (${fk_servidor}, ${s.fk_empresa}, ${s.fk_componente}, ${s.alerta_critico}, ${s.alerta_normal});
-            `;
-
-            return database.executar(sqlParametro).then(() => {
-                
-                return { fk_servidor };
-            });
-        });
-    });
-
-
-    return Promise.all(promises).then(lista => lista[0]);
+    return database.executar(sqlServidor);
 }
 
 
 
-    function deletarServidor(id_servidor, fk_empresa) {
+function deletarServidor(id_servidor, fk_empresa) {
 
     if (id_servidor == null || fk_empresa == null) {
         console.error("Erro: id_servidor ou fk_empresa indefinidos!");
@@ -65,7 +48,7 @@ function listarServidores(fk_empresa) {
 }
 
 
-function atualizarServidor(id_servidor, nome, pais,ipEc2, estado, mac_address, tipo_cpu, ram, disco) {
+function atualizarServidor(id_servidor, nome, pais, ipEc2, estado, mac_address, tipo_cpu, ram, disco) {
     var instrucaoSql = `
         update servidor
         set 
@@ -83,7 +66,7 @@ function atualizarServidor(id_servidor, nome, pais,ipEc2, estado, mac_address, t
 }
 
 function mapaGlobal(fk_empresa) {
-     var instrucaoSql = `
+    var instrucaoSql = `
         select      pais, COUNT(*) AS quantidade
         FROM servidor
         WHERE fk_empresa = ${fk_empresa}
@@ -104,7 +87,7 @@ function mapaEstados(fk_empresa, pais) {
 
 
 module.exports = {
-    criarServidores,
+    criarServidor,
     deletarServidor,
     listarServidores,
     atualizarServidor,

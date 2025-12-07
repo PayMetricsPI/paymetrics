@@ -13,14 +13,21 @@ function listarServidores(req, res) {
 }
 
 
-function criarServidores(req, res) {
-    const servidores = req.body.servidores;
+function criarServidor(req, res) {
+    const nome = req.body.nome;
+    const fk_empresa = req.body.fk_empresa;
+    const pais = req.body.pais;
+    const estado = req.body.estado;
+    const mac_address = req.body.mac_address;
+    const ipEc2 = req.body.ipEc2;
+    const tipo_cpu = req.body.tipo_cpu;
+    const ram = req.body.ram;
+    const disco = req.body.disco;
 
-    if (!servidores || !Array.isArray(servidores) || servidores.length === 0) {
-        return res.status(400).json({ error: "Dados inválidos" });
-    }
+    console.log(req.body)
 
-    servidorModel.criarServidores(servidores)
+
+    servidorModel.criarServidor(nome, fk_empresa, pais, estado, mac_address, ipEc2, tipo_cpu, ram, disco)
         .then(resultado => {
            const insertId = resultado && resultado.insertId ? resultado.insertId : null; 
             return res.status(201).json({
@@ -90,7 +97,7 @@ function mapaEstados(req, res) {
 module.exports = {
     atualizarServidor,
     listarServidores,
-    criarServidores,
+    criarServidor,
     deletarServidor,
     mapaGlobal,
     mapaEstados

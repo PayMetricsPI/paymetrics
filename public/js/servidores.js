@@ -80,9 +80,7 @@
     fetch(`/servidores/criarServidor`, {
       method: 'POST',
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        servidores: [{ fk_empresa, nome, pais, estado, mac_address: mac, ipEc2, tipo_cpu, ram, disco }]
-      })
+      body: JSON.stringify({ fk_empresa, nome, pais, estado, mac_address: mac, ipEc2, tipo_cpu, ram, disco })
     })
       .then(resp => resp.json())
       .then((data) => {
@@ -92,7 +90,7 @@
         console.log("criar servidor:", data.id_servidor);
         sessionStorage.setItem("fk_servidor", data.id_servidor);
 
-        open_modal_create_alerta_critico(data.id_servidor);
+        open_modal_create_alerta_critico(data.insertId);
       })
       .catch(console.error);
   });
@@ -267,8 +265,8 @@
             btnParam.addEventListener('click', async (e) => {
               e.stopPropagation();
                 sessionStorage.setItem("fk_servidor", s.id_servidor);
-              const parametros = await buscarParametrosServidor(s.id_servidor);
-              abrirModalEditarParametros(parametros, s.id_servidor);
+              // const parametros = await buscarParametrosServidor(s.id_servidor);
+              abrirModalEditarParametros([], s.id_servidor);
             });
           }
         });
@@ -276,22 +274,22 @@
       .catch(console.error);
   }
 
-  async function buscarParametrosServidor(idServidor) {
-   try {
+  // async function buscarParametrosServidor(idServidor) {
+  //  try {
  
-   const resp = await fetch(`/parametro/${idServidor}`);  
-   if (!resp.ok) {
+  //  const resp = await fetch(`/parametro/${idServidor}`);  
+  //  if (!resp.ok) {
 
-   console.error(`Erro HTTP ao buscar parâmetros: ${resp.status}`);
-  return [];
-  }
+  //  console.error(`Erro HTTP ao buscar parâmetros: ${resp.status}`);
+  // return [];
+  // }
   
-  return await resp.json();
-   } catch (e) {
-    console.error("Erro ao buscar parâmetros:", e);
-    return [];
-   }
-  }
+  // return await resp.json();
+  //  } catch (e) {
+  //   console.error("Erro ao buscar parâmetros:", e);
+  //   return [];
+  //  }
+  // }
 
 
 
