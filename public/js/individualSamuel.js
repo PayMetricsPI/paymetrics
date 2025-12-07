@@ -1,5 +1,8 @@
 let pingRealtimeCache = null;
 
+
+
+
 async function carregarUltimoJson() {
     try {
         const resp = await fetch("/s3/ultimodia");
@@ -450,6 +453,16 @@ async function iniciarMapa() {
     mapa.container("miniMapa");
     mapa.geoData(anychart.maps.world);
 
+    mapa.title()
+  .enabled(true)
+  .text("Distribuição Global de Latência")
+  .fontSize(18)
+  .fontWeight("600")
+  .fontColor("#000")
+  .padding(0, 0, 15, 0)
+  .align("center");
+
+
     mapa.background().fill("#fff");
 
     mapa.unboundRegions()
@@ -593,7 +606,7 @@ const mesLista = [
 let chartBF = null;
 
 async function atualizarGraficoLatencia() {
-    let paisSelecionado = sessionStorage.getItem("paisSelecionado") || "BR";
+    let paisSelecionado = sessionStorage.getItem("paisSelecionado") || "GLOBAL";
 
     let historico;
     let tituloDataset;
@@ -690,8 +703,12 @@ async function atualizarGraficoLatencia() {
                     cornerRadius: 10,
                     displayColors: false,
                     callbacks: {
-                        label: (ctx) => ctx.parsed.y + " ms"
+                        label: (ctx) => {
+                            if (ctx.dataset.label == "Pico Ideal") return null;
+                            return ctx.parsed.y + " ms";
+                        }
                     }
+
                 }
             },
             scales: {
