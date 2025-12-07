@@ -146,6 +146,8 @@
 
     if (!nome || !mac || !tipo_cpu || !ram || !disco) return alert("Preencha todos os campos!");
 
+    console.log(mac)
+
     fetch(`/servidores/atualizarServidor/${id}`, {
       method: 'PUT',
       headers: { "Content-Type": "application/json" },
@@ -209,7 +211,7 @@
           </div>
           <div class="user_info">
             <p><strong>Nome:</strong>  ${s.nome}</p>
-            <p><strong>IP:</strong> ${s.ipEc2}</p>
+            <p><strong>IP:</strong> ${s.ip}</p>
             <p><strong>Mac Address:</strong> ${s.mac_address}</p>
             <p><strong>País:</strong> ${s.pais}</p>
             <p><strong>Estado:</strong> ${s.estado}</p>
@@ -250,7 +252,7 @@
                 s.pais,
                 s.estado,
                 s.mac_address,
-                s.ipEc2,
+                s.ip,
                 s.tipo_cpu,
                 s.ram,
                 s.disco

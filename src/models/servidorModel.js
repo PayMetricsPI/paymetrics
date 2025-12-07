@@ -56,7 +56,7 @@ function atualizarServidor(id_servidor, nome, pais, ipEc2, estado, mac_address, 
             pais = '${pais}',
             estado = '${estado}',
             mac_address = '${mac_address}',
-            ipEc2 = '${ipEc2}',
+            ip = '${ipEc2}',
             tipo_cpu = '${tipo_cpu}',
             disco = '${disco}',
             ram = '${ram}'
