@@ -258,7 +258,7 @@ function buscarDados() {
     // Buscar parâmetros
     const id_servidor = JSON.parse(sessionStorage.getItem('servidorSelecionado')).id_servidor;
 
-    fetch("/parametro/obterParametro/" + id_servidor)
+    fetch(`/parametro/${id_servidor}`)
         .then(r => r.json())
         .then(data => {
 
