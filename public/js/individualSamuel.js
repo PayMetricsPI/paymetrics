@@ -220,7 +220,7 @@ async function preencherSelectPaises() {
 
     select.innerHTML = "";
 
-    // Opção GLOBAL
+
     const optGlobal = document.createElement("option");
     optGlobal.value = "GLOBAL";
     optGlobal.textContent = "Todos os países";
@@ -241,9 +241,9 @@ async function preencherSelectPaises() {
             return;
         }
 
-        // ✅ Aqui entram APENAS os países que vieram do banco
+      
         dados.forEach(item => {
-            const pais = item.pais || item.id; // segurança caso venha como id
+            const pais = item.pais || item.id;
 
             const opt = document.createElement("option");
             opt.value = pais;
@@ -251,7 +251,7 @@ async function preencherSelectPaises() {
             select.appendChild(opt);
         });
 
-        // manter seleção salva
+        
         const salvo = sessionStorage.getItem("paisSelecionado");
         if (salvo) select.value = salvo;
 
@@ -259,7 +259,7 @@ async function preencherSelectPaises() {
         console.error("Erro ao buscar países:", e);
     }
 
-    // ✅ Evento de mudança continua funcionando normal
+    
     select.addEventListener("change", async (ev) => {
         const valor = ev.target.value;
         sessionStorage.setItem("paisSelecionado", valor);
