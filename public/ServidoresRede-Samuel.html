@@ -22,26 +22,32 @@
 
   <div class="main-content">
     <div class="dashboard-container">
-      <h1 class="titulo">Panorama Geral de Servidores por Rede</h1>
+      <h1 class="titulo">Panorama Geral de Servidores por Rede</h1> 
+      <div class="data-atual">
+    <span id="dataHoje"></span>
+</div>
 
       <div class="cards-row">
         <div class="mini-card">
     <p class="mini-title">Servidores Globais</p>
     <h2 class="mini-value"></h2>
-</div>
-
+        </div>
         <div class="mini-card">
           <p class="mini-title">TPS Total (Transações por Segundo)</p>
           <h2 class="mini-value"></h2>
-        </div>
+          <span class="info-tooltip">
+           ⓘ
+          <span class="tooltip">800 TPS > Critico<br>
+                                400 TPS >= Atenção<br>
+                                400 TPS < Normal
+          </span>
+        </span>
 
+        </div>
         <div class="mini-card">
           <p class="mini-title">Latência Global</p>
           <h2 class="mini-value"></h2>
-        
         </div>
-
-      
       </div>
     </div>
 
@@ -57,7 +63,12 @@
       <div class="bloco-direita">
         <div>
           <div class="mapa-container">
+            <span class="status critico" title="Crítico">●</span> Crítico
+            <span class="status atencao" title="Atenção">●</span> Atenção  
+            <span class="status normal" title="Normal">●</span> Normal
             <div id="miniMapa">
+              
+            </span>
             </div>
             
             
