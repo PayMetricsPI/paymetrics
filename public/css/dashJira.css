@@ -7,31 +7,45 @@
 
 html,
 body {
-    overflow-x: hidden;
-    background-color: #f3f2f2;
+    width: 100%;
+    min-height: 100vh;
 }
 
-.container {
-    max-width: 1140px;
-    margin: 0 auto;
-    padding: 0 28px 0 120px; 
-    width: 100%;
+.a {
+    /* max-width: 1140px; */
+    /* margin: 0 auto; */
+    padding: 0 28px;
+    /* width: 100%; */
+    margin-right: 0;
+    height: 100%;
+    align-items: center;
 }
 
 .dash_jira {
-    margin-top: 50px;
     background-color: #f3f2f2;
+    padding-bottom: 50px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100vw;
+}
+
+.titulo_jira {
+    padding-top: 50px;
+    margin-left: 0;
 }
 
 .titulo_jira h1 {
     font-size: 22px;
-    margin-left: 200px;
+    margin-left: 0;
 }
 
 .titulo_jira h1,
 .info,
 .servidores_alertas {
     margin-left: 0 !important;
+    /* padding-left: 100px; */
 }
 
 .alertas_container {
@@ -92,6 +106,7 @@ body {
     width: 100%;
     box-sizing: border-box;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    margin-left: 0;
 }
 
 .titulo_ser h2 {
@@ -115,6 +130,7 @@ body {
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.08);
 }
 
 .servidor_card b {
@@ -147,4 +163,20 @@ body {
 .servidor_card img {
     background-color: #f4f4f4;
     width: 55px;
+}
+
+.chart-card {
+    margin: 18px 100px;
+    background: white;
+    padding: 12px;
+    border-radius: 12px;
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08);
+    height: 320px;
+    overflow: hidden;
+}
+
+.chart-card canvas {
+    width: 100% !important;
+    height: 100% !important;
+    display: block;
 }

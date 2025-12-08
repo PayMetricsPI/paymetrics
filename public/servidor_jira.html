@@ -37,19 +37,27 @@
         </div>
         <div class="chamados">
             <div class="titulo_cha">
-                <p>Chamados abertos</p>
-                <select>
-                    <option value="aberto">Abertos</option>
-                    <option value="andamento">Em andamento</option>
-                    <option value="fechado">Fechados</option>
-                </select>
+                <p>Chamados</p>
+                <div class="filter">
+                    <select>
+                        <option value="aberto">Abertos</option>
+                        <option value="andamento">Em andamento</option>
+                        <option value="fechado">Fechados</option>
+                    </select>
+                    <div class="component-filter" aria-label="Filtrar por componente">
+                        <label for="componentFilter" class="comp">Componente</label>
+                        <select id="componentFilter" aria-label="Filtrar tickets por componente">
+                            <option value="">Todos os componentes</option>
+                        </select>
+                    </div>
+                </div>
             </div>
             <div class="prioridade-filter" style="margin: 10px 0 20px 0;">
                 <label style="margin-right:20px;">
                     <input type="checkbox" id="checkCritico" checked> Crítico
                 </label>
                 <label>
-                    <input type="checkbox" id="checkAtencao" checked > Atenção
+                    <input type="checkbox" id="checkAtencao" checked> Atenção
                 </label>
             </div>
             <div class="tickets">
@@ -64,13 +72,14 @@
                         <div class="lado_dir">
                             <p><strong>Status:</strong> Aberto</p>
                             <p><strong>Horário:</strong> 22h:10m</p>
+                            <p><strong>Dia:</strong> 22h:10m</p>
                         </div>
                     </div>
                 </div>
                 <div class="card_ticket">
                     <div class="lado_esq">
                         <div class="info_text">
-                            <div class="status">Crítico !</div>
+                            <div class="status">Crítico</div>
                             <p><strong>Ticket:</strong> #225 <br>
                                 <strong>Componente:</strong> RAM <span class="percent">90%</span>
                             </p>

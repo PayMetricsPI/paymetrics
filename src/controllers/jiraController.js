@@ -11,7 +11,7 @@ async function getjira(req, res){
     });
 
     const input = {
-        Bucket: process.env.AWS_CLIENT_JIRA,
+        Bucket: process.env.AWS_CLIENT_PAYMETRICS,
         Key: "jira/data.json"
     }
 
