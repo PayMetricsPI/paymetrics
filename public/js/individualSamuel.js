@@ -204,32 +204,62 @@ async function buscarHistoricoPais7Dias(pais) {
     return historico.reverse();
 }
 
+function formataData(data = new Date()){
+  const hoje = new Date();
+  
+    const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
+    document.getElementById('dataHoje').textContent = hoje.toLocaleDateString('pt-BR', options);
+} 
 
+window.onload = function(){
+   document.getElementById("localData").innerHTML = formataData();
+};
 async function preencherSelectPaises() {
     const select = document.getElementById("selectPais");
     if (!select) return;
 
     select.innerHTML = "";
 
+    // Opção GLOBAL
     const optGlobal = document.createElement("option");
     optGlobal.value = "GLOBAL";
     optGlobal.textContent = "Todos os países";
     select.appendChild(optGlobal);
 
-    const paises = ["BR", "US", "CA", "FR", "JP"];
-    
-    paises.forEach(p => {
-        const opt = document.createElement("option");
-        opt.value = p;
-        opt.textContent = p;
-        select.appendChild(opt);
-    });
+    const fk = getEmpresa();
+    if (!fk) return;
 
-    const salvo = sessionStorage.getItem("paisSelecionado");
-    if (salvo === "GLOBAL" || (salvo && paises.includes(salvo))) {
-        select.value = salvo;
+    try {
+        const resp = await fetch(`/servidores/mapa/${fk}`);
+        const texto = await resp.text();
+
+        let dados;
+        try {
+            dados = JSON.parse(texto);
+        } catch {
+            console.error("Resposta inválida ao buscar países:", texto);
+            return;
+        }
+
+        // ✅ Aqui entram APENAS os países que vieram do banco
+        dados.forEach(item => {
+            const pais = item.pais || item.id; // segurança caso venha como id
+
+            const opt = document.createElement("option");
+            opt.value = pais;
+            opt.textContent = pais;
+            select.appendChild(opt);
+        });
+
+        // manter seleção salva
+        const salvo = sessionStorage.getItem("paisSelecionado");
+        if (salvo) select.value = salvo;
+
+    } catch (e) {
+        console.error("Erro ao buscar países:", e);
     }
 
+    // ✅ Evento de mudança continua funcionando normal
     select.addEventListener("change", async (ev) => {
         const valor = ev.target.value;
         sessionStorage.setItem("paisSelecionado", valor);
@@ -237,12 +267,12 @@ async function preencherSelectPaises() {
         if (valor === "GLOBAL") {
             await iniciarMapa();
             if (btnVoltar) btnVoltar.classList.remove("show");
+
             const historicoGlobal = await buscarHistorico7Dias();
             atualizarGraficoLatenciaComDados(historicoGlobal);
             return;
         }
 
-       
         await iniciarMapa();
         if (btnVoltar) btnVoltar.classList.remove("show");
 
@@ -259,6 +289,7 @@ async function preencherSelectPaises() {
         atualizarGraficoLatencia();
     });
 }
+
 
 function classificarTPS(valor) {
     if (valor > 800) return { texto: "Crítico", classe: "status critical" };
@@ -652,7 +683,115 @@ async function atualizarGraficoLatencia() {
             labels: labels,
             datasets: [
                 {
-                    label: tituloDataset,
+                  label: "Latência Global",  
+                    data: valores,
+                    borderColor: "#000000",
+                    backgroundColor: "#fff",
+                    tension: 0.4,
+                    borderWidth: 5,
+                    pointRadius: 10,
+                    pointHoverRadius: 14,
+                    pointBackgroundColor: "#0000ff",
+                    pointBorderColor: "#fff",
+                    pointBorderWidth: 4,
+                    pointHoverBorderWidth: 5,
+                    fill: true
+                },
+                {
+                    label: "Pico Ideal",
+                    data: Array(labels.length).fill(PICO_IDEAL),
+                    borderColor: "#4caf50",
+                    borderDash: [10, 6],
+                    borderWidth: 3,
+                    pointRadius: 0,
+                    fill: false,
+                    tension: 0
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: { mode: 'index', intersect: false },
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'top',
+                    labels: {
+                        font: { size: 15, weight: "600", family: "Poppins" },
+                        color: "#333",
+                        usePointStyle: true,
+                        padding: 25,
+                        filter: (item) => item.text.includes("Latência") || item.text === "Pico Ideal"
+                    }
+                },
+                title: { display: false },
+                tooltip: {
+                    backgroundColor: "rgba(0,0,0,0.85)",
+                    titleFont: { size: 14 },
+                    bodyFont: { size: 16, weight: "600" },
+                    padding: 12,
+                    cornerRadius: 10,
+                    displayColors: false,
+                    callbacks: {
+                        label: (ctx) => {
+                            if (ctx.dataset.label == "Pico Ideal") return null;
+                            return ctx.parsed.y + " ms";
+                        }
+                    }
+
+                }
+            },
+            scales: {
+                x: {
+                    grid: { display: false },
+                    ticks: { font: { size: 14 }, color: "#555" }
+                },
+                y: {
+                    grid: { color: "rgba(0,0,0,0.04)", drawBorder: false },
+                    ticks: {
+                        font: { size: 14 },
+                        color: "#555",
+                        padding: 10,
+                        callback: v => v + "ms"
+                    }
+                }
+            }
+        }
+    });
+}
+function atualizarGraficoLatenciaComDados(historico) {
+    const ctx = document.getElementById("bfChart");
+    if (!ctx) return;
+
+    if (!historico || historico.length === 0) {
+        if (chartBF) chartBF.destroy();
+        return;
+    }
+
+    const labels = historico.map(h => {
+        const [a, m, d] = h.data.split('-');
+        return new Date(a, m-1, d).toLocaleDateString('pt-BR', {
+            day: 'numeric',
+            month: 'short'
+        });
+    });
+
+    const valores = historico.map(h => h.media);
+    const PICO_IDEAL = 90;
+
+    if (chartBF) {
+        chartBF.destroy();
+        chartBF = null;
+    }
+
+    chartBF = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [
+                {
+                    label: "Latência Global",
                     data: valores,
                     borderColor: "#000000",
                     backgroundColor: "#fff",
@@ -726,61 +865,6 @@ async function atualizarGraficoLatencia() {
                     }
                 }
             }
-        }
-    });
-}
-
-function atualizarGraficoLatenciaComDados(historico) {
-    sessionStorage.setItem("paisSelecionado", "GLOBAL");
-    atualizarGraficoLatencia();
-}
-function atualizarGraficoLatenciaComDados(historico) {
-    const ctx = document.getElementById("bfChart");
-    if (!ctx) return;
-
-    if (!historico || historico.length === 0) {
-        if (chartBF) chartBF.destroy();
-        const c = ctx.getContext("2d");
-        c.clearRect(0, 0, ctx.width, ctx.height);
-        c.font = "18px Poppins";
-        c.fillStyle = "#444";
-        c.textAlign = "center";
-        c.fillText("Sem dados", ctx.width / 2, ctx.height / 2);
-        return;
-    }
-
-    const labels = historico.map(h => {
-        const [a, m, d] = h.data.split('-');
-        return new Date(a, m-1, d).toLocaleDateString('pt-BR', {day:'numeric', month:'short'});
-    });
-
-    const valores = historico.map(h => h.media);
-    const anoPassado = valores.map(v => Math.round(v * (0.85 + Math.random() * 0.3)));
-
-    if (chartBF) {
-        chartBF.data.labels = labels;
-        chartBF.data.datasets[0].data = anoPassado;
-        chartBF.data.datasets[1].data = valores;
-        chartBF.options.plugins.title = {display:true, text:"Latência Média Global"};
-        chartBF.update();
-        return;
-    }
-
-    chartBF = new Chart(ctx, {
-        type: "line",
-        data: {
-            labels: labels,
-            datasets: [
-                {label:"Semana passada",data:anoPassado,borderColor:"#d32f2f",tension:0.35,borderWidth:2,fill:false},
-                {label:"Latência Global",data:valores,borderColor:"#1e88e5",tension:0.35,borderWidth:4,fill:false,pointRadius:5},
-                {label:"Pico Ideal",data:Array(7).fill(90),borderColor:"#4caf50",borderDash:[8,4],borderWidth:2,pointRadius:0}
-            ]
-        },
-        options: {
-            responsive:true,
-            maintainAspectRatio:false,
-            plugins:{legend:{display:false},title:{display:true,text:"Latência Média Global"}},
-            scales:{y:{suggestedMax:200,ticks:{callback:v=>v+'ms'}}}
         }
     });
 }
