@@ -19,7 +19,7 @@ function criarServidor(req, res) {
     const pais = req.body.pais;
     const estado = req.body.estado;
     const mac_address = req.body.mac_address;
-    const ipEc2 = req.body.ipEc2;
+    const ip = req.body.ip;
     const tipo_cpu = req.body.tipo_cpu;
     const ram = req.body.ram;
     const disco = req.body.disco;
@@ -27,7 +27,7 @@ function criarServidor(req, res) {
     console.log(req.body)
 
 
-    servidorModel.criarServidor(nome, fk_empresa, pais, estado, mac_address, ipEc2, tipo_cpu, ram, disco)
+    servidorModel.criarServidor(nome, fk_empresa, pais, estado, mac_address, ip, tipo_cpu, ram, disco)
         .then(resultado => {
            const insertId = resultado && resultado.insertId ? resultado.insertId : null; 
             return res.status(201).json({
@@ -61,9 +61,9 @@ function deletarServidor(req, res) {
 
 function atualizarServidor(req, res) {
     const id_servidor = req.params.id_servidor;
-    const { nome,pais, estado, mac_address, tipo_cpu, ram, disco, ipEc2 } = req.body;
+    const { nome,pais, estado, mac_address, tipo_cpu, ram, disco, ip } = req.body;
 
-    servidorModel.atualizarServidor(id_servidor, nome,pais, estado, mac_address, ipEc2, tipo_cpu, ram, disco,)
+    servidorModel.atualizarServidor(id_servidor, nome,pais, estado, mac_address, ip, tipo_cpu, ram, disco,)
         .then(resultado => res.status(200).json({ message: "Servidor atualizado com sucesso", resultado }))
         .catch(erro => {
             console.error("Erro ao atualizar o servidor:", erro.sqlMessage || erro);

@@ -1,12 +1,12 @@
 var database = require("../database/config");
 
-function criarServidor(nome, fk_empresa, pais, estado, mac_address, ipEc2, tipo_cpu, ram, disco) {
+function criarServidor(nome, fk_empresa, pais, estado, mac_address, ip, tipo_cpu, ram, disco) {
 
     let sqlServidor = `
         INSERT INTO servidor 
             (nome, fk_empresa, ip, pais, estado, mac_address, tipo_cpu, ram, disco)
         VALUES 
-            ('${nome}', ${fk_empresa}, '${ipEc2}', '${pais}', '${estado}', '${mac_address}',
+            ('${nome}', ${fk_empresa}, '${ip}', '${pais}', '${estado}', '${mac_address}',
                 '${tipo_cpu}',${ram}, ${disco});
     `;
 
@@ -48,7 +48,7 @@ function listarServidores(fk_empresa) {
 }
 
 
-function atualizarServidor(id_servidor, nome, pais, ipEc2, estado, mac_address, tipo_cpu, ram, disco) {
+function atualizarServidor(id_servidor, nome, pais, ip, estado, mac_address, tipo_cpu, ram, disco) {
     var instrucaoSql = `
         update servidor
         set 
@@ -56,7 +56,7 @@ function atualizarServidor(id_servidor, nome, pais, ipEc2, estado, mac_address, 
             pais = '${pais}',
             estado = '${estado}',
             mac_address = '${mac_address}',
-            ip = '${ipEc2}',
+            ip = '${ip}',
             tipo_cpu = '${tipo_cpu}',
             disco = '${disco}',
             ram = '${ram}'

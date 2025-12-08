@@ -70,7 +70,7 @@
     const pais = create_server_modal.querySelector('.pais_input').value.trim();
     const estado = create_server_modal.querySelector('.estado_input').value.trim();
     const mac = create_server_modal.querySelector('.mac_input').value.trim();
-    const ip = create_server_modal.querySelector('.ip_input').value.trim();
+    const ip = create_server_modal.querySelector('.ip').value.trim();
     const tipo_cpu = create_server_modal.querySelector('.tipo_cpu_input').value.trim();
     const ram = create_server_modal.querySelector('.ram_input').value.trim();
     const disco = create_server_modal.querySelector('.disco_input').value.trim();
@@ -101,7 +101,7 @@
 
     edit_server_modal.querySelector('.nome_input').value = nome;
     edit_server_modal.querySelector('.mac_input').value = mac;
-    edit_server_modal.querySelector('.ip_input').value = ip;
+    edit_server_modal.querySelector('.ip').value = ip;
     edit_server_modal.querySelector('.tipo_cpu_input').value = tipo_cpu;
     edit_server_modal.querySelector('.ram_input').value = ram;
     edit_server_modal.querySelector('.disco_input').value = disco;
@@ -139,7 +139,7 @@
     const pais = document.getElementById("select_pais_edit").value.trim();
     const estado = document.getElementById("select_estado_edit").value.trim();
     const mac = edit_server_modal.querySelector('.mac_input').value.trim();
-    const ip = edit_server_modal.querySelector('.ip_input').value.trim();
+    const ip = edit_server_modal.querySelector('.ip').value.trim();
     const tipo_cpu = edit_server_modal.querySelector('.tipo_cpu_input').value.trim();
     const ram = edit_server_modal.querySelector('.ram_input').value.trim();
     const disco = edit_server_modal.querySelector('.disco_input').value.trim();
