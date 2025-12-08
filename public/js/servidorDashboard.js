@@ -78,14 +78,31 @@ function carregarDados() {
     return fetch('/s3/downloadJSON')
         .then(response => response.json())
         .then(response => {
-
             data = response.data.flat();
             console.log("TOTAL CARREGADO:", data.length);
 
             separarPorPeriodo(data);
-
+            atualizarUltimaData();
         })
         .catch(err => console.error('ERRO S3:', err));
+}
+
+function atualizarUltimaData() {
+    if (!servidor || !Array.isArray(data)) return;
+
+    const mac = getMAC(servidor);
+    if (!mac) return;
+
+    const servidorData = data
+        .filter(row => row.mac_address === mac && row.data_alerta);
+
+    const ordenado = servidorData.sort(
+        (a, b) => new Date(b.data_alerta.replace(' ', 'T')) - new Date(a.data_alerta.replace(' ', 'T'))
+    );
+
+    if (ordenado.length > 0) {
+        document.getElementById("data_alerta").textContent = ordenado[0].data_alerta;
+    }
 }
 
 function calcularAlertas(dataFiltro = data) {
@@ -446,6 +463,7 @@ function distribuirAlertasNasLabels(dataFiltro, labels, periodo) {
 
     return { contCPU, contCPUCritico, contRAM, contRAMCritico, contDisco, contDiscoCritico, contDownload, contDownloadCritico, contUpload, contUploadCritico };
 }
+
 
 function getMAC(servidor) {
     return servidor.mac_address
@@ -2533,8 +2551,12 @@ function atualizarGraficoPorPeriodo(periodo) {
     }
 
 }
+console.log('CHECK ONLOAD 1');
+
 window.onload = function () {
+    console.log('CHECK ONLOAD 2 - ENTROU NO window.onload');
     carregarDados().then(() => {
+        console.log('CHECK ONLOAD 3 - DEPOIS DE carregarDados, data.length =',)
         const Periodo = document.getElementById('periodo');
         Periodo.addEventListener('change', () => atualizarGraficoPorPeriodo(Periodo.value));
         atualizarGraficoPorPeriodo(Periodo.value);
@@ -2542,6 +2564,7 @@ window.onload = function () {
     setInterval(buscarDados, 2000)
     buscarDados();
     configurarRedirecionamentoDosCards();
+    atualizarUltimaData();
 };
 
 function configurarRedirecionamentoDosCards() {
