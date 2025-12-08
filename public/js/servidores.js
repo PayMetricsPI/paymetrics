@@ -70,7 +70,7 @@
     const pais = create_server_modal.querySelector('.pais_input').value.trim();
     const estado = create_server_modal.querySelector('.estado_input').value.trim();
     const mac = create_server_modal.querySelector('.mac_input').value.trim();
-    const ipEc2 = create_server_modal.querySelector('.ipEc2_input').value.trim();
+    const ip = create_server_modal.querySelector('.ip').value.trim();
     const tipo_cpu = create_server_modal.querySelector('.tipo_cpu_input').value.trim();
     const ram = create_server_modal.querySelector('.ram_input').value.trim();
     const disco = create_server_modal.querySelector('.disco_input').value.trim();
@@ -80,9 +80,7 @@
     fetch(`/servidores/criarServidor`, {
       method: 'POST',
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        servidores: [{ fk_empresa, nome, pais, estado, mac_address: mac, ipEc2, tipo_cpu, ram, disco }]
-      })
+      body: JSON.stringify({ fk_empresa, nome, pais, estado, mac_address: mac, ip, tipo_cpu, ram, disco })
     })
       .then(resp => resp.json())
       .then((data) => {
@@ -92,18 +90,18 @@
         console.log("criar servidor:", data.id_servidor);
         sessionStorage.setItem("fk_servidor", data.id_servidor);
 
-        open_modal_create_alerta_critico(data.id_servidor);
+        open_modal_create_alerta_critico(data.insertId);
       })
       .catch(console.error);
   });
 
-  function open_modal_edit_server(id, nome, pais, estado, mac, ipEc2, tipo_cpu, ram, disco) {
+  function open_modal_edit_server(id, nome, pais, estado, mac, ip, tipo_cpu, ram, disco) {
     out_edit_server.classList.add('show');
     edit_server_modal.classList.add('show');
 
     edit_server_modal.querySelector('.nome_input').value = nome;
     edit_server_modal.querySelector('.mac_input').value = mac;
-    edit_server_modal.querySelector('.ipEc2_input').value = ipEc2;
+    edit_server_modal.querySelector('.ip').value = ip;
     edit_server_modal.querySelector('.tipo_cpu_input').value = tipo_cpu;
     edit_server_modal.querySelector('.ram_input').value = ram;
     edit_server_modal.querySelector('.disco_input').value = disco;
@@ -141,17 +139,19 @@
     const pais = document.getElementById("select_pais_edit").value.trim();
     const estado = document.getElementById("select_estado_edit").value.trim();
     const mac = edit_server_modal.querySelector('.mac_input').value.trim();
-    const ipEc2 = edit_server_modal.querySelector('.ipEc2_input').value.trim();
+    const ip = edit_server_modal.querySelector('.ip').value.trim();
     const tipo_cpu = edit_server_modal.querySelector('.tipo_cpu_input').value.trim();
     const ram = edit_server_modal.querySelector('.ram_input').value.trim();
     const disco = edit_server_modal.querySelector('.disco_input').value.trim();
 
     if (!nome || !mac || !tipo_cpu || !ram || !disco) return alert("Preencha todos os campos!");
 
+    console.log(mac)
+
     fetch(`/servidores/atualizarServidor/${id}`, {
       method: 'PUT',
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ nome, pais, estado, mac_address: mac, ipEc2, tipo_cpu, ram, disco })
+      body: JSON.stringify({ nome, pais, estado, mac_address: mac, ip, tipo_cpu, ram, disco })
     })
       .then(resp => resp.json())
       .then(() => {
@@ -211,7 +211,7 @@
           </div>
           <div class="user_info">
             <p><strong>Nome:</strong>  ${s.nome}</p>
-            <p><strong>IP:</strong> ${s.ipEc2}</p>
+            <p><strong>IP:</strong> ${s.ip}</p>
             <p><strong>Mac Address:</strong> ${s.mac_address}</p>
             <p><strong>País:</strong> ${s.pais}</p>
             <p><strong>Estado:</strong> ${s.estado}</p>
@@ -252,7 +252,7 @@
                 s.pais,
                 s.estado,
                 s.mac_address,
-                s.ipEc2,
+                s.ip,
                 s.tipo_cpu,
                 s.ram,
                 s.disco
@@ -268,6 +268,7 @@
               e.stopPropagation();
                 sessionStorage.setItem("fk_servidor", s.id_servidor);
               const parametros = await buscarParametrosServidor(s.id_servidor);
+              console.log(parametros)
               abrirModalEditarParametros(parametros, s.id_servidor);
             });
           }
@@ -279,7 +280,7 @@
   async function buscarParametrosServidor(idServidor) {
    try {
  
-   const resp = await fetch(`/parametro/${idServidor}`);  
+   const resp = await fetch(`/parametro/${idServidor}`);
    if (!resp.ok) {
 
    console.error(`Erro HTTP ao buscar parâmetros: ${resp.status}`);
@@ -377,9 +378,11 @@
 
  
    parametros.forEach(p => {
-    const input = modal.querySelector(`input[data-componente="${p.fk_componente}"][data-tipo="${p.tipo}"]`);
+    const inputNormal = modal.querySelector(`input[data-componente="${p.fk_componente}"][data-tipo="normal"]`);
+    const inputCritico = modal.querySelector(`input[data-componente="${p.fk_componente}"][data-tipo="critico"]`);
   
-    if (input) input.value = p.valor; 
+    if (inputNormal) inputNormal.value = p.alerta_normal; 
+    if (inputCritico) inputCritico.value = p.alerta_critico; 
    });
   }
   window.onload = carregarServidores;

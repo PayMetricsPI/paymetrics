@@ -21,14 +21,15 @@ async function criarParametro(req, res) {
 }
 
 function atualizarParametro(req, res) {
-    const parametros = req.body;
+    const parametros = req.body.parametros;
+    const fk_servidor = req.params.fk_servidor;
 
-    parametroModel.atualizarParametroLista(parametros)
-        .then(() => res.status(200).json({ message: "Parâmetros atualizados com sucesso" }))
-        .catch(erro => {
-            console.error("Erro ao atualizar parâmetros:", erro);
-            res.status(500).json({ error: erro });
-        });
+    parametros.forEach(element => {
+        parametroModel.atualizarParametro(element, fk_servidor)
+    });
+
+    res.status(200).json({ message: "Parâmetro atualizado com sucesso" })
+
 }
 
 

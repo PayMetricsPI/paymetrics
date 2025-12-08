@@ -1,5 +1,8 @@
 let pingRealtimeCache = null;
 
+
+
+
 async function carregarUltimoJson() {
     try {
         const resp = await fetch("/s3/ultimodia");
@@ -201,44 +204,92 @@ async function buscarHistoricoPais7Dias(pais) {
     return historico.reverse();
 }
 
+function formataData(data = new Date()){
+  const hoje = new Date();
+  
+    const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
+    document.getElementById('dataHoje').textContent = hoje.toLocaleDateString('pt-BR', options);
+} 
+
+window.onload = function(){
+   document.getElementById("localData").innerHTML = formataData();
+};
 async function preencherSelectPaises() {
     const select = document.getElementById("selectPais");
     if (!select) return;
 
     select.innerHTML = "";
 
-    const paises = ["BR", "US", "CA", "FR", "JP"];
+    // Opção GLOBAL
+    const optGlobal = document.createElement("option");
+    optGlobal.value = "GLOBAL";
+    optGlobal.textContent = "Todos os países";
+    select.appendChild(optGlobal);
 
-    paises.forEach(p => {
-        const opt = document.createElement("option");
-        opt.value = p;
-        opt.textContent = p;
-        select.appendChild(opt);
-    });
+    const fk = getEmpresa();
+    if (!fk) return;
 
-    const salvo = sessionStorage.getItem("paisSelecionado");
-    if (salvo && paises.includes(salvo)) {
-        select.value = salvo;
+    try {
+        const resp = await fetch(`/servidores/mapa/${fk}`);
+        const texto = await resp.text();
+
+        let dados;
+        try {
+            dados = JSON.parse(texto);
+        } catch {
+            console.error("Resposta inválida ao buscar países:", texto);
+            return;
+        }
+
+        // ✅ Aqui entram APENAS os países que vieram do banco
+        dados.forEach(item => {
+            const pais = item.pais || item.id; // segurança caso venha como id
+
+            const opt = document.createElement("option");
+            opt.value = pais;
+            opt.textContent = pais;
+            select.appendChild(opt);
+        });
+
+        // manter seleção salva
+        const salvo = sessionStorage.getItem("paisSelecionado");
+        if (salvo) select.value = salvo;
+
+    } catch (e) {
+        console.error("Erro ao buscar países:", e);
     }
 
+    // ✅ Evento de mudança continua funcionando normal
     select.addEventListener("change", async (ev) => {
-        const novoPais = ev.target.value;
+        const valor = ev.target.value;
+        sessionStorage.setItem("paisSelecionado", valor);
 
-        sessionStorage.setItem("paisSelecionado", novoPais);
+        if (valor === "GLOBAL") {
+            await iniciarMapa();
+            if (btnVoltar) btnVoltar.classList.remove("show");
 
-        await atualizarCardEventos(novoPais);
+            const historicoGlobal = await buscarHistorico7Dias();
+            atualizarGraficoLatenciaComDados(historicoGlobal);
+            return;
+        }
 
-        const estados = await obterMapaEstados(novoPais);
+        await iniciarMapa();
+        if (btnVoltar) btnVoltar.classList.remove("show");
+
+        await atualizarCardEventos(valor);
+
+        const estados = await obterMapaEstados(valor);
         if (estados.length > 0) {
-            exibirEstados(novoPais, estados);
+            exibirEstados(valor, estados);
         } else {
-            const lat = await gerarPingPais(novoPais);
-            atualizarTabela([{ nome: novoPais, latencia: lat }]);
+            const lat = await gerarPingPais(valor);
+            atualizarTabela([{ nome: valor, latencia: lat }]);
         }
 
         atualizarGraficoLatencia();
     });
 }
+
 
 function classificarTPS(valor) {
     if (valor > 800) return { texto: "Crítico", classe: "status critical" };
@@ -433,6 +484,16 @@ async function iniciarMapa() {
     mapa.container("miniMapa");
     mapa.geoData(anychart.maps.world);
 
+    mapa.title()
+  .enabled(true)
+  .text("Distribuição Global de Latência")
+  .fontSize(18)
+  .fontWeight("600")
+  .fontColor("#000")
+  .padding(0, 0, 15, 0)
+  .align("center");
+
+
     mapa.background().fill("#fff");
 
     mapa.unboundRegions()
@@ -576,116 +637,231 @@ const mesLista = [
 let chartBF = null;
 
 async function atualizarGraficoLatencia() {
-    let paisSelecionado = sessionStorage.getItem("paisSelecionado") || "BR";
-    const historico = await buscarHistoricoPais7Dias(paisSelecionado);
+    let paisSelecionado = sessionStorage.getItem("paisSelecionado") || "GLOBAL";
+
+    let historico;
+    let tituloDataset;
+
+    if (paisSelecionado === "GLOBAL") {
+        historico = await buscarHistorico7Dias();
+        tituloDataset = "Latência Global";
+    } else {
+        historico = await buscarHistoricoPais7Dias(paisSelecionado);
+        tituloDataset = `Latência ${paisSelecionado}`;
+    }
 
     const ctx = document.getElementById("bfChart");
     if (!ctx) return;
 
-    if (!historico || historico.length === 0) {
+    if (!historico || historico.length == 0) {
         if (chartBF) chartBF.destroy();
-
-        const noDataCtx = ctx.getContext("2d");
-        noDataCtx.clearRect(0, 0, ctx.width, ctx.height);
-        noDataCtx.font = "18px Poppins";
-        noDataCtx.fillStyle = "#444";
-        noDataCtx.textAlign = "center";
-        noDataCtx.fillText("Nenhum servidor encontrado", ctx.width / 2, ctx.height / 2);
+        const c = ctx.getContext("2d");
+        c.clearRect(0, 0, ctx.width, ctx.height);
+        c.font = "18px Poppins";
+        c.fillStyle = "#999";
+        c.textAlign = "center";
+        c.fillText("Sem dados", ctx.width / 2, ctx.height / 2);
         return;
     }
 
     const labels = historico.map(h => {
         const [ano, mes, dia] = h.data.split('-');
-        const data = new Date(ano, mes - 1, dia);
-        return data.toLocaleDateString('pt-BR', { day: 'numeric', month: 'short' });
+        return new Date(ano, mes - 1, dia).toLocaleDateString('pt-BR', {
+            day: 'numeric',
+            month: 'short'
+        });
     });
 
     const valores = historico.map(h => h.media);
+    const PICO_IDEAL = 85;
 
-    const anoPassado = valores.map(v => Math.round(v * (0.85 + Math.random() * 0.3)));
-
-    if (chartBF) {
-        chartBF.data.labels = labels;
-        chartBF.data.datasets[0].data = anoPassado;
-        chartBF.data.datasets[1].data = valores;
-        chartBF.update();
-        return;
-    }
+    if (chartBF) chartBF.destroy();
 
     chartBF = new Chart(ctx, {
-        type: "line",
+        type: 'line',
         data: {
             labels: labels,
             datasets: [
                 {
-                    label: "Semana passada",
-                    data: anoPassado,
-                    borderColor: "#d32f2f",
-                    backgroundColor: "rgba(211, 47, 47, 0.1)",
-                    tension: 0.35,
-                    borderWidth: 2,
-                    fill: false,
-                    pointRadius: 3,
-                    pointBackgroundColor: "#d32f2f"
-                },
-                {
-                    label: "Latência Atual",
+                  label: "Latência Global",  
                     data: valores,
-                    borderColor: "#1e88e5",
-                    backgroundColor: "rgba(30, 136, 229, 0.1)",
-                    tension: 0.35,
-                    borderWidth: 4,
-                    fill: false,
-                    pointRadius: 5,
-                    pointHoverRadius: 8,
-                    pointBackgroundColor: "#1e88e5"
+                    borderColor: "#000000",
+                    backgroundColor: "#fff",
+                    tension: 0.4,
+                    borderWidth: 5,
+                    pointRadius: 10,
+                    pointHoverRadius: 14,
+                    pointBackgroundColor: "#0000ff",
+                    pointBorderColor: "#fff",
+                    pointBorderWidth: 4,
+                    pointHoverBorderWidth: 5,
+                    fill: true
                 },
                 {
                     label: "Pico Ideal",
-                    data: Array(7).fill(90),
+                    data: Array(labels.length).fill(PICO_IDEAL),
                     borderColor: "#4caf50",
-                    borderDash: [8, 4],
-                    borderWidth: 2,
-                    tension: 0,
+                    borderDash: [10, 6],
+                    borderWidth: 3,
+                    pointRadius: 0,
                     fill: false,
-                    pointRadius: 0
+                    tension: 0
                 }
             ]
         },
         options: {
             responsive: true,
             maintainAspectRatio: false,
-            interaction: {
-                mode: 'index',
-                intersect: false
-            },
+            interaction: { mode: 'index', intersect: false },
             plugins: {
-                legend: { display: false },
+                legend: {
+                    display: true,
+                    position: 'top',
+                    labels: {
+                        font: { size: 15, weight: "600", family: "Poppins" },
+                        color: "#333",
+                        usePointStyle: true,
+                        padding: 25,
+                        filter: (item) => item.text.includes("Latência") || item.text === "Pico Ideal"
+                    }
+                },
+                title: { display: false },
                 tooltip: {
+                    backgroundColor: "rgba(0,0,0,0.85)",
+                    titleFont: { size: 14 },
+                    bodyFont: { size: 16, weight: "600" },
+                    padding: 12,
+                    cornerRadius: 10,
+                    displayColors: false,
                     callbacks: {
-                        label: function (context) {
-                            return `${context.dataset.label}: ${context.parsed.y}ms`;
+                        label: (ctx) => {
+                            if (ctx.dataset.label == "Pico Ideal") return null;
+                            return ctx.parsed.y + " ms";
                         }
                     }
+
                 }
             },
             scales: {
                 x: {
                     grid: { display: false },
-                    ticks: {
-                        font: { size: 13, weight: "600" },
-                        color: "#333"
-                    }
+                    ticks: { font: { size: 14 }, color: "#555" }
                 },
                 y: {
-                    beginAtZero: false,
-                    suggestedMin: 0,
-                    suggestedMax: 200,
-                    grid: { color: "rgba(0,0,0,0.05)" },
+                    grid: { color: "rgba(0,0,0,0.04)", drawBorder: false },
                     ticks: {
-                        font: { size: 13, weight: "600" },
+                        font: { size: 14 },
+                        color: "#555",
+                        padding: 10,
+                        callback: v => v + "ms"
+                    }
+                }
+            }
+        }
+    });
+}
+function atualizarGraficoLatenciaComDados(historico) {
+    const ctx = document.getElementById("bfChart");
+    if (!ctx) return;
+
+    if (!historico || historico.length === 0) {
+        if (chartBF) chartBF.destroy();
+        return;
+    }
+
+    const labels = historico.map(h => {
+        const [a, m, d] = h.data.split('-');
+        return new Date(a, m-1, d).toLocaleDateString('pt-BR', {
+            day: 'numeric',
+            month: 'short'
+        });
+    });
+
+    const valores = historico.map(h => h.media);
+    const PICO_IDEAL = 90;
+
+    if (chartBF) {
+        chartBF.destroy();
+        chartBF = null;
+    }
+
+    chartBF = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [
+                {
+                    label: "Latência Global",
+                    data: valores,
+                    borderColor: "#000000",
+                    backgroundColor: "#fff",
+                    tension: 0.4,
+                    borderWidth: 5,
+                    pointRadius: 10,
+                    pointHoverRadius: 14,
+                    pointBackgroundColor: "#0000ff",
+                    pointBorderColor: "#fff",
+                    pointBorderWidth: 4,
+                    pointHoverBorderWidth: 5,
+                    fill: true
+                },
+                {
+                    label: "Pico Ideal",
+                    data: Array(7).fill(PICO_IDEAL),
+                    borderColor: "#4caf50",
+                    borderDash: [10, 6],
+                    borderWidth: 3,
+                    pointRadius: 0,
+                    fill: false,
+                    tension: 0
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: { mode: 'index', intersect: false },
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'top',
+                    labels: {
+                        font: { size: 15, weight: "600", family: "Poppins" },
                         color: "#333",
-                        callback: value => value + 'ms'
+                        usePointStyle: true,
+                        padding: 25,
+                        filter: (item) => item.text.includes("Latência") || item.text === "Pico Ideal"
+                    }
+                },
+                title: { display: false },
+                tooltip: {
+                    backgroundColor: "rgba(0,0,0,0.85)",
+                    titleFont: { size: 14 },
+                    bodyFont: { size: 16, weight: "600" },
+                    padding: 12,
+                    cornerRadius: 10,
+                    displayColors: false,
+                    callbacks: {
+                        label: (ctx) => {
+                            if (ctx.dataset.label == "Pico Ideal") return null;
+                            return ctx.parsed.y + " ms";
+                        }
+                    }
+
+                }
+            },
+            scales: {
+                x: {
+                    grid: { display: false },
+                    ticks: { font: { size: 14 }, color: "#555" }
+                },
+                y: {
+                    grid: { color: "rgba(0,0,0,0.04)", drawBorder: false },
+                    ticks: {
+                        font: { size: 14 },
+                        color: "#555",
+                        padding: 10,
+                        callback: v => v + "ms"
                     }
                 }
             }

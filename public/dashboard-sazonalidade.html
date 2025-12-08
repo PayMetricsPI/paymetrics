@@ -15,53 +15,66 @@
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/plugins/global/index.global.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/locales-all.global.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/google-calendar@6.1.8/index.global.min.js"></script>
-
 </head>
 
-<body onload="getDataForCalendar(); getDataForInsight()">
+<body onload="calendar(); gerarMapaIntensidade(); gemini();">
     <div id="sidebar"></div>
-    <section class="presentation">
-        <div class="description-icons">
-            <div class="title-description">
-                <h1>Olá, <span id="welcome"></span></h1>
-                <p>Bem-vindo(a) à sua dashboard de previsão de demanda.
-                    Aqui você encontra uma visão clara e dinâmica dos períodos em que o uso de hardware pode atingir
-                    níveis
-                    críticos ao longo do próximo ano. Explore os gráficos, navegue pelo calendário e antecipe decisões
-                    estratégicas com confiança.</p>
-            </div>
-            <div class="icon-row">
 
-                <div class="icon-item">
-                    <div class="icon-circle">
-                        <img src="assets/icons/calendar.png" alt="calendar">
-                    </div>
-                </div>
-
-                <div class="icon-item">
-                    <div class="icon-circle">
-                        <img src="assets/icons/graphic.png" alt="graphic">
-                    </div>
-                </div>
-
-                <div class="icon-item">
-                    <div class="icon-circle">
-                        <img src="assets/icons/strategy.png" alt="strategy">
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </section>
-    <section class="calendar-header">
-        <div class="calendar-title">
-            <div class="title-paragraph">
+    <section class="calendar-section">
+        <div class="calendar-container">
+            <div class="title">
                 <h1>Visualize, com <span class="destaque">antecedência</span>, os possíveis picos de uso de
                     hardware para o próximo ano</h1>
             </div>
-            <div id="calendar" style="width: 1100px; margin: 20px auto;"></div>
+            <div class="calendar" id="calendar"></div>
+        </div>
+        <div class="container-calendar-legend">
+            <span class="legend-dot alert-dot"></span>
+            <span class="legend-text">Pico de utilização de hardware previsto</span>
         </div>
     </section>
+
+    <section class="intensity-section">
+        <div class="title">
+            <h1><span class="destaque">Intensidade</span> dos picos nos próximos 12 meses</h1>
+        </div>
+        <div class="intensity-map" id="intensityMap"></div>
+        <div class="kpi-container">
+            <div class="kpi-card">
+                <h3>Média</h3>
+                <p class="kpi-value" id="kpiMedia">—</p>
+            </div>
+
+            <div class="kpi-card">
+                <h3>Mediana</h3>
+                <p class="kpi-value" id="kpiMediana">—</p>
+            </div>
+            <div class="kpi-card">
+                <h3>Desvio padrão</h3>
+                <p class="kpi-value" id="kpiDesvio">—</p>
+            </div>
+
+        </div>
+    </section>
+
+    <section class="section-media-movel">
+        <div class="title">
+            <h1><span class="destaque">Comportamento</span> dos picos nos próximos 12 meses</h1>
+        </div>
+        <canvas id="graficoMediaMovel"></canvas>
+
+        <div class="grafico-legend">
+            <div class="legend-item">
+                <span class="legend-bullet" style="background-color: #FFAA00;"></span>
+                <span class="legend-text">Quantidade de picos</span>
+            </div>
+            <div class="legend-item">
+                <span class="legend-bullet" style="background-color: #AA33FF;"></span>
+                <span class="legend-text">Média</span>
+            </div>
+        </div>
+    </section>
+
     <section class="insights-section">
         <h1 class="titulo-insights">
             <img src="assets/icons/gemini.png" class="icone-gemini">
@@ -82,13 +95,13 @@
             </button>
         </div>
 
-    </section>
-
-
-    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
-    <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <script src="js/header.js"></script>
-    <script src="js/sazonalidade.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
+        <script src="js/header.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.12.0/math.min.js"></script>
+        <script src="js/sazonalidade.js"></script>
 
 </body>
+
 </html>

@@ -10,7 +10,7 @@ router.get("/:fk_empresa", function(req, res) {
 
 
 router.post("/criarServidor", function(req, res) {
-    servidorController.criarServidores(req, res);
+    servidorController.criarServidor(req, res);
 });
 
 router.put("/atualizarServidor/:id_servidor", function(req, res) {

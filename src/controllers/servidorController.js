@@ -13,14 +13,21 @@ function listarServidores(req, res) {
 }
 
 
-function criarServidores(req, res) {
-    const servidores = req.body.servidores;
+function criarServidor(req, res) {
+    const nome = req.body.nome;
+    const fk_empresa = req.body.fk_empresa;
+    const pais = req.body.pais;
+    const estado = req.body.estado;
+    const mac_address = req.body.mac_address;
+    const ip = req.body.ip;
+    const tipo_cpu = req.body.tipo_cpu;
+    const ram = req.body.ram;
+    const disco = req.body.disco;
 
-    if (!servidores || !Array.isArray(servidores) || servidores.length === 0) {
-        return res.status(400).json({ error: "Dados inválidos" });
-    }
+    console.log(req.body)
 
-    servidorModel.criarServidores(servidores)
+
+    servidorModel.criarServidor(nome, fk_empresa, pais, estado, mac_address, ip, tipo_cpu, ram, disco)
         .then(resultado => {
            const insertId = resultado && resultado.insertId ? resultado.insertId : null; 
             return res.status(201).json({
@@ -54,13 +61,9 @@ function deletarServidor(req, res) {
 
 function atualizarServidor(req, res) {
     const id_servidor = req.params.id_servidor;
-    const { nome,pais, estado, mac_address, tipo_cpu, ram, disco,ipEc2 } = req.body;
+    const { nome,pais, estado, mac_address, tipo_cpu, ram, disco, ip } = req.body;
 
-    if (!id_servidor || !nome || !mac_address || !ipEc2 || !pais || !estado || !tipo_cpu || !ram || !disco) {
-        return res.status(400).json({ error: "Dados incompletos para atualizar servidor" });
-    }
-
-    servidorModel.atualizarServidor(id_servidor, nome,pais, estado, mac_address,ipEc2, tipo_cpu, ram, disco,)
+    servidorModel.atualizarServidor(id_servidor, nome,pais, estado, mac_address, ip, tipo_cpu, ram, disco,)
         .then(resultado => res.status(200).json({ message: "Servidor atualizado com sucesso", resultado }))
         .catch(erro => {
             console.error("Erro ao atualizar o servidor:", erro.sqlMessage || erro);
@@ -90,7 +93,7 @@ function mapaEstados(req, res) {
 module.exports = {
     atualizarServidor,
     listarServidores,
-    criarServidores,
+    criarServidor,
     deletarServidor,
     mapaGlobal,
     mapaEstados

@@ -328,7 +328,7 @@
 .ram {
   display: flex;
   flex-direction: column;
-    display: flex;
+  display: flex;
   flex-direction: column;
   background-color: #FFF3E0;
   border-radius: 10px;
@@ -338,7 +338,7 @@
 .disco {
   display: flex;
   flex-direction: column;
-    display: flex;
+  display: flex;
   flex-direction: column;
   background-color: #FFF3E0;
   border-radius: 10px;
@@ -348,9 +348,9 @@
 .upload {
   display: flex;
   flex-direction: column;
-    display: flex;
+  display: flex;
   flex-direction: column;
-  background-color: #FFF3E0; 
+  background-color: #FFF3E0;
   border-radius: 10px;
   padding: 30px;
 }
@@ -358,7 +358,7 @@
 .download {
   display: flex;
   flex-direction: column;
-    display: flex;
+  display: flex;
   flex-direction: column;
   background-color: #FFF3E0;
   border-radius: 10px;

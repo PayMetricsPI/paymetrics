@@ -1,7 +1,4 @@
-async function getDataForCalendar() {
-
-    const nome = sessionStorage.getItem('NOME_USUARIO');
-    document.getElementById('welcome').innerText = `${nome}`;
+async function calendar() {
 
     const key = "pred/hardware_previsoes.json";
 
@@ -13,18 +10,23 @@ async function getDataForCalendar() {
         });
 
         const data = await res.json();
-        console.log("Resposta da API:", data);
 
-        const events = data.content.calendar.map(day => ({
-            start: day.date,
-            allDay: true,
-            className: day.alert ? 'pico' : ''
-        }));
+        const events = []
+        const calendarData = data.content.calendar;
+
+        for (let i = 0; i < calendarData.length; i++) {
+            const day = calendarData[i];
+            events.push({
+                start: day.date,
+                allDay: true,
+                className: day.alert ? 'pico' : ''
+            });
+        }
 
         const calendarEl = document.getElementById('calendar');
 
         const calendar = new FullCalendar.Calendar(calendarEl, {
-            locale: 'en',
+            locale: 'pt-br',
             initialView: 'dayGridMonth',
             initialDate: '2026-01-01',
 
@@ -34,39 +36,27 @@ async function getDataForCalendar() {
                 right: 'next'
             },
 
-            titleFormat: {
-                year: 'numeric',
-                month: 'long'
-            },
-
             validRange: {
                 start: '2026-01-01',
                 end: '2027-01-01'
             },
 
-            showNonCurrentDates: true,
+            showNonCurrentDates: false,
             events: events,
 
-            dayHeaderContent: (arg) => arg.text.substring(0, 3).toUpperCase(),
+            dayHeaderContent: function (arg) {
+                return arg.text.substring(0, 3).toUpperCase();
+            },
 
             eventContent: function (arg) {
                 if (arg.event.classNames.includes('pico')) {
                     return { html: '<div class="dia-alerta"></div>' };
                 }
             }
+
         });
 
         calendar.render();
-
-        function corrigirDiasForaDoMes() {
-            document.querySelectorAll('.fc-daygrid-day.fc-day-other').forEach(el => {
-                el.style.backgroundColor = '#ffffff';
-                el.style.color = 'black';
-            });
-        }
-
-        calendar.on('datesSet', corrigirDiasForaDoMes);
-        corrigirDiasForaDoMes();
 
 
     } catch (err) {
@@ -75,7 +65,7 @@ async function getDataForCalendar() {
     }
 }
 
-async function getDataForInsight() {
+async function gemini() {
     const key = "output/eventos_2026_gemini14817667377260867836.json";
 
     try {
@@ -145,4 +135,159 @@ function formatarTexto(texto) {
     return novo.charAt(0).toUpperCase() + novo.slice(1);
 }
 
+function calcularMediaMovel(valores) {
+    const medias = [];
 
+    for (let i = 2; i < valores.length; i++) {
+        const soma = valores[i] + valores[i - 1] + valores[i - 2];
+        medias.push(soma / 3);
+    }
+
+    return medias;
+}
+
+function atualizarKPIs(contagemMensal) {
+    const media = math.mean(contagemMensal).toFixed(2)
+
+    const mediana = math.median(contagemMensal).toFixed(2);
+
+    const desvioPadrao = math.std(contagemMensal, 'uncorrected').toFixed(2);
+
+    document.getElementById("kpiMedia").textContent = media;
+    document.getElementById("kpiMediana").textContent = mediana;
+    document.getElementById("kpiDesvio").textContent = desvioPadrao;
+}
+
+function gerarGraficoMediaMovel(contagemMensal) {
+    const mediaMovel = calcularMediaMovel(contagemMensal);
+
+    const mediaMovelCompleto = Array(12).fill(null);
+
+    for (let i = 0; i < mediaMovel.length; i++) {
+        mediaMovelCompleto[i + 2] = mediaMovel[i];
+    }
+
+    const meses = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun",
+        "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
+
+    const ctx = document.getElementById("graficoMediaMovel").getContext("2d");
+
+    if (window.graficoMM3Instance) {
+        window.graficoMM3Instance.destroy();
+    }
+
+    window.graficoMM3Instance = new Chart(ctx, {
+        type: "line",
+        data: {
+            labels: meses,
+            datasets: [
+                {
+                    label: "Picos previstos",
+                    data: contagemMensal,
+                    borderWidth: 3,
+                    borderColor: "#FFAA00",
+                    tension: 0.3,
+                    pointRadius: 2
+                },
+                {
+                    label: "Média móvel",
+                    data: mediaMovelCompleto,
+                    borderWidth: 3,
+                    borderColor: "#AA33FF",
+                    borderDash: [6, 4],
+                    tension: 0.3,
+                    pointRadius: 2
+                }
+            ]
+        },
+        options: {
+            plugins: {
+                legend: {
+                    display: false,
+                }
+            },
+            scales: {
+                y: {
+                    min: -1,
+                    max: 6,
+                    beginAtZero: true,
+                    grid: {
+                        color: '#B0B0B0',
+                        borderDash: [2, 4],
+                    },
+                    ticks: {
+                        color: '#B0B0B0',
+                        font: {
+                            family: 'Noto Sans'
+                        }
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false
+                    },
+                    ticks: {
+                        color: '#B0B0B0',
+                        font: {
+                            family: 'Noto Sans'
+                        }
+                    }
+                },
+            },
+        }
+    });
+}
+
+async function gerarMapaIntensidade() {
+    const key = "pred/hardware_previsoes.json";
+
+    try {
+        const res = await fetch('/BucketRoute/getS3Object', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ key })
+        });
+
+        const data = await res.json();
+
+        const calendar = data.content.calendar;
+
+        const contagemMensal = Array.from({ length: 12 }, () => 0);
+
+        calendar.forEach(item => {
+            const mes = new Date(item.date).getMonth();
+
+            if (item.alert === true) {
+                contagemMensal[mes]++;
+            }
+        });
+
+        atualizarKPIs(contagemMensal);
+        gerarGraficoMediaMovel(contagemMensal);
+
+        const mesesNome = [
+            "Jan", "Fev", "Mar", "Abr", "Mai", "Jun",
+            "Jul", "Ago", "Set", "Out", "Nov", "Dez"
+        ];
+
+        const container = document.getElementById("intensityMap");
+        container.innerHTML = "";
+
+        contagemMensal.forEach((valor, mes) => {
+            let nivel = "level-low";
+            if (valor >= 1) nivel = "level-medium";
+            if (valor > 4) nivel = "level-high";
+
+            const card = document.createElement("div");
+            card.className = `intensity-card ${nivel}`;
+            card.innerHTML = `
+                <h3>${mesesNome[mes]}</h3>
+                <div class="intensity-value">${valor}</div>
+            `;
+            container.appendChild(card);
+        });
+
+    } catch (e) {
+        console.error("Erro ao gerar mapa de intensidade:", e);
+    }
+}

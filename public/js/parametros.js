@@ -69,7 +69,6 @@ submit_button_create_alerta_critico.addEventListener('click', () => {
 
     const parametros = [];
 
- 
     parametros.push({
         fk_servidor,
         fk_empresa: fk_empresa,
@@ -112,16 +111,6 @@ submit_button_create_alerta_critico.addEventListener('click', () => {
         alerta_critico: Number(document.querySelector('input[data-componente="5"][data-tipo="critico"]').value),
         alerta_normal: Number(document.querySelector('input[data-componente="5"][data-tipo="normal"]').value)
     });
-
-
-    parametros.push({
-        fk_servidor,
-        fk_empresa,
-        fk_componente: 6,
-        alerta_critico: Number(document.querySelector('input[data-componente="6"][data-tipo="critico"]').value),
-        alerta_normal: Number(document.querySelector('input[data-componente="6"][data-tipo="normal"]').value)
-    });
-
 
     fetch('/parametro/criarParametro', {
         method: 'POST',
