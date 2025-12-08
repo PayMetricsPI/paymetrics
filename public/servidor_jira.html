@@ -19,7 +19,6 @@
             <img src="./assets/imgs/servidor.png" alt="Servidor">
             <div class="info_servidor">
                 <p class="nome">Nome do servidor</p>
-                <p class="mac">Mac</p>
             </div>
             <div class="kpi">
                 <div class="kpi_aberto">
@@ -45,6 +44,14 @@
                     <option value="fechado">Fechados</option>
                 </select>
             </div>
+            <div class="prioridade-filter" style="margin: 10px 0 20px 0;">
+                <label style="margin-right:20px;">
+                    <input type="checkbox" id="checkCritico" checked> Crítico
+                </label>
+                <label>
+                    <input type="checkbox" id="checkAtencao" checked > Atenção
+                </label>
+            </div>
             <div class="tickets">
                 <div class="card_ticket">
                     <div class="lado_esq">
@@ -55,17 +62,12 @@
                             </p>
                         </div>
                         <div class="lado_dir">
-                            <select class="filter_card">
-                                <option value="aberto" selected>Aberto</option>
-                                <option value="andamento">Em andamento</option>
-                                <option value="fechado">Fechado</option>
-                            </select>
                             <p><strong>Status:</strong> Aberto</p>
                             <p><strong>Horário:</strong> 22h:10m</p>
                         </div>
                     </div>
                 </div>
-                 <div class="card_ticket">
+                <div class="card_ticket">
                     <div class="lado_esq">
                         <div class="info_text">
                             <div class="status">Crítico !</div>
@@ -84,7 +86,7 @@
                         </div>
                     </div>
                 </div>
-                 <div class="card_ticket">
+                <div class="card_ticket">
                     <div class="lado_esq">
                         <div class="info_text">
                             <div class="status">Crítico !</div>
@@ -105,6 +107,8 @@
                 </div>
     </section>
     <script src="js/header.js"></script>
+    <script src="js/servidor_jira.js"></script>
+
 </body>
 
 </html>

@@ -12,7 +12,7 @@ html {
 }
 
 .dash_servidor {
-    margin-top: 50px;
+    margin-top: 90px;
 }
 
 .servidor_info {
@@ -25,7 +25,9 @@ html {
 }
 
 .info_servidor {
-    width: 200px;
+    min-width: 240px;
+    width: auto;
+    white-space: nowrap;
 }
 
 .servidor_info img {
@@ -66,7 +68,7 @@ html {
 
 .kpi_aberto h1,
 .kpi_andamento h1,
-.kpi_fechado h1{
+.kpi_fechado h1 {
     font-size: 30px;
 }
 
@@ -268,4 +270,34 @@ html {
 
 .lado_dir p {
     font-size: 15px;
+}
+
+.prioridade-filter {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 16px;
+    margin-left: 100px;
+    margin-right: 0;
+    margin-top: 5px;
+    margin-bottom: 28px;
+}
+
+.prioridade-filter label {
+    font-weight: 600;
+    font-size: 1em;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+/* Cor da checkbox "Crítico" */
+#checkCritico {
+    accent-color: green;
+}
+
+/* Cor da checkbox "Atenção" */
+#checkAtencao {
+    accent-color: green;
+    /* Amarelo/laranja */
 }

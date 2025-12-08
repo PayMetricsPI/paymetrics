@@ -1,159 +1,141 @@
-(function () {
-    const STORAGE_KEY = 'tickets_fechados';
-    const CLOSED_COLOR = '#43a047';
-    const HIGHEST_COLOR = '#e53935';
-    const MEDIUM_COLOR = '#f7b116';
-
-    function readClosedList() {
-        try { return JSON.parse(sessionStorage.getItem(STORAGE_KEY) || '[]'); }
-        catch (e) { return []; }
+document.addEventListener('DOMContentLoaded', async () => {
+    const mac = sessionStorage.getItem('mac_selecionado');
+    const nome = sessionStorage.getItem('nome_selecionado') || `Servidor: ${mac}`;
+    const nomeEl = document.querySelector('.servidor_info .nome');
+    if (!mac || !nomeEl) {
+        if (nomeEl) nomeEl.textContent = "Servidor não selecionado";
+        return;
     }
-    function saveClosedList(list) {
-        sessionStorage.setItem(STORAGE_KEY, JSON.stringify(list));
-    }
+    nomeEl.textContent = nome;
 
-    const select = document.querySelector('.titulo_cha select, select#filtroStatus, select[name="status"], select') || null;
-    const container = document.querySelector('.tickets, .servidores_alertas') || document.body;
-
-    function normalizeStatus(s) {
-        if (!s) return '';
-        s = String(s).toLowerCase().trim();
-        if (s.includes('abert') || s === 'open') return 'aberto';
-        if (s.includes('and') || s.includes('andamento') || s === 'inprogress' || s === 'doing') return 'andamento';
-        if (s.includes('fech') || s === 'closed' || s === 'done') return 'fechado';
-        return s;
+    function updateKPIs(alertasServidor) {
+        let countAberto = 0, countAndamento = 0, countFechado = 0;
+        alertasServidor.forEach(a => {
+            const st = (a.status || '').toLowerCase();
+            if (st.includes('abert')) countAberto++;
+            else if (st.includes('andamento')) countAndamento++;
+            else if (st.includes('fech')) countFechado++;
+        });
+        document.querySelector('.kpi_aberto h1').textContent = countAberto;
+        document.querySelector('.kpi_andamento h1').textContent = countAndamento;
+        document.querySelector('.kpi_fechado h1').textContent = countFechado;
     }
 
-    function getCards() {
-        return Array.from(document.querySelectorAll('.card_ticket'));
+    function normalizeStatus(status) {
+        status = String(status || '').toLowerCase();
+        if (status.includes('abert')) return 'aberto';
+        if (status.includes('andamento')) return 'andamento';
+        if (status.includes('fech')) return 'fechado';
+        return status;
     }
 
-    function mapPriorityToColorLabel(p) {
-        if (!p) return { label: 'Crítico', color: HIGHEST_COLOR };
-        const v = String(p).toLowerCase();
-        if (v === 'highest' || v === 'high') return { label: 'Highest', color: HIGHEST_COLOR };
-        if (v === 'medium') return { label: 'Medium', color: MEDIUM_COLOR };
-        return { label: String(p), color: HIGHEST_COLOR };
-    }
+    function renderTickets(filtro = 'aberto', alertasServidorParam = null) {
+        const tickets = document.querySelector('.tickets');
+        if (!tickets) return;
+        tickets.innerHTML = '';
+        const alertasList = alertasServidorParam || window._alertasServidor || [];
+        let chamadosFiltrados = alertasList.filter(a => normalizeStatus(a.status) === filtro);
 
-    function applyFilter() {
-        const filtroRaw = select?.value || '';
-        const filtro = normalizeStatus(filtroRaw) || 'aberto';
-        const closedList = readClosedList();
+        const mostrarCritico = document.getElementById('checkCritico')?.checked;
+        const mostrarAtencao = document.getElementById('checkAtencao')?.checked;
+        chamadosFiltrados = chamadosFiltrados.filter(a => {
+            if ((a.priority === 'Highest' || String(a.priority).toLowerCase() === 'highest') && mostrarCritico) return true;
+            if ((a.priority === 'Medium' || String(a.priority).toLowerCase() === 'medium') && mostrarAtencao) return true;
+            return false;
+        });
 
-        const areaContainer = document.querySelector(`[data-area="${filtro}"]`);
-        const allAreaContainers = Array.from(document.querySelectorAll('[data-area]'));
+        chamadosFiltrados.sort((a, b) => {
+            const prioA = (a.priority || '').toLowerCase();
+            const prioB = (b.priority || '').toLowerCase();
+            if (prioA === 'medium' && prioB !== 'medium') return 1;
+            if (prioA !== 'medium' && prioB === 'medium') return -1;
+            return 0;
+        });
 
-        if (allAreaContainers.length > 0) {
-            allAreaContainers.forEach(a => {
-                a.style.display = (a.getAttribute('data-area') === filtro) ? '' : 'none';
-            });
+        chamadosFiltrados.forEach(alerta => {
+            const statusText =
+                (alerta.priority === 'Highest' || String(alerta.priority).toLowerCase() === 'highest')
+                    ? 'Crítico '
+                    : 'Atenção';
+            const statusColor =
+                (alerta.priority === 'Highest' || String(alerta.priority).toLowerCase() === 'highest')
+                    ? '#e53935'
+                    : '#f7b116';
+            const currentStatus = normalizeStatus(alerta.status);
+
+            tickets.insertAdjacentHTML('beforeend', `
+                <div class="card_ticket">
+                    <div class="lado_esq">
+                        <div class="info_text">
+                            <div class="status" style="color:${statusColor}; font-weight:bold;">
+                                ${statusText}
+                            </div>
+                            <p>
+                                <strong>Ticket:</strong> #${alerta.issueKey} <br>
+                                <strong>Componente:</strong> ${alerta.summary.split(':')[1] || ''} <br>
+                                <strong>MAC:</strong> ${alerta.description}
+                            </p>
+                        </div>
+                        <div class="lado_dir">
+                            <p><strong>Status:</strong> ${alerta.status}</p>
+                            <p><strong>Horário:</strong> ${(alerta.created || '').slice(11, 16) || ''}</p>
+                        </div>
+                    </div>
+                </div>
+            `);
+        });
+
+        if (chamadosFiltrados.length === 0) {
+            tickets.innerHTML = "<p style='text-align:center;opacity:0.7;'>Nenhum chamado para este status</p>";
         }
+    }
 
-        getCards().forEach(card => {
-            const dsStatus = card.dataset.status || card.getAttribute('data-status') || '';
-            let status = normalizeStatus(dsStatus);
-            if (!status) {
-                const statusTextEl = card.querySelector('.status, .status_badge, .status_text');
-                status = normalizeStatus(statusTextEl?.textContent || '');
-            }
+    async function refreshTicketsAndKPIs(filtro = 'aberto') {
+        let alertas = [];
+        try {
+            const resp = await fetch('/jira/buscaralertas');
+            alertas = await resp.json();
+        } catch (err) {
+            console.error('Erro ao buscar alertas do bucket:', err);
+        }
+        window._alertasServidor = alertas.filter(a => a.description === mac);
+        updateKPIs(window._alertasServidor);
+        renderTickets(filtro, window._alertasServidor);
+    }
 
-            const cardId = card.dataset.id || card.getAttribute('data-id') || null;
-            if (cardId && closedList.indexOf(String(cardId)) !== -1) status = 'fechado';
+    await refreshTicketsAndKPIs('aberto');
 
-            if (areaContainer) {
-                if (status === filtro) {
-                    areaContainer.appendChild(card);
-                    card.style.display = '';
-                } else {
-                    card.style.display = 'none';
-                }
-            } else {
-                card.style.display = (filtro === status) ? '' : 'none';
-            }
-
-            const checkbox = card.querySelector('input[type="checkbox"], .ticket-checkbox');
-            if (checkbox) {
-                if (status === 'fechado') {
-                    checkbox.checked = false;
-                    checkbox.style.display = 'none';
-                    checkbox.disabled = true;
-                } else {
-                    checkbox.style.display = '';
-                    checkbox.disabled = false;
-                }
-            }
-
-            const statusBadge = card.querySelector('.status_badge, .status');
-            if (statusBadge) {
-                if (status === 'fechado') {
-                    statusBadge.textContent = 'Fechado';
-                    statusBadge.style.color = CLOSED_COLOR;
-                } else if (status === 'andamento') {
-                    statusBadge.textContent = 'Em andamento';
-                    statusBadge.style.color = MEDIUM_COLOR;
-                } else {
-                    const prioridadeAttr = card.dataset.priority || card.getAttribute('data-priority') || '';
-                    const pInfo = mapPriorityToColorLabel(prioridadeAttr);
-                    statusBadge.textContent = pInfo.label || 'Crítico';
-                    statusBadge.style.color = pInfo.color;
-                }
-            }
-
-            const statusText = card.querySelector('.lado_dir .status_text, .status_text');
-            if (statusText) statusText.innerHTML = `<strong>Status:</strong> ${status === 'fechado' ? 'Fechado' : (status === 'andamento' ? 'Em andamento' : 'Aberto')}`;
+    const filtroSelect = document.querySelector('.titulo_cha select');
+    if (filtroSelect) {
+        filtroSelect.addEventListener('change', function () {
+            renderTickets(this.value || 'aberto', window._alertasServidor);
         });
     }
 
-    function markCardAsClosed(card) {
-        if (!card) return;
-        const cardId = card.dataset.id || card.getAttribute('data-id') || null;
-        card.dataset.status = 'fechado';
-        const badge = card.querySelector('.status_badge, .status');
-        if (badge) {
-            badge.textContent = 'Fechado';
-            badge.style.color = CLOSED_COLOR;
-        }
-        const statusText = card.querySelector('.lado_dir .status_text, .status_text');
-        if (statusText) statusText.innerHTML = '<strong>Status:</strong> Fechado';
-        const checkbox = card.querySelector('input[type="checkbox"], .ticket-checkbox');
-        if (checkbox) {
-            checkbox.checked = false;
-            checkbox.style.display = 'none';
-            checkbox.disabled = true;
-        }
-        if (cardId) {
-            const closedList = readClosedList();
-            if (closedList.indexOf(String(cardId)) === -1) {
-                closedList.push(String(cardId));
-                saveClosedList(closedList);
-            }
-        }
-    }
-
-    container.addEventListener('click', (e) => {
-        const target = e.target;
-        if (!target.matches('input[type="checkbox"], .ticket-checkbox')) return;
-
-        const card = target.closest('.card_ticket');
-        if (!card) return;
-
-        const filtroRaw = select?.value || '';
-        const filtro = normalizeStatus(filtroRaw) || 'aberto';
-        if (filtro === 'fechado') {
-            target.checked = false;
-            target.disabled = true;
-            return;
-        }
-
-        markCardAsClosed(card);
-        if (filtro !== 'fechado') {
-            card.style.display = 'none';
-        }
+    document.getElementById('checkCritico').addEventListener('change', function() {
+        renderTickets(document.querySelector('.titulo_cha select').value || 'aberto', window._alertasServidor);
+    });
+    document.getElementById('checkAtencao').addEventListener('change', function() {
+        renderTickets(document.querySelector('.titulo_cha select').value || 'aberto', window._alertasServidor);
     });
 
-    if (select) select.addEventListener('change', applyFilter);
+    document.querySelector('.tickets').addEventListener('change', async function (e) {
+        const select = e.target;
+        if (!select.classList.contains('filter_card')) return;
+        const ticketId = select.getAttribute('data-ticket-id');
+        const novoStatus = select.value;
+        if (!ticketId) {
+            return;
+        }
+        await fetch('/jira/atualizarStatus', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                issueKey: ticketId,
+                novoStatus: novoStatus
+            })
+        });
+        await refreshTicketsAndKPIs(document.querySelector('.titulo_cha select').value || 'aberto');
+    });
 
-    document.addEventListener('DOMContentLoaded', applyFilter);
-    applyFilter();
-})();
+});

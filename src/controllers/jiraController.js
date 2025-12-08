@@ -11,8 +11,8 @@ async function getjira(req, res){
     });
 
     const input = {
-        Bucket: process.env.AWS_TRUSTED_BUCKET,
-        Key: "client-jira/jira/data.json"
+        Bucket: process.env.AWS_CLIENT_JIRA,
+        Key: "jira/data.json"
     }
 
     const command = new GetObjectCommand(input);
