@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Métricas PayMetrics</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.3.15/proj4.js"></script>
+  <script src="https://cdn.anychart.com/releases/8.11.0/js/anychart-base.min.js"></script>
+  <script src="https://cdn.anychart.com/releases/8.11.0/js/anychart-map.min.js"></script>
+  <script src="https://cdn.anychart.com/releases/8.11.0/geodata/custom/world/world.js"></script>
+  
+  <link rel="stylesheet" href="./css/navbar.css" />
+  <link rel="stylesheet" href="./css/SamuelDash.css" />
+</head>
+
+<body onload="carregarPingRealtime()">
+  <div id="sidebar"></div>
+
+  <div class="main-content">
+    <div class="dashboard-container">
+      <h1 class="titulo">Panorama Geral de Servidores por Rede</h1> 
+      <div class="data-atual">
+    <span id="dataHoje"></span>
+</div>
+
+      <div class="cards-row">
+        <div class="mini-card">
+    <p class="mini-title">Servidores Globais</p>
+    <h2 class="mini-value"></h2>
+        </div>
+        <div class="mini-card">
+          <p class="mini-title">TPS Total (Transações por Segundo)</p>
+          <h2 class="mini-value"></h2>
+          <span class="info-tooltip">
+           ⓘ
+          <span class="tooltip">800 TPS > Critico<br>
+                                400 TPS >= Atenção<br>
+                                400 TPS < Normal
+          </span>
+        </span>
+
+        </div>
+        <div class="mini-card">
+          <p class="mini-title">Latência Global</p>
+          <h2 class="mini-value"></h2>
+        </div>
+      </div>
+    </div>
+
+    <div class="distribuicao-grid">
+      <div class="bloco-esquerda">
+        <select id="selectPais"></select>
+
+    
+
+        <canvas id="bfChart"></canvas>
+      </div>
+
+      <div class="bloco-direita">
+        <div>
+          <div class="mapa-container">
+            <span class="status critico" title="Crítico">●</span> Crítico
+            <span class="status atencao" title="Atenção">●</span> Atenção  
+            <span class="status normal" title="Normal">●</span> Normal
+            <div id="miniMapa">
+              
+            </span>
+            </div>
+            
+            
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tabelas">
+    <div class="latency-table">
+      <h3>Principais Regiões com Alta Latência & Impacto</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Região/Servidor</th>
+            <th>Latência</th>
+            <th>Status</th>
+            <th>Impacto Estimado</th>
+          </tr>
+        </thead>
+
+        <tbody id="tabelaLatenciaCorpo">
+        
+      </table>
+    </div>
+     
+    </div>
+    </div>
+  </div>
+
+  <script src="./js/header.js"></script>
+ <script src="./js/individualSamuel.js"></script>
+
+</body>
+</html>

@@ -10,7 +10,7 @@ router.get("/:fk_empresa", function(req, res) {
 
 
 router.post("/criarServidor", function(req, res) {
-    servidorController.criarServidores(req, res);
+    servidorController.criarServidor(req, res);
 });
 
 router.put("/atualizarServidor/:id_servidor", function(req, res) {
@@ -21,5 +21,8 @@ router.put("/atualizarServidor/:id_servidor", function(req, res) {
 router.post("/deletarServidor/:id_servidor", function(req, res) {
     servidorController.deletarServidor(req, res);
 });
+
+router.get("/mapa/:fk_empresa/:pais", servidorController.mapaEstados);
+router.get("/mapa/:fk_empresa", servidorController.mapaGlobal);
 
 module.exports = router;

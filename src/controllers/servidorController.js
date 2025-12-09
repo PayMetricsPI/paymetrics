@@ -13,21 +13,29 @@ function listarServidores(req, res) {
 }
 
 
-function criarServidores(req, res) {
-    const servidores = req.body.servidores;
+function criarServidor(req, res) {
+    const nome = req.body.nome;
+    const fk_empresa = req.body.fk_empresa;
+    const pais = req.body.pais;
+    const estado = req.body.estado;
+    const mac_address = req.body.mac_address;
+    const ip = req.body.ip;
+    const tipo_cpu = req.body.tipo_cpu;
+    const ram = req.body.ram;
+    const disco = req.body.disco;
 
-    if (!servidores || !Array.isArray(servidores) || servidores.length === 0) {
-        return res.status(400).json({ error: "Dados inválidos" });
-    }
+    console.log(req.body)
 
-    servidorModel.criarServidores(servidores)
+
+    servidorModel.criarServidor(nome, fk_empresa, pais, estado, mac_address, ip, tipo_cpu, ram, disco)
         .then(resultado => {
-            const insertId = resultado && resultado.insertId ? resultado.insertId : null;
+           const insertId = resultado && resultado.insertId ? resultado.insertId : null; 
             return res.status(201).json({
                 message: "Servidores criados com sucesso",
                 insertedCount: resultado.affectedRows,
-                insertId // pode ser null se não houver
-            });
+                    insertId 
+            }); 
+
         })
         .catch(erro => {
             console.error("Erro ao criar servidores:", erro.sqlMessage || erro);
@@ -53,13 +61,9 @@ function deletarServidor(req, res) {
 
 function atualizarServidor(req, res) {
     const id_servidor = req.params.id_servidor;
-    const { nome, mac_address, tipo_cpu, ram, disco } = req.body;
+    const { nome,pais, estado, mac_address, tipo_cpu, ram, disco, ip } = req.body;
 
-    if (!id_servidor || !nome || !mac_address || !tipo_cpu || !ram || !disco) {
-        return res.status(400).json({ error: "Dados incompletos para atualizar servidor" });
-    }
-
-    servidorModel.atualizarServidor(id_servidor, nome, mac_address, tipo_cpu, ram, disco,)
+    servidorModel.atualizarServidor(id_servidor, nome,pais, estado, mac_address, ip, tipo_cpu, ram, disco,)
         .then(resultado => res.status(200).json({ message: "Servidor atualizado com sucesso", resultado }))
         .catch(erro => {
             console.error("Erro ao atualizar o servidor:", erro.sqlMessage || erro);
@@ -67,10 +71,31 @@ function atualizarServidor(req, res) {
         });
 }
 
+function mapaGlobal(req, res) {
+    const fk_empresa = req.params.fk_empresa;
+
+    servidorModel.mapaGlobal(fk_empresa)
+        .then(resultado => res.json(resultado))
+        .catch(erro => res.status(500).json(erro));
+}
+
+function mapaEstados(req, res) {
+    const fk_empresa = req.params.fk_empresa;
+    const pais = req.params.pais;
+
+    servidorModel.mapaEstados(fk_empresa, pais)
+        .then(resultado => res.json(resultado))
+        .catch(erro => res.status(500).json(erro));
+}
+
+
 
 module.exports = {
     atualizarServidor,
     listarServidores,
-    criarServidores,
-    deletarServidor
+    criarServidor,
+    deletarServidor,
+    mapaGlobal,
+    mapaEstados
+
 };

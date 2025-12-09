@@ -41,11 +41,11 @@ function login(event) {
                 sessionStorage.setItem("id", usuario.fk_empresa);
 
                 if(usuario.cargo == "Analista"){
-                    window.location.href = "DashPessoaEstrategia.html"
+                    window.location.href = "ServidoresRede-Samuel.html"
                 }else if(usuario.cargo == "RH"){
                     window.location.href = "deletarUsuario.html"
                 }else {
-                    window.location.href = "embreve.html"
+                    window.location.href = "servidor.html"
                 }
             });
 
