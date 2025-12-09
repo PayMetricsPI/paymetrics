@@ -1,62 +1,64 @@
-create database payMetrics;
-use payMetrics;
+CREATE DATABASE IF NOT EXISTS paymetrics;
+USE paymetrics;
 
-create table empresa (
-id_empresa int auto_increment primary key,
-razao_social varchar(200) not null);
-
-create table cargo(
-id int not null auto_increment primary key,
-nome varchar(200) not null);
-
-create table usuarios (
-id_usuario int auto_increment,
-fk_empresa int not null,
-fk_cargo int not null,
-nome varchar(200) not null,
-email varchar(200) not null,
-senha varchar(200) not null,
-primary key (id_usuario, fk_empresa,fk_cargo),
-foreign key (fk_empresa) references empresa(id_empresa),
-foreign key (fk_cargo) references cargo(id),
-unique (email)
+CREATE TABLE empresa (
+    id_empresa INT AUTO_INCREMENT PRIMARY KEY,
+    razao_social VARCHAR(200) NOT NULL
 );
 
-create table servidor (
-id_servidor int not null auto_increment,
-fk_empresa int not null,
-nome varchar(200),
-ip varchar(200),
-pais varchar(200),
-estado varchar(200),
-mac_address varchar(50) not null,
-tipo_cpu varchar(100) not null,
-ram int not null,
-disco int not null,
-primary key (id_servidor, fk_empresa),
-foreign key (fk_empresa) references empresa(id_empresa)
+CREATE TABLE cargo (
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(200) NOT NULL
 );
 
-create table componente(
-id_componente int not null auto_increment,
-nome varchar(200) not null,
-unidade_medida varchar(50),
-peso int,
-primary key (id_componente));
+CREATE TABLE usuarios (
+    id_usuario INT AUTO_INCREMENT,
+    fk_empresa INT NOT NULL,
+    fk_cargo INT NOT NULL,
+    nome VARCHAR(200) NOT NULL,
+    email VARCHAR(200) NOT NULL,
+    senha VARCHAR(200) NOT NULL,
+    PRIMARY KEY (id_usuario, fk_empresa, fk_cargo),
+    FOREIGN KEY (fk_empresa) REFERENCES empresa(id_empresa),
+    FOREIGN KEY (fk_cargo) REFERENCES cargo(id),
+    UNIQUE (email)
+);
 
-create table parametro(
-id_parametro int not null auto_increment,
-fk_servidor int not null,
-fk_empresa int not null,
-fk_componente int not null,
-alerta_critico int not null,
-alerta_normal int not null,
-primary key (id_parametro,fk_servidor,fk_empresa,fk_componente),
-foreign key (fk_servidor, fk_empresa)references servidor(id_servidor, fk_empresa),
-foreign key (fk_componente) references componente (id_componente));
+CREATE TABLE servidor (
+    id_servidor INT NOT NULL AUTO_INCREMENT,
+    fk_empresa INT NOT NULL,
+    nome VARCHAR(200),
+    ip VARCHAR(200),
+    pais VARCHAR(200),
+    estado VARCHAR(200),
+    mac_address VARCHAR(50) NOT NULL,
+    tipo_cpu VARCHAR(100) NOT NULL,
+    ram INT NOT NULL,
+    disco INT NOT NULL,
+    PRIMARY KEY (id_servidor, fk_empresa),
+    FOREIGN KEY (fk_empresa) REFERENCES empresa(id_empresa)
+);
 
-insert into empresa (razao_social)
-values
+CREATE TABLE componente (
+    id_componente INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(200) NOT NULL,
+    unidade_medida VARCHAR(50),
+    peso INT
+);
+
+CREATE TABLE parametro (
+    id_parametro INT NOT NULL AUTO_INCREMENT,
+    fk_servidor INT NOT NULL,
+    fk_empresa INT NOT NULL,
+    fk_componente INT NOT NULL,
+    alerta_critico INT NOT NULL,
+    alerta_normal INT NOT NULL,
+    PRIMARY KEY (id_parametro, fk_servidor, fk_empresa, fk_componente),
+    FOREIGN KEY (fk_servidor, fk_empresa) REFERENCES servidor(id_servidor, fk_empresa),
+    FOREIGN KEY (fk_componente) REFERENCES componente(id_componente)
+);
+
+INSERT INTO empresa (razao_social) VALUES
 ('Amazon.com Inc.'),
 ('Amazon Brasil Ltda.'),
 ('Amazon Deutschland GmbH'),
@@ -64,25 +66,19 @@ values
 ('Amazon Canada ULC'),
 ('Amazon Spain Services SL');
 
-desc usuarios;
-
-insert into cargo (nome) values
+INSERT INTO cargo (nome) VALUES
 ('RH'),
 ('Técnico'),
 ('Analista');
-select *from cargo;
 
-insert into usuarios(fk_empresa, fk_cargo, nome, email, senha) values
+INSERT INTO usuarios (fk_empresa, fk_cargo, nome, email, senha) VALUES
 (1,1,'Samuel','samuel@gmail.com','Senha@123'),
 (1,2,'Guilherme','guigo@gmail.com','Senha@123'),
 (1,3,'Bruno','bruninho@gmail.com','Senha@123');
 
-select *from usuarios;
-
-desc componente;
-insert into componente(nome, unidade_medida, peso)values
-('CPU', 'Porcentagem',2),
-('RAM', 'Porcentagem',3),
-('Mb Enviados - REDE', 'Bytes',3),
-('Mb Recebidos - REDE', 'Bytes',3),
-('DISCO', 'Porcentagem',1);
+INSERT INTO componente (nome, unidade_medida, peso) VALUES
+('CPU', 'Porcentagem', 2),
+('RAM', 'Porcentagem', 3),
+('Mb Enviados - REDE', 'Bytes', 3),
+('Mb Recebidos - REDE', 'Bytes', 3),
+('DISCO', 'Porcentagem', 1);

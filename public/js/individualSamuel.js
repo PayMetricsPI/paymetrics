@@ -49,7 +49,7 @@ async function fetchS3(file) {
 }
 
 async function buscarJsonDoDia(dataStr) {
-    return await fetchS3(`latendiaClient-json/${dataStr}-latencia.json`) ||
+    return await fetchS3(`latenciaClient-json/${dataStr}-latencia.json`) ||
            await fetchS3(`${dataStr}-latencia.json`);
 }
 

@@ -6,12 +6,13 @@ var s3Controller = require('../controllers/s3Controller');
 AWS.config.update({
     region: "us-east-1",
     accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    sessionToken: process.env.AWS_SESSION_TOKEN
 });
 
-
 const s3 = new AWS.S3();
-const bucket = "paymetricsclientteste";
+const bucket = process.env.AWS_BUCKET_NAME_CLIENT;
+
 
 router.post("/uploadCSV", (req, res) => {
     s3Controller.novoCSVBucket(req, res);
@@ -27,14 +28,18 @@ router.get("/ultimodia", async (req, res) => {
     try {
         const dados = await s3.listObjectsV2({
             Bucket: bucket,
-            Prefix: "output/"
+            Prefix: "latenciaClient-json/"
         }).promise();
 
-        const lista = dados.Contents
+        const lista = (dados.Contents || [])
             .map(obj => obj.Key)
             .filter(k => k.endsWith("-latencia.json"))
             .sort()
             .reverse();
+
+        if (lista.length === 0) {
+            return res.status(404).json({ erro: "Nenhum arquivo encontrado" });
+        }
 
         const arquivo = lista[0];
 
@@ -44,6 +49,7 @@ router.get("/ultimodia", async (req, res) => {
         }).promise();
 
         res.json(JSON.parse(obj.Body.toString("utf-8")));
+
     } catch (e) {
         console.error("Erro rota /s3/ultimodia:", e);
         res.status(500).json({ erro: "Falha ao carregar arquivo mais recente" });

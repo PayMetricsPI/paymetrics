@@ -83,7 +83,7 @@ async function novoCSVBucket(req, res) {
 // }
 async function clientJSONBucket(req, res) {
     const s3Client = new S3Client({
-        region: process.env.AWS_REGION,
+        region: "us-east-1",
         credentials: {
             accessKeyId: process.env.AWS_ACCESS_KEY_ID,
             secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
@@ -92,8 +92,8 @@ async function clientJSONBucket(req, res) {
     });
 
     const paramsList = {
-        Bucket: process.env.AWS_BUCKET_NAME_CLIENT,
-        Prefix: '',
+        Bucket: "client-paymetrics",
+        Prefix: 'output/',
     };
 
     try {
@@ -118,10 +118,13 @@ async function clientJSONBucket(req, res) {
 
         for (const key of keys) {
             const getResp = await s3Client.send(new GetObjectCommand({
-                Bucket: process.env.AWS_BUCKET_NAME_CLIENT,
+                Bucket: "client-paymetrics",
                 Key: key,
             }));
             const jsonString = await streamToString(getResp.Body);
+
+            console.log(jsonString)
+
             const jsonObj = JSON.parse(jsonString);
             resultados.push(jsonObj);
         }

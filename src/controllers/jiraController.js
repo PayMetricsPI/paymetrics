@@ -2,7 +2,7 @@ const { S3Client, GetObjectCommand } = require('@aws-sdk/client-s3');
 
 async function getjira(req, res){
     const s3Client = new S3Client({
-        region: process.env.AWS_REGION,
+        region: "us-east-1",
         credentials: {
             accessKeyId: process.env.AWS_ACCESS_KEY_ID,
             secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
@@ -11,7 +11,7 @@ async function getjira(req, res){
     });
 
     const input = {
-        Bucket: process.env.AWS_CLIENT_PAYMETRICS,
+        Bucket: "client-paymetrics",
         Key: "jira/data.json"
     }
 
