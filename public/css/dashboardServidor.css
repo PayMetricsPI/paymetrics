@@ -365,7 +365,6 @@
   padding: 30px;
   box-shadow: black;
 }
-}
 
 .card-evento {
   padding: 15px;
@@ -373,10 +372,11 @@
   background: #fff;
   max-width: 400px;
 }
+
 .card-evento .barra {
   width: 100%;
   height: 10px;
-  background: rgba(0,0,0,0.1);
+  background: rgba(0, 0, 0, 0.1);
   border-radius: 20px;
   overflow: hidden;
   margin-top: 12px;
@@ -395,7 +395,59 @@
   from {
     width: 0%;
   }
+
   to {
     width: var(--progress);
   }
+}
+
+.monitoramento_container {
+  width: 80% important;
+  margin: 0 auto;
+  margin-top: 30px;
+  padding: 40px;
+  display: flex;
+  justify-content: center;
+  border-radius: 10px;
+  border: 3px solid rgb(243, 186, 0);
+}
+
+.container_percentages {
+  width: 100%;
+  display: flex;
+  justify-content: center !important;
+  align-items: center;
+  gap: 50px;
+  margin: 0 auto;
+}
+
+.container_percentages>div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.titulo {
+  width: 80%;
+  margin: 60px auto 10px auto;
+  text-align: center;
+  font-size: 32px;
+  font-weight: bold;
+}
+
+#data_alerta {
+  font-size: 18px;
+  margin-top: 5px;
+  font-weight: bold;
+  color: #444;
+}
+
+.horas {
+  width: 60%;
+  margin: 10px auto 0 auto;
+  display: flex;
+  justify-content: flex-end;
+  font-size: 20px;
+  font-weight: 500;
+  gap: 10px;
 }

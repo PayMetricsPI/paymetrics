@@ -38,9 +38,14 @@
                     <span class="select_cursor"></span>
                 </div>
             </div>
-
         </div>
     </div>
+
+    <div class="horas">
+        <span>Horário da última coleta de dados:</span>
+        <div id="data_alerta"></div>
+    </div>
+
 
     <div class="alerta_container">
         <div class="sessao_critico">
@@ -114,28 +119,33 @@
         </div>
     </div>
 
-    <div class="container"></div>
+    <div class="titulo">Monitoramento em tempo real
 
-    <div class="container_percentages">
-        <div class="">
-            <h2>CPU</h2>
-            <canvas id="statusChart"></canvas>
-        </div>
-        <div class="">
-            <h2>RAM</h2>
-            <canvas id="statusRamChart"></canvas>
-        </div>
-        <div class="">
-            <h2>Disco</h2>
-            <canvas id="statusDiscoChart"></canvas>
-        </div>
-        <div class="">
-            <h2>Upload</h2>
-            <canvas id="statusRedeChart"></canvas>
-        </div>
-        <div class="">
-            <h2>Download</h2>
-            <canvas id="statusRedeChart2"></canvas>
+        <div class="container_center"></div>
+        <div class="monitoramento_container">
+
+            <div class="container_percentages">
+                <div class="">
+                    <h2>CPU</h2>
+                    <canvas id="statusChart" style="width: 200px; height: 200px;"></canvas>
+                </div>
+                <div class="">
+                    <h2>RAM</h2>
+                    <canvas id="statusRamChart" style="width: 200px; height: 200px;"></canvas>
+                </div>
+                <div class="">
+                    <h2>Disco</h2>
+                    <canvas id="statusDiscoChart" style="width: 200px; height: 200px;"></canvas>
+                </div>
+                <div class="">
+                    <h2>Upload</h2>
+                    <canvas id="statusRedeChart" style="width: 200px; height: 200px;"></canvas>
+                </div>
+                <div class="">
+                    <h2>Download</h2>
+                    <canvas id="statusRedeChart2" style="width: 200px; height: 200px;"></canvas>
+                </div>
+            </div>
         </div>
     </div>
 
