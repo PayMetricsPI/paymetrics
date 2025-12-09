@@ -11,49 +11,40 @@
     <link rel="stylesheet" href="css/embreve.css">
     <link rel="stylesheet" href="css/dashJira.css">
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
 </head>
 
 <body>
     <div id="sidebar"></div>
     <section class="dash_jira">
-        <div class="titulo_jira">
-            <h1>Alertas</h1>
-        </div>
-        <div class="alertas_container">
-            <div class="info">
-                <div class="kpi_critico">
-                    <h1 style="color: red;"><b>1</b></h1>
-                    <p>Servidores em <span style="color: red; text-decoration: underline;">alertas críticos</span></p>
-                </div>
-                <div class="kpi_atencao">
-                    <h1 style="color: #f7b116;"><b>2</b></h1>
-                    <p>Servidores em <span style="color: #f7b116; text-decoration: underline;">alertas de atenção</span></p>
-                </div>
+        <div class="a">
+            <div class="titulo_jira">
+                <h1>Alertas</h1>
             </div>
-            <div class="servidores_alertas">
-                <div class="titulo_ser">
-                    <h2>Servidores em alertas</h2>
-                </div>
-                <div class="servidor_card">
-                    <img src="./assets/imgs/servidor.png" alt="Servidor">
-                    <div class="info_servidor">
-                        <p class="nome">Nome do servidor</p>
-                        <p class="mac">Mac</p>
+            <div class="alertas_container">
+                <div class="info">
+                    <div class="kpi_critico">
+                        <h1 style="color: red;"><b>1</b></h1>
+                        <p>Servidores em <span style="color: red; text-decoration: underline;">alertas críticos</span>
+                        </p>
                     </div>
-                    <p class="status" style="color: red;"><b>Crítico !</b></p>
-                </div>
-
-                <div class="servidor_card">
-                    <img src="./assets/imgs/servidor.png" alt="Servidor">
-                    <div class="info_servidor">
-                        <p class="nome">Nome do servidor</p>
-                        <p class="mac">Mac</p>
+                    <div class="kpi_atencao">
+                        <h1 style="color: #f7b116;"><b>2</b></h1>
+                        <p>Servidores em <span style="color: #f7b116; text-decoration: underline;">alertas de
+                                atenção</span></p>
                     </div>
-                    <p class="status" style="color: #f7b116;"><b>Crítico !</b></p>
+                </div>
+                <div class="servidores_alertas">
+                    <div class="titulo_ser">
+                        <h2>Servidores em alertas</h2>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
     <script src="./js/header.js"></script>
+    <script src="./js/dashJira.js"></script>
 </body>
+
 </html>

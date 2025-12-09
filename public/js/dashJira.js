@@ -1,108 +1,193 @@
 const fk_empresa = Number(sessionStorage.getItem('id'));
 
 document.addEventListener('DOMContentLoaded', () => {
-    const container = document.querySelector('.servidores_alertas');
-    if (container) container.addEventListener('click', cardClick);
+    carregarKPIs();
     carregarServidoresComAlertas();
 });
 
-function cardClick(e) {
-    const card = e.target.closest('.servidor_card');
-    if (!card) return;
+async function carregarKPIs() {
+    try {
+        const resp = await fetch('/jira/buscaralertas');
+        const alertas = await resp.json();
 
-    const nome = card.querySelector('.info_servidor .nome')?.textContent?.trim();
-    const mac = card.querySelector('.info_servidor .mac')?.textContent?.trim();
-    const id = card.dataset.id || card.getAttribute('data-id');
+        const totalCritico = alertas.filter(a =>
+            a.priority && a.priority.toLowerCase() === "highest"
+        ).length;
 
-    if (id) sessionStorage.setItem('fk_servidor', String(id));
-    if (nome) sessionStorage.setItem('servidor_nome', nome);
-    if (mac) sessionStorage.setItem('servidor_mac', mac);
+        const totalAtencao = alertas.filter(a =>
+            a.priority && a.priority.toLowerCase() === "medium"
+        ).length;
 
-    window.location.href = 'servidor_jira.html';
+        document.querySelector('.kpi_critico h1').textContent = totalCritico;
+        document.querySelector('.kpi_atencao h1').textContent = totalAtencao;
+    } catch (err) {
+        document.querySelector('.kpi_critico h1').textContent = 0;
+        document.querySelector('.kpi_atencao h1').textContent = 0;
+        console.error('Não foi possível buscar alertas do bucket', err);
+    }
 }
+document.addEventListener('click', function (e) {
+    const card = e.target.closest('.servidor_card');
+    if (card && card.parentElement && card.parentElement.classList.contains('servidores_alertas')) {
+        const mac = card.getAttribute('data-mac');
+        const nome = card.getAttribute('data-nome'); 
+        if (mac) sessionStorage.setItem('mac_selecionado', mac);
+        if (nome) sessionStorage.setItem('nome_selecionado', nome);
+        window.location.href = 'servidor_jira.html';
+    }
+});
 
 async function carregarServidoresComAlertas() {
-    if (!fk_empresa) {
-        console.log('fk_empresa não foi encontrada');
-        return;
-    }
-
-    let alertas = [];
-    try {
-        const resp = await fetch(`/jira/alertas/${fk_empresa}`);
-        if (resp.ok) alertas = await resp.json();
-        else {
-            console.warn('Resposta de alertas não OK, fallback para vazio');
-            alertas = [];
-        }
-    } catch (err) {
-        console.warn('Falha ao buscar alertas, fallback para vazio', err);
-        alertas = [];
-    }
-
-    alertas = Array.isArray(alertas) ? alertas.filter(a => a && a.fk_servidor != null) : [];
-    const idsUnicos = [...new Set(alertas.map(a => a.fk_servidor).filter(id => id != null))];
-
     const container = document.querySelector('.servidores_alertas');
     if (!container) return;
 
     container.querySelectorAll('.servidor_card').forEach(c => c.remove());
-    if (idsUnicos.length === 0) {
-        return;
+
+    try {
+        const resp = await fetch('/jira/buscaralertas');
+        const alertas = await resp.json();
+
+        const macsUnicos = [...new Set(alertas.map(a => a.description).filter(Boolean))];
+
+        macsUnicos.forEach(mac => {
+            const alertasServidor = alertas.filter(a => a.description === mac);
+
+            const nomeServidor = `Servidor ${mac}`;
+
+            let numHighest = 0, numMedium = 0;
+            alertasServidor.forEach(a => {
+                if (String(a.priority).toLowerCase() === "highest") numHighest++;
+                if (String(a.priority).toLowerCase() === "medium") numMedium++;
+            });
+
+            let prioridade = "Medium";
+            if (numHighest > numMedium) prioridade = "Highest";
+            else if (numMedium > numHighest) prioridade = "Medium";
+            else if (numHighest === numMedium && numHighest > 0) prioridade = "Highest";
+
+            const prioridadeInfo = {
+                Highest: { label: "Crítico", color: "#e53935" },
+                Medium: { label: "Atenção", color: "#f7b116" }
+            }[prioridade] || { label: prioridade, color: "#888" };
+
+            const card = document.createElement('div');
+            card.className = 'servidor_card';
+            card.setAttribute('data-mac', mac);
+            card.setAttribute('data-nome', nomeServidor);
+            card.innerHTML = `
+        <img src="./assets/imgs/servidor.png" alt="Servidor">
+        <div class="info_servidor">
+            <p class="nome">${nomeServidor}</p>
+        </div>
+        <div class="status_badge" style="color:${prioridadeInfo.color}; font-weight:800; margin-left: 350px;">
+            ${prioridadeInfo.label}
+        </div>
+    `;
+            container.appendChild(card);
+        });
+
+        if (macsUnicos.length === 0) {
+            container.insertAdjacentHTML(
+                "beforeend",
+                `<div style="text-align:center;opacity:0.7;padding:32px;">Nenhum servidor em alerta.</div>`
+            );
+        }
+    } catch (err) {
+        console.error('Erro ao buscar alertas do bucket para cards de servidores', err);
+        container.insertAdjacentHTML(
+            "beforeend",
+            `<div style="text-align:center;opacity:0.7;padding:32px;">Erro ao carregar servidores</div>`
+        );
     }
+}
 
-    const servidores = await Promise.all(idsUnicos.map(async id => {
-        try {
-            const r = await fetch(`/servidores/${id}/${fk_empresa}`);
-            if (r.ok) return await r.json();
-        } catch (e) {}
-        const alerta = alertas.find(a => a.fk_servidor === id) || {};
-        return {
-            id_servidor: id,
-            nome: alerta.nome_servidor || `Servidor ${id}`,
-            mac_address: alerta.mac || '—'
-        };
-    }));
+(function () {
+  let chartInstance = null;
 
-    servidores.filter(Boolean).forEach(s => {
-        const servidorId = s.id_servidor || s.id;
-        const alertsDoServidor = alertas.filter(a => a.fk_servidor === servidorId);
+  function getComponentFromAlert(alert) {
+    if (!alert) return '';
+    if (alert.component) return String(alert.component).trim();
+    if (alert.components && Array.isArray(alert.components) && alert.components.length) {
+      return String(alert.components[0]).trim();
+    }
+    if (alert.summary && typeof alert.summary === 'string') {
+      const s = alert.summary.trim();
+      const colonParts = s.split(':');
+      if (colonParts.length >= 2) {
+        const after = colonParts.slice(1).join(':').trim();
+        const first = after.split(/[|\-\/\\()]/)[0].trim();
+        if (first) return first;
+      }
+      const parenMatch = s.match(/\(([^)]+)\)\s*$/);
+      if (parenMatch && parenMatch[1]) return parenMatch[1].trim();
+      const words = s.split(/\s+/);
+      if (words.length) {
+        const last = words[words.length - 1].replace(/[\W_]+/g, '').trim();
+        if (last) return last;
+      }
+    }
+    return '';
+  }
 
-        const ordem = ['highest', 'medium'];
-        let prioridadeEscolhida = null;
-        for (const o of ordem) {
-            if (alertsDoServidor.some(a => String(a.priority || '').toLowerCase() === o)) {
-                prioridadeEscolhida = o;
-                break;
-            }
-        }
-        if (!prioridadeEscolhida && alertsDoServidor.length) {
-            prioridadeEscolhida = String(alertsDoServidor[0].priority || '').toLowerCase();
-        }
-
-        const prioridadeInfo = mapPrioridade(prioridadeEscolhida);
-
-        const card = document.createElement('div');
-        card.className = 'servidor_card';
-        card.setAttribute('data-id', servidorId);
-        card.innerHTML = `
-            <img src="./assets/icons/servidor_jira.png" alt="Servidor">
-            <div class="info_servidor">
-                <p class="nome">${s.nome || 'Servidor'}</p>
-                <p class="mac">${s.mac_address || 'MAC'}</p>
-            </div>
-            <div class="status_badge" style="color: ${prioridadeInfo.color}; font-weight:700;">
-                ${prioridadeInfo.label}
-            </div>
-        `;
-        container.appendChild(card);
+  function buildChartData(alertas) {
+    const map = new Map();
+    (alertas || []).forEach(a => {
+      const comp = (getComponentFromAlert(a) || '').trim() || 'Sem componente';
+      if (!map.has(comp)) map.set(comp, { aberto: 0, andamento: 0, fechado: 0 });
+      const item = map.get(comp);
+      const st = String(a.status || '').toLowerCase();
+      if (st.includes('abert') || st.includes('open') || st.includes('todo')) item.aberto++;
+      else if (st.includes('andamento') || st.includes('progress') || st.includes('doing') || st.includes('in progress')) item.andamento++;
+      else if (st.includes('fech') || st.includes('done') || st.includes('closed') || st.includes('resolved')) item.fechado++;
+      else item.aberto++;
     });
-}
 
-function mapPrioridade(priority) {
-    if (!priority) return { label: 'Crítico', color: '#e53935' };
-    const p = String(priority).toLowerCase();
-    if (p === 'highest') return { label: 'Highest', color: '#e53935' };
-    if (p === 'medium') return { label: 'Medium', color: '#f7b116' };
-    return { label: String(priority), color: '#e53935' };
-}
+    const labels = Array.from(map.keys());
+    const abertoData = labels.map(l => map.get(l).aberto);
+    const andamentoData = labels.map(l => map.get(l).andamento);
+    const fechadoData = labels.map(l => map.get(l).fechado);
+
+    return {
+      labels,
+      datasets: [
+        { label: 'Fechado', data: fechadoData, backgroundColor: '#43a047' },
+        { label: 'Em Andamento', data: andamentoData, backgroundColor: '#f7b116' },
+        { label: 'Aberto', data: abertoData, backgroundColor: '#1e88e5' }
+      ]
+    };
+  }
+
+  function createOrUpdateChart(alertas) {
+    const canvas = document.getElementById('jiraChart');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const data = buildChartData(alertas);
+
+    const config = {
+      type: 'bar',
+      data,
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { position: 'top' },
+          tooltip: { mode: 'index', intersect: false }
+        },
+        interaction: { mode: 'nearest', axis: 'x', intersect: false },
+        scales: {
+          x: { stacked: true, ticks: { maxRotation: 0, minRotation: 0 } },
+          y: { stacked: true, beginAtZero: true, ticks: { precision: 0 } }
+        }
+      }
+    };
+
+    if (chartInstance) {
+      chartInstance.data = data;
+      chartInstance.update();
+    } else {
+      chartInstance = new Chart(ctx, config);
+    }
+  }
+
+  window.updateJiraChart = createOrUpdateChart;
+})();

@@ -4,6 +4,8 @@ const anoSelect = document.getElementById("ano_sim");
 const slc_tempo_visualizacao = document.getElementById("slc_tempo_visualizacao");
 const slc_tempo_previsao = document.getElementById("slc_tempo_previsao");
 
+const URL_API_RANDOM_FOREST_BRUNO = "http://100.30.79.140:5000"
+
 const graph_options = {
     type: 'line',
     data: {
@@ -63,7 +65,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
 
 async function buscarDadosGrafico(type, anos, meses) {
-    const res = await fetch(`http://localhost:5000/obter/previsao/ano/${type}/${anos}/${meses}`);
+    const res = await fetch(URL_API_RANDOM_FOREST_BRUNO+`/obter/previsao/ano/${type}/${anos}/${meses}`);
     return await res.json();
 }
 
@@ -129,7 +131,7 @@ async function obterDatasetDoSegmento(type, anos, meses) {
 }
 
 function preverProxMes(type) {
-    fetch(`http://localhost:5000/obter/previsao/prox/${type}`).then(
+    fetch(URL_API_RANDOM_FOREST_BRUNO+`/obter/previsao/prox/${type}`).then(
         (res) => {
             res.json().then((json) => {
                 indice = document.getElementById(`indice_${type}`);
@@ -167,7 +169,7 @@ function simular() {
     if(type == "moveis") icontype = "chair";
 
     
-    fetch(`http://localhost:5000/obter/previsao/${type}/${ano}/${mes}`).then(res => {
+    fetch(URL_API_RANDOM_FOREST_BRUNO+`/obter/previsao/${type}/${ano}/${mes}`).then(res => {
         res.json().then(data => {
             const res = document.getElementById("res");
             res.innerHTML = `
@@ -207,7 +209,7 @@ function simular() {
 }
 
 function obterLimites() {
-    fetch("http://localhost:5000/obter/limites/data")
+    fetch(URL_API_RANDOM_FOREST_BRUNO+`/obter/limites/data`)
         .then(res => res.json())
         .then(limites => {
 
@@ -352,7 +354,7 @@ function mostrarProxMes() {
 }
 
 function obterMetricasRandomForest() {
-    fetch("http://localhost:5000/obter/metricas").then(res => res.json())
+    fetch(URL_API_RANDOM_FOREST_BRUNO+"/obter/metricas").then(res => res.json())
         .then(json => {
             const containers = document.querySelectorAll(".values_modal_metricas")
             for (let i = 0; i < json.length; i++) {

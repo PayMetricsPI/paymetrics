@@ -1,6 +1,6 @@
 async function calendar() {
 
-    const key = "pred/hardware_previsoes.json";
+    const key = "guilherme/hardware_previsoes.json";
 
     try {
         const res = await fetch('/BucketRoute/getS3Object', {
@@ -66,7 +66,7 @@ async function calendar() {
 }
 
 async function gemini() {
-    const key = "output/eventos_2026_gemini14817667377260867836.json";
+    const key = "guilherme/eventos_2026_gemini13959218756542317443.json";
 
     try {
         const res = await fetch('/BucketRoute/getS3Object', {
@@ -239,7 +239,7 @@ function gerarGraficoMediaMovel(contagemMensal) {
 }
 
 async function gerarMapaIntensidade() {
-    const key = "pred/hardware_previsoes.json";
+    const key = "guilherme/hardware_previsoes.json";
 
     try {
         const res = await fetch('/BucketRoute/getS3Object', {

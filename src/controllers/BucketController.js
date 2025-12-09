@@ -1,12 +1,12 @@
 const aws = require('aws-sdk');
 
-const S3_BUCKET = 'bucket-guigo-client';
+const S3_BUCKET = 'client-paymetrics';
 
 const s3 = new aws.S3({
     region: 'us-east-1',
-    accessKeyId: "",
-    secretAccessKey: "",
-    sessionToken: ""
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    sessionToken: process.env.AWS_SESSION_TOKEN
 });
 
 const getS3Object = async (objectKey) => {
